@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
 
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
+    public GameObject m_player;
+
     public bool useGamepad = false;
     internal bool enableTimer = false;
 
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
         int gamepadID = InputManager.instance.GetAnyGamePad();
+        m_player = GameObject.FindGameObjectWithTag("Player");
         if (InputManager.instance.IsAnyKeyDown() || InputManager.instance.IsAnyMouseButtonDown())
         {
             useGamepad = false;
@@ -93,6 +96,11 @@ public class GameManager : MonoBehaviour
         {
             useGamepad = true;
         }
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        m_player = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void InitialiseFunc()
