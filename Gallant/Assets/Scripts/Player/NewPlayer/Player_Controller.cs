@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
 {
-    private Camera camera;
+    private Camera playerCamera;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
     public Player_Attack playerAttack { private set; get; }
     public Player_Abilities playerAbilities { private set; get; }
     public Player_Resources playerResources { private set; get; }
+    public Player_Pickup playerPickup { private set; get; }
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -20,12 +21,13 @@ public class Player_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main;
+        playerCamera = Camera.main;
 
         playerMovement = GetComponent<Player_Movement>();
         playerAttack = GetComponent<Player_Attack>();
         playerAbilities = GetComponent<Player_Abilities>();
         playerResources = GetComponent<Player_Resources>();
+        playerPickup = GetComponentInChildren<Player_Pickup>();
     }
 
     // Update is called once per frame
@@ -33,6 +35,22 @@ public class Player_Controller : MonoBehaviour
     {
         int gamepadID = InputManager.instance.GetAnyGamePad();
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);
+
+        // Left hand pickup
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.WEST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+        {
+            DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+            if (droppedWeapon != null)
+                playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
+        }
+
+        // Right hand pickup
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
+        {
+            DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+            if (droppedWeapon != null)
+                playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
+        }
     }
     private Vector2 GetPlayerMovementVector()
     {
@@ -51,6 +69,7 @@ public class Player_Controller : MonoBehaviour
             m_currentVelocity = Vector3.SmoothDamp(m_currentVelocity, movement, ref m_movementVelocity, 0.1f);
             return m_currentVelocity;
         }
+
     }
 
     private Vector2 GetPlayerAimVector()
@@ -63,13 +82,16 @@ public class Player_Controller : MonoBehaviour
         else
         {
             RaycastHit hit;
-            Ray ray = camera.ScreenPointToRay(InputManager.instance.GetMousePositionInScreen());
+            Ray ray = playerCamera.ScreenPointToRay(InputManager.instance.GetMousePositionInScreen());
             if (Physics.Raycast(ray, out hit, 1000))
             {
-                Vector2 aim = new Vector2(hit.point.x - transform.position.x, hit.point.z - transform.position.z);
+                Vector3 aim = hit.point - transform.position;
 
-                m_lastAimDirection = aim;
-                return aim;
+                Vector3 normalizedAim = Vector3.zero;
+                normalizedAim += aim.z * -transform.right;
+                normalizedAim += aim.x * transform.forward;
+                normalizedAim *= -1;
+                m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
             }
             return m_lastAimDirection;
         }

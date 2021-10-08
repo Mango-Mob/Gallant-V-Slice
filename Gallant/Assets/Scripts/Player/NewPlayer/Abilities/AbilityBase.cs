@@ -9,9 +9,7 @@ public abstract class AbilityBase : MonoBehaviour
     public MyFloatEvent OnAbilityUse = new MyFloatEvent();
 
     [Header("Ability Information")]
-    public string m_title;
-    public Sprite m_icon;
-    public float m_cooldownTime = 1.0f;
+    public AbilityData m_data;
     private bool m_canUse = true;
 
     public void TriggerAbility()
@@ -19,7 +17,7 @@ public abstract class AbilityBase : MonoBehaviour
         
         if (m_canUse)
         {
-            OnAbilityUse.Invoke(m_cooldownTime);
+            OnAbilityUse.Invoke(m_data.cooldownTime);
             AbilityFunctionality();
             StartCooldown();
         }
@@ -33,7 +31,7 @@ public abstract class AbilityBase : MonoBehaviour
         IEnumerator Cooldown()
         {
             m_canUse = false;
-            yield return new WaitForSeconds(m_cooldownTime);
+            yield return new WaitForSeconds(m_data.cooldownTime);
             m_canUse = true;
         }
     }
