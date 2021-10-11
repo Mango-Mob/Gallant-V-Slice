@@ -13,10 +13,12 @@ public class Actor : StateMachine
 
     public string m_currentStateDisplay;
 
+    public GameObject m_target { get; set; } = null;
+
     private bool m_isDead = false;
     private float m_currentHealth;
 
-    protected GameObject playerObject; 
+    protected GameObject playerObject;
 
     private void Awake()
     {
@@ -33,7 +35,7 @@ public class Actor : StateMachine
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -45,15 +47,25 @@ public class Actor : StateMachine
 
     public void DealDamage(float damage)
     {
-        if(!m_isDead)
+        if (!m_isDead)
         {
             damage = EnemyData.CalculateDamage(damage, m_myData.resistance);
 
             m_currentHealth -= damage;
-            if(m_currentHealth <= 0)
+            if (m_currentHealth <= 0)
             {
                 m_isDead = true;
             }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        if(m_target != null)
+        {
+            Gizmos.DrawLine(transform.position, m_target.transform.position);
+            Gizmos.DrawSphere(m_target.transform.position, 0.5f);
         }
     }
 }

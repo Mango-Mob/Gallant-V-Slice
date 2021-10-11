@@ -17,6 +17,14 @@ public class State_Idle : State
     {
         m_myActor.animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero);
         m_delay -= Time.deltaTime;
+
+        //Check if there is a target to move to.
+        if(m_myActor.m_target != null && m_myActor.m_myData.m_states.Contains(Type.MOVE_TO_TARGET))
+        {
+            m_myActor.SetState(new State_MoveToTarget(m_myActor));
+            return;
+        }
+
         if(m_delay <= 0)
         {
             if (m_myActor.m_myData.m_states.Contains(Type.ROAM))

@@ -27,6 +27,14 @@ public class State_Roam : State
     public override void Update()
     {
         m_myActor.animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.legs.localVelocity.normalized);
+
+        //Check if target exists, then transition to it.
+        if (m_myActor.m_target != null && m_myActor.m_myData.m_states.Contains(Type.MOVE_TO_TARGET))
+        {
+            m_myActor.SetState(new State_MoveToTarget(m_myActor));
+            return;
+        }
+
         if (m_myActor.legs.IsResting())
         {
             if(m_myActor.m_myData.m_states.Contains(Type.IDLE))
