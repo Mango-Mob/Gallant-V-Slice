@@ -28,6 +28,13 @@ public class BoomerangProjectile : MonoBehaviour
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
+
+        if (m_weaponData != null)
+        {
+            m_boomerangSpeed = m_weaponData.m_speed;
+            m_throwDuration = 10.0f / m_boomerangSpeed;
+
+        }
     }
 
     // Update is called once per frame
