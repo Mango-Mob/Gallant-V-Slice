@@ -14,7 +14,6 @@ public abstract class AbilityBase : MonoBehaviour
 
     public void TriggerAbility()
     {
-        
         if (m_canUse)
         {
             OnAbilityUse.Invoke(m_data.cooldownTime);

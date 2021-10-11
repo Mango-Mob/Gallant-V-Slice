@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Player_Controller by William de Beer
+ * File: Player_Controller.cs
+ * Description:
+ *		Controls interactions between different player components and handles player input.
+ */
 public class Player_Controller : MonoBehaviour
 {
     private Camera playerCamera;
@@ -33,7 +39,10 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Set gamepad being used
         int gamepadID = InputManager.instance.GetAnyGamePad();
+
+        // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);
 
         // Left hand pickup
@@ -50,6 +59,16 @@ public class Player_Controller : MonoBehaviour
             DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
             if (droppedWeapon != null)
                 playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
+        }
+
+        // Weapon attacks
+        if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
+        {
+            playerAttack.UseWeapon(Hand.RIGHT);
+        }
+        if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
+        {
+            playerAttack.UseWeapon(Hand.LEFT);
         }
     }
     private Vector2 GetPlayerMovementVector()
@@ -74,17 +93,19 @@ public class Player_Controller : MonoBehaviour
 
     private Vector2 GetPlayerAimVector()
     {
-        if (GameManager.instance.useGamepad)
+        if (GameManager.instance.useGamepad) // If using gamepad
         {
             int gamepadID = InputManager.instance.GetAnyGamePad();
             return InputManager.instance.GetGamepadStick(StickType.RIGHT, gamepadID);
         }
-        else
+        else // If using mouse
         {
+            // Raycast to find raycast point
             RaycastHit hit;
             Ray ray = playerCamera.ScreenPointToRay(InputManager.instance.GetMousePositionInScreen());
             if (Physics.Raycast(ray, out hit, 1000))
             {
+                // Return direction from player to hit point
                 Vector3 aim = hit.point - transform.position;
 
                 Vector3 normalizedAim = Vector3.zero;

@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Player_Movement by William de Beer
+ * File: Player_Movement.cs
+ * Description:
+ *		Contains logic for player movement such as running and dodging.
+ */
 public class Player_Movement : MonoBehaviour
 {
     public CharacterController characterController { private set; get; }
@@ -24,7 +30,8 @@ public class Player_Movement : MonoBehaviour
     [Header("Dodge Attributes")]
     public float m_shadowDuration = 1.0f;
     public GameObject m_adrenShadowPrefab;
-    float TEMPTIMER = 0.0f;
+    private float m_rollTimer = 0.0f;
+    public float m_rollDuration = 0.2f;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +42,7 @@ public class Player_Movement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Gravity physics
         m_grounded = characterController.isGrounded;
         if (m_grounded)
             m_yVelocity = -1.0f;
@@ -46,15 +54,15 @@ public class Player_Movement : MonoBehaviour
 
     private void RollUpdate()
     {
-        if (m_isRolling)
+        if (m_isRolling) // Check if the player is supposed to be rolling
         {
             // Move player in stored direction while roll is active
             characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * Time.fixedDeltaTime
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
-            TEMPTIMER -= Time.fixedDeltaTime;
-            if (TEMPTIMER <= 0.0f)
+            m_rollTimer -= Time.fixedDeltaTime;
+            if (m_rollTimer <= 0.0f)
                 m_isRolling = false;
         }
     }
@@ -65,16 +73,18 @@ public class Player_Movement : MonoBehaviour
 
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
-        if (m_isRolling)
+        if (m_isRolling) // If the player is rolling prevent other movement
             return;
-        if (_aim.magnitude != 0)
+        if (_aim.magnitude != 0) // If the player is trying to aim...
         {
+            // Make player model face aim direction
             Vector3 normalizedAim = Vector3.zero;
             normalizedAim += _aim.y * transform.forward;
             normalizedAim += _aim.x * transform.right;
             RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
         }
-        float speed = m_moveSpeed;
+
+        float speed = m_moveSpeed; // Player movement speed
 
         Vector3 normalizedMove = Vector3.zero;
         Vector3 movement = Vector3.zero;
@@ -88,15 +98,19 @@ public class Player_Movement : MonoBehaviour
             // Apply movement
             movement = normalizedMove * speed * _deltaTime;
 
+            // If player is not trying to aim, aim in direction of movement.
             if (_aim.magnitude == 0)
                 RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
         }
-        if (_roll)
+        if (_roll) // If roll input is triggered
         {
+            // Set roll to true
             m_isRolling = true;
-            TEMPTIMER = 0.2f;
 
-            //Create Provider
+            // Set roll duration
+            m_rollTimer = m_rollDuration;
+
+            // Create adrenaline provider
             if (m_adrenShadowPrefab != null)
             {
                 AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
@@ -108,12 +122,12 @@ public class Player_Movement : MonoBehaviour
             {
                 m_lastMoveDirection = normalizedMove;
             }
-            else
+            else // Set last move direction to forward for rolling if player is not moving.
             {
-                m_lastMoveDirection = playerModel.transform.forward;
+                m_lastMoveDirection = playerModel.transform.forward; 
             }
         }
-
+        // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
     private void OnDrawGizmos()
@@ -136,7 +150,7 @@ public class Player_Movement : MonoBehaviour
 
         GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 
-        //Slow mo
+        //Slow motion
         GameManager.instance.SlowTime(0.4f, _val);
     }
 }
