@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Remove
 public class Boss_Weapon : MonoBehaviour
 {
     [Header("Weapon Materials")]

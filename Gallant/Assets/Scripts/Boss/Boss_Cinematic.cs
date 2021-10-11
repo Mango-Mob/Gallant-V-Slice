@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Remove
 public class Boss_Cinematic : MonoBehaviour
 {
     public Boss_AI m_boss;

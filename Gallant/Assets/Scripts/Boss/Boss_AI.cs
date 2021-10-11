@@ -5,6 +5,7 @@ using UnityEngine;
 
 
 //Michael Jordan
+//Remove
 public class Boss_AI : MonoBehaviour
 {
     public bool m_waitOnAwake = true;

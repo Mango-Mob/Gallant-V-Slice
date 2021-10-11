@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+//Remove
 public class Boss_Movement : MonoBehaviour
 {
     [Range(0, 360, order = 0)]

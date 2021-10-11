@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+//Remove
 public class Boss_Projectile : MonoBehaviour
 {
     public Transform m_sender;
