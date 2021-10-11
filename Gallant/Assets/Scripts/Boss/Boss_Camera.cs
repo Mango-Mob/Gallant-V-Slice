@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+//Remove
 public class Boss_Camera : MonoBehaviour
 {
     private CinemachineVirtualCamera vCamera;

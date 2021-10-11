@@ -7,9 +7,9 @@ public class Actor_Animator : MonoBehaviour
     protected Animator m_animator;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        m_animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -20,8 +20,19 @@ public class Actor_Animator : MonoBehaviour
 
     public void SetVector2(string xName, string yName, Vector2 vector)
     {
-        m_animator.SetFloat(xName, vector.x);
-        m_animator.SetFloat(yName, vector.y);
+        if (xName != "")
+            m_animator.SetFloat(xName, vector.x);
+        if (yName != "")
+            m_animator.SetFloat(yName, vector.y);
+    }
+    public void SetVector3(string xName, string yName, string zName, Vector3 vector)
+    {
+        if(xName != "")
+            m_animator.SetFloat(xName, vector.x);
+        if (yName != "")
+            m_animator.SetFloat(yName, vector.y);
+        if (zName != "")
+            m_animator.SetFloat(zName, vector.z);
     }
 
     public void SetBool(string name, bool status)
