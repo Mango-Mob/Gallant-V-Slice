@@ -70,6 +70,20 @@ public class Player_Controller : MonoBehaviour
         {
             playerAttack.UseWeapon(Hand.LEFT);
         }
+
+        // Debug controls
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
+        {
+            playerResources.ChangeHealth(-10.0f);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
+        {
+            playerResources.ChangeAdrenaline(-0.2f);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_THREE))
+        {
+            playerResources.ChangeAdrenaline(0.2f);
+        }
     }
     private Vector2 GetPlayerMovementVector()
     {
