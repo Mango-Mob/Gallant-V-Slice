@@ -14,8 +14,10 @@ public class WeaponData : ScriptableObject
     public Weapon weaponType; // The type of weapon the object is.
     public GameObject weaponModelPrefab; // Prefab of weapon model to be used when player is holding it
 
+    public Sprite weaponIcon;
     public float hitCenterOffset = 0.75f;
     public float hitSize = 1.0f;
+    public AbilityData abilityData;
 
     [Header("Base Weapon Stats")]
     public int m_damage = 10; 

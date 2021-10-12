@@ -37,6 +37,10 @@ public class Player_Attack : MonoBehaviour
 
     private GameObject m_boomerangeProjectilePrefab;
 
+    [Header("Weapon Icons")]
+    [SerializeField] private UI_WeaponIcon m_leftWeaponIcon;
+    [SerializeField] private UI_WeaponIcon m_rightWeaponIcon;
+
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();
@@ -109,6 +113,11 @@ public class Player_Attack : MonoBehaviour
                 // Set new weapon
                 m_leftWeapon = _weapon.m_weaponData;
                 m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+
+                if (m_leftWeaponIcon != null)
+                    m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+                else
+                    Debug.LogWarning("Weapon icon not set");
                 break;
             case Hand.RIGHT:
                 // Drop old weapon
@@ -121,6 +130,11 @@ public class Player_Attack : MonoBehaviour
                 // Set new weapon
                 m_rightWeapon = _weapon.m_weaponData;
                 m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+
+                if (m_rightWeaponIcon != null)
+                    m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+                else
+                    Debug.LogWarning("Weapon icon not set");
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
