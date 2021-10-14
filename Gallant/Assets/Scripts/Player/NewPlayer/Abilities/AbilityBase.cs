@@ -1,13 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public abstract class AbilityBase : MonoBehaviour
 {
-    public class MyFloatEvent : UnityEvent<float> { }
-    public MyFloatEvent OnAbilityUse = new MyFloatEvent();
-
     [Header("Ability Information")]
     public AbilityData m_data;
     private bool m_canUse = true;
@@ -26,7 +22,6 @@ public abstract class AbilityBase : MonoBehaviour
     {
         if (m_canUse)
         {
-            //OnAbilityUse.Invoke(m_data.cooldownTime);
             AbilityFunctionality();
             StartCooldown();
         }
