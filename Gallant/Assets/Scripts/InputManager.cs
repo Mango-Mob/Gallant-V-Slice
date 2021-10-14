@@ -31,6 +31,7 @@ public enum ButtonType
     NORTH, SOUTH, EAST, WEST,
     START, SELECT, 
     LT, LB, LS, RT, RB, RS,
+    UP, DOWN, LEFT, RIGHT
 }
 
 public enum StickType
@@ -173,6 +174,10 @@ public class InputManager : MonoBehaviour
             case ButtonType.RT:        { return pad.rightTrigger; }
             case ButtonType.RB:        { return pad.rightShoulder; }
             case ButtonType.RS:        { return pad.rightStickButton; }
+            case ButtonType.UP:        { return pad.dpad.up; }
+            case ButtonType.DOWN:      { return pad.dpad.down; }
+            case ButtonType.LEFT:      { return pad.dpad.left; }
+            case ButtonType.RIGHT:     { return pad.dpad.right; }
 
             default:
                 return null;
