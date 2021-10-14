@@ -5,12 +5,13 @@ using UnityEngine;
 public class Player_Resources : MonoBehaviour
 {
     public float m_health { get; private set; } = 100.0f;
-    public float m_stamina { get; private set; } = 100.0f;
+    public float m_maxHealth { get; private set; } = 100.0f;
     public float m_adrenaline { get; private set; } = 0.0f;
 
     private Player_Controller playerController;
-    float m_staminaRechargeTimer = 0.0f;
-    public float m_staminaRechargeDelay = 0.8f;
+    public UI_Bar healthBar;
+    public UI_OrbResource adrenalineOrbs;
+
     public float m_rechargeRate = 40.0f;
     public float m_adrenalineDecayRate = 3.0f;
     public bool m_dead { get; private set; } = false;
@@ -24,23 +25,27 @@ public class Player_Resources : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ChangeAdrenaline(-Time.deltaTime * m_adrenalineDecayRate);
+        if (healthBar != null)
+            healthBar.SetValue(m_health / m_maxHealth);
+
+        if (adrenalineOrbs != null)
+            adrenalineOrbs.SetValue(m_adrenaline);
     }
 
     public void ChangeHealth(float _amount)
     {
         if (_amount > 0) // Gain
         {
-            // Remove adrenaline as price for healing
-            m_adrenaline -= _amount;
+            //// Remove adrenaline as price for healing
+            //m_adrenaline -= _amount;
 
-            if (m_adrenaline < 0)
-                m_health += _amount + m_adrenaline;
-            else
-                m_health += _amount;
+            //if (m_adrenaline < 0)
+            //    m_health += _amount + m_adrenaline;
+            //else
+            //    m_health += _amount;
 
 
-            m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 100.0f);
+            //m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
         }
         else // Drain
         {
@@ -51,22 +56,7 @@ public class Player_Resources : MonoBehaviour
                 m_dead = true;
             }
         }
-        m_health = Mathf.Clamp(m_health, 0.0f, 100.0f);
-    }
-
-    public void ChangeStamina(float _amount)
-    {
-        m_stamina += _amount;
-        if (_amount > 0) // Gain
-        {
-
-        }
-        else // Drain
-        {
-            // If staina goes below 0 make longer delay before recharging.
-            m_staminaRechargeTimer = m_staminaRechargeDelay * (m_stamina < 0.0f ? 2 : 1);
-        }
-        m_stamina = Mathf.Clamp(m_stamina, 0.0f, 100.0f);
+        m_health = Mathf.Clamp(m_health, 0.0f, m_maxHealth);
     }
 
     public void ChangeAdrenaline(float _amount)
@@ -80,6 +70,6 @@ public class Player_Resources : MonoBehaviour
         {
 
         }
-        m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 100.0f);
+        m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
     }
 }
