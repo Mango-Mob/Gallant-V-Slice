@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Remove
 [CreateAssetMenu(fileName = "bossData", menuName = "Boss Data (DO NOT USE)", order = 1)]
 public class BossData : ScriptableObject
 {

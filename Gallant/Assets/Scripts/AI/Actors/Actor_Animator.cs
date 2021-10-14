@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,6 +34,11 @@ public class Actor_Animator : MonoBehaviour
             m_animator.SetFloat(yName, vector.y);
         if (zName != "")
             m_animator.SetFloat(zName, vector.z);
+    }
+
+    public void SetTrigger(string triggerName)
+    {
+        m_animator.SetTrigger(triggerName);
     }
 
     public void SetBool(string name, bool status)
