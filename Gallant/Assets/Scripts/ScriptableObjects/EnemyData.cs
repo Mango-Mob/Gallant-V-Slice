@@ -14,6 +14,8 @@ public class EnemyData : ScriptableObject
     [Range(0, 400)]
     public float resistance;
 
+    public float m_damageModifier = 1.0f;
+
     public List<State.Type> m_states = new List<State.Type>();
 
     public static float CalculateDamage(float inTakeDamage, float resistance)

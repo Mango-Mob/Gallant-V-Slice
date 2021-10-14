@@ -146,4 +146,9 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
+
+    public void DamagePlayer(float _damage)
+    {
+        Debug.Log($"Player is damaged: {_damage} points of health.");
+    }
 }

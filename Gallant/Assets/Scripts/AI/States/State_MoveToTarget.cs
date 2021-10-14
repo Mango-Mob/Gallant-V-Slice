@@ -36,7 +36,7 @@ public class State_MoveToTarget : State
         {
             foreach (var attack in m_myActor.m_myAttacks)
             {
-                if (attack.IsWithinRange(m_myActor, LayerMask.NameToLayer("Player")))
+                if (attack.IsWithinRange(m_myActor, LayerMask.NameToLayer("Player")) && attack.IsAvailable())
                 {
                     m_myActor.SetState(new State_Attack(m_myActor, attack));
                     return;

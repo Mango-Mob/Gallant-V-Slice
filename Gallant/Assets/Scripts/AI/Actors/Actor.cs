@@ -67,29 +67,30 @@ public class Actor : StateMachine
     {
         if (m_currentState != null)
             m_currentState.Update();
-
-        if(m_IsWeaponLive && m_activeAttack != null)
-        {
-            Collider[] hits = m_activeAttack.GetOverlap(this, LayerMask.NameToLayer("Player") | LayerMask.NameToLayer("Shadow"));
-
-            foreach (var hit in hits)
-            {
-                m_damagedColliders.Add(hit);
-                if(hit.gameObject.layer == LayerMask.NameToLayer("Player"))
-                {
-                    //Damage player
-                }
-                else if(hit.gameObject.layer == LayerMask.NameToLayer("Shadow"))
-                {
-                    //Damage shadow
-                }
-            }
-        }
     }
 
     public void OpenAttackWindow()
     {
         m_IsWeaponLive = true;
+    }
+
+    public void InvokeAttack()
+    {
+        if(m_activeAttack != null)
+        {
+            List<Collider> hits = new List<Collider>(m_activeAttack.GetOverlap(this, LayerMask.NameToLayer("Player")));
+            hits.AddRange(m_activeAttack.GetOverlap(this, LayerMask.NameToLayer("Shadow")));
+
+            foreach (var hit in hits)
+            {
+                if (!m_damagedColliders.Contains(hit))
+                {
+                    m_damagedColliders.Add(hit);
+                    //Damage player
+                    m_activeAttack.Invoke(this, hit);
+                }
+            }
+        }
     }
 
     public void CloseAttackWindow()
