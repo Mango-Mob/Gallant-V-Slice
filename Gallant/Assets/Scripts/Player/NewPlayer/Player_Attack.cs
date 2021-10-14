@@ -118,6 +118,9 @@ public class Player_Attack : MonoBehaviour
                     m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
                 else
                     Debug.LogWarning("Weapon icon not set");
+
+                playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, _hand);
+
                 break;
             case Hand.RIGHT:
                 // Drop old weapon
@@ -135,6 +138,9 @@ public class Player_Attack : MonoBehaviour
                     m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
                 else
                     Debug.LogWarning("Weapon icon not set");
+
+                playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, _hand);
+
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
@@ -142,6 +148,42 @@ public class Player_Attack : MonoBehaviour
         }
 
         Destroy(_weapon.gameObject);
+    }
+
+    public void SwapWeapons()
+    {
+        if (m_leftWeaponInUse || m_rightWeaponInUse)
+            return;
+
+        // Store old left hand weapon for future use
+        WeaponData _leftHandStore = m_leftWeapon;
+
+        // Left hand weapon
+        // Delete old weapon from player
+        Destroy(m_leftWeaponObject);
+
+        // Set new weapon
+        m_leftWeapon = m_rightWeapon;
+        m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+
+        if (m_leftWeaponIcon != null)
+            m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+        else
+            Debug.LogWarning("Weapon icon not set");
+
+
+        // Right hand weapon
+        // Delete old weapon from player
+        Destroy(m_rightWeaponObject);
+
+        // Set new weapon
+        m_rightWeapon = _leftHandStore;
+        m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+
+        if (m_rightWeaponIcon != null)
+            m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+        else
+            Debug.LogWarning("Weapon icon not set");
     }
 
     #region Sword

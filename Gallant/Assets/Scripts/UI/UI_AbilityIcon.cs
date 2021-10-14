@@ -22,14 +22,15 @@ public class UI_AbilityIcon : UI_Element
 
     public void SetCooldownFill(float _fill)
     {
-        if (m_cooldown != null)
-            m_cooldown.fillAmount = _fill;
+        m_cooldown.fillAmount = _fill;
     }
 
     public void SetIconSprite(Sprite _sprite)
     {
-        if (m_icon != null)
+        if (_sprite != null)
             m_icon.sprite = _sprite;
+        else
+            m_icon.sprite = Resources.Load<Sprite>("DefaultIcon");
     }
 
     #region Parent override functions
