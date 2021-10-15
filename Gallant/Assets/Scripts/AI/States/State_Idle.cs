@@ -10,12 +10,12 @@ public class State_Idle : State
     public override void Start()
     {
         m_myActor.m_currentStateDisplay = "IDLE";
-        m_myActor.legs.Halt();
+        m_myActor.m_legs.Halt();
     }
 
     public override void Update()
     {
-        m_myActor.animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero);
+        m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero);
         m_delay -= Time.deltaTime;
 
         //Check if there is a target to move to.

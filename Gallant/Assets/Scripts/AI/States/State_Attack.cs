@@ -23,8 +23,8 @@ public class State_Attack : State
             m_myActor.SetState(new State_Idle(m_myActor));
         }
 
-        m_myActor.legs.Halt();
-        m_myActor.animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
+        m_myActor.m_legs.Halt();
+        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
     }
 
     public override void Update()

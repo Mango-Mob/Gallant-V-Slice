@@ -11,12 +11,12 @@ public class State_MoveToTarget : State
     {
         m_myActor.m_currentStateDisplay = "MOVING TO TARGET";
 
-        m_myActor.legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
+        m_myActor.m_legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
     }
 
     public override void Update()
     {
-        m_myActor.animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.legs.localVelocity.normalized);
+        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized);
 
         if (m_myActor.m_target == null)
         {
@@ -26,15 +26,18 @@ public class State_MoveToTarget : State
             }
             else
             {
-                m_myActor.legs.SetTargetLocation(m_myActor.transform.position, true);
+                m_myActor.m_legs.SetTargetLocation(m_myActor.transform.position, true);
             }
             return;
         }
-        m_myActor.legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
+        m_myActor.m_legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
 
         if(m_myActor.m_myData.m_states.Contains(Type.ATTACK))
         {
-            foreach (var attack in m_myActor.m_myAttacks)
+            List<Actor_Attack> currentAttacks = new List<Actor_Attack>(m_myActor.m_myAttacks);
+            currentAttacks.Sort(new AttackPrioritySort(m_myActor));
+
+            foreach (var attack in currentAttacks)
             {
                 if (attack.IsWithinRange(m_myActor, LayerMask.NameToLayer("Player")) && attack.IsAvailable())
                 {

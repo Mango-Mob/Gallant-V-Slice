@@ -1,51 +1,51 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using Unity.Collections;
 using UnityEngine;
 
+/****************
+ * Actor : An actor is a collection of game objects in a scene that represents a NPC in the game world.
+ * @author : Michael Jordan
+ * @file : Actor.cs
+ * @year : 2021
+ */
 
 public class Actor : StateMachine
 {
+    [Header("Actor Stats")]
     public EnemyData m_myData;
-
-    public Actor_Legs legs { get; private set; }
-    public Actor_Animator animator { get; private set; }
-
     public string m_currentStateDisplay;
 
-    public GameObject m_target { get; set; } = null;
+    //Accessables:
+    public Actor_Legs m_legs { get; private set; } //The Legs of the actor
+    public Actor_Animator m_animator { get; private set; } //The animator of the actor
+    public GameObject m_target { get; set; } = null; //The current focus of the actor
+    public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
+    public Actor_Attack m_activeAttack { get; set; } = null; //Currently selected attack.
 
-    //Attack Data
-    private List<Collider> m_damagedColliders;
-    public List<Actor_Attack> m_myAttacks { get; private set; }
-    public Actor_Attack m_activeAttack { get; set; }
+    //Attack Data:
+    private List<Collider> m_damagedColliders; //List of all colliders damaged since last clear
     private bool m_IsWeaponLive = false;
 
-
+    //Status:
     private bool m_isDead = false;
     private float m_currentHealth;
 
-    protected GameObject playerObject;
-
+    //Called upon the creation of the class.
     private void Awake()
     {
-        legs = GetComponentInChildren<Actor_Legs>();
-        animator = GetComponentInChildren<Actor_Animator>();
-        playerObject = GameManager.instance.m_player;
         m_damagedColliders = new List<Collider>();
 
+        //Load information from Scriptable Object
         m_currentHealth = m_myData.health;
 
-        if (m_myData.m_states.Contains(State.Type.IDLE))
-            SetState(new State_Idle(this));
-
-        m_activeAttack = null;
+        //Get external scripts:
+        m_legs = GetComponentInChildren<Actor_Legs>();
+        m_animator = GetComponentInChildren<Actor_Animator>();
         if (m_myData.name != "")
         {
             m_myAttacks = new List<Actor_Attack>();
-
+            //Search the system for all Actor_Attack classes under the namespace: "name_Attack"
             foreach (System.Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.name}_Attack")
@@ -54,27 +54,33 @@ public class Actor : StateMachine
                 }
             }
         }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
+        if (m_myData.m_states.Contains(State.Type.IDLE))
+            SetState(new State_Idle(this));
     }
 
     // Update is called once per frame
     void Update()
     {
         if (m_currentState != null)
-            m_currentState.Update();
+            m_currentState.Update(); //If state exists, update it.
     }
 
+    /*********************
+     * OpenAttackWindow : Starts the vfx to indicate the actor is priming an attack.
+     * @author: Michael Jordan
+     */
     public void OpenAttackWindow()
     {
         m_IsWeaponLive = true;
     }
 
-    public void InvokeAttack()
+    /*******************
+    * InvokeAttack : Start checking for collisions based on the current active attack.
+    * @author : Michael Jordan
+    * @param : (bool) if the active attack should be reset to null (default: false).
+    */
+    public void InvokeAttack(bool _resetState = false)
     {
         if(m_activeAttack != null)
         {
@@ -91,8 +97,15 @@ public class Actor : StateMachine
                 }
             }
         }
+
+        if (_resetState)
+            CloseAttackWindow();
     }
 
+    /*********************
+     * CloseAttackWindow : Resets the actor back to before the attack was made.
+     * @author: Michael Jordan
+     */
     public void CloseAttackWindow()
     {
         m_IsWeaponLive = false;
@@ -100,13 +113,21 @@ public class Actor : StateMachine
         m_activeAttack = null;
     }
 
-    public void DealDamage(float damage)
+    /*******************
+    * DealDamage : Reduces the actor's current hp by the damage provided, will ignore any negative damage and will kill the actor when hp = 0.
+    * @author : Michael Jordan
+    * @param : (float) the damage that will be dealt to the actor.
+    */
+    public void DealDamage(float _damage)
     {
         if (!m_isDead)
         {
-            damage = EnemyData.CalculateDamage(damage, m_myData.resistance);
+            _damage = EnemyData.CalculateDamage(_damage, m_myData.resistance);
 
-            m_currentHealth -= damage;
+            if (_damage <= 0)
+                return;
+
+            m_currentHealth -= _damage;
             if (m_currentHealth <= 0)
             {
                 m_isDead = true;
@@ -114,6 +135,7 @@ public class Actor : StateMachine
         }
     }
 
+    //Draws guides only in the editor for debuging.
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
