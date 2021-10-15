@@ -20,8 +20,13 @@ public class UI_WeaponIcon : UI_Element
     }
     public void SetIconSprite(Sprite _sprite)
     {
-        if (m_icon != null)
+        if (_sprite != null)
+        {
             m_icon.sprite = _sprite;
+            m_icon.enabled = true;
+        }
+        else
+            m_icon.enabled = false;
     }
     #region Parent override functions
     public override bool IsContainingVector(Vector2 _pos)
