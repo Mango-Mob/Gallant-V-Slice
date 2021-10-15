@@ -45,40 +45,43 @@ public class Player_Controller : MonoBehaviour
         // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);
 
-        // Left hand pickup
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.WEST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+        if (!playerMovement.m_isStunned) // Make sure player is not stunned
         {
-            DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
-            if (droppedWeapon != null)
-                playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
-        }
+            // Left hand pickup
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.WEST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+            {
+                DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+                if (droppedWeapon != null)
+                    playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
+            }
 
-        // Right hand pickup
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
-        {
-            DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
-            if (droppedWeapon != null)
-                playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
-        }
+            // Right hand pickup
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
+            {
+                DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+                if (droppedWeapon != null)
+                    playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
+            }
 
-        // Weapon attacks
-        if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
-        {
-            playerAttack.UseWeapon(Hand.RIGHT);
-        }
-        if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
-        {
-            playerAttack.UseWeapon(Hand.LEFT);
-        }
+            // Weapon attacks
+            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
+            {
+                playerAttack.UseWeapon(Hand.RIGHT);
+            }
+            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
+            {
+                playerAttack.UseWeapon(Hand.LEFT);
+            }
 
-        // Ability attacks
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.E))
-        {
-            playerAbilities.UseAbility(Hand.RIGHT);
-        }
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.LT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Q))
-        {
-            playerAbilities.UseAbility(Hand.LEFT);
+            // Ability attacks
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.E))
+            {
+                playerAbilities.UseAbility(Hand.RIGHT);
+            }
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Q))
+            {
+                playerAbilities.UseAbility(Hand.LEFT);
+            }
         }
 
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.UP, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Y))
@@ -99,6 +102,14 @@ public class Player_Controller : MonoBehaviour
         {
             playerResources.ChangeAdrenaline(0.2f);
         }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
+        {
+            StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+        }
+    }
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    {
+        playerMovement.StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
     }
     private Vector2 GetPlayerMovementVector()
     {
@@ -145,5 +156,11 @@ public class Player_Controller : MonoBehaviour
             }
             return m_lastAimDirection;
         }
+    }
+
+    public void DamagePlayer(float _damage)
+    {
+        Debug.Log($"Player is damaged: {_damage} points of health.");
+        playerResources.ChangeHealth(-_damage);
     }
 }

@@ -31,6 +31,18 @@ public class State_MoveToTarget : State
             return;
         }
         m_myActor.legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
+
+        if(m_myActor.m_myData.m_states.Contains(Type.ATTACK))
+        {
+            foreach (var attack in m_myActor.m_myAttacks)
+            {
+                if (attack.IsWithinRange(m_myActor, LayerMask.NameToLayer("Player")) && attack.IsAvailable())
+                {
+                    m_myActor.SetState(new State_Attack(m_myActor, attack));
+                    return;
+                }
+            }
+        }
     }
 
     public override void End()
