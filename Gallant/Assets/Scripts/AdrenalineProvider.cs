@@ -5,7 +5,7 @@ using UnityEngine;
 public class AdrenalineProvider : MonoBehaviour
 {
     public float m_durationInSeconds = 5;
-    public PlayerMovement m_playerRef;
+    public Player_Movement m_playerRef;
 
     private float m_maxDuration;
 

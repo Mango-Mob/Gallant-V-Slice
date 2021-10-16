@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Remove
 public class Boss_Kick : MonoBehaviour
 {
     public bool isPlayerWithin = false;

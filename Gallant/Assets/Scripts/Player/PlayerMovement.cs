@@ -150,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
             //Create Provider
             AdrenalineProvider provider = GameObject.Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
             provider.m_durationInSeconds = m_shadowDuration;
-            provider.m_playerRef = this;
+            //provider.m_playerRef = this;
 
             if (normalizedMove.magnitude > 0)
             {

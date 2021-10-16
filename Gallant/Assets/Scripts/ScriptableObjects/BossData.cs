@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "bossData", menuName = "Boss Data", order = 1)]
+//Remove
+[CreateAssetMenu(fileName = "bossData", menuName = "Boss Data (DO NOT USE)", order = 1)]
 public class BossData : ScriptableObject
 {
     [Header("Base Stats")]
