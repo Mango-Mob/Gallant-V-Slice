@@ -23,6 +23,7 @@ public class Player_Attack : MonoBehaviour
 {
     private Player_Controller playerController;
     public float m_swingHeight = 1.0f;
+    public LayerMask m_attackTargets;
 
     [Header("Hand Transforms")]
     public Transform m_leftHandTransform;
@@ -164,13 +165,24 @@ public class Player_Attack : MonoBehaviour
 
         // Set new weapon
         m_leftWeapon = m_rightWeapon;
-        m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
 
-        if (m_leftWeaponIcon != null)
-            m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+        if (m_leftWeapon != null)
+        {
+            m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+
+            if (m_leftWeaponIcon != null)
+                m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+            else
+                Debug.LogWarning("Weapon icon not set");
+
+            playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
+        }
         else
-            Debug.LogWarning("Weapon icon not set");
-
+        {
+            if (m_leftWeaponIcon != null)
+                m_leftWeaponIcon.SetIconSprite(null);
+            playerController.playerAbilities.SetAbility(null, Hand.LEFT);
+        }
 
         // Right hand weapon
         // Delete old weapon from player
@@ -178,21 +190,38 @@ public class Player_Attack : MonoBehaviour
 
         // Set new weapon
         m_rightWeapon = _leftHandStore;
-        m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
 
-        if (m_rightWeaponIcon != null)
-            m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+        if (m_rightWeapon != null)
+        {
+            m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+
+            if (m_rightWeaponIcon != null)
+                m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+            else
+                Debug.LogWarning("Weapon icon not set");
+
+            playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
+        }
         else
-            Debug.LogWarning("Weapon icon not set");
+        {
+            if (m_rightWeaponIcon != null)
+                m_rightWeaponIcon.SetIconSprite(null);
+            playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
+        }
     }
 
     #region Melee
     private void WeaponAttack(WeaponData _data)
     {
-        Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize/*,Enemy Layer*/);
+        Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
         foreach (var collider in colliders)
         {
             Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
+            Actor actor = collider.GetComponent<Actor>();
+            if (actor != null)
+            {
+                actor.DealDamage(_data.m_damage);
+            }
         }
     }
 
