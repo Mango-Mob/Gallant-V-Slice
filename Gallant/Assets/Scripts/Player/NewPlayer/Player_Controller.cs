@@ -19,6 +19,7 @@ public class Player_Controller : MonoBehaviour
     public Player_Abilities playerAbilities { private set; get; }
     public Player_Resources playerResources { private set; get; }
     public Player_Pickup playerPickup { private set; get; }
+    public Player_Stats playerStats { private set; get; }
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -35,6 +36,7 @@ public class Player_Controller : MonoBehaviour
         playerAbilities = GetComponent<Player_Abilities>();
         playerResources = GetComponent<Player_Resources>();
         playerPickup = GetComponentInChildren<Player_Pickup>();
+        playerStats = GetComponentInChildren<Player_Stats>();
     }
 
     // Update is called once per frame
@@ -162,6 +164,6 @@ public class Player_Controller : MonoBehaviour
     public void DamagePlayer(float _damage)
     {
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-_damage);
+        playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
     }
 }
