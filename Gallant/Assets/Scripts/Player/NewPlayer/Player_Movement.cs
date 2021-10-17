@@ -26,6 +26,10 @@ public class Player_Movement : MonoBehaviour
 
     private bool m_grounded = true;
     private float m_yVelocity = 0.0f;
+    public bool m_isStunned { get; private set; } = false;
+    private float m_stunTimer = 0.0f;
+    private Vector3 m_knockbackVelocity = Vector3.zero;
+    public float m_minKnockbackSpeed = 0.5f;
 
     [Header("Dodge Attributes")]
     public float m_shadowDuration = 1.0f;
@@ -50,6 +54,7 @@ public class Player_Movement : MonoBehaviour
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
         RollUpdate();
+        StunUpdate();
     }
 
     private void RollUpdate()
@@ -66,6 +71,33 @@ public class Player_Movement : MonoBehaviour
                 m_isRolling = false;
         }
     }
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    {
+        m_isStunned = true;
+        m_stunTimer = _stunDuration;
+        m_knockbackVelocity = _knockbackVelocity;
+    }
+    private void StunUpdate()
+    {
+        if (m_isStunned) // Check if the player is stunned
+        {
+            m_stunTimer -= Time.fixedDeltaTime;
+            if (m_stunTimer <= 0.0f)
+                m_isStunned = false;
+        }
+
+        if (m_knockbackVelocity.magnitude > m_minKnockbackSpeed) // If knockback speed is low enough
+        {
+            // Apply knockback
+            characterController.Move(m_knockbackVelocity * Time.deltaTime
+                + transform.up * m_yVelocity * Time.deltaTime);
+            m_knockbackVelocity = Vector3.Lerp(m_knockbackVelocity, Vector3.zero, 5 * Time.fixedDeltaTime); // Adjust knockback speed
+        }
+        else
+        {
+            m_knockbackVelocity = Vector3.zero; // Stop knockback
+        }
+    }
     public void StopRoll()
     {
         m_isRolling = false;
@@ -73,7 +105,7 @@ public class Player_Movement : MonoBehaviour
 
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
-        if (m_isRolling) // If the player is rolling prevent other movement
+        if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
             return;
         if (_aim.magnitude != 0) // If the player is trying to aim...
         {
@@ -130,10 +162,6 @@ public class Player_Movement : MonoBehaviour
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);
-    }
     private void RotateToFaceDirection(Vector3 _direction)
     {
         // Rotate player model
@@ -152,5 +180,9 @@ public class Player_Movement : MonoBehaviour
 
         //Slow motion
         GameManager.instance.SlowTime(0.4f, _val);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);
     }
 }

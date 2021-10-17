@@ -28,9 +28,12 @@ public class UI_AbilityIcon : UI_Element
     public void SetIconSprite(Sprite _sprite)
     {
         if (_sprite != null)
+        {
             m_icon.sprite = _sprite;
+            m_icon.enabled = true;
+        }
         else
-            m_icon.sprite = Resources.Load<Sprite>("DefaultIcon");
+            m_icon.enabled = false;
     }
 
     #region Parent override functions

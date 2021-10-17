@@ -186,20 +186,9 @@ public class Player_Attack : MonoBehaviour
             Debug.LogWarning("Weapon icon not set");
     }
 
-    #region Sword
+    #region Melee
     private void WeaponAttack(WeaponData _data)
     {
-        //switch (_hand)
-        //{
-        //    case Hand.LEFT:
-        //        break;
-        //    case Hand.RIGHT:
-        //        break;
-        //    default:
-        //        Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
-        //        return;
-        //}
-
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize/*,Enemy Layer*/);
         foreach (var collider in colliders)
         {
@@ -223,11 +212,6 @@ public class Player_Attack : MonoBehaviour
             }
         }
     }
-
-    #endregion
-
-    #region Shield
-
     #endregion
 
     #region Boomerang

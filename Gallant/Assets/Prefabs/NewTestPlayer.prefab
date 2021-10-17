@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9019408069624615024}
   - component: {fileID: 1622062156034978552}
   - component: {fileID: 8170640709309492195}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PickUpDetector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,7 +83,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7925464788017200438}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LeftWeaponHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -115,7 +115,7 @@ GameObject:
   - component: {fileID: 3122777057003787251}
   - component: {fileID: 3122777057003787248}
   - component: {fileID: 3122777057003787249}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TempModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 3122777057571505332}
   - component: {fileID: 3122777057571505333}
   - component: {fileID: 3122777057571505334}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -316,7 +316,7 @@ GameObject:
   - component: {fileID: 3122777058140226028}
   - component: {fileID: 3122777058140226029}
   - component: {fileID: 3122777058140226027}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: NewTestPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,9 +364,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModel: {fileID: 3122777057003787262}
-  m_gravityMult: 1
+  m_gravityMult: 0.5
   m_moveSpeed: 5
-  m_rollSpeed: 12
+  m_rollSpeed: 20
+  m_minKnockbackSpeed: 0.5
   m_shadowDuration: 1
   m_adrenShadowPrefab: {fileID: 3504135104941125864, guid: 92efe45cf760c7f4e91eab82e06a0fef,
     type: 3}
@@ -383,6 +384,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5ecdf610f28d894dbdc2020aee86fb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_leftAbility: {fileID: 0}
+  m_rightAbility: {fileID: 0}
+  m_leftAbilityIcon: {fileID: 0}
+  m_rightAbilityIcon: {fileID: 0}
 --- !u!114 &3122777058140226028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,8 +400,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3b47cd4124a04b9735458379b8b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_swingHeight: 1
   m_leftHandTransform: {fileID: 7925464788017200438}
+  m_leftWeapon: {fileID: 0}
   m_rightHandTransform: {fileID: 2477371212452143754}
+  m_rightWeapon: {fileID: 0}
+  m_leftWeaponIcon: {fileID: 0}
+  m_rightWeaponIcon: {fileID: 0}
 --- !u!114 &3122777058140226029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,7 +419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd7a971c85665184a9e4fb75abc6eadf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_staminaRechargeDelay: 0.8
+  healthBar: {fileID: 0}
+  adrenalineOrbs: {fileID: 0}
   m_rechargeRate: 40
   m_adrenalineDecayRate: 3
 --- !u!143 &3122777058140226027
@@ -439,7 +450,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2477371212452143754}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RightWeaponHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
