@@ -19,6 +19,7 @@ public class Player_Controller : MonoBehaviour
     public Player_Abilities playerAbilities { private set; get; }
     public Player_Resources playerResources { private set; get; }
     public Player_Pickup playerPickup { private set; get; }
+    public Player_Stats playerStats { private set; get; }
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -35,11 +36,16 @@ public class Player_Controller : MonoBehaviour
         playerAbilities = GetComponent<Player_Abilities>();
         playerResources = GetComponent<Player_Resources>();
         playerPickup = GetComponentInChildren<Player_Pickup>();
+        playerStats = GetComponentInChildren<Player_Stats>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Set animation speeds based on stats
+        animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
+        animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
+
         // Set gamepad being used
         int gamepadID = InputManager.instance.GetAnyGamePad();
 
@@ -107,6 +113,20 @@ public class Player_Controller : MonoBehaviour
         {
             StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
         }
+
+        // Item debug
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_SEVEN))
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_EIGHT))
+        {
+            playerStats.AddEffect(ItemEffect.ATTACK_SPEED);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_NINE))
+        {
+            playerStats.AddEffect(ItemEffect.MOVE_SPEED);
+        }
     }
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
     {
@@ -162,6 +182,6 @@ public class Player_Controller : MonoBehaviour
     public void DamagePlayer(float _damage)
     {
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-_damage);
+        playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
     }
 }

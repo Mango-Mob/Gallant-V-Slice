@@ -18,9 +18,9 @@ public class WeaponData : ScriptableObject
     public float hitCenterOffset = 0.75f;
     public float hitSize = 1.0f;
     public AbilityData abilityData;
+    public ItemEffect itemEffect; // Only for weapons with passives.
 
     [Header("Base Weapon Stats")]
     public int m_damage = 10; 
-    public int m_speed = 5;
-    public int m_effectiveness = 30; // For shield block %
+    public float m_speed = 1;
 }

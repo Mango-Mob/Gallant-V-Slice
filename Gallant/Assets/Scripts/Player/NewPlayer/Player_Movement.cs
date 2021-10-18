@@ -124,7 +124,8 @@ public class Player_Movement : MonoBehaviour
             RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
         }
 
-        float speed = m_moveSpeed; // Player movement speed
+        float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
+        playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
 
         Vector3 normalizedMove = Vector3.zero;
         Vector3 movement = Vector3.zero;
@@ -144,6 +145,8 @@ public class Player_Movement : MonoBehaviour
         }
         if (_roll) // If roll input is triggered
         {
+            playerController.animator.SetTrigger("Roll");
+
             // Set roll to true
             m_isRolling = true;
 

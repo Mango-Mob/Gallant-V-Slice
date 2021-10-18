@@ -21,7 +21,7 @@ public enum Hand
  */
 public class Player_Attack : MonoBehaviour
 {
-    private Player_Controller playerController;
+    public Player_Controller playerController { private set; get; }
     public float m_swingHeight = 1.0f;
     public LayerMask m_attackTargets;
 
@@ -106,7 +106,10 @@ public class Player_Attack : MonoBehaviour
             case Hand.LEFT:
                 // Drop old weapon
                 if (m_leftWeapon != null)
+                {
                     DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_leftWeapon);
+                    playerController.playerStats.RemoveEffect(m_leftWeapon.itemEffect); // Remove any passive effect the weapon had
+                }
 
                 // Delete old weapon from player
                 Destroy(m_leftWeaponObject);
@@ -114,6 +117,7 @@ public class Player_Attack : MonoBehaviour
                 // Set new weapon
                 m_leftWeapon = _weapon.m_weaponData;
                 m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+                playerController.playerStats.AddEffect(m_leftWeapon.itemEffect); // Add passive effect the weapon has
 
                 if (m_leftWeaponIcon != null)
                     m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
@@ -126,7 +130,10 @@ public class Player_Attack : MonoBehaviour
             case Hand.RIGHT:
                 // Drop old weapon
                 if (m_rightWeapon != null)
+                {
                     DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_rightWeapon);
+                    playerController.playerStats.RemoveEffect(m_rightWeapon.itemEffect); // Remove any passive effect the weapon had
+                }
 
                 // Delete old weapon from player
                 Destroy(m_rightWeaponObject);
@@ -134,6 +141,7 @@ public class Player_Attack : MonoBehaviour
                 // Set new weapon
                 m_rightWeapon = _weapon.m_weaponData;
                 m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+                playerController.playerStats.AddEffect(m_rightWeapon.itemEffect); // Add passive effect the weapon has
 
                 if (m_rightWeaponIcon != null)
                     m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
