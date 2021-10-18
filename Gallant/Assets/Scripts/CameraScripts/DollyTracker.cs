@@ -22,8 +22,6 @@ public class DollyTracker : MonoBehaviour
     {
         if(m_player != null)
         {
-            m_player.GetComponent<PlayerController>().m_cameraController.m_camera.m_XAxis.Value = x;
-            m_player.GetComponent<PlayerController>().m_cameraController.m_camera.m_YAxis.Value = y;
 
             Quaternion rotation = m_myTrack.transform.rotation;
             Vector3 A = rotation * (m_myTrack.m_Waypoints[0].position) + m_myTrack.transform.position;
@@ -44,7 +42,6 @@ public class DollyTracker : MonoBehaviour
         {
             m_player = other.gameObject;
 
-            m_myCamera.Priority = m_player.GetComponent<PlayerController>().m_cameraController.m_camera.Priority + 1;
         }
     }
     private void OnTriggerExit(Collider other)
