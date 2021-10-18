@@ -12,6 +12,7 @@ public class BoomerangProjectile : MonoBehaviour
 {
     // The model transform of the boomerang to animate it
     public Transform m_modelTransform;
+    public GameObject m_weaponModel;
     public GameObject[] m_effects;
 
     private Player_Attack m_projectileUser; // The user of the projectile so the boomerang has a target to return to
@@ -33,7 +34,15 @@ public class BoomerangProjectile : MonoBehaviour
 
         if (m_weaponData != null)
         {
-            m_boomerangSpeed = 5.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
+            m_weaponModel = Instantiate(m_weaponData.weaponModelPrefab, m_modelTransform);
+
+            if (m_weaponModel.transform.GetChild(0) != null)
+            {
+                m_weaponModel.transform.GetChild(0).localPosition = Vector3.zero;
+                m_weaponModel.transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, 0);
+            }
+
+            m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
             m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
             m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
