@@ -11,6 +11,7 @@ using UnityEngine;
 public class Player_Controller : MonoBehaviour
 {
     private Camera playerCamera;
+    public Animator animator;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -64,11 +65,11 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Weapon attacks
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
             {
                 playerAttack.UseWeapon(Hand.RIGHT);
             }
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
             {
                 playerAttack.UseWeapon(Hand.LEFT);
             }

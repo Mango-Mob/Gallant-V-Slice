@@ -21,12 +21,12 @@ public class State_Roam : State
             targetPos = currPos + Random.insideUnitSphere * distance;
         } while (!NavMesh.SamplePosition(targetPos, out hit, 1.0f, 1));
 
-        m_myActor.legs.SetTargetLocation(hit.position, true);
+        m_myActor.m_legs.SetTargetLocation(hit.position, true);
     }
 
     public override void Update()
     {
-        m_myActor.animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.legs.localVelocity.normalized);
+        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized);
 
         //Check if target exists, then transition to it.
         if (m_myActor.m_target != null && m_myActor.m_myData.m_states.Contains(Type.MOVE_TO_TARGET))
@@ -35,7 +35,7 @@ public class State_Roam : State
             return;
         }
 
-        if (m_myActor.legs.IsResting())
+        if (m_myActor.m_legs.IsResting())
         {
             if(m_myActor.m_myData.m_states.Contains(Type.IDLE))
             {

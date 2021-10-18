@@ -40,6 +40,7 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
     }
 
@@ -106,7 +107,14 @@ public class Player_Movement : MonoBehaviour
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
         if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
+        {
+            playerController.animator.SetBool("IsMoving", false);
+            playerController.animator.SetFloat("TempMoveMag", 0);
             return;
+        }
+        playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
+        playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
+
         if (_aim.magnitude != 0) // If the player is trying to aim...
         {
             // Make player model face aim direction
