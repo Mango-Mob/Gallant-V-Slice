@@ -16,6 +16,7 @@ public class Player_Resources : MonoBehaviour
     public float m_adrenalineDecayRate = 3.0f;
     public bool m_dead { get; private set; } = false;
 
+
     // Start is called before the first frame update
     void Start()
     {
