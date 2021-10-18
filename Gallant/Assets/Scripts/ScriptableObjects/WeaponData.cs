@@ -22,5 +22,5 @@ public class WeaponData : ScriptableObject
 
     [Header("Base Weapon Stats")]
     public int m_damage = 10; 
-    public int m_speed = 5;
+    public float m_speed = 1;
 }

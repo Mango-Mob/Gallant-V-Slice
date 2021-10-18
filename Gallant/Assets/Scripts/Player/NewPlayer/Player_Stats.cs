@@ -106,6 +106,7 @@ public class Player_Stats : MonoBehaviour
                     Debug.LogWarning(effect.Key + " has no effect on stats.");
                     break;
             }
+            Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
         }
     }
 }
