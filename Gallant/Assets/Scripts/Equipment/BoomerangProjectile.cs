@@ -36,11 +36,17 @@ public class BoomerangProjectile : MonoBehaviour
         {
             m_weaponModel = Instantiate(m_weaponData.weaponModelPrefab, m_modelTransform);
 
-            if (m_weaponModel.transform.GetChild(0) != null)
+            GameObject model = m_weaponModel.transform.GetChild(0).gameObject;
+            if (model != null)
             {
-                m_weaponModel.transform.GetChild(0).localPosition = Vector3.zero;
-                m_weaponModel.transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, 0);
+                model.transform.parent = m_modelTransform;
+                Destroy(m_weaponModel);
+                m_weaponModel = model;
+
+                m_weaponModel.transform.localPosition = Vector3.zero;
+                m_weaponModel.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
+
 
             m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
             m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
@@ -55,7 +61,7 @@ public class BoomerangProjectile : MonoBehaviour
         m_lifeTimer += Time.fixedDeltaTime;
 
         // Rotate model as it moves
-        m_modelTransform.Rotate(new Vector3((m_hand == Hand.LEFT ? 1.0f : -1.0f) * m_boomerangRotateSpeed * Time.fixedDeltaTime, 0, 0));
+        m_modelTransform.Rotate(new Vector3(0, (m_hand == Hand.LEFT ? 1.0f : -1.0f) * m_boomerangRotateSpeed * Time.fixedDeltaTime, 0));
 
         if (m_throwDuration > m_lifeTimer) // If projectile is moving away from player
         {
