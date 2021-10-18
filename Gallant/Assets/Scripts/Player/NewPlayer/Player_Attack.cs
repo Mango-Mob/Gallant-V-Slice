@@ -21,7 +21,7 @@ public enum Hand
  */
 public class Player_Attack : MonoBehaviour
 {
-    private Player_Controller playerController;
+    public Player_Controller playerController { private set; get; }
     public float m_swingHeight = 1.0f;
     public LayerMask m_attackTargets;
 

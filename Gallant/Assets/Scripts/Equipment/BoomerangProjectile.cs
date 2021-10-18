@@ -33,8 +33,9 @@ public class BoomerangProjectile : MonoBehaviour
 
         if (m_weaponData != null)
         {
-            m_boomerangSpeed = m_weaponData.m_speed;
-            m_throwDuration = 10.0f / m_boomerangSpeed;
+            m_boomerangSpeed = 5.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
+            m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
+            m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
     }
 

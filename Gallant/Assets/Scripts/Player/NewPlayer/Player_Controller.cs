@@ -42,6 +42,10 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Set animation speeds based on stats
+        animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
+        animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
+
         // Set gamepad being used
         int gamepadID = InputManager.instance.GetAnyGamePad();
 
@@ -108,6 +112,20 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
             StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+        }
+
+        // Item debug
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_SEVEN))
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_EIGHT))
+        {
+            playerStats.AddEffect(ItemEffect.ATTACK_SPEED);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_NINE))
+        {
+            playerStats.AddEffect(ItemEffect.MOVE_SPEED);
         }
     }
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
