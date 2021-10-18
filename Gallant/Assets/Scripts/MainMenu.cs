@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Cinemachine;
 
+//Update please
 public class MainMenu : MonoBehaviour
 {
     public string m_sceneName = "MainGameScene";
@@ -30,7 +31,7 @@ public class MainMenu : MonoBehaviour
         m_playButton.Select();
         HUDManager.instance.gameObject.SetActive(false);
         player = GameObject.FindGameObjectWithTag("Player");
-        player.GetComponent<PlayerController>().m_functionalityEnabled = false;
+        
         m_tutorialText.SetActive(false);
         m_masterVolume.value = AudioManager.instance.volumes[0];
         m_soundEffectVolume.value = AudioManager.instance.volumes[1];
@@ -73,7 +74,7 @@ public class MainMenu : MonoBehaviour
         m_tutorialText.SetActive(true);
         doors.SetBool("IsOpen", true);
         vCamera.Priority = 0;
-        player.GetComponent<PlayerController>().m_functionalityEnabled = true;
+        
         Destroy(gameObject);
 
         //LevelLoader.instance.LoadNewLevel(m_sceneName);

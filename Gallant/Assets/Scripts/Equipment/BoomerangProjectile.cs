@@ -12,6 +12,7 @@ public class BoomerangProjectile : MonoBehaviour
 {
     // The model transform of the boomerang to animate it
     public Transform m_modelTransform;
+    public GameObject[] m_effects;
 
     private Player_Attack m_projectileUser; // The user of the projectile so the boomerang has a target to return to
     public WeaponData m_weaponData;
@@ -28,12 +29,13 @@ public class BoomerangProjectile : MonoBehaviour
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
+        GetComponent<SphereCollider>().radius = m_weaponData.hitSize;
 
         if (m_weaponData != null)
         {
-            m_boomerangSpeed = m_weaponData.m_speed;
-            m_throwDuration = 10.0f / m_boomerangSpeed;
-
+            m_boomerangSpeed = 5.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
+            m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
+            m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
     }
 
@@ -64,7 +66,27 @@ public class BoomerangProjectile : MonoBehaviour
             {
                 // "Catch" the projectile when close enough to player.
                 m_projectileUser.CatchBoomerang(m_hand);
+
+                foreach (var effect in m_effects)
+                {
+                    effect.transform.SetParent(null);
+                    if (effect.GetComponent<VFXTimerScript>() != null)
+                        effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
+                }
+
                 Destroy(gameObject);
+            }
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+        {
+            Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
+            Actor actor = other.GetComponent<Actor>();
+            if (actor != null)
+            {
+                actor.DealDamage(m_weaponData.m_damage);
             }
         }
     }

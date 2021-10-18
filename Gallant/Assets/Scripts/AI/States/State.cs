@@ -15,5 +15,7 @@ public abstract class State
 
     public abstract void Update();
 
+    //public abstract bool TransitionCondition();
+
     public abstract void End();
 }
