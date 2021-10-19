@@ -19,6 +19,8 @@ public class Actor : StateMachine
     //Accessables:
     public Actor_Legs m_legs { get; private set; } //The Legs of the actor
     public Actor_Animator m_animator { get; private set; } //The animator of the actor
+    public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dumie
+
     public GameObject m_target { get; set; } = null; //The current focus of the actor
     public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
     public Actor_Attack m_activeAttack { get; set; } = null; //Currently selected attack.
@@ -42,6 +44,10 @@ public class Actor : StateMachine
         //Get external scripts:
         m_legs = GetComponentInChildren<Actor_Legs>();
         m_animator = GetComponentInChildren<Actor_Animator>();
+        m_tracker = GetComponentInChildren<Actor_Tracker>();
+
+        m_tracker?.RecordResistance(m_myData.resistance);
+
         if (m_myData.name != "")
         {
             m_myAttacks = new List<Actor_Attack>();
@@ -62,6 +68,9 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
+        if (InputManager.instance.IsKeyDown(KeyType.K))
+            DealDamage(5.0f);
+
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
     }
@@ -128,7 +137,12 @@ public class Actor : StateMachine
                 return;
 
             m_currentHealth -= _damage;
-            if (m_currentHealth <= 0)
+            m_tracker?.RecordDamage(_damage);
+
+            if(m_tracker != null && m_tracker.m_enableAutoHealing)
+                m_currentHealth = m_myData.health;
+
+            if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
             }
