@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_OrbResource : UI_Element
+public class UI_Orb : UI_Element
 {
-    [SerializeField] private UI_Orb orb1;
-    [SerializeField] private UI_Orb orb2;
-    [SerializeField] private UI_Orb orb3;
+    [SerializeField] private Image orbImage;
+    [SerializeField] private Image orbPulse;
+    [SerializeField] private Image orbFlicker;
 
-    [Range(0.0f, 3.0f)]
-    [SerializeField] private float m_value;
+    private float m_value = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -21,13 +20,17 @@ public class UI_OrbResource : UI_Element
     // Update is called once per frame
     void Update()
     {
+
     }
+
     public void SetValue(float _value)
     {
-        m_value = Mathf.Clamp(_value, 0.0f, 3.0f);
-        orb1.SetValue(m_value);
-        orb2.SetValue(m_value - 1.0f);
-        orb3.SetValue(m_value - 2.0f);
+        if (m_value < 1.0f && _value >= 1.0f)
+            orbFlicker.GetComponent<Animator>().SetTrigger("Flicker");
+
+        m_value = _value;
+        orbImage.color = new Color(1, 1, 1, m_value);
+        orbPulse.gameObject.SetActive(m_value >= 1);
     }
 
     #region Parent override functions
