@@ -68,9 +68,6 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.instance.IsKeyDown(KeyType.K))
-            DealDamage(5.0f);
-
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
     }
