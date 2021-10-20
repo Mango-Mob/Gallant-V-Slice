@@ -12,8 +12,7 @@ public class Player_Resources : MonoBehaviour
     public UI_Bar healthBar;
     public UI_OrbResource adrenalineOrbs;
 
-    public float m_rechargeRate = 40.0f;
-    public float m_adrenalineDecayRate = 3.0f;
+    public float m_adrenalineHeal = 40.0f;
     public bool m_dead { get; private set; } = false;
 
 
@@ -35,27 +34,11 @@ public class Player_Resources : MonoBehaviour
 
     public void ChangeHealth(float _amount)
     {
-        if (_amount > 0) // Gain
+        m_health += _amount;
+        if (m_health <= 0.0f && !m_dead)
         {
-            //// Remove adrenaline as price for healing
-            //m_adrenaline -= _amount;
-
-            //if (m_adrenaline < 0)
-            //    m_health += _amount + m_adrenaline;
-            //else
-            //    m_health += _amount;
-
-
-            //m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
-        }
-        else // Drain
-        {
-            m_health += _amount;
-            if (m_health <= 0.0f && !m_dead)
-            {
-                // Kill
-                m_dead = true;
-            }
+            // Kill
+            m_dead = true;
         }
         m_health = Mathf.Clamp(m_health, 0.0f, m_maxHealth);
     }
@@ -72,5 +55,14 @@ public class Player_Resources : MonoBehaviour
 
         }
         m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
+    }
+
+    public void UseAdrenaline()
+    {
+        if (m_adrenaline >= 1.0f)
+        {
+            ChangeHealth(m_adrenalineHeal);
+            ChangeAdrenaline(-1.0f);
+        }
     }
 }
