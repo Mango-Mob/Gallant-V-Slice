@@ -62,8 +62,6 @@ public class Actor : StateMachine
                 }
             }
         }
-
-        
     }
 
     // Called at the start of the first update call
