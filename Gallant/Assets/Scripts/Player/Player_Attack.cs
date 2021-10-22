@@ -13,11 +13,11 @@ public enum Hand
     LEFT,
     RIGHT,
 }
-/*
- * Player_Attack by William de Beer
- * File: Player_Attack
- * Description:
- *		Contains logic for different player weapon attacks
+/****************
+ * Player_Attack: Contains logic for different player weapon attacks
+ * @author : William de Beer
+ * @file : Player_Attack.cs
+ * @year : 2021
  */
 public class Player_Attack : MonoBehaviour
 {
@@ -48,6 +48,11 @@ public class Player_Attack : MonoBehaviour
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("BoomerangProjectile");
     }
 
+    /*******************
+     * UseWeapon : Use a weapon's functionality
+     * @author : William de Beer
+     * @param : (Hand) The hand of the weapon to be used
+     */
     public void UseWeapon(Hand _hand)
     {
         WeaponData thisData;
@@ -99,6 +104,11 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
     }
+    /*******************
+     * PickUpWeapon : Pick up a weapon and add it to hand.
+     * @author : William de Beer
+     * @param : (DroppedWeapon) The weapon to be picked up, (Hand) Hand to be given to.
+     */
     public void PickUpWeapon(DroppedWeapon _weapon, Hand _hand)
     {
         switch (_hand)
@@ -159,6 +169,10 @@ public class Player_Attack : MonoBehaviour
         Destroy(_weapon.gameObject);
     }
 
+    /*******************
+     * SwapWeapons : Swap the weapons between hands.
+     * @author : William de Beer
+     */
     public void SwapWeapons()
     {
         if (m_leftWeaponInUse || m_rightWeaponInUse)
@@ -219,6 +233,11 @@ public class Player_Attack : MonoBehaviour
     }
 
     #region Melee
+    /*******************
+     * WeaponAttack : Create sphere attack detection and damages enemies in it.
+     * @author : William de Beer
+     * @param : (WeaponData) 
+     */
     private void WeaponAttack(WeaponData _data)
     {
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
@@ -252,6 +271,11 @@ public class Player_Attack : MonoBehaviour
     #endregion
 
     #region Boomerang
+    /*******************
+     * ThrowBoomerang : Launches projectile from specified hand.
+     * @author : William de Beer
+     * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
+     */
     private void ThrowBoomerang(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         // Create projectile
@@ -273,6 +297,11 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
     }
+    /*******************
+     * CatchBoomerang : Returns boomerang to hand
+     * @author : William de Beer
+     * @param : (Hand) 
+     */
     public void CatchBoomerang(Hand _hand)
     {
         // Set activation booleans

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * WeaponData by William de Beer
- * File: WeaponData.cs
- * Description:
- *		ScriptableObject which contain weapon stats.
+/****************
+ * WeaponData: Scriptable object containing data for weapon
+ * @author : William de Beer
+ * @file : WeaponData.cs
+ * @year : 2021
  */
 [CreateAssetMenu(fileName = "weaponData", menuName = "Weapon Data", order = 1)]
 public class WeaponData : ScriptableObject

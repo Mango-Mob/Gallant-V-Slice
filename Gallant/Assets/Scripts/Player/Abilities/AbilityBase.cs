@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/****************
+ * AbilityBase: Base class for ability
+ * @author : William de Beer
+ * @file : AbilityBase.cs
+ * @year : 2021
+ */
 public abstract class AbilityBase : MonoBehaviour
 {
     [Header("Ability Information")]
