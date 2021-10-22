@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Player_Movement by William de Beer
- * File: Player_Movement.cs
- * Description:
- *		Contains logic for player movement such as running and dodging.
+/****************
+ * Player_Movement: Contains logic for player movement such as running and dodging.
+ * @author : William de Beer
+ * @file : Player_Movement.cs
+ * @year : 2021
  */
 public class Player_Movement : MonoBehaviour
 {
@@ -58,6 +58,10 @@ public class Player_Movement : MonoBehaviour
         StunUpdate();
     }
 
+    /*******************
+     * RollUpdate : Updates rolling movement if active.
+     * @author : William de Beer
+     */
     private void RollUpdate()
     {
         if (m_isRolling) // Check if the player is supposed to be rolling
@@ -72,12 +76,21 @@ public class Player_Movement : MonoBehaviour
                 m_isRolling = false;
         }
     }
+    /*******************
+     * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
+     * @author : William de Beer
+     * @param : (float) Duration of the stun, (Vector3) Knockback velocity
+     */
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
     {
         m_isStunned = true;
         m_stunTimer = _stunDuration;
         m_knockbackVelocity = _knockbackVelocity;
     }
+    /*******************
+     * StunUpdate : Updates the players state of being stunned.
+     * @author : William de Beer
+     */
     private void StunUpdate()
     {
         if (m_isStunned) // Check if the player is stunned
@@ -103,7 +116,12 @@ public class Player_Movement : MonoBehaviour
     {
         m_isRolling = false;
     }
-
+    /*******************
+     * Move : Contains logic to move the player, aiming and starting roll.
+     * @author : William de Beer
+     * @param : (Vector2) Movement direction, (Vector2) Aiming direction, (bool) If roll should start
+     * @return : (type) 
+     */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
         if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
@@ -173,6 +191,12 @@ public class Player_Movement : MonoBehaviour
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
+
+    /*******************
+     * RotateToFaceDirection : Rotates the player to face specified direction
+     * @author : William de Beer
+     * @param : (Vector3) Specified direction
+     */
     private void RotateToFaceDirection(Vector3 _direction)
     {
         // Rotate player model
@@ -183,9 +207,15 @@ public class Player_Movement : MonoBehaviour
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
         }
     }
+
+    /*******************
+     * GiveAdrenaline : Grants the player adrenaline when they perform a successful dodge.
+     * @author : William de Beer
+     * @param : (float) Value to add
+     */
     public void GiveAdrenaline(float _val)
     {
-        playerController.playerResources.ChangeAdrenaline(100 * _val);
+        playerController.playerResources.ChangeAdrenaline(_val);
 
         GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 

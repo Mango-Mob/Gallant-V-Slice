@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/****************
+ * UI_Orb: An orb to display one third of adrenaline resources.
+ * @author : William de Beer
+ * @file : UI_Orb.cs
+ * @year : 2021
+ */
 public class UI_Orb : UI_Element
 {
     [SerializeField] private Image orbImage;
@@ -11,18 +17,11 @@ public class UI_Orb : UI_Element
 
     private float m_value = 0.0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    /*******************
+     * SetValue : Sets the value of resource fill
+     * @author : William de Beer
+     * @param : (float) Value to be set
+     */
     public void SetValue(float _value)
     {
         if (m_value < 1.0f && _value >= 1.0f)

@@ -9,6 +9,12 @@ public enum ItemEffect
     ATTACK_SPEED,
     DAMAGE_RESISTANCE,
 }
+/****************
+ * Player_Stats: Manages the stats of the player including effects
+ * @author : William de Beer
+ * @file : Player_Stats.cs
+ * @year : 2021
+ */
 public class Player_Stats : MonoBehaviour
 {
     public float m_movementSpeed = 100.0f;
@@ -18,24 +24,17 @@ public class Player_Stats : MonoBehaviour
 
     public Dictionary<ItemEffect, int> m_effects = new Dictionary<ItemEffect, int>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /*******************
+     * AddEffect : Adds an effect to the dictionary
+     * @author : William de Beer
+     * @param : (ItemEffect) Effect to be added
+     */
     public void AddEffect(ItemEffect _effect)
     {
         bool foundEffect = false;
-        foreach (var effect in m_effects)
+        foreach (var effect in m_effects) // Check if effect is already in dictionary
         {
-            if (effect.Key == _effect)
+            if (effect.Key == _effect) // Increment if matches
             {
                 foundEffect = true;
                 m_effects[_effect] += 1;
@@ -49,13 +48,18 @@ public class Player_Stats : MonoBehaviour
 
         EvaluateEffects();
     }
+    /*******************
+     * RemoveEffect : Removes an effect to the dictionary
+     * @author : William de Beer
+     * @param : (ItemEffect) Effect to be removed
+     */
     public void RemoveEffect(ItemEffect _effect)
     {
         bool foundEffect = false;
         List<ItemEffect> removeList = new List<ItemEffect>();
-        foreach (var effect in m_effects)
+        foreach (var effect in m_effects) // Check if effect is already in dictionary
         {
-            if (effect.Key == _effect)
+            if (effect.Key == _effect)//  Decrement if matches
             {
                 foundEffect = true;
                 m_effects[_effect] -= 1;
@@ -77,6 +81,11 @@ public class Player_Stats : MonoBehaviour
 
         EvaluateEffects();
     }
+
+    /*******************
+     * EvaluateEffects : Calculates item effect power
+     * @author : William de Beer
+     */
     private void EvaluateEffects()
     {
         foreach (var effect in m_effects)

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * DroppedWeapon by William de Beer
- * File: DroppedWeapon.cs
- * Description:
- *		A dropped weapon which contains information of a weapon and can be picked up by the player.
+/****************
+ * DroppedWeapon: A dropped weapon which contains information of a weapon and can be picked up by the player.
+ * @author : William de Beer
+ * @file : DroppedWeapon.cs
+ * @year : 2021
  */
 public class DroppedWeapon : MonoBehaviour
 {
@@ -33,6 +33,13 @@ public class DroppedWeapon : MonoBehaviour
         m_defaultModel.transform.Rotate(new Vector3(0, 30, 0) * Time.fixedDeltaTime);
         m_defaultModel.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Mathf.Sin(Time.timeSinceLevelLoad * 1.0f) * 30.0f);
     }
+
+    /*******************
+     * CreateDroppedWeapon : Create a weapon drop containing weapon data
+     * @author : William de Beer
+     * @param : (Vector3) Spawn position, (WeaponData) Weapon data
+     * @return : (GameObject) Reference to created dropped weapon.
+     */
     public static GameObject CreateDroppedWeapon(Vector3 _position, WeaponData _data) 
     {
         GameObject prefab = Resources.Load<GameObject>("BaseWeaponDrop"); // Get prefab from resources.

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Player_Controller by William de Beer
- * File: Player_Controller.cs
- * Description:
- *		Controls interactions between different player components and handles player input.
+/****************
+ * Player_Controller: Controls interactions between different player components and handles player input.
+ * @author : William de Beer
+ * @file : Player_Controller.cs
+ * @year : 2021
  */
 public class Player_Controller : MonoBehaviour
 {
@@ -134,6 +134,11 @@ public class Player_Controller : MonoBehaviour
             playerStats.AddEffect(ItemEffect.MOVE_SPEED);
         }
     }
+    /*******************
+     * StunPlayer : Calls playerMovement StunPlayer function.
+     * @author : William de Beer
+     * @param : (float) Stun duration, (Vector3) Knockback velocity
+     */
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
     {
         playerMovement.StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);

@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/****************
+ * UI_Bar: Filled image that can be used to display a stat.
+ * @author : William de Beer
+ * @file : UI_Bar.cs
+ * @year : 2021
+ */
 public class UI_Bar : UI_Element
 {
     [Range(0.0f, 1.0f)]
@@ -15,6 +20,11 @@ public class UI_Bar : UI_Element
         m_barImage.fillAmount = m_value;
     }
 
+    /*******************
+     * SetValue : Sets the value of resource fill
+     * @author : William de Beer
+     * @param : (float) Value to be set
+     */
     public void SetValue(float _value)
     {
         m_value = Mathf.Clamp(_value, 0.0f, 1.0f);
