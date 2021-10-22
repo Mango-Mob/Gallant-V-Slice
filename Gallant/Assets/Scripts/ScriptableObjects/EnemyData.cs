@@ -19,7 +19,7 @@ public class EnemyData : ScriptableObject
 
     public List<State.Type> m_states = new List<State.Type>();
 
-    public static float CalculateDamage(float inTakeDamage, float resistance)
+    public static float CalculateDamage(float inTakeDamage, float resistance, float penetration = 0)
     {
         return inTakeDamage * (100f / (100f + resistance));
     }

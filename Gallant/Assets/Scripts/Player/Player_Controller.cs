@@ -130,7 +130,7 @@ public class Player_Controller : MonoBehaviour
     }
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
     {
-        playerMovement.StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+        playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
     private Vector2 GetPlayerMovementVector()
     {
