@@ -55,7 +55,7 @@ public class Player_Controller : MonoBehaviour
         if (!playerMovement.m_isStunned) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.WEST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -63,7 +63,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Right hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RIGHT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -89,6 +89,12 @@ public class Player_Controller : MonoBehaviour
             {
                 playerAbilities.UseAbility(Hand.LEFT);
             }
+        }
+
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.V))
+        {
+            // Heal from adrenaline
+            playerResources.UseAdrenaline();
         }
 
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.UP, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Y))
