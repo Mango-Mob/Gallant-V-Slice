@@ -30,10 +30,7 @@ public class KnockUpArea : MonoBehaviour
                 if (player != null)
                 {
                     player.DamagePlayer(damage);
-                    Vector3 newPos = player.transform.position;
-                    newPos.y += 3;
-                    player.transform.position = newPos;
-                    player.StunPlayer(0.5f, Vector3.zero);
+                    player.StunPlayer(1.0f, Vector3.up * 20f);
                 }
             }
             else if (hit.gameObject.layer == LayerMask.NameToLayer("Shadow"))
