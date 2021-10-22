@@ -124,68 +124,70 @@ public class Player_Movement : MonoBehaviour
      */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
-        if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
+        Vector3 movement = Vector3.zero;
+        if (!(m_isRolling || m_isStunned)) // If the player is rolling prevent other movement
         {
             playerController.animator.SetBool("IsMoving", false);
             playerController.animator.SetFloat("TempMoveMag", 0);
-            return;
         }
-        playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
-        playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
-
-        if (_aim.magnitude != 0) // If the player is trying to aim...
+        else
         {
-            // Make player model face aim direction
-            Vector3 normalizedAim = Vector3.zero;
-            normalizedAim += _aim.y * transform.forward;
-            normalizedAim += _aim.x * transform.right;
-            RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
-        }
+            playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
+            playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
 
-        float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
-        playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
-
-        Vector3 normalizedMove = Vector3.zero;
-        Vector3 movement = Vector3.zero;
-
-        if (_move.magnitude != 0)
-        {
-            // Movement
-            normalizedMove += _move.y * transform.forward;
-            normalizedMove += _move.x * transform.right;
-
-            // Apply movement
-            movement = normalizedMove * speed * _deltaTime;
-
-            // If player is not trying to aim, aim in direction of movement.
-            if (_aim.magnitude == 0)
-                RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
-        }
-        if (_roll) // If roll input is triggered
-        {
-            playerController.animator.SetTrigger("Roll");
-
-            // Set roll to true
-            m_isRolling = true;
-
-            // Set roll duration
-            m_rollTimer = m_rollDuration;
-
-            // Create adrenaline provider
-            if (m_adrenShadowPrefab != null)
+            if (_aim.magnitude != 0) // If the player is trying to aim...
             {
-                AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
-                provider.m_durationInSeconds = m_shadowDuration;
-                provider.m_playerRef = this;
+                // Make player model face aim direction
+                Vector3 normalizedAim = Vector3.zero;
+                normalizedAim += _aim.y * transform.forward;
+                normalizedAim += _aim.x * transform.right;
+                RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
 
-            if (normalizedMove.magnitude != 0.0)
+            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
+            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
+
+            Vector3 normalizedMove = Vector3.zero;
+
+            if (_move.magnitude != 0)
             {
-                m_lastMoveDirection = normalizedMove;
+                // Movement
+                normalizedMove += _move.y * transform.forward;
+                normalizedMove += _move.x * transform.right;
+
+                // Apply movement
+                movement = normalizedMove * speed * _deltaTime;
+
+                // If player is not trying to aim, aim in direction of movement.
+                if (_aim.magnitude == 0)
+                    RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
             }
-            else // Set last move direction to forward for rolling if player is not moving.
+            if (_roll) // If roll input is triggered
             {
-                m_lastMoveDirection = playerModel.transform.forward; 
+                playerController.animator.SetTrigger("Roll");
+
+                // Set roll to true
+                m_isRolling = true;
+
+                // Set roll duration
+                m_rollTimer = m_rollDuration;
+
+                // Create adrenaline provider
+                if (m_adrenShadowPrefab != null)
+                {
+                    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
+                    provider.m_durationInSeconds = m_shadowDuration;
+                    provider.m_playerRef = this;
+                }
+
+                if (normalizedMove.magnitude != 0.0)
+                {
+                    m_lastMoveDirection = normalizedMove;
+                }
+                else // Set last move direction to forward for rolling if player is not moving.
+                {
+                    m_lastMoveDirection = playerModel.transform.forward;
+                }
             }
         }
         // Move
