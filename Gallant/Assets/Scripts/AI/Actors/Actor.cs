@@ -63,6 +63,12 @@ public class Actor : StateMachine
             }
         }
 
+        
+    }
+
+    // Called at the start of the first update call
+    private void Start()
+    {
         if (m_myData.m_states.Contains(State.Type.IDLE))
             SetState(new State_Idle(this));
     }
