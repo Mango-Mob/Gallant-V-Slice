@@ -22,6 +22,7 @@ public class Player_Movement : MonoBehaviour
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
+    public bool m_isRollInvincible { get; private set; } = false;
     private Vector3 m_lastMoveDirection;
 
     private bool m_grounded = true;
@@ -35,13 +36,25 @@ public class Player_Movement : MonoBehaviour
     public float m_shadowDuration = 1.0f;
     public GameObject m_adrenShadowPrefab;
     private float m_rollTimer = 0.0f;
-    public float m_rollDuration = 0.2f;
+    private float m_rollDuration = 0.2f;
+
+    private float m_rollCDTimer = 0.0f;
+    public float m_rollCD = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
+
+        playerController.animator.SetFloat("RollSpeed", 12.0f / 8.0f);
+
+        var animControllers = playerController.animator.runtimeAnimatorController;
+        foreach (var clip in animControllers.animationClips)
+        {
+            if (clip.name == "dodge roll event")
+                m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+        }
     }
 
     // Update is called once per frame
@@ -75,17 +88,29 @@ public class Player_Movement : MonoBehaviour
             if (m_rollTimer <= 0.0f)
                 m_isRolling = false;
         }
+        else
+        {
+            if (m_rollCDTimer > 0.0f)
+                m_rollCDTimer -= Time.fixedDeltaTime;
+
+            m_isRollInvincible = false;
+        }
     }
     /*******************
      * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
      * @author : William de Beer
      * @param : (float) Duration of the stun, (Vector3) Knockback velocity
      */
-    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity, bool _bypassInvincibility = false)
     {
+        if (!_bypassInvincibility && m_isRollInvincible)
+            return;
+
         m_isStunned = true;
         m_stunTimer = _stunDuration;
         m_knockbackVelocity = _knockbackVelocity;
+        m_isRolling = false;
+        m_isRollInvincible = false;
     }
     /*******************
      * StunUpdate : Updates the players state of being stunned.
@@ -111,6 +136,12 @@ public class Player_Movement : MonoBehaviour
         {
             m_knockbackVelocity = Vector3.zero; // Stop knockback
         }
+    }
+
+    public void IFramesActive(bool _active)
+    {
+        m_isRollInvincible = _active;
+        Debug.Log("I Frames: " + _active);
     }
     public void StopRoll()
     {
@@ -162,8 +193,10 @@ public class Player_Movement : MonoBehaviour
                 if (_aim.magnitude == 0)
                     RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
             }
-            if (_roll) // If roll input is triggered
+            if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
+                m_rollCDTimer = m_rollCD;
+
                 playerController.animator.SetTrigger("Roll");
 
                 // Set roll to true

@@ -117,7 +117,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+            StunPlayer(0.2f, transform.up * 80.0f);
         }
 
         // Item debug
@@ -190,8 +190,11 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    public void DamagePlayer(float _damage)
+    public void DamagePlayer(float _damage, bool _bypassInvincibility = false)
     {
+        if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
+            return;
+
         Debug.Log($"Player is damaged: {_damage} points of health.");
         playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
     }
