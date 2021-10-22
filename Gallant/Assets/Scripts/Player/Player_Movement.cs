@@ -125,7 +125,7 @@ public class Player_Movement : MonoBehaviour
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
         Vector3 movement = Vector3.zero;
-        if (!(m_isRolling || m_isStunned)) // If the player is rolling prevent other movement
+        if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
         {
             playerController.animator.SetBool("IsMoving", false);
             playerController.animator.SetFloat("TempMoveMag", 0);
