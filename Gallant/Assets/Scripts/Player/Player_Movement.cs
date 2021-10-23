@@ -87,6 +87,11 @@ public class Player_Movement : MonoBehaviour
             m_rollTimer -= Time.fixedDeltaTime;
             if (m_rollTimer <= 0.0f)
                 m_isRolling = false;
+
+            if (playerController.playerAbilities.m_leftAbility != null)
+                playerController.playerAbilities.m_leftAbility.AbilityWhileRolling();
+            if (playerController.playerAbilities.m_rightAbility != null)
+                playerController.playerAbilities.m_rightAbility.AbilityWhileRolling();
         }
         else
         {
@@ -195,6 +200,11 @@ public class Player_Movement : MonoBehaviour
             }
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
+                if (playerController.playerAbilities.m_leftAbility != null)
+                    playerController.playerAbilities.m_leftAbility.AbilityOnRoll();
+                if (playerController.playerAbilities.m_rightAbility != null)
+                    playerController.playerAbilities.m_rightAbility.AbilityOnRoll();
+
                 m_rollCDTimer = m_rollCD;
 
                 playerController.animator.SetTrigger("Roll");

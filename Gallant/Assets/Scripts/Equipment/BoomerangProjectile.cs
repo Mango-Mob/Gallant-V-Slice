@@ -98,11 +98,8 @@ public class BoomerangProjectile : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
             Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
-            Actor actor = other.GetComponent<Actor>();
-            if (actor != null)
-            {
-                actor.DealDamage(m_weaponData.m_damage);
-            }
+
+            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
         }
     }
 

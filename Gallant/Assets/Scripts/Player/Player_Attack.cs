@@ -244,11 +244,26 @@ public class Player_Attack : MonoBehaviour
         foreach (var collider in colliders)
         {
             Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
-            Actor actor = collider.GetComponent<Actor>();
-            if (actor != null)
-            {
-                actor.DealDamage(_data.m_damage);
-            }
+            DamageTarget(collider.gameObject, _data.m_damage);
+        }
+    }
+
+    /*******************
+     * DamageTarget : Apply damage effects to enemy.
+     * @author : William de Beer
+     * @param : (GameObject) Target of attack, (float) Damage to deal
+     */
+    public void DamageTarget(GameObject _target, float _damage)
+    {
+        if (playerController.playerAbilities.m_leftAbility != null)
+            playerController.playerAbilities.m_leftAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+        if (playerController.playerAbilities.m_rightAbility != null)
+            playerController.playerAbilities.m_rightAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+
+        Actor actor = _target.GetComponent<Actor>();
+        if (actor != null)
+        {
+            actor.DealDamage(_damage);
         }
     }
 

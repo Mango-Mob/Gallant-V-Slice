@@ -35,7 +35,10 @@ public abstract class AbilityBase : MonoBehaviour
 
     public abstract void AbilityFunctionality();
     public abstract void AbilityPassive();
-
+    public abstract void AbilityOnHitRecieved(GameObject _attacker, float _damage);
+    public abstract void AbilityOnHitDealt(GameObject _target, float _damage);
+    public abstract void AbilityOnRoll();
+    public abstract void AbilityWhileRolling();
     void StartCooldown()
     {
         m_cooldownTimer = m_data.cooldownTime;

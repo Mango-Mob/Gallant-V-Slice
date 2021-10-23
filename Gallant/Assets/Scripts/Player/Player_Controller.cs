@@ -106,6 +106,7 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
             playerResources.ChangeHealth(-10.0f);
+            DamagePlayer(10.0f, null, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -190,10 +191,15 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    public void DamagePlayer(float _damage, bool _bypassInvincibility = false)
+    public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
+
+        if (playerAbilities.m_leftAbility != null)
+            playerAbilities.m_leftAbility.AbilityOnHitRecieved(_attacker, _damage);
+        if (playerAbilities.m_rightAbility != null)
+            playerAbilities.m_rightAbility.AbilityOnHitRecieved(_attacker, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
         playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
