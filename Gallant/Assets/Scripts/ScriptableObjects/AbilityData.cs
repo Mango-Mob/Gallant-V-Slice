@@ -1,7 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/****************
+ * AbilityData: Scriptable object containing data for ability
+ * @author : William de Beer
+ * @file : AbilityData.cs
+ * @year : 2021
+ */
 [CreateAssetMenu(fileName = "abilityData", menuName = "Ability Data", order = 1)]
 public class AbilityData : ScriptableObject
 {
