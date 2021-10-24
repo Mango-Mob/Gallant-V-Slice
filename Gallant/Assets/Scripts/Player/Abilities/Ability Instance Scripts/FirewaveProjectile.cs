@@ -5,9 +5,10 @@ using UnityEngine;
 public class FirewaveProjectile : MonoBehaviour
 {
     public float m_speed = 10.0f;
-    public float m_lifeTime = 1.0f;
     public float m_damage = 20.0f;
+    public float m_lifeTime = 1.0f;
     private float m_lifeTimer = 0.0f;
+    public AbilityData m_data;
 
     // Start is called before the first frame update
     void Start()
