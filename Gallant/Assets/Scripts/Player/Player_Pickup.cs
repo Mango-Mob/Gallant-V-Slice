@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Player_Pickup by William de Beer
- * File: Player_Pickup.cs
- * Description:
- *		Allows the player to pickup weapons from the ground provided they are within a trigger collider.
+/****************
+ * Player_Pickup: Allows the player to pickup dropped weapons
+ * @author : William de Beer
+ * @file : Player_Pickup.cs
+ * @year : 2021
  */
 public class Player_Pickup : MonoBehaviour
 {
     // List of dropped weapons in range of player
     private List<DroppedWeapon> weaponsInRange = new List<DroppedWeapon>();
 
+    /*******************
+     * FunctionName : Gets the closest weapon to the player inside the trigger box
+     * @author : William de Beer
+     * @return : (DroppedWeapon) Closest weapon to player.
+     */
     public DroppedWeapon GetClosestWeapon() 
     {
         if (weaponsInRange.Count < 1) // Check if there are no weapons in range
