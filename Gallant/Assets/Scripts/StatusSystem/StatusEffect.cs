@@ -11,10 +11,10 @@ using UnityEngine;
 public abstract class StatusEffect
 {
     //Display image for UI
-    public Sprite m_displayImage { get; private set; }
+    public Sprite m_displayImage { get; protected set; }
 
     //Display vfx for world
-    public GameObject m_vfxDisplayPrefab { get; private set; }
+    public GameObject m_vfxDisplayPrefab { get; protected set; }
 
     //Strength which is abstractly defined by each status effect.
     public float m_strength;
