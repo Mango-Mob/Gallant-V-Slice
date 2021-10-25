@@ -22,6 +22,8 @@ public class Actor : StateMachine
     public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dummy
     public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
 
+    public Actor_UI m_ui { get; private set; }
+
     public GameObject m_target { get; set; } = null; //The current focus of the actor
     public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
     public Actor_Attack m_activeAttack { get; set; } = null; //Currently selected attack.
@@ -42,11 +44,13 @@ public class Actor : StateMachine
         //Load information from Scriptable Object
         m_currentHealth = m_myData.health;
 
-        //Get external scripts:
         m_legs = GetComponentInChildren<Actor_Legs>();
+        m_legs.m_baseSpeed = m_myData.baseSpeed;
+
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
         m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
+        m_ui = GetComponentInChildren<Actor_UI>();
 
         m_tracker?.RecordResistance(m_myData.resistance);
 
@@ -76,6 +80,13 @@ public class Actor : StateMachine
     {
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
+
+        m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
+
+        if(InputManager.instance.IsKeyDown(KeyType.J))
+        {
+            GetComponent<StatusEffectContainer>().AddStatusEffect(new SlowStatus(0.5f, 5.0f));
+        }
     }
 
     /*********************
