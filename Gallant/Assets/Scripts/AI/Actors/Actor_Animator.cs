@@ -21,6 +21,26 @@ public class Actor_Animator : MonoBehaviour
     }
 
     /*******************
+     * SetFloat : Sets a single float value in the animator, with the float provided.
+     * @author : Michael Jordan
+     * @param : (string) name of the x parameter in the animator.
+     * @param : (float) value to store into the animator.
+     * @param : (float) time (in seconds) for blending the current values to the new one provided (Default = 0.0f).
+     */
+    public void SetFloat(string name, float value, float lerpDuration = 0)
+    {
+        if (lerpDuration > 0)
+        {
+            if (name != "")
+                StartCoroutine(BlendFloatValue(name, value, lerpDuration));
+            return;
+        }
+
+        if (name != "")
+            m_animator.SetFloat(name, value);
+    }
+
+    /*******************
     * SetVector2 : Sets two floats in the animator, with the vector2 provided.
     * @author : Michael Jordan
     * @param : (string) name of the x parameter in the animator.

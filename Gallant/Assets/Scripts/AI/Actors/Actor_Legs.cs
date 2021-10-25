@@ -9,6 +9,12 @@ using UnityEngine.AI;
  */
 public class Actor_Legs : MonoBehaviour
 {
+    [HideInInspector] 
+    public float m_baseSpeed;
+
+    [Range(0.0f, 2.0f)]
+    public float m_speedModifier = 1.0f;
+
     //External Accessors
     public Vector3 velocity { get{ return m_agent.velocity; } }
     public Vector3 localVelocity { get {return Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity;}}
@@ -32,7 +38,8 @@ public class Actor_Legs : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+        m_agent.speed = m_baseSpeed * m_speedModifier;
     }
 
     /*********************
