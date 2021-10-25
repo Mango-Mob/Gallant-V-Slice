@@ -84,14 +84,22 @@ public class Player_Movement : MonoBehaviour
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
-            m_rollTimer -= Time.fixedDeltaTime;
-            if (m_rollTimer <= 0.0f)
-                m_isRolling = false;
-
             if (playerController.playerAbilities.m_leftAbility != null)
                 playerController.playerAbilities.m_leftAbility.AbilityWhileRolling();
             if (playerController.playerAbilities.m_rightAbility != null)
                 playerController.playerAbilities.m_rightAbility.AbilityWhileRolling();
+
+            m_rollTimer -= Time.fixedDeltaTime;
+            if (m_rollTimer <= 0.0f)
+            {
+                m_isRolling = false;
+
+                if (playerController.playerAbilities.m_leftAbility != null)
+                    playerController.playerAbilities.m_leftAbility.AbilityOnEndRoll();
+                if (playerController.playerAbilities.m_rightAbility != null)
+                    playerController.playerAbilities.m_rightAbility.AbilityOnEndRoll();
+            }
+
         }
         else
         {
@@ -201,9 +209,9 @@ public class Player_Movement : MonoBehaviour
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
                 if (playerController.playerAbilities.m_leftAbility != null)
-                    playerController.playerAbilities.m_leftAbility.AbilityOnRoll();
+                    playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
                 if (playerController.playerAbilities.m_rightAbility != null)
-                    playerController.playerAbilities.m_rightAbility.AbilityOnRoll();
+                    playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
 
                 m_rollCDTimer = m_rollCD;
 

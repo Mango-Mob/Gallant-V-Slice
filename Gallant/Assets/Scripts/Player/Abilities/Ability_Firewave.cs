@@ -11,12 +11,10 @@ using UnityEngine;
 public class Ability_Firewave : AbilityBase
 {
     public GameObject m_wavePrefab;
-    private Player_Controller playerController;
 
     private void Start()
     {
         m_wavePrefab = Resources.Load<GameObject>("Abilities/FirewaveProjectile");
-        playerController = GetComponent<Player_Controller>();
     }
     public override void AbilityFunctionality()
     {
@@ -28,6 +26,8 @@ public class Ability_Firewave : AbilityBase
             GameObject projectile = Instantiate(m_wavePrefab,
                 modelTransform.position + 0.5f * modelTransform.forward + transform.up,
                 modelTransform.rotation);
+
+            projectile.GetComponent<FirewaveProjectile>().m_data = m_data;
         }
     }
     public override void AbilityPassive()
@@ -42,11 +42,15 @@ public class Ability_Firewave : AbilityBase
     {
 
     }
-    public override void AbilityOnRoll()
+    public override void AbilityOnBeginRoll()
     {
 
     }
     public override void AbilityWhileRolling()
+    {
+
+    }
+    public override void AbilityOnEndRoll()
     {
 
     }

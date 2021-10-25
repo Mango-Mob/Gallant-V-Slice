@@ -45,7 +45,7 @@ public class Player_Attack : MonoBehaviour
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();
-        m_boomerangeProjectilePrefab = Resources.Load<GameObject>("BoomerangProjectile");
+        m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
     }
 
     /*******************
