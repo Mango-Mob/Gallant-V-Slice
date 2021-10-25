@@ -45,7 +45,8 @@ public class Actor : StateMachine
         m_currentHealth = m_myData.health;
 
         m_legs = GetComponentInChildren<Actor_Legs>();
-        m_legs.m_baseSpeed = m_myData.baseSpeed;
+        if(m_legs != null)
+            m_legs.m_baseSpeed = m_myData.baseSpeed;
 
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
@@ -81,7 +82,7 @@ public class Actor : StateMachine
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
 
-        m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
+        m_animator?.SetFloat("VelocityHaste", m_legs.m_speedModifier);
 
         if(InputManager.instance.IsKeyDown(KeyType.J))
         {
