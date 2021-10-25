@@ -166,13 +166,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2817118459836149459}
-  m_LocalRotation: {x: 0.04224692, y: -0.043633282, z: -0.6992252, w: 0.7123169}
-  m_LocalPosition: {x: -0.0702, y: -0.0171, z: 0.0001}
+  m_LocalRotation: {x: -0.024790037, y: 0.04041881, z: -0.65293247, w: 0.75593054}
+  m_LocalPosition: {x: -0.0594, y: -0.0314, z: -0.0017}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2606401613373251410}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -0.048, y: -6.964, z: -88.934006}
+  m_LocalEulerAnglesHint: {x: 0.87700003, y: -354.636, z: 278.404}
 --- !u!1 &3122777057003787262
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,13 +278,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3122777057571505330}
-  m_LocalRotation: {x: 0.5149992, y: -0.000000029802322, z: 0.000000029802322, w: 0.8571907}
-  m_LocalPosition: {x: 0, y: 7.4, z: -3.81}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 6, z: -6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3122777058140226026}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 61.995003, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!20 &3122777057571505332
 Camera:
   m_ObjectHideFlags: 0
@@ -435,12 +435,12 @@ MonoBehaviour:
   playerModel: {fileID: 1873858612984320825}
   m_gravityMult: 2
   m_moveSpeed: 5
-  m_rollSpeed: 10
+  m_rollSpeed: 12
   m_minKnockbackSpeed: 0.5
   m_shadowDuration: 1
   m_adrenShadowPrefab: {fileID: 3504135104941125864, guid: 92efe45cf760c7f4e91eab82e06a0fef,
     type: 3}
-  m_rollDuration: 0.45
+  m_rollCD: 0.5
 --- !u!114 &550414675513458815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,7 +492,7 @@ MonoBehaviour:
   m_leftHandTransform: {fileID: 7925464788017200438}
   m_leftWeapon: {fileID: 0}
   m_rightHandTransform: {fileID: 2477371212452143754}
-  m_rightWeapon: {fileID: 0}
+  m_rightWeapon: {fileID: 11400000, guid: f0347e997bc46a24f95fadb1a5c0ebb6, type: 2}
   m_leftWeaponIcon: {fileID: 0}
   m_rightWeaponIcon: {fileID: 0}
 --- !u!114 &3122777058140226029
@@ -551,13 +551,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4399742751132285948}
-  m_LocalRotation: {x: -0.6986064, y: -0.7128309, z: -0.051483057, w: -0.034216832}
-  m_LocalPosition: {x: -0.0702, y: -0.0171, z: 0.0001}
+  m_LocalRotation: {x: -0.67469686, y: -0.73789537, z: -0.017159011, w: 0.00038024216}
+  m_LocalPosition: {x: -0.0507, y: -0.0307, z: 0.0014}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8772327381052352617}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -1.4660001, y: -186.93599, z: 88.934006}
+  m_LocalEulerAnglesHint: {x: -1.48, y: -181.295, z: 84.893005}
 --- !u!1001 &1639347283192557160
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -639,7 +639,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7894048d961ee3547b4a91b6ad54bd5d, type: 2}
+      objectReference: {fileID: 2100000, guid: 79838adb891a5f040a9897df035b2075, type: 2}
     - target: {fileID: -8131033541153715354, guid: 1ec60c38d5d2fb544aadcea1bcd44c81,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1699,7 +1699,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7894048d961ee3547b4a91b6ad54bd5d, type: 2}
+      objectReference: {fileID: 2100000, guid: 79838adb891a5f040a9897df035b2075, type: 2}
     - target: {fileID: 8033771843984770561, guid: 1ec60c38d5d2fb544aadcea1bcd44c81,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1719,7 +1719,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7e6c826775bea5f49a96e4533279d995, type: 2}
+      objectReference: {fileID: 2100000, guid: 79838adb891a5f040a9897df035b2075, type: 2}
     - target: {fileID: 9160364277804130455, guid: 1ec60c38d5d2fb544aadcea1bcd44c81,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

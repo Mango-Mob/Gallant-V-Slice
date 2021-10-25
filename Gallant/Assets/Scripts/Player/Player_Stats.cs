@@ -31,6 +31,9 @@ public class Player_Stats : MonoBehaviour
      */
     public void AddEffect(ItemEffect _effect)
     {
+        if (_effect == ItemEffect.NONE)
+            return;
+
         bool foundEffect = false;
         foreach (var effect in m_effects) // Check if effect is already in dictionary
         {
@@ -55,6 +58,9 @@ public class Player_Stats : MonoBehaviour
      */
     public void RemoveEffect(ItemEffect _effect)
     {
+        if (_effect == ItemEffect.NONE)
+            return;
+
         bool foundEffect = false;
         List<ItemEffect> removeList = new List<ItemEffect>();
         foreach (var effect in m_effects) // Check if effect is already in dictionary

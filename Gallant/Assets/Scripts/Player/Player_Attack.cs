@@ -46,6 +46,8 @@ public class Player_Attack : MonoBehaviour
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
+        ApplyWeaponData(Hand.LEFT);
+        ApplyWeaponData(Hand.RIGHT);
     }
 
     /*******************
@@ -121,20 +123,9 @@ public class Player_Attack : MonoBehaviour
                     playerController.playerStats.RemoveEffect(m_leftWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
 
-                // Delete old weapon from player
-                Destroy(m_leftWeaponObject);
-
                 // Set new weapon
                 m_leftWeapon = _weapon.m_weaponData;
-                m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
-                playerController.playerStats.AddEffect(m_leftWeapon.itemEffect); // Add passive effect the weapon has
-
-                if (m_leftWeaponIcon != null)
-                    m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
-                else
-                    Debug.LogWarning("Weapon icon not set");
-
-                playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, _hand);
+                ApplyWeaponData(Hand.LEFT);
 
                 break;
             case Hand.RIGHT:
@@ -145,20 +136,10 @@ public class Player_Attack : MonoBehaviour
                     playerController.playerStats.RemoveEffect(m_rightWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
 
-                // Delete old weapon from player
-                Destroy(m_rightWeaponObject);
 
                 // Set new weapon
                 m_rightWeapon = _weapon.m_weaponData;
-                m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
-                playerController.playerStats.AddEffect(m_rightWeapon.itemEffect); // Add passive effect the weapon has
-
-                if (m_rightWeaponIcon != null)
-                    m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
-                else
-                    Debug.LogWarning("Weapon icon not set");
-
-                playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, _hand);
+                ApplyWeaponData(Hand.RIGHT);
 
                 break;
             default:
@@ -167,6 +148,55 @@ public class Player_Attack : MonoBehaviour
         }
 
         Destroy(_weapon.gameObject);
+    }
+
+    private void ApplyWeaponData(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                // Delete old weapon from player
+                Destroy(m_leftWeaponObject);
+                if (m_leftWeapon != null)
+                {
+                    m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+
+                    if (m_leftWeaponIcon != null)
+                        m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+                    else
+                        Debug.LogWarning("Weapon icon not set");
+
+                    playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
+                }
+                else
+                {
+                    if (m_leftWeaponIcon != null)
+                        m_leftWeaponIcon.SetIconSprite(null);
+                    playerController.playerAbilities.SetAbility(null, Hand.LEFT);
+                }
+                break;
+            case Hand.RIGHT:
+                // Delete old weapon from player
+                Destroy(m_rightWeaponObject);
+                if (m_rightWeapon != null)
+                {
+                    m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+
+                    if (m_rightWeaponIcon != null)
+                        m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+                    else
+                        Debug.LogWarning("Weapon icon not set");
+
+                    playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
+                }
+                else
+                {
+                    if (m_rightWeaponIcon != null)
+                        m_rightWeaponIcon.SetIconSprite(null);
+                    playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
+                }
+                break;
+        }
     }
 
     /*******************
@@ -182,54 +212,14 @@ public class Player_Attack : MonoBehaviour
         WeaponData _leftHandStore = m_leftWeapon;
 
         // Left hand weapon
-        // Delete old weapon from player
-        Destroy(m_leftWeaponObject);
-
         // Set new weapon
         m_leftWeapon = m_rightWeapon;
-
-        if (m_leftWeapon != null)
-        {
-            m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
-
-            if (m_leftWeaponIcon != null)
-                m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
-            else
-                Debug.LogWarning("Weapon icon not set");
-
-            playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
-        }
-        else
-        {
-            if (m_leftWeaponIcon != null)
-                m_leftWeaponIcon.SetIconSprite(null);
-            playerController.playerAbilities.SetAbility(null, Hand.LEFT);
-        }
+        ApplyWeaponData(Hand.LEFT);
 
         // Right hand weapon
-        // Delete old weapon from player
-        Destroy(m_rightWeaponObject);
-
         // Set new weapon
         m_rightWeapon = _leftHandStore;
-
-        if (m_rightWeapon != null)
-        {
-            m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
-
-            if (m_rightWeaponIcon != null)
-                m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
-            else
-                Debug.LogWarning("Weapon icon not set");
-
-            playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
-        }
-        else
-        {
-            if (m_rightWeaponIcon != null)
-                m_rightWeaponIcon.SetIconSprite(null);
-            playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
-        }
+        ApplyWeaponData(Hand.RIGHT);
     }
 
     #region Melee
