@@ -85,7 +85,7 @@ public class Actor : StateMachine
 
         if(InputManager.instance.IsKeyDown(KeyType.J))
         {
-            GetComponent<StatusEffectContainer>().AddStatusEffect(new SlowStatus(0.5f, 5.0f));
+            GetComponent<StatusEffectContainer>().AddStatusEffect(new SlowStatus(1.0f, 5.0f));
         }
     }
 
