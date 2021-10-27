@@ -47,7 +47,7 @@ public class Player_Movement : MonoBehaviour
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
 
-        playerController.animator.SetFloat("RollSpeed", 12.0f / 8.0f);
+        playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f));
 
         var animControllers = playerController.animator.runtimeAnimatorController;
         foreach (var clip in animControllers.animationClips)
@@ -80,7 +80,7 @@ public class Player_Movement : MonoBehaviour
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
             // Move player in stored direction while roll is active
-            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * Time.fixedDeltaTime
+            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed / 100.0f) * Time.fixedDeltaTime
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
@@ -168,6 +168,8 @@ public class Player_Movement : MonoBehaviour
      */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
+        Vector2 adjustedMove = _move / (_aim.magnitude != 0.0f ? 2.0f : 1.0f);
+
         Vector3 movement = Vector3.zero;
         if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
         {
@@ -193,11 +195,11 @@ public class Player_Movement : MonoBehaviour
 
             Vector3 normalizedMove = Vector3.zero;
 
-            if (_move.magnitude != 0)
+            if (adjustedMove.magnitude != 0)
             {
                 // Movement
-                normalizedMove += _move.y * transform.forward;
-                normalizedMove += _move.x * transform.right;
+                normalizedMove += adjustedMove.y * transform.forward;
+                normalizedMove += adjustedMove.x * transform.right;
 
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
@@ -205,13 +207,37 @@ public class Player_Movement : MonoBehaviour
                 // If player is not trying to aim, aim in direction of movement.
                 if (_aim.magnitude == 0)
                     RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
+
+                // Movement Animation control
+                Vector3 rotationVector = new Vector3(0, 0, 0);
+
+                rotationVector += normalizedMove.z * playerModel.transform.right;
+                rotationVector += normalizedMove.x * playerModel.transform.forward;
+
+                playerController.animator.SetFloat("Horizontal", rotationVector.z);
+                playerController.animator.SetFloat("Vertical", rotationVector.x);
             }
+            else
+            {
+                playerController.animator.SetFloat("Horizontal", 0);
+                playerController.animator.SetFloat("Vertical", 0);
+            }
+            Debug.Log($"X: {playerController.animator.GetFloat("Horizontal")}, Y: {playerController.animator.GetFloat("Vertical")}");
+
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
                 if (playerController.playerAbilities.m_leftAbility != null)
                     playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
                 if (playerController.playerAbilities.m_rightAbility != null)
                     playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
+
+                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed / 100.0f));
+                var animControllers = playerController.animator.runtimeAnimatorController;
+                foreach (var clip in animControllers.animationClips)
+                {
+                    if (clip.name == "dodge roll event")
+                        m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+                }
 
                 m_rollCDTimer = m_rollCD;
 
