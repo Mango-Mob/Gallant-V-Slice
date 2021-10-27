@@ -1,0 +1,1080 @@
+fileFormatVersion: 2
+guid: 649925397894ca94f8f300f7cfd2dd9c
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 232528478, guid: 43a8bbf65be290d44ba52b94476242b9, type: 3}
+  version: 24
+  mGraphInstanceData:
+  - graphLabel: StylizedRock1
+    prototypeName: StylizedRock1
+    graphDescIndex: 0
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock1\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"1975504581\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: -9092736932317899038, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: -9145404153106110290, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: 7756743105825569022, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: -9145404153106110290, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock1 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock1 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock1 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: -7155869741861122353, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: 7756743105825569022, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -9092736932317899038, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -9145404153106110290, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+  - graphLabel: StylizedRock2
+    prototypeName: StylizedRock2
+    graphDescIndex: 1
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock2\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"3971391359\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: 5318636894937472317, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: -2011087090962078273, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: 4036054030952222510, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: -2011087090962078273, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock2 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock2 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock2 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 2011517004601614263, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: 4036054030952222510, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: 5318636894937472317, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -2011087090962078273, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+  - graphLabel: StylizedRock3
+    prototypeName: StylizedRock3
+    graphDescIndex: 2
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock3\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"2612113385\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: -6006849992097352636, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: 715015799725776044, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: 5204798718984570344, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: 715015799725776044, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock3 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock3 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock3 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 889307590140175580, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: 5204798718984570344, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -6006849992097352636, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: 715015799725776044, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+  - graphLabel: StylizedRock4
+    prototypeName: StylizedRock4
+    graphDescIndex: 3
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock4\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"97860170\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: -8899263060874066016, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: 8849734788038100972, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: 3816306428451843497, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: 8849734788038100972, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock4 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock4 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock4 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 6028949216732613974, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: 3816306428451843497, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -8899263060874066016, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: 8849734788038100972, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+  - graphLabel: StylizedRock5
+    prototypeName: StylizedRock5
+    graphDescIndex: 4
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock5\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"1926367964\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: -6385184472021640656, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: -7382727074606491709, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: -4912387094898792193, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: -7382727074606491709, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock5 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock5 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock5 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 436573628194688788, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: -4912387094898792193, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -6385184472021640656, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: -7382727074606491709, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+  - graphLabel: StylizedRock6
+    prototypeName: StylizedRock6
+    graphDescIndex: 5
+    generateAllOutputs: 1
+    generateMipMaps: 1
+    preset: " <sbspreset pkgurl=\"pkg://StylizedRock6\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"3957021542\" type=\"8\" value=\"11,11\" />\n
+      </sbspreset>\n"
+    shaderName: Standard (Tesselation)
+    materialProperties:
+      shader: {fileID: 4800000, guid: 9fc2b6ae7a1eb4f4f9dd216c45b7fd05, type: 3}
+      shaderKeywords: _MAINTEX _NORMALMAP _PARALLAXMAP
+      lightmapFlags: 4
+      texEnvs:
+      - name: _BumpMap
+        texture: {fileID: 2164784574509173907, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailAlbedoMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailMask
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _DetailNormalMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _EmissiveMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _HMSO
+        texture: {fileID: 8187360723651836414, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MainTex
+        texture: {fileID: -2813985364697803418, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _MetallicGlossMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _OcclusionMap
+        texture: {instanceID: 0}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      - name: _ParallaxMap
+        texture: {fileID: 8187360723651836414, guid: 649925397894ca94f8f300f7cfd2dd9c,
+          type: 3}
+        scale: {x: 1, y: 1}
+        offset: {x: 0, y: 0}
+      floats:
+      - name: _BumpScale
+        float: 0.7
+      - name: _Cutoff
+        float: 0.5
+      - name: _DetailNormalMapScale
+        float: 1
+      - name: _DstBlend
+        float: 0
+      - name: _EdgeLength
+        float: 4
+      - name: _GlossMapScale
+        float: 1
+      - name: _Glossiness
+        float: 0.5
+      - name: _GlossyReflections
+        float: 1
+      - name: _Height
+        float: 0.2
+      - name: _Metallic
+        float: 0
+      - name: _Mode
+        float: 0
+      - name: _OcclusionStrength
+        float: 1
+      - name: _Parallax
+        float: 0.02
+      - name: _SmoothnessTextureChannel
+        float: 0
+      - name: _SpecularHighlights
+        float: 1
+      - name: _SrcBlend
+        float: 1
+      - name: _UVSec
+        float: 0
+      - name: _ZWrite
+        float: 1
+      colors:
+      - name: _Color
+        color: {r: 1, g: 1, b: 1, a: 1}
+      - name: _EmissionColor
+        color: {r: 0, g: 0, b: 0, a: 1}
+    outputDescList:
+    - outputName: baseColor
+      identifier: baseColor
+      usageName: baseColor
+      channelStr: baseColor
+      label: Base Color
+      usage: 1
+      bImage: 1
+      bNumerical: 0
+      bLinear: 0
+    - outputName: normal
+      identifier: normal
+      usageName: normal
+      channelStr: normal
+      label: Normal
+      usage: 7
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: height
+      identifier: HMSO
+      usageName: height
+      channelStr: height
+      label: HMSO
+      usage: 9
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    texturePackingList:
+    - targetName: baseColor
+      components:
+      - sourceName: baseColor
+        from: 0
+        to: 3
+    - targetName: normal
+      components:
+      - sourceName: normal
+        from: 0
+        to: 3
+    - targetName: height
+      components:
+      - sourceName: height
+        from: 0
+        to: 3
+    textureParameters:
+    - textureName: StylizedRock6 - baseColor
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock6 - normal
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: StylizedRock6 - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    colorSpaceList: []
+    inputTextureMap: []
+    targetSettingList:
+    - label: Default
+      bOverride: 0
+      bLockRatio: 1
+      textureWidth: 2048
+      textureHeight: 2048
+      textureFormatMode: 0
+      normalCompressed: 0
+      bGenerateOnLoad: 1
+    material: {fileID: 6135817468922732547, guid: 649925397894ca94f8f300f7cfd2dd9c,
+      type: 3}
+    generatedTextures:
+    - {fileID: -2813985364697803418, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: 2164784574509173907, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
+    - {fileID: 8187360723651836414, guid: 649925397894ca94f8f300f7cfd2dd9c, type: 3}
