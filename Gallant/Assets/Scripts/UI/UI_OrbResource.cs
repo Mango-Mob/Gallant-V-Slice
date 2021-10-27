@@ -2,51 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/****************
+ * UI_OrbResource: Set of orbs which can be used to display adrenaline resources.
+ * @author : William de Beer
+ * @file : UI_OrbResource.cs
+ * @year : 2021
+ */
 public class UI_OrbResource : UI_Element
 {
-    [Header("Orb 1")] 
-    [SerializeField] private Image orbImage1;
-    [SerializeField] private Image orbPulse1;
-    [SerializeField] private Image orbFlicker1;
-
-    [Header("Orb 2")]
-    [SerializeField] private Image orbImage2;
-    [SerializeField] private Image orbPulse2;
-    [SerializeField] private Image orbFlicker2;
-
-    [Header("Orb 3")]
-    [SerializeField] private Image orbImage3;
-    [SerializeField] private Image orbPulse3;
-    [SerializeField] private Image orbFlicker3;
+    [SerializeField] private UI_Orb orb1;
+    [SerializeField] private UI_Orb orb2;
+    [SerializeField] private UI_Orb orb3;
 
     [Range(0.0f, 3.0f)]
     [SerializeField] private float m_value;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        orbImage1.color = new Color(1, 1, 1, m_value);
-        orbPulse1.enabled = orbImage1.color.a >= 1;
-        orbFlicker1.enabled = orbImage1.color.a >= 1;
-
-        orbImage2.color = new Color(1, 1, 1, m_value - 1.0f);
-        orbPulse2.enabled = orbImage2.color.a >= 1;
-        orbFlicker2.enabled = orbImage2.color.a >= 1;
-
-        orbImage3.color = new Color(1, 1, 1, m_value - 2.0f);
-        orbPulse3.enabled = orbImage3.color.a >= 1;
-        orbFlicker3.enabled = orbImage3.color.a >= 1;
-    }
+    /*******************
+     * SetValue : Sets the value of resource fill
+     * @author : William de Beer
+     * @param : (float) Value to be set
+     */
     public void SetValue(float _value)
     {
         m_value = Mathf.Clamp(_value, 0.0f, 3.0f);
+        orb1.SetValue(m_value);
+        orb2.SetValue(m_value - 1.0f);
+        orb3.SetValue(m_value - 2.0f);
     }
 
     #region Parent override functions

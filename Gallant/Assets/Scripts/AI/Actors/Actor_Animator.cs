@@ -21,14 +21,44 @@ public class Actor_Animator : MonoBehaviour
     }
 
     /*******************
+     * SetFloat : Sets a single float value in the animator, with the float provided.
+     * @author : Michael Jordan
+     * @param : (string) name of the x parameter in the animator.
+     * @param : (float) value to store into the animator.
+     * @param : (float) time (in seconds) for blending the current values to the new one provided (Default = 0.0f).
+     */
+    public void SetFloat(string name, float value, float lerpDuration = 0)
+    {
+        if (lerpDuration > 0)
+        {
+            if (name != "")
+                StartCoroutine(BlendFloatValue(name, value, lerpDuration));
+            return;
+        }
+
+        if (name != "")
+            m_animator.SetFloat(name, value);
+    }
+
+    /*******************
     * SetVector2 : Sets two floats in the animator, with the vector2 provided.
     * @author : Michael Jordan
     * @param : (string) name of the x parameter in the animator.
     * @param : (string) name of the y parameter in the animator.
     * @param : (Vector2) float values to store into the animator.
+    * @param : (float) time (in seconds) for blending the current values to the new one provided (Default = 0.0f).
     */
-    public void SetVector2(string xName, string yName, Vector2 vector)
+    public void SetVector2(string xName, string yName, Vector2 vector, float lerpDuration = 0)
     {
+        if(lerpDuration > 0)
+        {
+            if (xName != "")
+                StartCoroutine(BlendFloatValue(xName, vector.x, lerpDuration));
+            if (yName != "")
+                StartCoroutine(BlendFloatValue(yName, vector.y, lerpDuration));
+            return;
+        }
+
         if (xName != "")
             m_animator.SetFloat(xName, vector.x);
         if (yName != "")
@@ -42,10 +72,23 @@ public class Actor_Animator : MonoBehaviour
     * @param : (string) name of the y parameter in the animator.
     * @param : (string) name of the z parameter in the animator.
     * @param : (Vector3) float values to store into the animator.
+    * @param : (float) time (in seconds) for blending the current values to the new one provided (Default = 0.0f).
     */
-    public void SetVector3(string xName, string yName, string zName, Vector3 vector)
+    public void SetVector3(string xName, string yName, string zName, Vector3 vector, float lerpDuration = 0)
     {
-        if(xName != "")
+        if (lerpDuration > 0)
+        {
+            if (xName != "")
+                StartCoroutine(BlendFloatValue(xName, vector.x, lerpDuration));
+            if (yName != "")
+                StartCoroutine(BlendFloatValue(yName, vector.y, lerpDuration));
+            if (zName != "")
+                StartCoroutine(BlendFloatValue(zName, vector.z, lerpDuration));
+
+            return;
+        }
+
+        if (xName != "")
             m_animator.SetFloat(xName, vector.x);
         if (yName != "")
             m_animator.SetFloat(yName, vector.y);
@@ -72,5 +115,32 @@ public class Actor_Animator : MonoBehaviour
     public void SetBool(string name, bool status)
     {
         m_animator.SetBool(name, status);
+    }
+
+    /*******************
+    * BlendFloatValue : Blends the existing float value to another based on a durtation.
+    * @author : Michael Jordan
+    * @param : (string) name of the float value stored in the animator.
+    * @param : (float) target float value.
+    * @param : (float) time (in seconds) for blending the current values to the new one provided.
+    */
+    private IEnumerator BlendFloatValue(string valueName, float end, float duration)
+    {
+        float start = m_animator.GetFloat(valueName);
+
+        float value = start;
+        DateTime startTime = DateTime.Now;
+
+        while(value != end)
+        {
+            float lerp = (float)(DateTime.Now - startTime).TotalSeconds / duration;
+            value = Mathf.Lerp(start, end, lerp);
+            m_animator.SetFloat(valueName, value);
+            yield return new WaitForEndOfFrame();
+        }
+
+        value = end;
+        m_animator.SetFloat(valueName, value);
+        yield return null;
     }
 }

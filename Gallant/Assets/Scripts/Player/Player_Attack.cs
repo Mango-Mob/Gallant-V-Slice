@@ -13,11 +13,11 @@ public enum Hand
     LEFT,
     RIGHT,
 }
-/*
- * Player_Attack by William de Beer
- * File: Player_Attack
- * Description:
- *		Contains logic for different player weapon attacks
+/****************
+ * Player_Attack: Contains logic for different player weapon attacks
+ * @author : William de Beer
+ * @file : Player_Attack.cs
+ * @year : 2021
  */
 public class Player_Attack : MonoBehaviour
 {
@@ -45,9 +45,16 @@ public class Player_Attack : MonoBehaviour
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();
-        m_boomerangeProjectilePrefab = Resources.Load<GameObject>("BoomerangProjectile");
+        m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
+        ApplyWeaponData(Hand.LEFT);
+        ApplyWeaponData(Hand.RIGHT);
     }
 
+    /*******************
+     * UseWeapon : Use a weapon's functionality
+     * @author : William de Beer
+     * @param : (Hand) The hand of the weapon to be used
+     */
     public void UseWeapon(Hand _hand)
     {
         WeaponData thisData;
@@ -99,6 +106,11 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
     }
+    /*******************
+     * PickUpWeapon : Pick up a weapon and add it to hand.
+     * @author : William de Beer
+     * @param : (DroppedWeapon) The weapon to be picked up, (Hand) Hand to be given to.
+     */
     public void PickUpWeapon(DroppedWeapon _weapon, Hand _hand)
     {
         switch (_hand)
@@ -111,20 +123,9 @@ public class Player_Attack : MonoBehaviour
                     playerController.playerStats.RemoveEffect(m_leftWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
 
-                // Delete old weapon from player
-                Destroy(m_leftWeaponObject);
-
                 // Set new weapon
                 m_leftWeapon = _weapon.m_weaponData;
-                m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
-                playerController.playerStats.AddEffect(m_leftWeapon.itemEffect); // Add passive effect the weapon has
-
-                if (m_leftWeaponIcon != null)
-                    m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
-                else
-                    Debug.LogWarning("Weapon icon not set");
-
-                playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, _hand);
+                ApplyWeaponData(Hand.LEFT);
 
                 break;
             case Hand.RIGHT:
@@ -135,20 +136,10 @@ public class Player_Attack : MonoBehaviour
                     playerController.playerStats.RemoveEffect(m_rightWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
 
-                // Delete old weapon from player
-                Destroy(m_rightWeaponObject);
 
                 // Set new weapon
                 m_rightWeapon = _weapon.m_weaponData;
-                m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
-                playerController.playerStats.AddEffect(m_rightWeapon.itemEffect); // Add passive effect the weapon has
-
-                if (m_rightWeaponIcon != null)
-                    m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
-                else
-                    Debug.LogWarning("Weapon icon not set");
-
-                playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, _hand);
+                ApplyWeaponData(Hand.RIGHT);
 
                 break;
             default:
@@ -159,6 +150,59 @@ public class Player_Attack : MonoBehaviour
         Destroy(_weapon.gameObject);
     }
 
+    private void ApplyWeaponData(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                // Delete old weapon from player
+                Destroy(m_leftWeaponObject);
+                if (m_leftWeapon != null)
+                {
+                    m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+
+                    if (m_leftWeaponIcon != null)
+                        m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+                    else
+                        Debug.LogWarning("Weapon icon not set");
+
+                    playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
+                }
+                else
+                {
+                    if (m_leftWeaponIcon != null)
+                        m_leftWeaponIcon.SetIconSprite(null);
+                    playerController.playerAbilities.SetAbility(null, Hand.LEFT);
+                }
+                break;
+            case Hand.RIGHT:
+                // Delete old weapon from player
+                Destroy(m_rightWeaponObject);
+                if (m_rightWeapon != null)
+                {
+                    m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+
+                    if (m_rightWeaponIcon != null)
+                        m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+                    else
+                        Debug.LogWarning("Weapon icon not set");
+
+                    playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
+                }
+                else
+                {
+                    if (m_rightWeaponIcon != null)
+                        m_rightWeaponIcon.SetIconSprite(null);
+                    playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
+                }
+                break;
+        }
+    }
+
+    /*******************
+     * SwapWeapons : Swap the weapons between hands.
+     * @author : William de Beer
+     */
     public void SwapWeapons()
     {
         if (m_leftWeaponInUse || m_rightWeaponInUse)
@@ -168,68 +212,48 @@ public class Player_Attack : MonoBehaviour
         WeaponData _leftHandStore = m_leftWeapon;
 
         // Left hand weapon
-        // Delete old weapon from player
-        Destroy(m_leftWeaponObject);
-
         // Set new weapon
         m_leftWeapon = m_rightWeapon;
-
-        if (m_leftWeapon != null)
-        {
-            m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
-
-            if (m_leftWeaponIcon != null)
-                m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
-            else
-                Debug.LogWarning("Weapon icon not set");
-
-            playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
-        }
-        else
-        {
-            if (m_leftWeaponIcon != null)
-                m_leftWeaponIcon.SetIconSprite(null);
-            playerController.playerAbilities.SetAbility(null, Hand.LEFT);
-        }
+        ApplyWeaponData(Hand.LEFT);
 
         // Right hand weapon
-        // Delete old weapon from player
-        Destroy(m_rightWeaponObject);
-
         // Set new weapon
         m_rightWeapon = _leftHandStore;
-
-        if (m_rightWeapon != null)
-        {
-            m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
-
-            if (m_rightWeaponIcon != null)
-                m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
-            else
-                Debug.LogWarning("Weapon icon not set");
-
-            playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
-        }
-        else
-        {
-            if (m_rightWeaponIcon != null)
-                m_rightWeaponIcon.SetIconSprite(null);
-            playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
-        }
+        ApplyWeaponData(Hand.RIGHT);
     }
 
     #region Melee
+    /*******************
+     * WeaponAttack : Create sphere attack detection and damages enemies in it.
+     * @author : William de Beer
+     * @param : (WeaponData) 
+     */
     private void WeaponAttack(WeaponData _data)
     {
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
         foreach (var collider in colliders)
         {
             Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
-            Actor actor = collider.GetComponent<Actor>();
-            if (actor != null)
-            {
-                actor.DealDamage(_data.m_damage);
-            }
+            DamageTarget(collider.gameObject, _data.m_damage);
+        }
+    }
+
+    /*******************
+     * DamageTarget : Apply damage effects to enemy.
+     * @author : William de Beer
+     * @param : (GameObject) Target of attack, (float) Damage to deal
+     */
+    public void DamageTarget(GameObject _target, float _damage)
+    {
+        if (playerController.playerAbilities.m_leftAbility != null)
+            playerController.playerAbilities.m_leftAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+        if (playerController.playerAbilities.m_rightAbility != null)
+            playerController.playerAbilities.m_rightAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+
+        Actor actor = _target.GetComponent<Actor>();
+        if (actor != null)
+        {
+            actor.DealDamage(_damage);
         }
     }
 
@@ -252,6 +276,11 @@ public class Player_Attack : MonoBehaviour
     #endregion
 
     #region Boomerang
+    /*******************
+     * ThrowBoomerang : Launches projectile from specified hand.
+     * @author : William de Beer
+     * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
+     */
     private void ThrowBoomerang(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         // Create projectile
@@ -273,6 +302,11 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
     }
+    /*******************
+     * CatchBoomerang : Returns boomerang to hand
+     * @author : William de Beer
+     * @param : (Hand) 
+     */
     public void CatchBoomerang(Hand _hand)
     {
         // Set activation booleans

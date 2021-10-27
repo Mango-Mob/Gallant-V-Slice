@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * BoomerangProjectile by William de Beer
- * File: BoomerangProjectile.cs
- * Description:
- *		A boomerang projectile which can be launched by the player if they are holding a boomerang.
+/****************
+ * BoomerangProjectile: A boomerang projectile which can be launched by the player if they are holding a boomerang.
+ * @author : William de Beer
+ * @file : BoomerangProjectile.cs
+ * @year : 2021
  */
 public class BoomerangProjectile : MonoBehaviour
 {
@@ -98,14 +98,17 @@ public class BoomerangProjectile : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
             Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
-            Actor actor = other.GetComponent<Actor>();
-            if (actor != null)
-            {
-                actor.DealDamage(m_weaponData.m_damage);
-            }
+
+            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
         }
     }
 
+    /*******************
+     * SetReturnInfo : Sets the information of the user who threw the boomerang and who it should be returned to.
+     * @author : William de Beer
+     * @param : (Player_Attack) The Player_Attack component of player, (WeaponData) The data of weapon, (Hand) The hand it originated from.
+     * @return : (type) 
+     */
     public void SetReturnInfo(Player_Attack _user, WeaponData _data, Hand _hand)
     {
         m_projectileUser = _user;

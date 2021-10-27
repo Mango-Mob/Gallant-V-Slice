@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Player_Controller by William de Beer
- * File: Player_Controller.cs
- * Description:
- *		Controls interactions between different player components and handles player input.
+/****************
+ * Player_Controller: Controls interactions between different player components and handles player input.
+ * @author : William de Beer
+ * @file : Player_Controller.cs
+ * @year : 2021
  */
 public class Player_Controller : MonoBehaviour
 {
@@ -55,7 +55,7 @@ public class Player_Controller : MonoBehaviour
         if (!playerMovement.m_isStunned) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.WEST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -63,7 +63,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Right hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
+            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RIGHT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -91,6 +91,12 @@ public class Player_Controller : MonoBehaviour
             }
         }
 
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.V))
+        {
+            // Heal from adrenaline
+            playerResources.UseAdrenaline();
+        }
+
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.UP, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Y))
         {
             playerAttack.SwapWeapons();
@@ -100,6 +106,7 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
             playerResources.ChangeHealth(-10.0f);
+            DamagePlayer(10.0f, null, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -111,7 +118,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+            StunPlayer(0.2f, transform.up * 80.0f);
         }
 
         // Item debug
@@ -128,9 +135,14 @@ public class Player_Controller : MonoBehaviour
             playerStats.AddEffect(ItemEffect.MOVE_SPEED);
         }
     }
+    /*******************
+     * StunPlayer : Calls playerMovement StunPlayer function.
+     * @author : William de Beer
+     * @param : (float) Stun duration, (Vector3) Knockback velocity
+     */
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
     {
-        playerMovement.StunPlayer(0.2f, (transform.position - Vector3.zero).normalized * 12.0f);
+        playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
     private Vector2 GetPlayerMovementVector()
     {
@@ -179,8 +191,16 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    public void DamagePlayer(float _damage)
+    public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
+        if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
+            return;
+
+        if (playerAbilities.m_leftAbility != null)
+            playerAbilities.m_leftAbility.AbilityOnHitRecieved(_attacker, _damage);
+        if (playerAbilities.m_rightAbility != null)
+            playerAbilities.m_rightAbility.AbilityOnHitRecieved(_attacker, _damage);
+
         Debug.Log($"Player is damaged: {_damage} points of health.");
         playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
     }

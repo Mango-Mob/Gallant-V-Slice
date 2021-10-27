@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Player_Movement by William de Beer
- * File: Player_Movement.cs
- * Description:
- *		Contains logic for player movement such as running and dodging.
+/****************
+ * Player_Movement: Contains logic for player movement such as running and dodging.
+ * @author : William de Beer
+ * @file : Player_Movement.cs
+ * @year : 2021
  */
 public class Player_Movement : MonoBehaviour
 {
@@ -22,6 +22,7 @@ public class Player_Movement : MonoBehaviour
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
+    public bool m_isRollInvincible { get; private set; } = false;
     private Vector3 m_lastMoveDirection;
 
     private bool m_grounded = true;
@@ -35,13 +36,25 @@ public class Player_Movement : MonoBehaviour
     public float m_shadowDuration = 1.0f;
     public GameObject m_adrenShadowPrefab;
     private float m_rollTimer = 0.0f;
-    public float m_rollDuration = 0.2f;
+    private float m_rollDuration = 0.2f;
+
+    private float m_rollCDTimer = 0.0f;
+    public float m_rollCD = 1.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
+
+        playerController.animator.SetFloat("RollSpeed", 12.0f / 8.0f);
+
+        var animControllers = playerController.animator.runtimeAnimatorController;
+        foreach (var clip in animControllers.animationClips)
+        {
+            if (clip.name == "dodge roll event")
+                m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+        }
     }
 
     // Update is called once per frame
@@ -58,6 +71,10 @@ public class Player_Movement : MonoBehaviour
         StunUpdate();
     }
 
+    /*******************
+     * RollUpdate : Updates rolling movement if active.
+     * @author : William de Beer
+     */
     private void RollUpdate()
     {
         if (m_isRolling) // Check if the player is supposed to be rolling
@@ -67,17 +84,51 @@ public class Player_Movement : MonoBehaviour
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
+            if (playerController.playerAbilities.m_leftAbility != null)
+                playerController.playerAbilities.m_leftAbility.AbilityWhileRolling();
+            if (playerController.playerAbilities.m_rightAbility != null)
+                playerController.playerAbilities.m_rightAbility.AbilityWhileRolling();
+
             m_rollTimer -= Time.fixedDeltaTime;
             if (m_rollTimer <= 0.0f)
+            {
                 m_isRolling = false;
+
+                if (playerController.playerAbilities.m_leftAbility != null)
+                    playerController.playerAbilities.m_leftAbility.AbilityOnEndRoll();
+                if (playerController.playerAbilities.m_rightAbility != null)
+                    playerController.playerAbilities.m_rightAbility.AbilityOnEndRoll();
+            }
+
+        }
+        else
+        {
+            if (m_rollCDTimer > 0.0f)
+                m_rollCDTimer -= Time.fixedDeltaTime;
+
+            m_isRollInvincible = false;
         }
     }
-    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    /*******************
+     * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
+     * @author : William de Beer
+     * @param : (float) Duration of the stun, (Vector3) Knockback velocity
+     */
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity, bool _bypassInvincibility = false)
     {
+        if (!_bypassInvincibility && m_isRollInvincible)
+            return;
+
         m_isStunned = true;
         m_stunTimer = _stunDuration;
         m_knockbackVelocity = _knockbackVelocity;
+        m_isRolling = false;
+        m_isRollInvincible = false;
     }
+    /*******************
+     * StunUpdate : Updates the players state of being stunned.
+     * @author : William de Beer
+     */
     private void StunUpdate()
     {
         if (m_isStunned) // Check if the player is stunned
@@ -99,80 +150,106 @@ public class Player_Movement : MonoBehaviour
             m_knockbackVelocity = Vector3.zero; // Stop knockback
         }
     }
+
+    public void IFramesActive(bool _active)
+    {
+        m_isRollInvincible = _active;
+        Debug.Log("I Frames: " + _active);
+    }
     public void StopRoll()
     {
         m_isRolling = false;
     }
-
+    /*******************
+     * Move : Contains logic to move the player, aiming and starting roll.
+     * @author : William de Beer
+     * @param : (Vector2) Movement direction, (Vector2) Aiming direction, (bool) If roll should start
+     * @return : (type) 
+     */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
+        Vector3 movement = Vector3.zero;
         if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
         {
             playerController.animator.SetBool("IsMoving", false);
             playerController.animator.SetFloat("TempMoveMag", 0);
-            return;
         }
-        playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
-        playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
-
-        if (_aim.magnitude != 0) // If the player is trying to aim...
+        else
         {
-            // Make player model face aim direction
-            Vector3 normalizedAim = Vector3.zero;
-            normalizedAim += _aim.y * transform.forward;
-            normalizedAim += _aim.x * transform.right;
-            RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
-        }
+            playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
+            playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
 
-        float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
-        playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
-
-        Vector3 normalizedMove = Vector3.zero;
-        Vector3 movement = Vector3.zero;
-
-        if (_move.magnitude != 0)
-        {
-            // Movement
-            normalizedMove += _move.y * transform.forward;
-            normalizedMove += _move.x * transform.right;
-
-            // Apply movement
-            movement = normalizedMove * speed * _deltaTime;
-
-            // If player is not trying to aim, aim in direction of movement.
-            if (_aim.magnitude == 0)
-                RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
-        }
-        if (_roll) // If roll input is triggered
-        {
-            playerController.animator.SetTrigger("Roll");
-
-            // Set roll to true
-            m_isRolling = true;
-
-            // Set roll duration
-            m_rollTimer = m_rollDuration;
-
-            // Create adrenaline provider
-            if (m_adrenShadowPrefab != null)
+            if (_aim.magnitude != 0) // If the player is trying to aim...
             {
-                AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
-                provider.m_durationInSeconds = m_shadowDuration;
-                provider.m_playerRef = this;
+                // Make player model face aim direction
+                Vector3 normalizedAim = Vector3.zero;
+                normalizedAim += _aim.y * transform.forward;
+                normalizedAim += _aim.x * transform.right;
+                RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
 
-            if (normalizedMove.magnitude != 0.0)
+            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
+            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
+
+            Vector3 normalizedMove = Vector3.zero;
+
+            if (_move.magnitude != 0)
             {
-                m_lastMoveDirection = normalizedMove;
+                // Movement
+                normalizedMove += _move.y * transform.forward;
+                normalizedMove += _move.x * transform.right;
+
+                // Apply movement
+                movement = normalizedMove * speed * _deltaTime;
+
+                // If player is not trying to aim, aim in direction of movement.
+                if (_aim.magnitude == 0)
+                    RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
             }
-            else // Set last move direction to forward for rolling if player is not moving.
+            if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
-                m_lastMoveDirection = playerModel.transform.forward; 
+                if (playerController.playerAbilities.m_leftAbility != null)
+                    playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
+                if (playerController.playerAbilities.m_rightAbility != null)
+                    playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
+
+                m_rollCDTimer = m_rollCD;
+
+                playerController.animator.SetTrigger("Roll");
+
+                // Set roll to true
+                m_isRolling = true;
+
+                // Set roll duration
+                m_rollTimer = m_rollDuration;
+
+                // Create adrenaline provider
+                if (m_adrenShadowPrefab != null)
+                {
+                    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
+                    provider.m_durationInSeconds = m_shadowDuration;
+                    provider.m_playerRef = this;
+                }
+
+                if (normalizedMove.magnitude != 0.0)
+                {
+                    m_lastMoveDirection = normalizedMove;
+                }
+                else // Set last move direction to forward for rolling if player is not moving.
+                {
+                    m_lastMoveDirection = playerModel.transform.forward;
+                }
             }
         }
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
+
+    /*******************
+     * RotateToFaceDirection : Rotates the player to face specified direction
+     * @author : William de Beer
+     * @param : (Vector3) Specified direction
+     */
     private void RotateToFaceDirection(Vector3 _direction)
     {
         // Rotate player model
@@ -183,9 +260,15 @@ public class Player_Movement : MonoBehaviour
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
         }
     }
+
+    /*******************
+     * GiveAdrenaline : Grants the player adrenaline when they perform a successful dodge.
+     * @author : William de Beer
+     * @param : (float) Value to add
+     */
     public void GiveAdrenaline(float _val)
     {
-        playerController.playerResources.ChangeAdrenaline(100 * _val);
+        playerController.playerResources.ChangeAdrenaline(_val);
 
         GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 

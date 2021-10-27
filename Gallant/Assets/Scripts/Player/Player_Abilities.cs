@@ -10,6 +10,12 @@ public enum Ability
     HP_BUFF,
     THORNS,
 }
+/****************
+ * Player_Abilities: Description
+ * @author : William de Beer
+ * @file : Player_Abilities.cs
+ * @year : 2021
+ */
 public class Player_Abilities : MonoBehaviour
 {
     [Header("Ability Information")]
@@ -20,12 +26,6 @@ public class Player_Abilities : MonoBehaviour
     [SerializeField] private UI_AbilityIcon m_leftAbilityIcon;
     [SerializeField] private UI_AbilityIcon m_rightAbilityIcon;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -35,6 +35,11 @@ public class Player_Abilities : MonoBehaviour
         if (m_rightAbilityIcon != null && m_rightAbility != null)
             m_rightAbilityIcon.SetCooldownFill(m_rightAbility.GetCooldownTime());
     }
+    /*******************
+     * UseAbility : Use ability in specified hand
+     * @author : William de Beer
+     * @param : (Hand) 
+     */
     public void UseAbility(Hand _hand)
     {
         switch (_hand)
@@ -52,6 +57,11 @@ public class Player_Abilities : MonoBehaviour
                 break;
         }
     }
+    /*******************
+     * SetAbility : Set ability in specified hand
+     * @author : William de Beer
+     * @param : (AbilityData), (Hand) 
+     */
     public void SetAbility(AbilityData _ability, Hand _hand)
     {
         AbilityBase abilityScript = null;
@@ -66,6 +76,7 @@ public class Player_Abilities : MonoBehaviour
             case Ability.LIGHTNING_BOLT:
                 break;
             case Ability.ICE_ROLL:
+                abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
                 break;
             case Ability.HP_BUFF:
                 break;
@@ -77,7 +88,9 @@ public class Player_Abilities : MonoBehaviour
         }
 
         if (abilityScript != null)
+        {
             abilityScript.m_data = _ability;
+        }
 
         switch (_hand)
         {

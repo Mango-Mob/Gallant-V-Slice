@@ -2,13 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/****************
+ * AbilityBase: Base class for ability
+ * @author : William de Beer
+ * @file : AbilityBase.cs
+ * @year : 2021
+ */
 public abstract class AbilityBase : MonoBehaviour
 {
     [Header("Ability Information")]
     public AbilityData m_data;
     private bool m_canUse = true;
     private float m_cooldownTimer = 0.0f;
-
+    protected Player_Controller playerController;
+    private void Awake()
+    {
+        playerController = GetComponent<Player_Controller>();
+    }
     public void Update()
     {
         if (!m_canUse)
@@ -29,6 +39,11 @@ public abstract class AbilityBase : MonoBehaviour
 
     public abstract void AbilityFunctionality();
     public abstract void AbilityPassive();
+    public abstract void AbilityOnHitRecieved(GameObject _attacker, float _damage);
+    public abstract void AbilityOnHitDealt(GameObject _target, float _damage);
+    public abstract void AbilityOnBeginRoll();
+    public abstract void AbilityWhileRolling();
+    public abstract void AbilityOnEndRoll();
 
     void StartCooldown()
     {

@@ -19,7 +19,10 @@ public class Actor : StateMachine
     //Accessables:
     public Actor_Legs m_legs { get; private set; } //The Legs of the actor
     public Actor_Animator m_animator { get; private set; } //The animator of the actor
-    public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dumie
+    public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dummy
+    public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
+
+    public Actor_UI m_ui { get; private set; }
 
     public GameObject m_target { get; set; } = null; //The current focus of the actor
     public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
@@ -32,6 +35,7 @@ public class Actor : StateMachine
     //Status:
     private bool m_isDead = false;
     private float m_currentHealth;
+    private UI_Bar m_healthBar;
 
     //Called upon the creation of the class.
     private void Awake()
@@ -41,10 +45,14 @@ public class Actor : StateMachine
         //Load information from Scriptable Object
         m_currentHealth = m_myData.health;
 
-        //Get external scripts:
         m_legs = GetComponentInChildren<Actor_Legs>();
+        if(m_legs != null)
+            m_legs.m_baseSpeed = m_myData.baseSpeed;
+
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
+        m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
+        m_ui = GetComponentInChildren<Actor_UI>();
 
         m_tracker?.RecordResistance(m_myData.resistance);
 
@@ -60,9 +68,18 @@ public class Actor : StateMachine
                 }
             }
         }
+    }
 
+    // Called at the start of the first update call
+    private void Start()
+    {
         if (m_myData.m_states.Contains(State.Type.IDLE))
             SetState(new State_Idle(this));
+
+        if(m_ui != null)
+        {
+            m_healthBar = m_ui.GetElement<UI_Bar>();
+        }
     }
 
     // Update is called once per frame
@@ -70,6 +87,15 @@ public class Actor : StateMachine
     {
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
+
+        m_animator?.SetFloat("VelocityHaste", m_legs.m_speedModifier);
+
+        if(InputManager.instance.IsKeyDown(KeyType.J))
+        {
+            GetComponent<StatusEffectContainer>().AddStatusEffect(new BurnStatus(15.0f, 5.0f));
+        }
+
+        m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
     }
 
     /*********************
@@ -142,6 +168,10 @@ public class Actor : StateMachine
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
+                if(m_myData.m_states.Contains(State.Type.DEAD))
+                {
+                    SetState(new State_Dead(this));
+                }
             }
         }
     }
@@ -163,5 +193,15 @@ public class Actor : StateMachine
                 attack.OnGizmosDraw(this);
             }
         }
+    }
+
+    /*******************
+    * DestroySelf : Destroys the gameObject itself.
+    * @author : Michael Jordan
+    * @param : (float) the damage that will be dealt to the actor.
+    */
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }
