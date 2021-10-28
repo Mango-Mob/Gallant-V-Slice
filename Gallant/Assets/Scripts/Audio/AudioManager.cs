@@ -74,13 +74,17 @@ public class AudioManager
             volumes[i] = PlayerPrefs.GetFloat($"volume{i}", 1.0f);
         }
     }
-
-    private void OnDestroy()
+    public void SaveData()
     {
         for (int i = 0; i < volumes.Length; i++)
         {
             PlayerPrefs.SetFloat($"volume{i}", volumes[i]);
         }
+    }
+
+    private void OnDestroy()
+    {
+        SaveData();  
     }
 
     /// <summary>

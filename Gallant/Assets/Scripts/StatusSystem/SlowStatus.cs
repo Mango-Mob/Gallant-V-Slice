@@ -2,7 +2,8 @@
 using UnityEngine;
 
 /****************
- * SlowStatus : A status effect that slows the victim and slowly speeds them up while the duration ends.
+ * SlowStatus : A status effect that slows the victim and slowly speeds them up while the duration ends. 
+ *              Strength = percentage of slow.
  * @author : Michael Jordan
  * @file : SlowStatus.cs
  * @year : 2021
@@ -15,9 +16,17 @@ public class SlowStatus : StatusEffect
     {
         if (other.GetType() == typeof(SlowStatus))
         {
-            m_strength = Mathf.Max(m_strength, (other as SlowStatus).m_strength);
-            m_duration = Mathf.Max(m_duration, (other as SlowStatus).m_duration);
-            m_startDuration = Mathf.Max(m_startDuration, m_duration);
+            if (m_strength == (other as SlowStatus).m_strength)
+            {
+                m_duration = Mathf.Max(m_duration, (other as SlowStatus).m_duration);
+                m_startDuration = Mathf.Max(m_startDuration, m_duration);
+            }
+            else
+            {
+                m_strength = Mathf.Max(m_strength, (other as SlowStatus).m_strength);
+                m_duration = (other as SlowStatus).m_duration;
+                m_startDuration = m_duration;
+            }
             return true;
         }
         return false;

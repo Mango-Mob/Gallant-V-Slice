@@ -35,6 +35,7 @@ public class Actor : StateMachine
     //Status:
     private bool m_isDead = false;
     private float m_currentHealth;
+    private UI_Bar m_healthBar;
 
     //Called upon the creation of the class.
     private void Awake()
@@ -74,6 +75,11 @@ public class Actor : StateMachine
     {
         if (m_myData.m_states.Contains(State.Type.IDLE))
             SetState(new State_Idle(this));
+
+        if(m_ui != null)
+        {
+            m_healthBar = m_ui.GetElement<UI_Bar>();
+        }
     }
 
     // Update is called once per frame
@@ -86,8 +92,10 @@ public class Actor : StateMachine
 
         if(InputManager.instance.IsKeyDown(KeyType.J))
         {
-            GetComponent<StatusEffectContainer>().AddStatusEffect(new SlowStatus(1.0f, 5.0f));
+            GetComponent<StatusEffectContainer>().AddStatusEffect(new BurnStatus(15.0f, 5.0f));
         }
+
+        m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
     }
 
     /*********************

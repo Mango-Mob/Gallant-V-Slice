@@ -141,39 +141,39 @@ public class LevelLoader : MonoBehaviour
         float timeMult = 1.0f;
         isTransitioning = true;
 
-        switch (_transition)
-        {
-            case Transition.CROSSFADE:
-                transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
-                break;
-            case Transition.YOUDIED:
-                transition = Instantiate(youdiedPrefab, transform).GetComponent<Animator>();
-                timeMult = 5.0f;
-                break;
-            case Transition.YOUWIN:
-                transition = Instantiate(youwinPrefab, transform).GetComponent<Animator>();
-                timeMult = 3.5f;
-                break;
-        }
+        //switch (_transition)
+        //{
+        //    case Transition.CROSSFADE:
+        //        transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
+        //        break;
+        //    case Transition.YOUDIED:
+        //        transition = Instantiate(youdiedPrefab, transform).GetComponent<Animator>();
+        //        timeMult = 5.0f;
+        //        break;
+        //    case Transition.YOUWIN:
+        //        transition = Instantiate(youwinPrefab, transform).GetComponent<Animator>();
+        //        timeMult = 3.5f;
+        //        break;
+        //}
 
-        transition.speed = 1.0f / timeMult;
-
-        if (transition != null)
-        {
-            // Wait to let animation finish playing
-            yield return new WaitForSeconds(transitionTime * timeMult);
-        }
+        //transition.speed = 1.0f / timeMult;
+        //
+        //if (transition != null)
+        //{
+        //    // Wait to let animation finish playing
+        //    yield return new WaitForSeconds(transitionTime * timeMult);
+        //}
         // Load Scene
         SceneManager.LoadScene(_name);
-        yield return new WaitForSeconds(transitionTime * timeMult);
+        //yield return new WaitForSeconds(transitionTime * timeMult);
 
-        if (transition != null)
-        {
-            Destroy(transition.gameObject);
-            transition = null;
-        }
+        //if (transition != null)
+        //{
+        //    Destroy(transition.gameObject);
+        //    transition = null;
+        //}
         isTransitioning = false;
-        
+        yield return null;
     }
 
     //public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
