@@ -168,7 +168,7 @@ public class Player_Movement : MonoBehaviour
      */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
-        Vector2 adjustedMove = _move / (_aim.magnitude != 0.0f ? 2.0f : 1.0f);
+        _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f);
 
         Vector3 movement = Vector3.zero;
         if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
@@ -195,11 +195,11 @@ public class Player_Movement : MonoBehaviour
 
             Vector3 normalizedMove = Vector3.zero;
 
-            if (adjustedMove.magnitude != 0)
+            if (_move.magnitude != 0)
             {
                 // Movement
-                normalizedMove += adjustedMove.y * transform.forward;
-                normalizedMove += adjustedMove.x * transform.right;
+                normalizedMove += _move.y * transform.forward;
+                normalizedMove += _move.x * transform.right;
 
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
@@ -214,15 +214,22 @@ public class Player_Movement : MonoBehaviour
                 rotationVector += normalizedMove.z * playerModel.transform.right;
                 rotationVector += normalizedMove.x * playerModel.transform.forward;
 
-                playerController.animator.SetFloat("Horizontal", rotationVector.z);
-                playerController.animator.SetFloat("Vertical", rotationVector.x);
+                if (_aim.magnitude == 0)
+                {
+                    playerController.animator.SetFloat("Horizontal", 0.0f);
+                    playerController.animator.SetFloat("Vertical", _move.magnitude);
+                }
+                else
+                {
+                    playerController.animator.SetFloat("Horizontal", rotationVector.z);
+                    playerController.animator.SetFloat("Vertical", rotationVector.x);
+                }
             }
             else
             {
                 playerController.animator.SetFloat("Horizontal", 0);
                 playerController.animator.SetFloat("Vertical", 0);
             }
-            Debug.Log($"X: {playerController.animator.GetFloat("Horizontal")}, Y: {playerController.animator.GetFloat("Vertical")}");
 
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
