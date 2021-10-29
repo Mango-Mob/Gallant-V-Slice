@@ -91,6 +91,7 @@ public class Player_Abilities : MonoBehaviour
         if (abilityScript != null)
         {
             abilityScript.m_data = _ability;
+            abilityScript.m_attachedHand = _hand;
         }
 
         switch (_hand)
