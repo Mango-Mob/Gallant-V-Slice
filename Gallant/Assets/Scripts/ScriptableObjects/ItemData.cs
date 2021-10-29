@@ -9,4 +9,6 @@ public class ItemData : ScriptableObject
     public string itemName;
     public ItemEffect itemEffect;
     public Sprite itemIcon;
+
+    public string description;
 }
