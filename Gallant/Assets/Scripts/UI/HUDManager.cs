@@ -76,18 +76,11 @@ public class HUDManager : MonoBehaviour
         return null;
     }
 
-    /*
-     * GetElement by Michael Jordan
-     * Description:
-     *  A Generic function used to find a UI_Element within this container.
-     *
-     * Generic: 
-     *   T - "typeof the UI_Element you are trying to find". Must me a child of the UI_Element class.
-     * Param:
-     *  name - "name of the UI_Element within the heirarchy". By default it is blank.
-     *
-     * Return: 
-     *  T - the element or null if it can not be found.
+    /*******************
+     * GetElement : A Generic function used to find a UI_Element within this container.
+     * @author : Michael Jordan
+     * @param : <T> typeof the UI_Element you are trying to find. Must me a child of the UI_Element class.
+     * @param : (string) name of the UI_Element within the heirarchy (Default = "").
      */
     public T GetElement<T>(string name = "") where T : UI_Element
     {

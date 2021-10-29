@@ -76,6 +76,7 @@ public class Player_Abilities : MonoBehaviour
             case Ability.LIGHTNING_BOLT:
                 break;
             case Ability.ICE_ROLL:
+                abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
                 break;
             case Ability.HP_BUFF:
                 break;
@@ -87,7 +88,9 @@ public class Player_Abilities : MonoBehaviour
         }
 
         if (abilityScript != null)
+        {
             abilityScript.m_data = _ability;
+        }
 
         switch (_hand)
         {
