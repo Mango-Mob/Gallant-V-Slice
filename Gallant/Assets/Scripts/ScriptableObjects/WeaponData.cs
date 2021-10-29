@@ -11,6 +11,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "weaponData", menuName = "Weapon Data", order = 1)]
 public class WeaponData : ScriptableObject
 {
+    public string weaponName;
     public Weapon weaponType; // The type of weapon the object is.
     public GameObject weaponModelPrefab; // Prefab of weapon model to be used when player is holding it
 
@@ -23,4 +24,14 @@ public class WeaponData : ScriptableObject
     [Header("Base Weapon Stats")]
     public int m_damage = 10; 
     public float m_speed = 1;
+
+    public static WeaponData GenerateWeapon(int _damage, float _speed)
+    {
+        WeaponData data = CreateInstance<WeaponData>();
+
+        data.m_damage = _damage;
+        data.m_speed = _speed;
+
+        return data;
+    }
 }

@@ -69,6 +69,12 @@ public class Frostpath : MonoBehaviour
             Actor actor = other.GetComponent<Actor>();
             if (actor != null)
             {
+
+            }
+            StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
+            if (status != null)
+            {
+                status.AddStatusEffect(new SlowStatus(0.5f, 0.5f));
             }
         }
     }

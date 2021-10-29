@@ -35,6 +35,12 @@ public class FirewaveProjectile : MonoBehaviour
             {
                 actor.DealDamage(m_damage);
             }
+
+            StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
+            if (status != null)
+            {
+                status.AddStatusEffect(new BurnStatus(5.0f, 3.0f));
+            }
         }
     }
 }

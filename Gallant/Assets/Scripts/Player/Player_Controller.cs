@@ -12,6 +12,7 @@ public class Player_Controller : MonoBehaviour
 {
     private Camera playerCamera;
     public Animator animator;
+    public LayerMask m_mouseAimingRayLayer;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -158,6 +159,7 @@ public class Player_Controller : MonoBehaviour
             movement.x -= (InputManager.instance.IsKeyPressed(KeyType.A) ? 1.0f : 0.0f);
             movement.y += (InputManager.instance.IsKeyPressed(KeyType.W) ? 1.0f : 0.0f);
             movement.y -= (InputManager.instance.IsKeyPressed(KeyType.S) ? 1.0f : 0.0f);
+            movement.Normalize();
             m_currentVelocity = Vector3.SmoothDamp(m_currentVelocity, movement, ref m_movementVelocity, 0.1f);
             return m_currentVelocity;
         }
@@ -173,19 +175,26 @@ public class Player_Controller : MonoBehaviour
         }
         else // If using mouse
         {
-            // Raycast to find raycast point
-            RaycastHit hit;
-            Ray ray = playerCamera.ScreenPointToRay(InputManager.instance.GetMousePositionInScreen());
-            if (Physics.Raycast(ray, out hit, 1000))
+            if (InputManager.instance.IsKeyPressed(KeyType.L_CTRL) || InputManager.instance.IsKeyPressed(KeyType.L_SHIFT))
             {
-                // Return direction from player to hit point
-                Vector3 aim = hit.point - transform.position;
+                // Raycast to find raycast point
+                RaycastHit hit;
+                Ray ray = playerCamera.ScreenPointToRay(InputManager.instance.GetMousePositionInScreen());
+                if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
+                {
+                    // Return direction from player to hit point
+                    Vector3 aim = hit.point - transform.position;
 
-                Vector3 normalizedAim = Vector3.zero;
-                normalizedAim += aim.z * -transform.right;
-                normalizedAim += aim.x * transform.forward;
-                normalizedAim *= -1;
-                m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
+                    Vector3 normalizedAim = Vector3.zero;
+                    normalizedAim += aim.z * -transform.right;
+                    normalizedAim += aim.x * transform.forward;
+                    normalizedAim *= -1;
+                    m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
+                }
+            }
+            else
+            {
+                m_lastAimDirection = new Vector2(0.0f, 0.0f);
             }
             return m_lastAimDirection;
         }
