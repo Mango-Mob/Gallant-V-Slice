@@ -17,13 +17,16 @@ public class WeaponReward : Reward
 
     public Text m_leftDamage;
     public Text m_leftSpeed;
+    public Text m_leftKnockback;
 
     public Text m_rightDamage;
     public Text m_rightSpeed;
+    public Text m_rightKnockback;
 
     //For each diffScale more +/- are displayed.
     private int m_damageDiffScale = 2;
     private float m_speedDiffScale = 3.0f;
+    private float m_knockDiffScale = 3.0f;
 
     public void LoadWeapon(WeaponData data, Player_Attack playerData)
     {
@@ -35,9 +38,11 @@ public class WeaponReward : Reward
 
         UpdateCompareField(m_leftDamage, data.m_damage - playerData.m_leftWeapon.m_damage, (float)m_damageDiffScale);
         UpdateCompareField(m_leftSpeed, data.m_speed - playerData.m_leftWeapon.m_speed, m_speedDiffScale);
+        UpdateCompareField(m_leftKnockback, data.m_knockback - playerData.m_leftWeapon.m_knockback, m_knockDiffScale);
 
         UpdateCompareField(m_rightDamage, data.m_damage - playerData.m_rightWeapon.m_damage, (float)m_damageDiffScale);
         UpdateCompareField(m_rightSpeed, data.m_speed - playerData.m_rightWeapon.m_speed, m_speedDiffScale);
+        UpdateCompareField(m_rightKnockback, data.m_knockback - playerData.m_rightWeapon.m_knockback, m_knockDiffScale);
     }
 
     /*******************
@@ -85,7 +90,7 @@ public class WeaponReward : Reward
         }
     }
 
-    public override void GiveReward()
+    public override void GiveReward(Player_Controller player)
     {
         
     }

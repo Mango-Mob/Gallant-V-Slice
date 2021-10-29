@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class Reward : MonoBehaviour
 {
-    public abstract void GiveReward();
+    public abstract void GiveReward(Player_Controller player);
 }
