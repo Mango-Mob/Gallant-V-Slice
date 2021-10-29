@@ -36,7 +36,6 @@ public abstract class AbilityBase : MonoBehaviour
             StartCooldown();
         }
     }
-
     public abstract void AbilityFunctionality();
     public abstract void AbilityPassive();
     public abstract void AbilityOnHitRecieved(GameObject _attacker, float _damage);
