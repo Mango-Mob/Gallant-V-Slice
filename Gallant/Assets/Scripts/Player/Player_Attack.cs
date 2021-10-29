@@ -69,6 +69,8 @@ public class Player_Attack : MonoBehaviour
                 thisObject = m_leftWeaponObject;
                 thisHandPosition = m_leftHandTransform.position;
 
+                playerController.animator.SetTrigger("LeftArmAttack");
+
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
@@ -77,6 +79,8 @@ public class Player_Attack : MonoBehaviour
                 thisData = m_rightWeapon;
                 thisObject = m_rightWeaponObject;
                 thisHandPosition = m_rightHandTransform.position;
+
+                playerController.animator.SetTrigger("RightArmAttack");
 
                 break;
             default:
