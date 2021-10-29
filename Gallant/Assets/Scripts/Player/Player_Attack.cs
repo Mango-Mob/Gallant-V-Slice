@@ -46,8 +46,6 @@ public class Player_Attack : MonoBehaviour
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
-        ApplyWeaponData(Hand.LEFT);
-        ApplyWeaponData(Hand.RIGHT);
     }
 
     /*******************
@@ -150,7 +148,7 @@ public class Player_Attack : MonoBehaviour
         Destroy(_weapon.gameObject);
     }
 
-    private void ApplyWeaponData(Hand _hand)
+    public void ApplyWeaponData(Hand _hand)
     {
         switch (_hand)
         {

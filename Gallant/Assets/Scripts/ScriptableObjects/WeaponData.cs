@@ -25,19 +25,20 @@ public class WeaponData : ScriptableObject
     public int m_level = 0;
     public int m_damage = 10; 
     public float m_speed = 1;
+    public float m_knockback = 1;
 
-    public static WeaponData GenerateWeapon(int _damage, float _speed)
+    public static WeaponData GenerateWeapon(int _level)
     {
         //Takes in a level parameter, which is used to generate a random weapon.
         //Damage/Speed are randomly assigned (between a range that increases based on the level value).
         //Random ability is assigned.
+        //  Ability level randomly generates from level
         //Random weapon type.
         //Return new weapon.
 
         WeaponData data = CreateInstance<WeaponData>();
 
-        data.m_damage = _damage;
-        data.m_speed = _speed;
+
 
         return data;
     }

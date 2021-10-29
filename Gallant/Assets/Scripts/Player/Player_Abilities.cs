@@ -74,6 +74,7 @@ public class Player_Abilities : MonoBehaviour
             case Ability.ACID_POOL:
                 break;
             case Ability.LIGHTNING_BOLT:
+                abilityScript = gameObject.AddComponent<Ability_Lightning>();
                 break;
             case Ability.ICE_ROLL:
                 abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
@@ -90,6 +91,7 @@ public class Player_Abilities : MonoBehaviour
         if (abilityScript != null)
         {
             abilityScript.m_data = _ability;
+            abilityScript.m_attachedHand = _hand;
         }
 
         switch (_hand)

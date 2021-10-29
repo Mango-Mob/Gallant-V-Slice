@@ -33,11 +33,14 @@ public class Player_Controller : MonoBehaviour
         playerCamera = Camera.main;
 
         playerMovement = GetComponent<Player_Movement>();
-        playerAttack = GetComponent<Player_Attack>();
         playerAbilities = GetComponent<Player_Abilities>();
+        playerAttack = GetComponent<Player_Attack>();
         playerResources = GetComponent<Player_Resources>();
         playerPickup = GetComponentInChildren<Player_Pickup>();
         playerStats = GetComponentInChildren<Player_Stats>();
+
+        playerAttack.ApplyWeaponData(Hand.LEFT);
+        playerAttack.ApplyWeaponData(Hand.RIGHT);
     }
 
     // Update is called once per frame

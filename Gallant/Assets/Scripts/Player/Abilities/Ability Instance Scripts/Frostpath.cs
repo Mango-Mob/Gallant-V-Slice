@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Frostpath : MonoBehaviour
 {
-
     public AbilityData m_data;
     public MeshRenderer meshRenderer { get; private set; }
     public ParticleSystem frostParticles { get; private set; }
 
     private bool m_beganLife = false;
 
-    public float m_lifeTime = 1.0f;
     private float m_lifeTimer = 0.0f;
 
     private Vector3 m_startPos;
@@ -33,7 +31,7 @@ public class Frostpath : MonoBehaviour
         if (m_beganLife)
         {
             m_lifeTimer += Time.fixedDeltaTime;
-            if (m_lifeTimer > m_lifeTime)
+            if (m_lifeTimer > m_data.lifetime)
             {
                 frostParticles.Stop();
                 frostParticles.transform.SetParent(null);
@@ -43,7 +41,7 @@ public class Frostpath : MonoBehaviour
         }
 
         Color color = new Color(meshRenderer.material.color.r, meshRenderer.material.color.g, meshRenderer.material.color.b, 
-            Mathf.Clamp((m_lifeTimer < 1.0f) ? m_lifeTimer * 3.0f * m_startAlpha : (m_lifeTime - m_lifeTimer) * m_startAlpha, 0.0f, m_startAlpha));
+            Mathf.Clamp((m_lifeTimer < 1.0f) ? m_lifeTimer * 3.0f * m_startAlpha : (m_data.lifetime - m_lifeTimer) * m_startAlpha, 0.0f, m_startAlpha));
 
         meshRenderer.material.color = color;
     }
@@ -74,7 +72,7 @@ public class Frostpath : MonoBehaviour
             StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
             if (status != null)
             {
-                status.AddStatusEffect(new SlowStatus(0.5f, 0.5f));
+                status.AddStatusEffect(new SlowStatus(m_data.effectiveness, m_data.duration));
             }
         }
     }

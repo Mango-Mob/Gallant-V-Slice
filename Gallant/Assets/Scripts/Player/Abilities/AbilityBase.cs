@@ -12,6 +12,7 @@ public abstract class AbilityBase : MonoBehaviour
 {
     [Header("Ability Information")]
     public AbilityData m_data;
+    public Hand m_attachedHand; 
     private bool m_canUse = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
