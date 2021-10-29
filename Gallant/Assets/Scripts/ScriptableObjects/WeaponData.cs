@@ -22,11 +22,18 @@ public class WeaponData : ScriptableObject
     public ItemEffect itemEffect; // Only for weapons with passives.
 
     [Header("Base Weapon Stats")]
+    public int m_level = 0;
     public int m_damage = 10; 
     public float m_speed = 1;
 
     public static WeaponData GenerateWeapon(int _damage, float _speed)
     {
+        //Takes in a level parameter, which is used to generate a random weapon.
+        //Damage/Speed are randomly assigned (between a range that increases based on the level value).
+        //Random ability is assigned.
+        //Random weapon type.
+        //Return new weapon.
+
         WeaponData data = CreateInstance<WeaponData>();
 
         data.m_damage = _damage;

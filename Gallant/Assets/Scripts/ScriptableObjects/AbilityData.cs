@@ -12,6 +12,7 @@ public class AbilityData : ScriptableObject
 {
     [Header("Ability Information")]
     public string abilityName;
+    public string weaponTitle; //_ <weapon> of <title>
     public Ability abilityPower;
     public Sprite abilityIcon;
 
