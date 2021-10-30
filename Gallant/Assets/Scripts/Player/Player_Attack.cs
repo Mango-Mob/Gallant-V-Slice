@@ -103,34 +103,30 @@ public class Player_Attack : MonoBehaviour
     }
 
     /*******************
-    * UseWeapon : Use a weapon's functionality
+    * UseWeapon : Use a weapon's functionality from an animation event. This is why it uses a bool instead of a enum.
     * @author : William de Beer
-    * @param : (Hand) The hand of the weapon to be used
+    * @param : (bool) Is left hand, otherwise use right
     */
-    public void UseWeapon(Hand _hand)
+    public void UseWeapon(bool _left)
     {
         WeaponData thisData;
         Vector3 thisHandPosition;
 
-        switch (_hand)
+        if (_left)
         {
-            case Hand.LEFT: // Left hand weapon
-                if (m_leftWeaponInUse)
-                    return;
-                // Set weapon information
-                thisData = m_leftWeapon;
-                thisHandPosition = m_leftHandTransform.position;
-                break;
-            case Hand.RIGHT: // Right hand weapon
-                if (m_rightWeaponInUse)
-                    return;
-                // Set weapon information
-                thisData = m_rightWeapon;
-                thisHandPosition = m_rightHandTransform.position;
-                break;
-            default:
-                Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
+            if (m_leftWeaponInUse)
                 return;
+            // Set weapon information
+            thisData = m_leftWeapon;
+            thisHandPosition = m_leftHandTransform.position;
+        }
+        else
+        {
+            if (m_rightWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_rightWeapon;
+            thisHandPosition = m_rightHandTransform.position;
         }
 
         // If weapon is not in hand
@@ -146,7 +142,7 @@ public class Player_Attack : MonoBehaviour
                 WeaponAttack(thisData);
                 break;
             case Weapon.BOOMERANG: // Use boomerang
-                ThrowBoomerang(thisHandPosition, thisData, _hand);
+                ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
