@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 
 /****************
@@ -29,6 +30,8 @@ public class Actor_Legs : MonoBehaviour
     protected Vector3 m_targetPosition;
     protected Quaternion m_targetRotation;
 
+    private bool m_isKnocked = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -38,7 +41,11 @@ public class Actor_Legs : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_isKnocked)
+            return;
+
         transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+        m_agent.destination = m_targetPosition;
         m_agent.speed = m_baseSpeed * m_speedModifier;
     }
 
@@ -70,10 +77,9 @@ public class Actor_Legs : MonoBehaviour
     public void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
     {
         m_agent.isStopped = false;
-        m_agent.destination = target;
         m_targetPosition = target;
 
-        Vector3 direction = m_agent.destination - transform.position;
+        Vector3 direction = m_targetPosition - transform.position;
         direction.y = 0;
 
         if (lookAtTarget)
@@ -102,5 +108,54 @@ public class Actor_Legs : MonoBehaviour
 
         Quaternion lookAt = Quaternion.LookRotation((_target.transform.position - transform.position).normalized, Vector3.up);
         return Quaternion.Angle(transform.rotation, lookAt);
+    }
+
+    public void KnockBack(Vector3 force, float mass)
+    {
+        Vector3 direct = force.normalized;
+        float power = force.magnitude;
+
+        float percentage = (100 / (100 + mass));
+
+        Vector3 targetLoc = transform.position + direct * (power * percentage);
+
+        StartCoroutine(KnockbackRoutine(targetLoc));
+    }
+
+    private IEnumerator KnockbackRoutine(Vector3 targetlocation)
+    {
+        m_isKnocked = true;
+        m_agent.destination = targetlocation;
+        NavMeshPath path = new NavMeshPath();
+        //Calculate if the knockback is in a straight line
+        if(m_agent.CalculatePath(targetlocation, path))
+        {
+            //path.corners;
+            if(path.corners.Length > 2)
+            {
+                //We have a turn, replace with straight line
+                m_agent.destination = path.corners[1];
+            }
+        }
+
+        float startAngSpeed = m_agent.angularSpeed;
+        float startSpeed = m_agent.speed;
+        float startAccel = m_agent.acceleration;
+
+        m_agent.angularSpeed = 0;
+        m_agent.speed = 150;
+        m_agent.acceleration = 300;
+
+        while (Vector3.Distance(transform.position, m_agent.destination) > 1.0f)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        m_agent.angularSpeed = startAngSpeed;
+        m_agent.speed = startSpeed;
+        m_agent.acceleration = startAccel;
+        m_isKnocked = false;
+
+        yield return false;
     }
 }

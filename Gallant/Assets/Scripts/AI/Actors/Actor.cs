@@ -85,6 +85,11 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
+        if (InputManager.instance.IsKeyDown(KeyType.O))
+        {
+            m_legs.KnockBack((transform.position).normalized * 8.0f, m_myData.mass);
+        }
+
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
 
@@ -193,6 +198,11 @@ public class Actor : StateMachine
                 attack.OnGizmosDraw(this);
             }
         }
+    }
+
+    public void KnockbackActor(Vector3 force)
+    {
+        m_legs?.KnockBack(force, m_myData.mass);
     }
 
     /*******************

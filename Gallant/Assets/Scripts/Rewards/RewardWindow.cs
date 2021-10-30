@@ -17,14 +17,7 @@ public class RewardWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.IsKeyDown(KeyType.I))
-        {
-            Show(true);
-        }
-        if (InputManager.instance.IsKeyDown(KeyType.O))
-        {
-            Show();
-        }
+
     }
 
     public void Show(bool generate = false)
