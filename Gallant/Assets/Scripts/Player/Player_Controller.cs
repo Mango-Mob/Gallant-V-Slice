@@ -12,6 +12,7 @@ public class Player_Controller : MonoBehaviour
 {
     private Camera playerCamera;
     public Animator animator;
+    public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
 
     // Player components
@@ -50,6 +51,19 @@ public class Player_Controller : MonoBehaviour
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
         animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
 
+        // Set avatar mask to be used
+        if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
+        {
+            animator.SetLayerWeight(animator.GetLayerIndex("Arm"), 1.0f);
+            animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), 0.0f);
+        }
+        else
+        {
+            animator.SetLayerWeight(animator.GetLayerIndex("Arm"), 0.0f);
+            animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), 1.0f);
+        }
+
+
         // Set gamepad being used
         int gamepadID = InputManager.instance.GetAnyGamePad();
 
@@ -77,11 +91,11 @@ public class Player_Controller : MonoBehaviour
             // Weapon attacks
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
             {
-                playerAttack.UseWeapon(Hand.RIGHT);
+                playerAttack.StartUsing(Hand.RIGHT);
             }
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
             {
-                playerAttack.UseWeapon(Hand.LEFT);
+                playerAttack.StartUsing(Hand.LEFT);
             }
 
             // Ability attacks
