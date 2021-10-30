@@ -42,22 +42,21 @@ public class Player_Attack : MonoBehaviour
     [SerializeField] private UI_WeaponIcon m_leftWeaponIcon;
     [SerializeField] private UI_WeaponIcon m_rightWeaponIcon;
 
-    private void Start()
+    private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
     }
 
     /*******************
-     * UseWeapon : Use a weapon's functionality
+     * StartUsing : Begin the use of held weapon via animation.
      * @author : William de Beer
      * @param : (Hand) The hand of the weapon to be used
      */
-    public void UseWeapon(Hand _hand)
+    public void StartUsing(Hand _hand)
     {
         WeaponData thisData;
-        GameObject thisObject;
-        Vector3 thisHandPosition;
+        string animatorTriggerName = "";
 
         switch (_hand)
         {
@@ -66,22 +65,68 @@ public class Player_Attack : MonoBehaviour
                     return;
                 // Set weapon information
                 thisData = m_leftWeapon;
-                thisObject = m_leftWeaponObject;
-                thisHandPosition = m_leftHandTransform.position;
-
+                animatorTriggerName += "Left";
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
                     return;
                 // Set weapon information
                 thisData = m_rightWeapon;
-                thisObject = m_rightWeaponObject;
-                thisHandPosition = m_rightHandTransform.position;
-
+                animatorTriggerName += "Right";
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
                 return;
+        }
+
+        // If weapon is not in hand
+        if (thisData == null)
+            return;
+
+        switch (thisData.weaponType)
+        {
+            case Weapon.SWORD: // Use sword
+                animatorTriggerName += "Sword";
+                break;
+            case Weapon.SHIELD: // Use shield
+                animatorTriggerName += "Shield";
+                break;
+            case Weapon.BOOMERANG: // Use boomerang
+                animatorTriggerName += "Boomerang";
+                break;
+            default:
+                Debug.Log("Weapon not implemented:" + thisData.weaponType);
+                break;
+        }
+
+        playerController.animator.SetTrigger(animatorTriggerName);
+    }
+
+    /*******************
+    * UseWeapon : Use a weapon's functionality from an animation event. This is why it uses a bool instead of a enum.
+    * @author : William de Beer
+    * @param : (bool) Is left hand, otherwise use right
+    */
+    public void UseWeapon(bool _left)
+    {
+        WeaponData thisData;
+        Vector3 thisHandPosition;
+
+        if (_left)
+        {
+            if (m_leftWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_leftWeapon;
+            thisHandPosition = m_leftHandTransform.position;
+        }
+        else
+        {
+            if (m_rightWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_rightWeapon;
+            thisHandPosition = m_rightHandTransform.position;
         }
 
         // If weapon is not in hand
@@ -97,7 +142,7 @@ public class Player_Attack : MonoBehaviour
                 WeaponAttack(thisData);
                 break;
             case Weapon.BOOMERANG: // Use boomerang
-                ThrowBoomerang(thisHandPosition, thisData, _hand);
+                ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
