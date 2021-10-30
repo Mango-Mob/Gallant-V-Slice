@@ -52,7 +52,7 @@ public class Player_Movement : MonoBehaviour
         var animControllers = playerController.animator.runtimeAnimatorController;
         foreach (var clip in animControllers.animationClips)
         {
-            if (clip.name == "dodge roll event")
+            if (clip.name == "knight dodge roll")
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
         }
     }
