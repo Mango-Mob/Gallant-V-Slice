@@ -16,7 +16,8 @@ public class State_MoveToTarget : State
 
     public override void Update()
     {
-        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized);
+        if (m_myActor.m_animator != null && m_myActor.m_animator.m_hasVelocity)
+            m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized);
 
         if (m_myActor.m_target == null)
         {

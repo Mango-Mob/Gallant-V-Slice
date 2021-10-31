@@ -52,7 +52,7 @@ public class Player_Movement : MonoBehaviour
         var animControllers = playerController.animator.runtimeAnimatorController;
         foreach (var clip in animControllers.animationClips)
         {
-            if (clip.name == "dodge roll event")
+            if (clip.name == "knight dodge roll")
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
         }
     }
@@ -171,16 +171,8 @@ public class Player_Movement : MonoBehaviour
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f);
 
         Vector3 movement = Vector3.zero;
-        if (m_isRolling || m_isStunned) // If the player is rolling prevent other movement
+        if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
         {
-            playerController.animator.SetBool("IsMoving", false);
-            playerController.animator.SetFloat("TempMoveMag", 0);
-        }
-        else
-        {
-            playerController.animator.SetFloat("TempMoveMag", _move.magnitude);
-            playerController.animator.SetBool("IsMoving", _move.magnitude > 0.0f);
-
             if (_aim.magnitude != 0) // If the player is trying to aim...
             {
                 // Make player model face aim direction
