@@ -296,7 +296,7 @@ public class Player_Attack : MonoBehaviour
         Actor actor = _target.GetComponent<Actor>();
         if (actor != null)
         {
-            actor.DealDamage(_damage);
+            actor.DealDamage(_damage, transform.position);
         }
     }
 

@@ -13,11 +13,17 @@ public class Actor_Animator : MonoBehaviour
 {
     //Accessables:
     protected Animator m_animator;
+    public bool m_hasVelocity { get; private set; }
+    public bool m_hasHit { get; private set; }
+
 
     // Start is called before the first frame update
     void Awake()
     {
         m_animator = GetComponent<Animator>();
+
+        m_hasVelocity = (HasParameter("VelocityHorizontal") && HasParameter("VelocityVertical") && HasParameter("VelocityHaste"));
+        m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
     }
 
     /*******************
@@ -142,5 +148,20 @@ public class Actor_Animator : MonoBehaviour
         value = end;
         m_animator.SetFloat(valueName, value);
         yield return null;
+    }
+
+    public bool HasParameter(string _name)
+    {
+        if (m_animator == null)
+            return false;
+
+        foreach (var param in m_animator.parameters)
+        {
+            if(param.name == _name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

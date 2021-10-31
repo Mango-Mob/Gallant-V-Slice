@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /****************
  * Actor_Tracker : An actor component used to track and display the damage dealt to this actor.
@@ -17,7 +17,7 @@ public class Actor_Tracker : MonoBehaviour
     public float m_peakRefreshTime = 5f;
 
     //Where to display the text;
-    private TextMeshPro m_display;
+    private Text m_display;
 
     /****************
      * DamageRecord : A struct which records the system time when a damage was received.
@@ -56,7 +56,7 @@ public class Actor_Tracker : MonoBehaviour
     //Called upon creation of this class
     private void Awake()
     {
-        m_display = GetComponent<TextMeshPro>();
+        m_display = GetComponent<Text>();
         m_peakDPS = new DamageRecord(0);
     }
 

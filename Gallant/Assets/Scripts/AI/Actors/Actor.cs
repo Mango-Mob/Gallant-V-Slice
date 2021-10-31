@@ -85,19 +85,15 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.instance.IsKeyDown(KeyType.O))
-        {
-            m_legs.KnockBack((transform.position).normalized * 8.0f, m_myData.mass);
-        }
-
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
 
-        m_animator?.SetFloat("VelocityHaste", m_legs.m_speedModifier);
-
+        if(m_animator != null && m_animator.m_hasVelocity)
+            m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
+    
         if(InputManager.instance.IsKeyDown(KeyType.J))
         {
-            GetComponent<StatusEffectContainer>().AddStatusEffect(new BurnStatus(15.0f, 5.0f));
+            DealDamage(1, Vector3.zero);
         }
 
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
@@ -154,8 +150,9 @@ public class Actor : StateMachine
     * DealDamage : Reduces the actor's current hp by the damage provided, will ignore any negative damage and will kill the actor when hp = 0.
     * @author : Michael Jordan
     * @param : (float) the damage that will be dealt to the actor.
+    * @param : (Vector3?) where the damage was deal from (default = null, for no react).
     */
-    public void DealDamage(float _damage)
+    public void DealDamage(float _damage, Vector3? fromPos = null)
     {
         if (!m_isDead)
         {
@@ -178,7 +175,19 @@ public class Actor : StateMachine
                     SetState(new State_Dead(this));
                 }
             }
+            else if(fromPos.HasValue && m_animator.m_hasHit)
+            {
+                HandleHitLoc(fromPos.Value);
+            }
         }
+    }
+
+    private void HandleHitLoc(Vector3 fromPos)
+    {
+        Vector3 direct = (fromPos - transform.position);
+
+        m_animator.SetTrigger("Hit");
+        m_animator.SetVector3("HitHorizontal", "","HitVertical", direct.normalized);
     }
 
     //Draws guides only in the editor for debuging.
