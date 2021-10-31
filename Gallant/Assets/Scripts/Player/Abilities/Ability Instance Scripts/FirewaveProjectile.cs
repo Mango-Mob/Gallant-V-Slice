@@ -5,8 +5,6 @@ using UnityEngine;
 public class FirewaveProjectile : MonoBehaviour
 {
     public float m_speed = 10.0f;
-    public float m_damage = 20.0f;
-    public float m_lifeTime = 1.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
 
@@ -21,19 +19,25 @@ public class FirewaveProjectile : MonoBehaviour
     {
         transform.position += transform.forward * m_speed * Time.fixedDeltaTime;
         m_lifeTimer += Time.fixedDeltaTime;
-        if (m_lifeTimer > m_lifeTime)
+        if (m_lifeTimer > m_data.lifetime)
             Destroy(gameObject);
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Debug.Log("Hit " + other.name + " with " + m_damage + " for " + m_damage);
+            Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
 
             Actor actor = other.GetComponent<Actor>();
             if (actor != null)
             {
-                actor.DealDamage(m_damage);
+                actor.DealDamage(m_data.damage);
+            }
+
+            StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
+            if (status != null)
+            {
+                status.AddStatusEffect(new BurnStatus(m_data.effectiveness, m_data.duration));
             }
         }
     }

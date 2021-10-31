@@ -12,6 +12,7 @@ public abstract class AbilityBase : MonoBehaviour
 {
     [Header("Ability Information")]
     public AbilityData m_data;
+    public Hand m_attachedHand; 
     private bool m_canUse = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
@@ -36,7 +37,6 @@ public abstract class AbilityBase : MonoBehaviour
             StartCooldown();
         }
     }
-
     public abstract void AbilityFunctionality();
     public abstract void AbilityPassive();
     public abstract void AbilityOnHitRecieved(GameObject _attacker, float _damage);

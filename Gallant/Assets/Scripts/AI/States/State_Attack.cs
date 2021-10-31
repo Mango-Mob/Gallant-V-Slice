@@ -24,7 +24,9 @@ public class State_Attack : State
         }
 
         m_myActor.m_legs.Halt();
-        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
+
+        if (m_myActor.m_animator != null && m_myActor.m_animator.m_hasVelocity)
+            m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
     }
 
     public override void Update()
