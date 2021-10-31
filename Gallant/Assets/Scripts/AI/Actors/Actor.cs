@@ -91,11 +91,6 @@ public class Actor : StateMachine
         if(m_animator != null && m_animator.m_hasVelocity)
             m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
     
-        if(InputManager.instance.IsKeyDown(KeyType.J))
-        {
-            DealDamage(1, Vector3.zero);
-        }
-
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
     }
 

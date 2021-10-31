@@ -7,25 +7,28 @@ public class ItemReward : Reward
 {
     public Text m_title;
 
-    public Image m_weaponImageLoc;
+    public Image m_itemImageLoc;
 
     public Text m_description;
 
     private ItemData m_currentlyLoaded;
+    private Player_Controller m_activePlayer;
 
-    public void LoadItem(ItemData data)
+    public void LoadItem(ItemData data, Player_Controller player)
     {
         m_title.text = data.itemName;
 
         m_description.text = "Description: \n" + data.description;
 
-        m_weaponImageLoc.sprite = data.itemIcon;
+        m_itemImageLoc.sprite = data.itemIcon;
 
         m_currentlyLoaded = data;
+        m_activePlayer = player;
     }
 
-    public override void GiveReward(Player_Controller player)
+    public override void GiveReward()
     {
-        player.playerStats.AddEffect(m_currentlyLoaded.itemEffect);
+        m_activePlayer?.playerStats.AddEffect(m_currentlyLoaded.itemEffect);
+        GetComponentInParent<RewardWindow>().Hide();
     }
 }
