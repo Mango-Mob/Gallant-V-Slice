@@ -79,6 +79,6 @@ public class SlowStatus : StatusEffect
 
     protected override void LoadDisplayVFX()
     {
-        Debug.LogError("Slow status effect doesn't currently load the Display vfx.");
+        //Debug.LogError("Slow status effect doesn't currently load the Display vfx.");
     }
 }
