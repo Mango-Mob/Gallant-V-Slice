@@ -271,13 +271,19 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (WeaponData) 
      */
-    private void WeaponAttack(WeaponData _data)
+    private void WeaponAttack(WeaponData _data, Vector3 _source)
     {
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
         foreach (var collider in colliders)
         {
             Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
             DamageTarget(collider.gameObject, _data.m_damage);
+
+            Actor actor = collider.GetComponent<Actor>();
+            if (actor != null)
+            {
+                //actor.;
+            }
         }
     }
 
