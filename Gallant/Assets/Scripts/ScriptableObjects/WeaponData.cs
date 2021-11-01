@@ -27,6 +27,9 @@ public class WeaponData : ScriptableObject
     public float m_speed = 1;
     public float m_knockback = 1;
 
+    [Header("Dropped Weapon Data")]
+    public float m_dropScaleMultiplier = 1.0f;
+
     public static WeaponData GenerateWeapon(int _level)
     {
         WeaponData data = null;
@@ -48,6 +51,8 @@ public class WeaponData : ScriptableObject
                 Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
                 return null;
         }
+
+        data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
         data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
@@ -95,12 +100,36 @@ public class WeaponData : ScriptableObject
                 break;
         }
 
+        if (data.abilityData == null)
+            TempReroll(ref data, powerLevel);
+
         // Create weapon name
         if(data.abilityData != null)
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
 
         //Return new weapon.
         return data;
+    }
+
+    public static void TempReroll(ref WeaponData data, int powerLevel)
+    {
+        int newAbilityTypeNo = Random.Range(0, 4);
+        if (newAbilityTypeNo == 0)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 1)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 2)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 3)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
+        }
     }
 
     public void Clone(WeaponData other)
