@@ -25,6 +25,7 @@ public class State_Wait : State
         //Check if there is a target to move to.
         if(m_myActor.m_target != null)
         {
+            m_myActor.m_legs.SetTargetRotation(Quaternion.LookRotation(m_myActor.m_target.transform.position-m_myActor.transform.position, Vector3.up));
             if (m_myActor.m_myData.m_states.Contains(Type.ATTACK))
             {
                 List<Actor_Attack> currentAttacks = new List<Actor_Attack>(m_myActor.m_myAttacks);

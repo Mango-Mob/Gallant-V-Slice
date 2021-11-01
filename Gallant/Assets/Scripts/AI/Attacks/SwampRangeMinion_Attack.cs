@@ -16,7 +16,7 @@ namespace SwampRangeMinion_Attack
     public class Throw : Actor_Attack
     {
         //Constructor
-        public Throw() : base() { m_baseDamage = 10.0f; m_cooldown = 0.5f; m_priority = 8; }
+        public Throw() : base() { m_baseDamage = 10.0f; m_cooldown = 1.5f; m_priority = 8; }
 
         public override void BeginAttack(Actor user)
         {
@@ -61,7 +61,7 @@ namespace SwampRangeMinion_Attack
         public override void Invoke(Actor user, Collider hitCollider)
         {
             GameObject projPrefab = LoadObjectData("SpitProjectile");
-            user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_myData.m_damageModifier, 50f);
+            user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_myData.m_damageModifier, 25f);
         }
 
         /*******************

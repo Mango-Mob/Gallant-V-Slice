@@ -145,7 +145,7 @@ public class JukeboxAgent : AudioAgent
     {
         for (int i = 0; i < currentList.Count; i++)
         {
-            if(currentList[i] == clip)
+            if(currentList[i].name == clip.name)
             {
                 return i;
             }

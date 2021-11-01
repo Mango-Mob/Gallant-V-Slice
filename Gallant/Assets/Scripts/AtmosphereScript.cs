@@ -16,14 +16,12 @@ public class AtmosphereScript : MonoBehaviour
     public void StartCombat()
     {
         m_normalAgent.Stop();
-        m_combatAgent.Shuffle();
-        m_combatAgent.Play(0);
+        m_combatAgent.Play((uint)Random.Range(0, m_combatAgent.audioClips.Count));
     }
 
     public void EndCombat()
     {
         m_combatAgent.Stop();
-        m_normalAgent.Shuffle();
-        m_normalAgent.Play(0);
+        m_normalAgent.Play((uint)Random.Range(0, m_normalAgent.audioClips.Count));
     }
 }

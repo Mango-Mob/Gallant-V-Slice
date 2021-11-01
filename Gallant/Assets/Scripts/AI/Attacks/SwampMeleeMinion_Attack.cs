@@ -16,7 +16,7 @@ namespace SwampMeleeMinion_Attack
     public class SingleSlash : Actor_Attack
     {
         //Constructor
-        public SingleSlash() : base() { m_baseDamage = 10.0f; m_cooldown = 0.25f; m_priority = 8; }
+        public SingleSlash() : base() { m_baseDamage = 10.0f; m_cooldown = 1.0f; m_priority = 8; }
 
         /*******************
          * GetOverlap : Gets all colliders that overlapSphere with the attack's collider.
@@ -27,7 +27,7 @@ namespace SwampMeleeMinion_Attack
          */
         public override Collider[] GetOverlap(Actor user, int targetLayer)
         {
-            return Physics.OverlapSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f, 1 << targetLayer);
+            return Physics.OverlapSphere(user.transform.position + (user.transform.forward * 0.8f) + user.transform.up, 0.8f, 1 << targetLayer);
         }
 
         /*******************
@@ -49,7 +49,7 @@ namespace SwampMeleeMinion_Attack
         public override void OnGizmosDraw(Actor user)
         {
             Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f);
+            Gizmos.DrawWireSphere(user.transform.position + (user.transform.forward * 0.8f) + user.transform.up, 0.8f);
         }
     }
 }
