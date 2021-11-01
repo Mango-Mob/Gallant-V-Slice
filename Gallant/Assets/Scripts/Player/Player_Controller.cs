@@ -22,6 +22,8 @@ public class Player_Controller : MonoBehaviour
     public Player_Resources playerResources { private set; get; }
     public Player_Pickup playerPickup { private set; get; }
     public Player_Stats playerStats { private set; get; }
+    public Player_AudioAgent playerAudioAgent { private set; get; }
+
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -39,6 +41,7 @@ public class Player_Controller : MonoBehaviour
         playerResources = GetComponent<Player_Resources>();
         playerPickup = GetComponentInChildren<Player_Pickup>();
         playerStats = GetComponentInChildren<Player_Stats>();
+        playerAudioAgent = GetComponent<Player_AudioAgent>();
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
@@ -47,6 +50,9 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UI_PauseMenu.isPaused)
+            return;
+
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
         animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
@@ -91,23 +97,23 @@ public class Player_Controller : MonoBehaviour
             // Weapon attacks
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
             {
-                //playerAttack.StartUsing(Hand.RIGHT);
-                playerAttack.UseWeapon(false);
+                playerAttack.StartUsing(Hand.RIGHT);
+                //playerAttack.UseWeapon(false);
             }
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
             {
-                //playerAttack.StartUsing(Hand.LEFT);
-                playerAttack.UseWeapon(true);
+                playerAttack.StartUsing(Hand.LEFT);
+                //playerAttack.UseWeapon(true);
             }
 
             // Ability attacks
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.RT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.E))
             {
-                playerAbilities.UseAbility(Hand.RIGHT);
+                playerAbilities.StartUsing(Hand.RIGHT);
             }
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Q))
             {
-                playerAbilities.UseAbility(Hand.LEFT);
+                playerAbilities.StartUsing(Hand.LEFT);
             }
         }
 

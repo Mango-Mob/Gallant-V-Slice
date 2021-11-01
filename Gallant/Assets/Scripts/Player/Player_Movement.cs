@@ -225,6 +225,8 @@ public class Player_Movement : MonoBehaviour
 
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
+                //playerController.playerAudioAgent.PlayRoll(); // Audio
+
                 if (playerController.playerAbilities.m_leftAbility != null)
                     playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
                 if (playerController.playerAbilities.m_rightAbility != null)
@@ -293,6 +295,8 @@ public class Player_Movement : MonoBehaviour
      */
     public void GiveAdrenaline(float _val)
     {
+        playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
+
         playerController.playerResources.ChangeAdrenaline(_val);
 
         GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
