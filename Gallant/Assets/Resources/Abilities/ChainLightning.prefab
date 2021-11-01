@@ -44,11 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50f7289e8cd89e048ba19bfc6ec86a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_enemyDetectionMask:
+    serializedVersion: 2
+    m_Bits: 512
   m_data: {fileID: 0}
   lineRenderer: {fileID: 394290177353347827}
   m_maxTargets: 3
   m_handTransform: {fileID: 0}
-  m_range: 30
+  m_hitRange: 10
+  m_chainRange: 15
 --- !u!120 &394290177353347827
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -98,14 +102,41 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
+        time: 0.020965576
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.023062699
+        value: 0.9954128
+        inSlope: -0.069097675
+        outSlope: -0.069097675
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.2184437
+      - serializedVersion: 3
+        time: 0.9913866
+        value: 1
+        inSlope: 0.034130875
+        outSlope: 0.034130875
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 1
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
