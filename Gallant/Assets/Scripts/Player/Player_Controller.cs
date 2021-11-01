@@ -50,7 +50,7 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UI_PauseMenu.isPaused)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead)
             return;
 
         // Set animation speeds based on stats
