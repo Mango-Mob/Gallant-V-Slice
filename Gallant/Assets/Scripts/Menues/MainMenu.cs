@@ -16,8 +16,8 @@ public class MainMenu : MonoBehaviour
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
 
-    [Header("Collection")]
-    public CollectionMenu m_collectionMenu;
+    //[Header("Collection")]
+    //public CollectionMenu m_collectionMenu;
 
     //public GameObject m_settings;
     //public GameObject m_settingsButton;
@@ -71,12 +71,12 @@ public class MainMenu : MonoBehaviour
         //HUDManager.instance.gameObject.SetActive(true);
         //
         //Destroy(gameObject);
-        LevelLoader.instance.LoadNewLevel("AI Test");
+        LevelLoader.instance.LoadNewLevel("MainLevel_1");
     }
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);
-        m_collectionMenu.gameObject.SetActive(false);
+        //m_collectionMenu?.gameObject.SetActive(false);
         m_mainDisplay.SetActive(true);
     }
     public void Settings()
@@ -95,7 +95,7 @@ public class MainMenu : MonoBehaviour
     }
     public void Collection()
     {
-        m_collectionMenu.gameObject.SetActive(true);
+        //m_collectionMenu.gameObject.SetActive(true);
         m_mainDisplay.SetActive(false);
     }
 

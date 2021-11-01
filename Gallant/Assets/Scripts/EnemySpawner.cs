@@ -47,6 +47,7 @@ public class EnemySpawner : MonoBehaviour
         public Vector3 m_forward;
     }
 
+    private Coroutine m_isSpawning = null;
 
     private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
 
@@ -83,6 +84,7 @@ public class EnemySpawner : MonoBehaviour
 
         while(m_spawnLocations.Count > 0)
         {
+            bool spawnedOne = false;
             foreach (var wave in m_waves[0].m_enemies)
             {
                 if (wave.m_count > 0)
@@ -94,16 +96,20 @@ public class EnemySpawner : MonoBehaviour
                     spawn.m_end = m_spawnLocations[selected].m_end;
                     spawn.m_height = m_spawnArcHeight;
                     spawn.PresetTarget(m_player.gameObject);
-
+                    spawnedOne = true;
                     m_spawnLocations.RemoveAt(selected);
                     wave.m_count--;
                     break;
-                    
                 }
             }
+
+            if (!spawnedOne)
+                break;
+
             yield return new WaitForSeconds(m_spawnDelay);
         }
-
+        m_waves.RemoveAt(0);
+        m_isSpawning = null;
         yield return null;
     }
 
@@ -222,11 +228,11 @@ public class EnemySpawner : MonoBehaviour
                     enemies = Physics.OverlapBox(transform.position, m_size / 2f, Quaternion.identity, 1 << LayerMask.NameToLayer("Attackable"));
                 }
 
-                if (enemies.Length == 0)
+                if (enemies.Length == 0 && m_isSpawning == null)
                 {
                     if(m_waves.Count > 0)
                     {
-                        StartCoroutine(SpawnWave());
+                        m_isSpawning = StartCoroutine(SpawnWave());
                         return;
                     }
 
