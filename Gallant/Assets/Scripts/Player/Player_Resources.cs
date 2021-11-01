@@ -51,6 +51,7 @@ public class Player_Resources : MonoBehaviour
         {
             // Kill
             m_dead = true;
+            playerController.animator.SetTrigger("KillPlayer");
         }
         m_health = Mathf.Clamp(m_health, 0.0f, m_maxHealth);
     }
