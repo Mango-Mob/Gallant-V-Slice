@@ -99,6 +99,7 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
 
+        playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
         playerController.animator.SetTrigger(animatorTriggerName);
     }
 
@@ -303,6 +304,7 @@ public class Player_Attack : MonoBehaviour
         if (actor != null)
         {
             actor.DealDamage(_damage, transform.position);
+            playerController.playerAudioAgent.PlaySwordHit(); // Audio
         }
     }
 

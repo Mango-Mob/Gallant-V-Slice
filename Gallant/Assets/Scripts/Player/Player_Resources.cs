@@ -74,6 +74,7 @@ public class Player_Resources : MonoBehaviour
     {
         if (m_adrenaline >= 1.0f)
         {
+            playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             ChangeHealth(m_adrenalineHeal);
             ChangeAdrenaline(-1.0f);
         }
