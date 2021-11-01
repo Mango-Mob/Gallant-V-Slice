@@ -27,6 +27,9 @@ public class WeaponData : ScriptableObject
     public float m_speed = 1;
     public float m_knockback = 1;
 
+    [Header("Dropped Weapon Data")]
+    public float m_dropScaleMultiplier = 1.0f;
+
     public static WeaponData GenerateWeapon(int _level)
     {
         WeaponData data = null;
