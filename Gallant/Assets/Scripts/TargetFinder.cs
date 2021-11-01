@@ -9,7 +9,7 @@ public class TargetFinder : MonoBehaviour
     public Actor testActor;
 
     public GameObject gate;
-
+    public AtmosphereScript script;
     private float m_time = 0;
     // Start is called before the first frame update
     void Start()
@@ -42,6 +42,7 @@ public class TargetFinder : MonoBehaviour
             if (gate != null)
             {
                 gate.SetActive(true);
+                script.StartCombat();
             }
         }
     }
