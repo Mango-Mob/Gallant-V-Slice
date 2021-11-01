@@ -13,6 +13,9 @@ public class SpawnEnemyObject : MonoBehaviour
     private float m_deltaTime;
     private float m_deltaDeltaTime;
     private bool m_hasReachedPeak;
+
+    private GameObject m_presetTarget = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,8 +48,13 @@ public class SpawnEnemyObject : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
+            GameObject enemy = GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
+            enemy.GetComponent<Actor>().m_target = m_presetTarget;
             Destroy(gameObject);
         }
+    }
+    public void PresetTarget(GameObject target)
+    {
+        m_presetTarget = target;
     }
 }

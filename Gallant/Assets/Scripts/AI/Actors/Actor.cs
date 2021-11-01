@@ -24,7 +24,7 @@ public class Actor : StateMachine
 
     public Actor_UI m_ui { get; private set; }
 
-    public GameObject m_target { get; set; } = null; //The current focus of the actor
+    public GameObject m_target { get; set; } //The current focus of the actor
     public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
     public Actor_Attack m_activeAttack { get; set; } = null; //Currently selected attack.
 
@@ -92,6 +92,11 @@ public class Actor : StateMachine
             m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
     
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
+
+        if (InputManager.instance.IsKeyDown(KeyType.J))
+        {
+            DealDamage(50.0f);
+        }
     }
 
     /*********************
