@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SwampMinion_Attack
+namespace SwampMeleeMinion_Attack
 {
     /****************
      * SwampBoss_Attack/SingleSlash : The actor performs a single slash attack.
@@ -16,7 +16,7 @@ namespace SwampMinion_Attack
     public class SingleSlash : Actor_Attack
     {
         //Constructor
-        public SingleSlash() : base() { m_baseDamage = 10.0f; m_cooldown = 0.15f; m_priority = 8; }
+        public SingleSlash() : base() { m_baseDamage = 10.0f; m_cooldown = 0.25f; m_priority = 8; }
 
         /*******************
          * GetOverlap : Gets all colliders that overlapSphere with the attack's collider.

@@ -36,6 +36,11 @@ public class State_Idle : State
                 m_myActor.SetState(new State_Roam(m_myActor));
             }
         }
+
+        if(m_myActor.m_myData.m_states.Contains(Type.WAIT))
+        {
+            m_myActor.SetState(new State_Wait(m_myActor));
+        }
     }
 
     public override void End()
