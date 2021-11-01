@@ -47,6 +47,9 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UI_PauseMenu.isPaused)
+            return;
+
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
         animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
