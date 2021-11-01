@@ -136,10 +136,10 @@ public class Player_Attack : MonoBehaviour
         switch (thisData.weaponType)
         {
             case Weapon.SWORD: // Use sword
-                WeaponAttack(thisData);
+                WeaponAttack(thisData, transform.position);
                 break;
             case Weapon.SHIELD: // Use shield
-                WeaponAttack(thisData);
+                WeaponAttack(thisData, transform.position);
                 break;
             case Weapon.BOOMERANG: // Use boomerang
                 ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
@@ -282,7 +282,7 @@ public class Player_Attack : MonoBehaviour
             Actor actor = collider.GetComponent<Actor>();
             if (actor != null)
             {
-                //actor.;
+                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
             }
         }
     }
