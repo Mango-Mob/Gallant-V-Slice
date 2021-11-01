@@ -18,6 +18,8 @@ public enum Ability
  */
 public class Player_Abilities : MonoBehaviour
 {
+    public Player_Controller playerController { private set; get; }
+
     [Header("Ability Information")]
     public AbilityBase m_leftAbility;
     public AbilityBase m_rightAbility;
@@ -25,6 +27,11 @@ public class Player_Abilities : MonoBehaviour
     [Header("Ability Icons")]
     [SerializeField] private UI_AbilityIcon m_leftAbilityIcon;
     [SerializeField] private UI_AbilityIcon m_rightAbilityIcon;
+
+    private void Start()
+    {
+        playerController = GetComponent<Player_Controller>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -46,11 +53,17 @@ public class Player_Abilities : MonoBehaviour
         {
             case Hand.LEFT:
                 if (m_leftAbility != null)
+                {
                     m_leftAbility.TriggerAbility();
+                    playerController.playerAudioAgent.PlayCast(); // Audio
+                }
                 break;
             case Hand.RIGHT:
                 if (m_rightAbility != null)
+                {
                     m_rightAbility.TriggerAbility();
+                    playerController.playerAudioAgent.PlayCast(); // Audio
+                }
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");

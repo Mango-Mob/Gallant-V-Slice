@@ -22,6 +22,8 @@ public class Player_Controller : MonoBehaviour
     public Player_Resources playerResources { private set; get; }
     public Player_Pickup playerPickup { private set; get; }
     public Player_Stats playerStats { private set; get; }
+    public Player_AudioAgent playerAudioAgent { private set; get; }
+
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -39,6 +41,7 @@ public class Player_Controller : MonoBehaviour
         playerResources = GetComponent<Player_Resources>();
         playerPickup = GetComponentInChildren<Player_Pickup>();
         playerStats = GetComponentInChildren<Player_Stats>();
+        playerAudioAgent = GetComponent<Player_AudioAgent>();
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
