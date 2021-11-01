@@ -11,19 +11,27 @@ public class State_Dead : State
 
     private SkinnedMeshRenderer mesh;
     private float m_timer = 0f;
-
+    private float m_secondTimer = 0f;
     public override void Start()
     {
         m_myActor.m_currentStateDisplay = "DEAD";
 
         m_myActor.m_legs.Halt();
-        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
-        m_myActor.m_animator.SetTrigger("Dead");
+
+        if (m_myActor.m_animator != null)
+        {
+            if (m_myActor.m_animator.m_hasVelocity)
+                m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
+
+            m_myActor.m_animator.SetTrigger("Dead");
+        }
+        
         mesh = m_myActor.GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
     public override void Update()
     {
+        m_secondTimer += Time.deltaTime;
         if (mesh != null && mesh.material.name.Contains("Disolve"))
         {
             m_timer += Time.deltaTime;
@@ -34,6 +42,11 @@ public class State_Dead : State
 
             if (m_timer > maxTime)
                 m_myActor.DestroySelf();
+        }
+
+        if(m_secondTimer > 5.0f)
+        {
+            m_myActor.DestroySelf();
         }
     }
 

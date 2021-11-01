@@ -16,6 +16,9 @@ public class MainMenu : MonoBehaviour
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
 
+    [Header("Collection")]
+    public CollectionMenu m_collectionMenu;
+
     //public GameObject m_settings;
     //public GameObject m_settingsButton;
     //public Slider m_masterVolume;
@@ -23,7 +26,7 @@ public class MainMenu : MonoBehaviour
     //public Slider m_musicVolume;
     //private GameObject m_lastSelected;
     //private bool ignore = true;
-   
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,6 +76,7 @@ public class MainMenu : MonoBehaviour
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);
+        m_collectionMenu.gameObject.SetActive(false);
         m_mainDisplay.SetActive(true);
     }
     public void Settings()
@@ -88,6 +92,11 @@ public class MainMenu : MonoBehaviour
         //{
         //    EventSystem.current.SetSelectedGameObject(m_settingsButton);
         //}
+    }
+    public void Collection()
+    {
+        m_collectionMenu.gameObject.SetActive(true);
+        m_mainDisplay.SetActive(false);
     }
 
     public void QuitGame()

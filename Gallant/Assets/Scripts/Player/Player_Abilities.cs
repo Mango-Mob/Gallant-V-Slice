@@ -82,7 +82,8 @@ public class Player_Abilities : MonoBehaviour
             case Ability.HP_BUFF:
                 break;
             case Ability.THORNS:
-                break;
+                abilityScript = gameObject.AddComponent<Ability_Thorns>();
+                    break;
             default:
                 Debug.Log("No ability script set for " + _ability);
                 break;

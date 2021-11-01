@@ -103,34 +103,30 @@ public class Player_Attack : MonoBehaviour
     }
 
     /*******************
-    * UseWeapon : Use a weapon's functionality
+    * UseWeapon : Use a weapon's functionality from an animation event. This is why it uses a bool instead of a enum.
     * @author : William de Beer
-    * @param : (Hand) The hand of the weapon to be used
+    * @param : (bool) Is left hand, otherwise use right
     */
-    public void UseWeapon(Hand _hand)
+    public void UseWeapon(bool _left)
     {
         WeaponData thisData;
         Vector3 thisHandPosition;
 
-        switch (_hand)
+        if (_left)
         {
-            case Hand.LEFT: // Left hand weapon
-                if (m_leftWeaponInUse)
-                    return;
-                // Set weapon information
-                thisData = m_leftWeapon;
-                thisHandPosition = m_leftHandTransform.position;
-                break;
-            case Hand.RIGHT: // Right hand weapon
-                if (m_rightWeaponInUse)
-                    return;
-                // Set weapon information
-                thisData = m_rightWeapon;
-                thisHandPosition = m_rightHandTransform.position;
-                break;
-            default:
-                Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
+            if (m_leftWeaponInUse)
                 return;
+            // Set weapon information
+            thisData = m_leftWeapon;
+            thisHandPosition = m_leftHandTransform.position;
+        }
+        else
+        {
+            if (m_rightWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_rightWeapon;
+            thisHandPosition = m_rightHandTransform.position;
         }
 
         // If weapon is not in hand
@@ -140,13 +136,13 @@ public class Player_Attack : MonoBehaviour
         switch (thisData.weaponType)
         {
             case Weapon.SWORD: // Use sword
-                WeaponAttack(thisData);
+                WeaponAttack(thisData, transform.position);
                 break;
             case Weapon.SHIELD: // Use shield
-                WeaponAttack(thisData);
+                WeaponAttack(thisData, transform.position);
                 break;
             case Weapon.BOOMERANG: // Use boomerang
-                ThrowBoomerang(thisHandPosition, thisData, _hand);
+                ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
@@ -275,13 +271,19 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (WeaponData) 
      */
-    private void WeaponAttack(WeaponData _data)
+    private void WeaponAttack(WeaponData _data, Vector3 _source)
     {
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
         foreach (var collider in colliders)
         {
             Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
             DamageTarget(collider.gameObject, _data.m_damage);
+
+            Actor actor = collider.GetComponent<Actor>();
+            if (actor != null)
+            {
+                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
+            }
         }
     }
 
@@ -300,7 +302,7 @@ public class Player_Attack : MonoBehaviour
         Actor actor = _target.GetComponent<Actor>();
         if (actor != null)
         {
-            actor.DealDamage(_damage);
+            actor.DealDamage(_damage, transform.position);
         }
     }
 

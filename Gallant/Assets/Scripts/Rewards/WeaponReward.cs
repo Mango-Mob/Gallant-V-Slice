@@ -17,27 +17,71 @@ public class WeaponReward : Reward
 
     public Text m_leftDamage;
     public Text m_leftSpeed;
+    public Text m_leftKnockback;
 
     public Text m_rightDamage;
     public Text m_rightSpeed;
+    public Text m_rightKnockback;
 
     //For each diffScale more +/- are displayed.
     private int m_damageDiffScale = 2;
     private float m_speedDiffScale = 3.0f;
+    private float m_knockDiffScale = 3.0f;
 
-    public void LoadWeapon(WeaponData data, Player_Attack playerData)
+    private Player_Controller m_activePlayer;
+    private WeaponData m_activeWeapon;
+
+    public void LoadWeapon(WeaponData data, Player_Controller player)
     {
-        m_title.text = GetPrefix(data.abilityData.starPowerLevel) + " " + data.name + " of "+ data.abilityData.weaponTitle;
+        m_activePlayer = player;
+        m_activeWeapon = data;
+
+        if (data.abilityData != null)
+        {
+            m_title.text = GetPrefix(data.abilityData.starPowerLevel) + " " + data.weaponName;
+            m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
+
+            for (int i = 0; i < 3 - data.abilityData.starPowerLevel; i++)
+            {
+                m_stars[i].SetActive(false);
+            }
+        }
+        else
+        {
+            m_title.text = data.weaponName;
+            m_abilityImageLoc.sprite = null;
+            foreach (var item in m_stars)
+            {
+                item.SetActive(false);
+            }
+        }
+
         m_levelText.text = "Level: " + data.m_level;
 
         m_weaponImageLoc.sprite = data.weaponIcon;
-        m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
 
-        UpdateCompareField(m_leftDamage, data.m_damage - playerData.m_leftWeapon.m_damage, (float)m_damageDiffScale);
-        UpdateCompareField(m_leftSpeed, data.m_speed - playerData.m_leftWeapon.m_speed, m_speedDiffScale);
+        CompareTo(data, player.playerAttack.m_leftWeapon, true);
+        CompareTo(data, player.playerAttack.m_rightWeapon, false);
+    }
 
-        UpdateCompareField(m_rightDamage, data.m_damage - playerData.m_rightWeapon.m_damage, (float)m_damageDiffScale);
-        UpdateCompareField(m_rightSpeed, data.m_speed - playerData.m_rightWeapon.m_speed, m_speedDiffScale);
+    public void CompareTo(WeaponData rewardWeapon, WeaponData playerWeapon, bool isLeft = true)
+    {
+        float damage = (playerWeapon != null) ? playerWeapon.m_damage : 0;
+        float speed = (playerWeapon != null) ? playerWeapon.m_speed : 0;
+        float knockback = (playerWeapon != null) ? playerWeapon.m_knockback : 0;
+
+        if(isLeft)
+        {
+            UpdateCompareField(m_leftDamage, rewardWeapon.m_damage, damage, (float)m_damageDiffScale);
+            UpdateCompareField(m_leftSpeed, rewardWeapon.m_speed, speed, m_speedDiffScale);
+            UpdateCompareField(m_leftKnockback, rewardWeapon.m_knockback, knockback, m_knockDiffScale);
+        }
+        else
+        {
+            UpdateCompareField(m_rightDamage, rewardWeapon.m_damage, damage, (float)m_damageDiffScale);
+            UpdateCompareField(m_rightSpeed, rewardWeapon.m_speed, speed, m_speedDiffScale);
+            UpdateCompareField(m_rightKnockback, rewardWeapon.m_knockback, knockback, m_knockDiffScale);
+        }
     }
 
     /*******************
@@ -47,12 +91,12 @@ public class WeaponReward : Reward
     * @param : (float) The actual difference between the player and this weapon.
     * @param : (float) The current difference scale.
     */
-    private void UpdateCompareField(Text compareField, float currentDiff, float diffScale)
+    private void UpdateCompareField(Text compareField, float rewardStat, float currentStat, float diffScale)
     {
         if (diffScale == 0)
             return;
-
-        int diff = Mathf.Clamp(Mathf.CeilToInt(currentDiff / diffScale), -3, 3);
+        
+        int diff = Mathf.Clamp(Mathf.CeilToInt((rewardStat - currentStat) / diffScale), -3, 3);
 
         if(diff > 0)
         {
@@ -61,7 +105,7 @@ public class WeaponReward : Reward
         }
         else if(diff < 0)
         {
-            compareField.text = new String('-', diff);
+            compareField.text = new String('-', Mathf.Abs(diff));
             compareField.color = Color.red;
         }
         else
@@ -87,18 +131,10 @@ public class WeaponReward : Reward
 
     public override void GiveReward()
     {
-        
-    }
+        Vector3 pos = UnityEngine.Random.onUnitSphere;
+        pos.y = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        DroppedWeapon.CreateDroppedWeapon(m_activePlayer.transform.position + pos.normalized, m_activeWeapon);
+        GetComponentInParent<RewardWindow>().Hide();
     }
 }
