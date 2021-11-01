@@ -12,7 +12,7 @@ public class RewardWindow : MonoBehaviour
     public List<ItemData> m_items = new List<ItemData>();
 
     private const float probFirstWeapon = 1.0f;
-    private const float probSecondWeapon = 0.3333f;
+    private const float probSecondWeapon = 0.6666f;
     private const float probThirdWeapon = 0.05f;
 
     public Player_Controller m_player;

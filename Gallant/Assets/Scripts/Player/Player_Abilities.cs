@@ -18,6 +18,8 @@ public enum Ability
  */
 public class Player_Abilities : MonoBehaviour
 {
+    public Player_Controller playerController { private set; get; }
+
     [Header("Ability Information")]
     public AbilityBase m_leftAbility;
     public AbilityBase m_rightAbility;
@@ -25,6 +27,11 @@ public class Player_Abilities : MonoBehaviour
     [Header("Ability Icons")]
     [SerializeField] private UI_AbilityIcon m_leftAbilityIcon;
     [SerializeField] private UI_AbilityIcon m_rightAbilityIcon;
+
+    private void Start()
+    {
+        playerController = GetComponent<Player_Controller>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -35,26 +42,52 @@ public class Player_Abilities : MonoBehaviour
         if (m_rightAbilityIcon != null && m_rightAbility != null)
             m_rightAbilityIcon.SetCooldownFill(m_rightAbility.GetCooldownTime());
     }
+
     /*******************
-     * UseAbility : Use ability in specified hand
+     * StartUsing : Begin the use of held weapon via animation.
      * @author : William de Beer
-     * @param : (Hand) 
+     * @param : (Hand) The hand of the weapon to be used
      */
-    public void UseAbility(Hand _hand)
+    public void StartUsing(Hand _hand)
     {
         switch (_hand)
         {
             case Hand.LEFT:
-                if (m_leftAbility != null)
-                    m_leftAbility.TriggerAbility();
+                if (m_leftAbility != null && m_leftAbility.m_canUse)
+                    playerController.animator.SetTrigger("LeftCast");
                 break;
             case Hand.RIGHT:
-                if (m_rightAbility != null)
-                    m_rightAbility.TriggerAbility();
+                if (m_rightAbility != null && m_rightAbility.m_canUse)
+                    playerController.animator.SetTrigger("RightCast");
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
                 break;
+        }
+    }
+
+    /*******************
+     * UseAbility: Use a ability's functionality from an animation event. This is why it uses a bool instead of a enum.
+     * @author : William de Beer
+     * @param : (bool) Is left hand, otherwise use right
+     */
+    public void UseAbility(bool _left)
+    {
+        if (_left)
+        {
+            if (m_leftAbility != null)
+            {
+                m_leftAbility.TriggerAbility();
+                playerController.playerAudioAgent.PlayCast(); // Audio
+            }
+        }
+        else
+        {
+            if (m_rightAbility != null)
+            {
+                m_rightAbility.TriggerAbility();
+                playerController.playerAudioAgent.PlayCast(); // Audio
+            }
         }
     }
     /*******************

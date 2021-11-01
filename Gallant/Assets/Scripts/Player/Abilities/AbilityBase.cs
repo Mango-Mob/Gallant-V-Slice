@@ -13,7 +13,7 @@ public abstract class AbilityBase : MonoBehaviour
     [Header("Ability Information")]
     public AbilityData m_data;
     public Hand m_attachedHand; 
-    private bool m_canUse = true;
+    public bool m_canUse { get; private set; } = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
     private void Awake()
@@ -33,6 +33,7 @@ public abstract class AbilityBase : MonoBehaviour
     {
         if (m_canUse)
         {
+            playerController.animator.SetTrigger((m_attachedHand == Hand.LEFT ? "Left" : "Right") +  "Cast");
             AbilityFunctionality();
             StartCooldown();
         }

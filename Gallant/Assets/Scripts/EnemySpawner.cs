@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     public float m_spawnDelay = 1.0f;
 
     public GameObject m_EnemyToSpawn;
+    public AtmosphereScript m_music;
 
     private float m_timer;
     private Player_Controller m_player = null;
@@ -37,6 +38,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
+        m_music = FindObjectOfType<AtmosphereScript>();
         m_roomBCollider = GetComponent<BoxCollider>();
 
         m_timer = m_spawnDelay;
@@ -164,10 +166,7 @@ public class EnemySpawner : MonoBehaviour
         }
         else if(m_player != null && m_spawnLocations.Count > 0)
         {
-            foreach (var gate in m_gates)
-            {
-                gate.SetActive(true);
-            }
+            StartCombat();
 
             int selected = Random.Range(0, m_spawnLocations.Count);
             Quaternion rotation = Quaternion.LookRotation(-m_spawnLocations[selected].m_forward, Vector3.up);
@@ -199,10 +198,23 @@ public class EnemySpawner : MonoBehaviour
                     gate.GetComponent<Animator>().SetBool("Open", true);
                 }
                 m_reward.Show(true);
+                m_music.EndCombat();
                 Destroy(this);
             }
         }
     }
+
+    public void StartCombat()
+    {
+        if (m_gates[0].activeInHierarchy)
+            return;
+        m_music.StartCombat();
+        foreach (var gate in m_gates)
+        {
+            gate.SetActive(true);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
