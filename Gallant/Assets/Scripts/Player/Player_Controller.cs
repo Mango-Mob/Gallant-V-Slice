@@ -128,6 +128,7 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
+#if UNITY_EDITOR
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
@@ -160,6 +161,7 @@ public class Player_Controller : MonoBehaviour
         {
             playerStats.AddEffect(ItemEffect.MOVE_SPEED);
         }
+#endif
     }
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.
