@@ -94,23 +94,23 @@ public class Player_Controller : MonoBehaviour
             // Weapon attacks
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
             {
-                //playerAttack.StartUsing(Hand.RIGHT);
-                playerAttack.UseWeapon(false);
+                playerAttack.StartUsing(Hand.RIGHT);
+                //playerAttack.UseWeapon(false);
             }
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
             {
-                //playerAttack.StartUsing(Hand.LEFT);
-                playerAttack.UseWeapon(true);
+                playerAttack.StartUsing(Hand.LEFT);
+                //playerAttack.UseWeapon(true);
             }
 
             // Ability attacks
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.RT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.E))
             {
-                playerAbilities.UseAbility(Hand.RIGHT);
+                playerAbilities.StartUsing(Hand.RIGHT);
             }
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Q))
             {
-                playerAbilities.UseAbility(Hand.LEFT);
+                playerAbilities.StartUsing(Hand.LEFT);
             }
         }
 

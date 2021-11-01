@@ -225,7 +225,7 @@ public class Player_Movement : MonoBehaviour
 
             if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
             {
-                playerController.playerAudioAgent.PlayRoll(); // Audio
+                //playerController.playerAudioAgent.PlayRoll(); // Audio
 
                 if (playerController.playerAbilities.m_leftAbility != null)
                     playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
