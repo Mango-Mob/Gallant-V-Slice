@@ -4,25 +4,58 @@ using UnityEngine;
 
 public class ChainLightning : MonoBehaviour
 {
+    public LayerMask m_enemyDetectionMask;
     public AbilityData m_data;
     [SerializeField] private LineRenderer lineRenderer;
     private List<Actor> m_hitTargets = new List<Actor>();
     public int m_maxTargets = 3;
     public Transform m_handTransform;
-    public float m_range = 10.0f;
+
+    public float m_hitRange = 10.0f;
+    public float m_chainRange = 3.0f;
 
     private float m_lifeTimer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        lineRenderer.positionCount = 1;
+        lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, m_handTransform.position);
 
         Vector3 lastTargetPos = m_handTransform.position;
         Actor[] actors = FindObjectsOfType<Actor>();
 
-        for (int i = 0; i < m_maxTargets; i++)
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.forward * m_chainRange, m_chainRange, transform.forward, m_hitRange, m_enemyDetectionMask);
+
+        //Actor actorHit = hits[0].collider.GetComponent<Actor>();
+        //if (actorHit != null)
+        //{
+        //    lineRenderer.SetPosition(1, actorHit.transform.position);
+        //    m_hitTargets.Add(actorHit);
+        //    actorHit.DealDamage(m_data.damage);
+        //    lastTargetPos = actorHit.transform.position;
+        //}
+
+        foreach (var hit in hits)
+        {
+            Actor actor = hit.collider.GetComponent<Actor>();
+            if (actor != null)
+            {
+                lineRenderer.SetPosition(1, actor.transform.position);
+                m_hitTargets.Add(actor);
+                actor.DealDamage(m_data.damage);
+                lastTargetPos = actor.transform.position;
+                break;
+            }
+        }
+
+        if (m_hitTargets.Count == 0)
+        {
+            lineRenderer.SetPosition(1, transform.position + transform.forward * (m_hitRange + m_chainRange));
+            return;
+        }
+
+        for (int i = 1; i < m_maxTargets; i++)
         {
             Actor bestTarget = null;
             float closestDistance = Mathf.Infinity;
@@ -31,10 +64,9 @@ public class ChainLightning : MonoBehaviour
                 if (actor == bestTarget || m_hitTargets.Contains(actor))
                     continue;
 
-                Vector3 directionToTarget = actor.transform.position - lastTargetPos;
-                float distance = directionToTarget.sqrMagnitude;
+                float distance = Vector3.Distance(actor.transform.position, lastTargetPos);
 
-                if (distance > m_range)
+                if (distance > m_chainRange)
                     continue;
 
                 if (distance < closestDistance)
@@ -57,6 +89,11 @@ public class ChainLightning : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, m_chainRange);
     }
 
     // Update is called once per frame

@@ -13,6 +13,7 @@ public abstract class AbilityBase : MonoBehaviour
     [Header("Ability Information")]
     public AbilityData m_data;
     public Hand m_attachedHand; 
+    public bool m_isPassive { get; protected set; } = false;
     public bool m_canUse { get; private set; } = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
@@ -31,12 +32,7 @@ public abstract class AbilityBase : MonoBehaviour
     }
     public void TriggerAbility()
     {
-        if (m_canUse)
-        {
-            playerController.animator.SetTrigger((m_attachedHand == Hand.LEFT ? "Left" : "Right") +  "Cast");
-            AbilityFunctionality();
-            StartCooldown();
-        }
+        AbilityFunctionality();
     }
     public abstract void AbilityFunctionality();
     public abstract void AbilityPassive();
@@ -46,14 +42,14 @@ public abstract class AbilityBase : MonoBehaviour
     public abstract void AbilityWhileRolling();
     public abstract void AbilityOnEndRoll();
 
-    void StartCooldown()
+    public void StartCooldown()
     {
-        m_cooldownTimer = m_data.cooldownTime;
+        m_cooldownTimer = m_data.cooldownTime * playerController.playerStats.m_abilityCD;
         m_canUse = false;
     }
 
     public float GetCooldownTime()
     {
-        return m_cooldownTimer / m_data.cooldownTime;
+        return m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD);
     }
 }

@@ -54,8 +54,8 @@ public class Player_Controller : MonoBehaviour
             return;
 
         // Set animation speeds based on stats
-        animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed / 100.0f);
-        animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed / 100.0f);
+        animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
+        animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed);
 
         // Set avatar mask to be used
         if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
@@ -76,7 +76,7 @@ public class Player_Controller : MonoBehaviour
         // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);
 
-        if (!playerMovement.m_isStunned) // Make sure player is not stunned
+        if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
             // Left hand pickup
             if (InputManager.instance.IsGamepadButtonDown(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
@@ -236,6 +236,6 @@ public class Player_Controller : MonoBehaviour
             playerAbilities.m_rightAbility.AbilityOnHitRecieved(_attacker, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-_damage * (100.0f - playerStats.m_damageResistance));
+        playerResources.ChangeHealth(-_damage * (1.0f - playerStats.m_damageResistance));
     }
 }

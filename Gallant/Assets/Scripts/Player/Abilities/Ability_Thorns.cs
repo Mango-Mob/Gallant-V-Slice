@@ -14,6 +14,7 @@ public class Ability_Thorns : AbilityBase
     private void Start()
     {
         m_thornsVFXPrefab = Resources.Load<GameObject>("Abilities/TempThornsVFX");
+        m_isPassive = true;
     }
     public override void AbilityFunctionality()
     {

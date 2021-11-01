@@ -80,7 +80,7 @@ public class Player_Movement : MonoBehaviour
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
             // Move player in stored direction while roll is active
-            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed / 100.0f) * Time.fixedDeltaTime
+            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
@@ -182,8 +182,8 @@ public class Player_Movement : MonoBehaviour
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
 
-            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed / 100.0f; // Player movement speed
-            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed / 100.0f);
+            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed; // Player movement speed
+            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed);
 
             Vector3 normalizedMove = Vector3.zero;
 
@@ -232,7 +232,7 @@ public class Player_Movement : MonoBehaviour
                 if (playerController.playerAbilities.m_rightAbility != null)
                     playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
 
-                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed / 100.0f));
+                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed));
                 var animControllers = playerController.animator.runtimeAnimatorController;
                 foreach (var clip in animControllers.animationClips)
                 {
