@@ -101,7 +101,8 @@ public class WeaponData : ScriptableObject
             TempReroll(ref data, powerLevel);
 
         // Create weapon name
-        data.weaponName = data.abilityData.weaponTitle + " " + data.weaponName;
+        if(data.abilityData != null)
+            data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
 
         //Return new weapon.
         return data;
@@ -126,5 +127,23 @@ public class WeaponData : ScriptableObject
         {
             data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
         }
+    }
+
+    public void Clone(WeaponData other)
+    {
+         this.weaponName = other.weaponName;
+         this.weaponType = other.weaponType;
+         this.weaponModelPrefab = other.weaponModelPrefab;
+
+         this.weaponIcon = other.weaponIcon;
+         this.hitCenterOffset = other.hitCenterOffset;
+         this.hitSize = other.hitSize;
+         this.abilityData = other.abilityData;
+         this.itemEffect = other.itemEffect;
+
+         this.m_level = other.m_level;
+         this.m_damage = other.m_damage;
+         this.m_speed = other.m_speed;
+         this.m_knockback = other.m_knockback;
     }
 }

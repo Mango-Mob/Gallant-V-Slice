@@ -10,7 +10,10 @@ public class State_Idle : State
     public override void Start()
     {
         m_myActor.m_currentStateDisplay = "IDLE";
-        m_myActor.m_animator?.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero, 0.25f);
+
+        if (m_myActor.m_animator != null && m_myActor.m_animator.m_hasVelocity)
+            m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero, 0.25f);
+
         m_myActor.m_legs?.Halt();
     }
 

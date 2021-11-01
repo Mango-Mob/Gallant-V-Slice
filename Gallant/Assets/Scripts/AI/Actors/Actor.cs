@@ -88,13 +88,9 @@ public class Actor : StateMachine
         if (m_currentState != null)
             m_currentState.Update(); //If state exists, update it.
 
-        m_animator?.SetFloat("VelocityHaste", m_legs.m_speedModifier);
-
-        if(InputManager.instance.IsKeyDown(KeyType.J))
-        {
-            GetComponent<StatusEffectContainer>().AddStatusEffect(new BurnStatus(15.0f, 5.0f));
-        }
-
+        if(m_animator != null && m_animator.m_hasVelocity)
+            m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
+    
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
     }
 
@@ -149,8 +145,9 @@ public class Actor : StateMachine
     * DealDamage : Reduces the actor's current hp by the damage provided, will ignore any negative damage and will kill the actor when hp = 0.
     * @author : Michael Jordan
     * @param : (float) the damage that will be dealt to the actor.
+    * @param : (Vector3?) where the damage was deal from (default = null, for no react).
     */
-    public void DealDamage(float _damage)
+    public void DealDamage(float _damage, Vector3? fromPos = null)
     {
         if (!m_isDead)
         {
@@ -173,7 +170,19 @@ public class Actor : StateMachine
                     SetState(new State_Dead(this));
                 }
             }
+            else if(fromPos.HasValue && m_animator.m_hasHit)
+            {
+                HandleHitLoc(fromPos.Value);
+            }
         }
+    }
+
+    private void HandleHitLoc(Vector3 fromPos)
+    {
+        Vector3 direct = (fromPos - transform.position);
+
+        m_animator.SetTrigger("Hit");
+        m_animator.SetVector3("HitHorizontal", "","HitVertical", direct.normalized);
     }
 
     //Draws guides only in the editor for debuging.
@@ -193,6 +202,11 @@ public class Actor : StateMachine
                 attack.OnGizmosDraw(this);
             }
         }
+    }
+
+    public void KnockbackActor(Vector3 force)
+    {
+        m_legs?.KnockBack(force, m_myData.mass);
     }
 
     /*******************

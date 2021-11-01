@@ -17,8 +17,15 @@ public class State_Dead : State
         m_myActor.m_currentStateDisplay = "DEAD";
 
         m_myActor.m_legs.Halt();
-        m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
-        m_myActor.m_animator.SetTrigger("Dead");
+
+        if (m_myActor.m_animator != null)
+        {
+            if (m_myActor.m_animator.m_hasVelocity)
+                m_myActor.m_animator.SetVector3("VelocityHorizontal", "", "VelocityVertical", Vector3.zero);
+
+            m_myActor.m_animator.SetTrigger("Dead");
+        }
+        
         mesh = m_myActor.GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
