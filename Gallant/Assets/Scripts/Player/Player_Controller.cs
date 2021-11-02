@@ -50,7 +50,7 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UI_PauseMenu.isPaused)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead)
             return;
 
         // Set animation speeds based on stats
@@ -128,6 +128,7 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
+#if UNITY_EDITOR
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
@@ -160,6 +161,7 @@ public class Player_Controller : MonoBehaviour
         {
             playerStats.AddEffect(ItemEffect.MOVE_SPEED);
         }
+#endif
     }
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.

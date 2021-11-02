@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /****************
  * Player_Resources: Manages player resources health and adrenaline.
@@ -51,8 +52,16 @@ public class Player_Resources : MonoBehaviour
         {
             // Kill
             m_dead = true;
+            playerController.animator.SetTrigger("KillPlayer");
+            StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, m_maxHealth);
+    }
+
+    IEnumerator BackToMenu()
+    {
+        yield return new WaitForSecondsRealtime(3);
+        SceneManager.LoadScene(0);   
     }
 
     /*******************
