@@ -99,7 +99,7 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
 
-        playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
+        //playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
         playerController.animator.SetTrigger(animatorTriggerName);
     }
 

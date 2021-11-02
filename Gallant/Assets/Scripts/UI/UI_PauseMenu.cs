@@ -32,6 +32,8 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void Quit()
     {
+        isPaused = false;
+        SetPause(false);
         SceneManager.LoadScene(0);
     }
 }

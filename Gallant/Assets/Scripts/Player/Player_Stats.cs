@@ -17,9 +17,9 @@ public enum ItemEffect
  */
 public class Player_Stats : MonoBehaviour
 {
-    public float m_movementSpeed = 100.0f;
-    public float m_attackSpeed = 100.0f;
-    public float m_abilityCD = 100.0f;
+    public float m_movementSpeed = 1.0f;
+    public float m_attackSpeed = 1.0f;
+    public float m_abilityCD = 1.0f;
     public float m_damageResistance = 0.0f;
 
     public Dictionary<ItemEffect, int> m_effects = new Dictionary<ItemEffect, int>();
@@ -102,19 +102,19 @@ public class Player_Stats : MonoBehaviour
                     // Do nothing
                     break;
                 case ItemEffect.MOVE_SPEED: // Each effect has diminishing effectiveness.
-                    m_movementSpeed = 100.0f * Mathf.Pow(effect.Value, 0.3f);
+                    m_movementSpeed = 1.0f + 0.2f * effect.Value;
                     break;
                 case ItemEffect.ABILITY_CD: // Ranges from 100% to 30%
-                    m_abilityCD = 100.0f * (0.7f * Mathf.Pow(1.5f, -effect.Value) + 0.3f);
+                    m_abilityCD = 1.0f * (0.7f * Mathf.Pow(1.5f, -effect.Value) + 0.3f);
                     break;
                 case ItemEffect.ATTACK_SPEED: // Each effect has diminishing effectiveness.
-                    m_attackSpeed = 100.0f * Mathf.Pow(effect.Value, 0.3f);
+                    m_attackSpeed = 1.0f + 0.1f * effect.Value;
                     break;
                 case ItemEffect.DAMAGE_RESISTANCE: // Each stack is half as effective as the last (Effect should be exclusive to weapons to prevent being overpowered)
                     m_damageResistance = 0.0f;
                     for (int i = 1; i <= effect.Value; i++)
                     {
-                        m_damageResistance += 30.0f * Mathf.Pow(0.5f, i - 1);
+                        m_damageResistance += 0.3f * Mathf.Pow(0.5f, i - 1);
                     }
                     break;
                 default:

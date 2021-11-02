@@ -15,6 +15,8 @@ public class Ability_FrostEvade : AbilityBase
 
     private void Start()
     {
+        m_isPassive = true;
+
         m_pathPrefab = Resources.Load<GameObject>("Abilities/Frostpath");
         playerController = GetComponent<Player_Controller>();
     }

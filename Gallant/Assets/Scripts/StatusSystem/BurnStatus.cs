@@ -63,6 +63,6 @@ public class BurnStatus : StatusEffect
 
     protected override void LoadDisplayVFX()
     {
-        Debug.LogError("Burn status effect doesn't currently load the Display vfx.");
+        //Debug.LogError("Burn status effect doesn't currently load the Display vfx.");
     }
 }

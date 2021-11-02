@@ -53,11 +53,11 @@ public class Player_Abilities : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
-                if (m_leftAbility != null && m_leftAbility.m_canUse)
+                if (m_leftAbility != null && m_leftAbility.m_canUse && !m_leftAbility.m_isPassive)
                     playerController.animator.SetTrigger("LeftCast");
                 break;
             case Hand.RIGHT:
-                if (m_rightAbility != null && m_rightAbility.m_canUse)
+                if (m_rightAbility != null && m_rightAbility.m_canUse && !m_rightAbility.m_isPassive)
                     playerController.animator.SetTrigger("RightCast");
                 break;
             default:
@@ -79,6 +79,7 @@ public class Player_Abilities : MonoBehaviour
             {
                 m_leftAbility.TriggerAbility();
                 playerController.playerAudioAgent.PlayCast(); // Audio
+                m_leftAbility.StartCooldown();
             }
         }
         else
@@ -87,6 +88,7 @@ public class Player_Abilities : MonoBehaviour
             {
                 m_rightAbility.TriggerAbility();
                 playerController.playerAudioAgent.PlayCast(); // Audio
+                m_rightAbility.StartCooldown();
             }
         }
     }
