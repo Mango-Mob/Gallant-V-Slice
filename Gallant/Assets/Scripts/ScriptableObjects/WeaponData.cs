@@ -27,6 +27,9 @@ public class WeaponData : ScriptableObject
     public float m_speed = 1;
     public float m_knockback = 1;
 
+    [Header("Dropped Weapon Data")]
+    public float m_dropScaleMultiplier = 1.0f;
+
     public static WeaponData GenerateWeapon(int _level)
     {
         WeaponData data = null;
@@ -49,6 +52,8 @@ public class WeaponData : ScriptableObject
                 return null;
         }
 
+        data.abilityData = null;
+
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
         data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
         data.m_speed += (int)(data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
@@ -57,14 +62,14 @@ public class WeaponData : ScriptableObject
 
         // Random ability and power level is assigned.
         Ability newAbilityType = (Ability)Random.Range(0, 6);
-        int curve = Random.Range(0, 20) + Random.Range(0, 20) - 19;
+        int curve = Random.Range(0, 5) + Random.Range(0, 5) - 4;
         int result = Mathf.Max(_level + curve, 0);
 
         // Power level
         int powerLevel = 0;
-        if (result < 20)
+        if (result < 5)
             powerLevel = 1;
-        else if (result < 40)
+        else if (result < 10)
             powerLevel = 2;
         else
             powerLevel = 3;
@@ -95,12 +100,36 @@ public class WeaponData : ScriptableObject
                 break;
         }
 
+        if (data.abilityData == null)
+            TempReroll(ref data, powerLevel);
+
         // Create weapon name
         if(data.abilityData != null)
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
 
         //Return new weapon.
         return data;
+    }
+
+    public static void TempReroll(ref WeaponData data, int powerLevel)
+    {
+        int newAbilityTypeNo = Random.Range(0, 4);
+        if (newAbilityTypeNo == 0)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 1)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 2)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
+        }
+        else if (newAbilityTypeNo == 3)
+        {
+            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
+        }
     }
 
     public void Clone(WeaponData other)

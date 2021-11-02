@@ -26,6 +26,7 @@ public class DroppedWeapon : MonoBehaviour
                 m_weaponModel.transform.GetChild(0).localPosition = Vector3.zero;
             }
             m_weaponModel.transform.GetChild(0).rotation = Quaternion.Euler(-75, 0, 0);
+            m_weaponModel.transform.GetChild(0).localScale *= m_weaponData.m_dropScaleMultiplier; 
         }
     }
     private void FixedUpdate()

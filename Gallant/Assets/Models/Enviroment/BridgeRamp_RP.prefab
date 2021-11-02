@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7435345476630412048}
   - component: {fileID: 4714932002388205110}
   - component: {fileID: 3190998155081225557}
+  - component: {fileID: 3350677880114238488}
   m_Layer: 0
   m_Name: post_PlankBridgeRamp
   m_TagString: Untagged
@@ -91,8 +92,24 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.591594, y: 5.112895, z: 0.48205614}
-  m_Center: {x: -2.4200182, y: -0.44355243, z: 6.132737}
+  m_Size: {x: 0.591594, y: 5.112895, z: 7.04}
+  m_Center: {x: -2.4200182, y: 2.98, z: 6.63}
+--- !u!208 &3350677880114238488
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831294617357364787}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.296, y: 2.5560002, z: 0.24100001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -2.42, y: -0.44400004, z: 6.1330004}
+  m_TimeToStationary: 0.5
 --- !u!1 &2363370088903400859
 GameObject:
   m_ObjectHideFlags: 0
@@ -184,6 +201,7 @@ GameObject:
   - component: {fileID: 7152516536609823988}
   - component: {fileID: 6598130321866181914}
   - component: {fileID: 2805946115798646782}
+  - component: {fileID: 7639536146100538695}
   m_Layer: 0
   m_Name: PlankBridgeRamp_post2
   m_TagString: Untagged
@@ -263,8 +281,24 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.4820559, y: 5.088497, z: 0.6219578}
-  m_Center: {x: 2.2824168, y: -0.45575148, z: 6.082816}
+  m_Size: {x: 0.4820559, y: 5.088497, z: 7.04}
+  m_Center: {x: 2.2824168, y: 2.98, z: 6.63}
+--- !u!208 &7639536146100538695
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2912734368592871253}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.24100001, y: 2.5440001, z: 0.31100002}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 2.282, y: -0.45600003, z: 6.083}
+  m_TimeToStationary: 0.5
 --- !u!1 &3075683564667700551
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,7 +510,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &2553214436167671911
 Transform:
@@ -507,7 +541,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7301541115614814271}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -518,7 +552,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: df68c95cf0c01f145840497233b50747, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

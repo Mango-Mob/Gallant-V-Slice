@@ -24,6 +24,8 @@ public class JukeboxAgent : AudioAgent
     private List<AudioClip> currentList;
     private bool isCurrentlyShuffled = false;
     private int currentIndex;
+    private bool isPlaying = false;
+
 
     protected AudioManager.VolumeChannel type = AudioManager.VolumeChannel.MUSIC;
     protected AudioPlayer player;
@@ -33,6 +35,7 @@ public class JukeboxAgent : AudioAgent
     {
         base.Awake();
         player = new AudioPlayer(gameObject, null);
+        player.SetVolume(AudioManager.instance.GetVolume(type, this) * localVolume);
         backPlayer = new AudioPlayer(gameObject, null);
         currentList = new List<AudioClip>();
         foreach (var clip in audioClips)
@@ -47,7 +50,9 @@ public class JukeboxAgent : AudioAgent
             Shuffle();
         }
         if (isPlayingOnAwake)
+        {
             Play();
+        } 
     }
 
     protected override void Update()
@@ -76,7 +81,7 @@ public class JukeboxAgent : AudioAgent
 
     private void CheckAudioPlayer()
     {
-        if (hasFadeTransitions && player.TimeLeft() < 5.0f)
+        if (hasFadeTransitions && player.TimeLeft() < 5.0f && player.IsPlaying())
         {
             float time = player.TimeLeft();
             //Start Fade out:
@@ -91,7 +96,7 @@ public class JukeboxAgent : AudioAgent
             LoadNextAudio();
             StartCoroutine(player.FadeIn(time));
         }
-        if (!player.IsPlaying())
+        if (!player.IsPlaying() && isPlaying)
             LoadNextAudio();
     }
 
@@ -123,6 +128,7 @@ public class JukeboxAgent : AudioAgent
         }
         currentIndex = GetIndexOf(currentlyPlaying);
         isCurrentlyShuffled = true;
+        player.Stop();
     }
 
     public void ResetOrder()
@@ -139,7 +145,7 @@ public class JukeboxAgent : AudioAgent
     {
         for (int i = 0; i < currentList.Count; i++)
         {
-            if(currentList[i] == clip)
+            if(currentList[i].name == clip.name)
             {
                 return i;
             }
@@ -156,7 +162,15 @@ public class JukeboxAgent : AudioAgent
 
         player.SetLooping(false);
         player.SetClip(currentList[(int)index]);
+
+        if(hasFadeTransitions)
+        {
+            StartCoroutine(player.FadeIn(fadeTime));
+        }
+            
+
         player.Play();
+        isPlaying = true;
         currentIndex = (int)index;
         return true;
     }
@@ -170,19 +184,30 @@ public class JukeboxAgent : AudioAgent
                 player.SetClip(currentList[i]);
                 player.SetLooping(isSolo && isLooping);
                 player.SetPitch(1.0f);
+
+                if (hasFadeTransitions)
+                    StartCoroutine(player.FadeIn(fadeTime));
+
                 player.Play();
                 currentIndex = i;
                 isLoopingQueue = isLooping;
                 return true;
             }
         }
+        isPlaying = true;
         Debug.LogError($"MultiAudioAgent on gameObject: \"{gameObject.name}\" doesn't contain \"{clipName}\".");
         return false;
     }
 
     public void Stop()
     {
-        player.Stop();
+        if (hasFadeTransitions)
+            StartCoroutine(player.FadeOut(fadeTime));
+        else
+        {
+            player.Stop();
+        }
+        isPlaying = false;
         player.SetPitch(1.0f);
     }
 }

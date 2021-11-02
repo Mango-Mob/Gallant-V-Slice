@@ -48,7 +48,7 @@ public class BoomerangProjectile : MonoBehaviour
             }
 
 
-            m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed / 100.0f;
+            m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
             m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
             m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
@@ -100,6 +100,12 @@ public class BoomerangProjectile : MonoBehaviour
             Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
 
             m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
+
+            Actor actor = other.GetComponent<Actor>();
+            if (actor != null)
+            {
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+            }
         }
     }
 
