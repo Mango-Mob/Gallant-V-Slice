@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     }
     private void TimeUpdate()
     {
-
+        
     }
     public void SlowTime(float _percentage, float _duration)
     {
