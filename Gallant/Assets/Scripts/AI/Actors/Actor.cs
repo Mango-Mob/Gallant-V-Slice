@@ -21,6 +21,7 @@ public class Actor : StateMachine
     public Actor_Animator m_animator { get; private set; } //The animator of the actor
     public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dummy
     public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
+    public Actor_Material m_material { get; private set; }
 
     public Actor_UI m_ui { get; private set; }
 
@@ -52,6 +53,7 @@ public class Actor : StateMachine
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
         m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
+        m_material = GetComponentInChildren<Actor_Material>();
         m_ui = GetComponentInChildren<Actor_UI>();
 
         m_tracker?.RecordResistance(m_myData.resistance);
@@ -85,7 +87,7 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
-        if (m_currentState != null)
+        if (m_currentState != null && !m_legs.m_isKnocked)
             m_currentState.Update(); //If state exists, update it.
 
         if(m_animator != null && m_animator.m_hasVelocity)
@@ -179,6 +181,8 @@ public class Actor : StateMachine
             {
                 HandleHitLoc(fromPos.Value);
             }
+
+            m_material?.ShowHit();
         }
     }
 
@@ -211,7 +215,7 @@ public class Actor : StateMachine
 
     public void KnockbackActor(Vector3 force)
     {
-        m_legs?.KnockBack(force, m_myData.mass);
+        m_legs?.KnockBack(force);
     }
 
     /*******************

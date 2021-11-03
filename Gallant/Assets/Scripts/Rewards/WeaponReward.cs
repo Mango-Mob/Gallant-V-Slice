@@ -26,7 +26,7 @@ public class WeaponReward : Reward
     //For each diffScale more +/- are displayed.
     private int m_damageDiffScale = 2;
     private float m_speedDiffScale = 3.0f;
-    private float m_knockDiffScale = 3.0f;
+    private float m_knockDiffScale = 50.0f;
 
     private Player_Controller m_activePlayer;
     private WeaponData m_activeWeapon;

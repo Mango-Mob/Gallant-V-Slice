@@ -1511,6 +1511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4964590265543988298}
   - component: {fileID: 4134867961499729588}
+  - component: {fileID: 2590540062423650469}
   m_Layer: 9
   m_Name: SwampBoss:Boss
   m_TagString: Untagged
@@ -1633,6 +1634,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.000489071, y: 0.012224892, z: -0.0248899}
     m_Extent: {x: 0.035554938, y: 0.029180681, z: 0.061756626}
   m_DirtyAABB: 0
+--- !u!114 &2590540062423650469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3938106091661283097}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8f79a1eeb4ef34c961f26725ca5724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_hitMaterial: {fileID: 2100000, guid: a35d7d69d7d41924a890a7b42459b975, type: 2}
 --- !u!1 &4466444089936279753
 GameObject:
   m_ObjectHideFlags: 0
@@ -2387,6 +2401,7 @@ GameObject:
   - component: {fileID: 7380378061790784062}
   - component: {fileID: 2844510379285810090}
   - component: {fileID: 7380378061790784049}
+  - component: {fileID: 51733229}
   m_Layer: 9
   m_Name: SwampBoss
   m_TagString: Boss
@@ -2438,6 +2453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_baseSpeed: 0
   m_speedModifier: 1
+  m_isKnocked: 0
   m_angleSpeed: 45
 --- !u!195 &7380378061790784062
 NavMeshAgent:
@@ -2489,6 +2505,22 @@ CapsuleCollider:
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 1.75, z: 0}
+--- !u!54 &51733229
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7380378061790784048}
+  serializedVersion: 2
+  m_Mass: 50
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7380378063208078505
 GameObject:
   m_ObjectHideFlags: 0
