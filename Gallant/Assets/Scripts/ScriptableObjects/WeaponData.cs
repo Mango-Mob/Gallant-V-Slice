@@ -32,20 +32,20 @@ public class WeaponData : ScriptableObject
 
     public static WeaponData GenerateWeapon(int _level)
     {
-        WeaponData data = null;
+        WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
         Weapon newWeaponType = (Weapon)Random.Range(0, 3);
         switch (newWeaponType)
         {
             case Weapon.SWORD:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/swordData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
                 break;
             case Weapon.SHIELD:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/shieldData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
                 break;
             case Weapon.BOOMERANG:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
                 break;
             default:
                 Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");

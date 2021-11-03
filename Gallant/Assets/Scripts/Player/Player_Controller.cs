@@ -132,8 +132,8 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            playerResources.ChangeHealth(-10.0f);
-            DamagePlayer(10.0f, null, false);
+            //playerResources.ChangeHealth(-10.0f, FindObjectOfType<Actor>().gameObject);
+            DamagePlayer(1.0f, FindObjectOfType<Actor>().gameObject, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -239,5 +239,7 @@ public class Player_Controller : MonoBehaviour
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
         playerResources.ChangeHealth(-_damage * (1.0f - playerStats.m_damageResistance));
+
+        animator.SetTrigger("HitPlayer");
     }
 }
