@@ -138,12 +138,15 @@ public class Player_Attack : MonoBehaviour
         {
             case Weapon.SWORD: // Use sword
                 WeaponAttack(thisData, transform.position);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.SHIELD: // Use shield
                 WeaponAttack(thisData, transform.position);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.BOOMERANG: // Use boomerang
                 ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
@@ -306,6 +309,15 @@ public class Player_Attack : MonoBehaviour
             actor.DealDamage(_damage, transform.position);
             playerController.playerAudioAgent.PlaySwordHit(); // Audio
         }
+    }
+
+    public void ShowWeapons(bool _show)
+    {
+        if (m_leftWeaponObject != null)
+            m_leftWeaponObject.SetActive(_show);
+
+        if (m_rightWeaponObject != null)
+            m_rightWeaponObject.SetActive(_show);
     }
 
     private void OnDrawGizmosSelected()
