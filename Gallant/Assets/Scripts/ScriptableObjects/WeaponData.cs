@@ -8,7 +8,7 @@ using UnityEngine;
  * @file : WeaponData.cs
  * @year : 2021
  */
-[CreateAssetMenu(fileName = "weaponData", menuName = "Weapon Data", order = 1)]
+[CreateAssetMenu(fileName = "weaponData", menuName = "Game Data/Weapon Data", order = 1)]
 public class WeaponData : ScriptableObject
 {
     public string weaponName;

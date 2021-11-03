@@ -14,7 +14,6 @@ public class EnemySpawner : MonoBehaviour
     public GameObject m_EnemyToSpawn;
     public AtmosphereScript m_music;
 
-    private float m_timer;
     private Player_Controller m_player = null;
     private BoxCollider m_roomBCollider;
     public GameObject[] m_gates;
@@ -25,20 +24,10 @@ public class EnemySpawner : MonoBehaviour
 
     public RewardWindow m_reward;
 
-    [Serializable]
-    public class Enemy
-    {
-        public GameObject m_EnemyToSpawn;
-        public int m_count;
-    }
-    [Serializable]
-    public class EnemyWave
-    {
-        public Enemy[] m_enemies;
-    }
 
-    [SerializeField]
-    public List<EnemyWave> m_waves = new List<EnemyWave>();
+    public int m_spawnSpots = 12; 
+
+    public List<RoomData> m_waves = new List<RoomData>();
     private struct SpawnLocation
     {
         public Vector3 m_start;
@@ -50,13 +39,13 @@ public class EnemySpawner : MonoBehaviour
     private Coroutine m_isSpawning = null;
 
     private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
+    private List<Actor> m_enemies = new List<Actor>();
 
     private void Awake()
     {
         m_music = FindObjectOfType<AtmosphereScript>();
         m_roomBCollider = GetComponent<BoxCollider>();
 
-        m_timer = m_spawnDelay;
         foreach (var gate in m_gates)
         {
             gate.SetActive(false);
@@ -66,51 +55,43 @@ public class EnemySpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < m_spawnSpots; i++)
+        {
+            if (m_roomBCollider != null)
+                GenerateASpawnPointInBox(m_size);
+            else
+                GenerateASpawnPointInSphere(m_radius);
+        }
 
     }
 
     private IEnumerator SpawnWave()
     {
-        foreach (var wave in m_waves[0].m_enemies)
+
+        foreach (var wave in m_waves[0].m_waveInformation)
         {
-            for (int i = 0; i < wave.m_count; i++)
+            for (int i = 0; i < wave.count; i++)
             {
-                if (m_roomBCollider != null)
-                    GenerateASpawnPointInBox(m_size);
-                else
-                    GenerateASpawnPointInSphere(m_radius);
+                yield return new WaitForSeconds(m_spawnDelay);
+
+                int selected = UnityEngine.Random.Range(0, m_spawnLocations.Count);
+                Quaternion rotation = Quaternion.LookRotation(-m_spawnLocations[selected].m_forward, Vector3.up);
+                SpawnEnemyObject spawn = GameObject.Instantiate(wave.spawnPrefab, m_spawnLocations[selected].m_start, rotation).GetComponent<SpawnEnemyObject>();
+                spawn.m_start = m_spawnLocations[selected].m_start;
+                spawn.m_end = m_spawnLocations[selected].m_end;
+                spawn.m_height = m_spawnArcHeight;
+                spawn.PresetTarget(m_player.gameObject);
+                spawn.SetOwner(this);
             }
-        }
-
-        while(m_spawnLocations.Count > 0)
-        {
-            bool spawnedOne = false;
-            foreach (var wave in m_waves[0].m_enemies)
-            {
-                if (wave.m_count > 0)
-                {
-                    int selected = UnityEngine.Random.Range(0, m_spawnLocations.Count);
-                    Quaternion rotation = Quaternion.LookRotation(-m_spawnLocations[selected].m_forward, Vector3.up);
-                    SpawnEnemyObject spawn = GameObject.Instantiate(wave.m_EnemyToSpawn, m_spawnLocations[selected].m_start, rotation).GetComponent<SpawnEnemyObject>();
-                    spawn.m_start = m_spawnLocations[selected].m_start;
-                    spawn.m_end = m_spawnLocations[selected].m_end;
-                    spawn.m_height = m_spawnArcHeight;
-                    spawn.PresetTarget(m_player.gameObject);
-                    spawnedOne = true;
-                    m_spawnLocations.RemoveAt(selected);
-                    wave.m_count--;
-                    break;
-                }
-            }
-
-            if (!spawnedOne)
-                break;
-
-            yield return new WaitForSeconds(m_spawnDelay);
         }
         m_waves.RemoveAt(0);
         m_isSpawning = null;
         yield return null;
+    }
+
+    public void AddEnemy(Actor actor)
+    {
+        m_enemies.Add(actor);
     }
 
     private void GenerateASpawnPointInBox(Vector3 size)
@@ -122,7 +103,7 @@ public class EnemySpawner : MonoBehaviour
         do
         {
             failed = false;
-            if (safety > 5) //If failed 5 times;
+            if (safety > 15) //If failed 5 times;
                 break;
             //Generate end location
             
@@ -136,22 +117,32 @@ public class EnemySpawner : MonoBehaviour
                 0.5f * Mathf.Clamp(size.z * generated.m_forward.z, -size.z, size.z)
                 );
 
-            generated.m_end = edgePoint;
+            generated.m_start = CalculateStartPoint(generated.m_end);
 
-            RaycastHit rhit;
-            if (Physics.Raycast(edgePoint + generated.m_forward * m_distOffEdge, Vector3.down * 15.0f, out rhit, 1 << LayerMask.NameToLayer("Water")))
+            if (Physics.OverlapSphere(generated.m_start, m_spawnWidth, 1 << LayerMask.NameToLayer("Environment")).Length == 0)
             {
-                generated.m_start = rhit.point;
+
             }
             else
             {
+                //Failed
+                failed = true;
+            }
+
+            if (Physics.OverlapSphere(generated.m_end, m_spawnWidth, 1 << LayerMask.NameToLayer("Environment")).Length == 0)
+            {
+
+            }
+            else
+            {
+                //Failed
                 failed = true;
             }
             safety++;
 
-        } while (!IsValidPoint(generated.m_end) || failed);
+        } while (failed);
 
-        if(safety < 5)
+        if(safety < 15)
         {
             //Successful
             m_spawnLocations.Add(generated);
@@ -167,47 +158,44 @@ public class EnemySpawner : MonoBehaviour
         do
         {
             failed = false;
-            if (safety > 5) //If failed 5 times;
+            if (safety > 15) //If failed 5 times;
                 break;
 
             Vector2 randPoint = UnityEngine.Random.insideUnitCircle * radius;
             generated.m_end = transform.position + new Vector3(randPoint.x, 0, randPoint.y);
 
-            //Generate start and forward
             generated.m_forward = (generated.m_end - transform.position).normalized;
-            Vector3 edgePoint = transform.position + (generated.m_forward * radius);
-           
-            RaycastHit rhit;
-            if (Physics.Raycast(edgePoint + generated.m_forward * m_distOffEdge, Vector3.down * 15.0f, out rhit, 1 << LayerMask.NameToLayer("Water")))
+
+            generated.m_start = CalculateStartPoint(generated.m_end);
+
+            if(Physics.OverlapSphere(generated.m_start, m_spawnWidth, 1 << LayerMask.NameToLayer("Environment")).Length == 0)
             {
-                generated.m_start = rhit.point;
+                
             }
             else
             {
+                //Failed
+                failed = true;
+            }
+
+            if (Physics.OverlapSphere(generated.m_end, m_spawnWidth, 1 << LayerMask.NameToLayer("Environment")).Length == 0)
+            {
+
+            }
+            else
+            {
+                //Failed
                 failed = true;
             }
             safety++;
 
+        } while (failed);
 
-        } while (!IsValidPoint(generated.m_end) || failed);
-
-        if (safety < 5)
+        if (safety < 15)
         {
             //Successful
             m_spawnLocations.Add(generated);
         }
-    }
-
-    private bool IsValidPoint(Vector3 testPoint)
-    {
-        foreach (var item in m_spawnLocations)
-        {
-            if(Vector3.Distance(item.m_end, testPoint) <= (m_spawnWidth + m_spawnWidth)/2f)
-            {
-                return false;
-            }
-        }
-        return true;
     }
 
     // Update is called once per frame
@@ -216,34 +204,31 @@ public class EnemySpawner : MonoBehaviour
         if(m_player != null)
         {
             StartCombat();
-            if (m_spawnLocations.Count == 0)
+            if(m_enemies.Count == 0 && m_isSpawning == null)
             {
-                Collider[] enemies;
-                if (m_isSphere)
+                if (m_waves.Count > 0)
                 {
-                    enemies = Physics.OverlapSphere(transform.position, m_radius, 1 << LayerMask.NameToLayer("Attackable"));
+                    m_isSpawning = StartCoroutine(SpawnWave());
+                    return;
                 }
-                else
+            
+                foreach (var gate in m_gates)
                 {
-                    enemies = Physics.OverlapBox(transform.position, m_size / 2f, Quaternion.identity, 1 << LayerMask.NameToLayer("Attackable"));
+                    gate.GetComponent<Animator>().SetBool("Open", true);
                 }
-
-                if (enemies.Length == 0 && m_isSpawning == null)
+            
+                m_reward.Show(++GameManager.currentLevel);
+                m_music.EndCombat();
+                Destroy(this);
+            }
+            else
+            {
+                for (int i = m_enemies.Count - 1; i >= 0; i--)
                 {
-                    if(m_waves.Count > 0)
+                    if(m_enemies[i].m_currentStateDisplay == "DEAD")
                     {
-                        m_isSpawning = StartCoroutine(SpawnWave());
-                        return;
+                        m_enemies.RemoveAt(i);
                     }
-
-                    foreach (var gate in m_gates)
-                    {
-                        gate.GetComponent<Animator>().SetBool("Open", true);
-                    }
-
-                    m_reward.Show(true);
-                    m_music.EndCombat();
-                    Destroy(this);
                 }
             }
         }
@@ -267,6 +252,12 @@ public class EnemySpawner : MonoBehaviour
             m_player = other.GetComponent<Player_Controller>();
         }
     }
+    private Vector3 CalculateStartPoint(Vector3 endPoint)
+    {
+        Vector3 direct = (endPoint - transform.position).normalized;
+
+        return transform.position + direct * (m_radius + m_distOffEdge);
+    }
     public void OnDrawGizmos()
     {
         if (m_isSphere)
@@ -276,11 +267,11 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (var item in m_spawnLocations)
         {
-            Gizmos.color = Color.black;
-            Gizmos.DrawSphere(item.m_end, m_spawnWidth);
-            Gizmos.color = Color.white;
-            Gizmos.DrawSphere(item.m_start, m_spawnWidth);
-            Gizmos.DrawLine(item.m_start, item.m_end);
+            for (int i = 0; i <= 12; i++)
+            {
+                Gizmos.color = Color.Lerp(Color.green, Color.red, i / 12.0f);
+                Gizmos.DrawSphere(MathParabola.Parabola(CalculateStartPoint(item.m_end), item.m_end, m_spawnArcHeight, i / 12.0f), m_spawnWidth);
+            }
         }
     }
 }

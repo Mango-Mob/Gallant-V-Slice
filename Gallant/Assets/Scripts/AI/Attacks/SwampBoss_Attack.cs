@@ -44,7 +44,7 @@ namespace SwampBoss_Attack
                 RaycastHit hit;
                 if(Physics.SphereCast(user.transform.position, 1.0f, (results[i].transform.position - user.transform.position).normalized, out hit))
                 {
-                    if (hit.collider != results[i])
+                    if (hit.collider != results[i] && Math.Abs(user.m_legs.GetAngleTowards(hit.collider.gameObject)) > 45)
                     {
                         results.RemoveAt(i);
                     }
@@ -64,6 +64,11 @@ namespace SwampBoss_Attack
          */
         public override void Invoke(Actor user, Collider hitCollider)
         {
+            if (Math.Abs(user.m_legs.GetAngleTowards(user.m_target)) > 45)
+            {
+                return;
+            }
+
             GameObject projPrefab = LoadObjectData("SpitProjectile");
             user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_myData.m_damageModifier, 50f);
         }

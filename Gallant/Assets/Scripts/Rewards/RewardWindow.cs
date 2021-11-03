@@ -28,11 +28,11 @@ public class RewardWindow : MonoBehaviour
         
     }
 
-    public void Show(bool generate = false)
+    public void Show(int level)
     {
         m_window.SetActive(true);
 
-        if(generate)
+        if(level >= 0)
         {
             for (int i = ((m_window.transform as RectTransform).childCount) - 1; i >= 0; i--)
             {
@@ -46,7 +46,7 @@ public class RewardWindow : MonoBehaviour
             //First reward
             if(roll <= probFirstWeapon * rollSize)// < Max
             {
-                rewards.Add(WeaponData.GenerateWeapon(1));
+                rewards.Add(WeaponData.GenerateWeapon(level));
             }
             else
             {

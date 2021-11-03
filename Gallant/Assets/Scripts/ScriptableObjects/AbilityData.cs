@@ -7,7 +7,7 @@ using UnityEngine;
  * @file : AbilityData.cs
  * @year : 2021
  */
-[CreateAssetMenu(fileName = "abilityData", menuName = "Ability Data", order = 1)]
+[CreateAssetMenu(fileName = "abilityData", menuName = "Game Data/Ability Data", order = 1)]
 public class AbilityData : ScriptableObject
 {
     [Header("Ability Information")]
