@@ -5,7 +5,7 @@ using UnityEngine;
 public class RewardWindow : MonoBehaviour
 {
     public GameObject m_window;
-
+    public GameObject m_pannel;
     public GameObject m_weaponRewardOption;
     public GameObject m_itemRewardOption;
 
@@ -17,6 +17,9 @@ public class RewardWindow : MonoBehaviour
 
     public Player_Controller m_player;
 
+    private int m_select = 0;
+    
+    private List<Reward> m_rewards = new List<Reward>();
     private void Start()
     {
         Hide();
@@ -31,12 +34,12 @@ public class RewardWindow : MonoBehaviour
     public void Show(int level)
     {
         m_window.SetActive(true);
-
-        if(level >= 0)
+        m_rewards.Clear();
+        if (level >= 0)
         {
-            for (int i = ((m_window.transform as RectTransform).childCount) - 1; i >= 0; i--)
+            for (int i = ((m_pannel.transform as RectTransform).childCount) - 1; i >= 0; i--)
             {
-                Destroy((m_window.transform as RectTransform).GetChild(i).gameObject);
+                Destroy((m_pannel.transform as RectTransform).GetChild(i).gameObject);
             }
 
             //Generate a random selection of rewards
@@ -56,7 +59,7 @@ public class RewardWindow : MonoBehaviour
             //Second reward
             if (roll <= probSecondWeapon * rollSize)
             {
-                rewards.Add(WeaponData.GenerateWeapon(1));
+                rewards.Add(WeaponData.GenerateWeapon(level));
             }
             else
             {
@@ -66,7 +69,7 @@ public class RewardWindow : MonoBehaviour
             //third reward
             if (roll <= probThirdWeapon * rollSize)
             {
-                rewards.Add(WeaponData.GenerateWeapon(1));
+                rewards.Add(WeaponData.GenerateWeapon(level));
             }
             else
             {
@@ -79,16 +82,31 @@ public class RewardWindow : MonoBehaviour
             {
                 if(item.GetType() == typeof(WeaponData))
                 {
-                    WeaponReward wReward = GameObject.Instantiate(m_weaponRewardOption, m_window.transform).GetComponent<WeaponReward>();
+                    WeaponReward wReward = GameObject.Instantiate(m_weaponRewardOption, m_pannel.transform).GetComponent<WeaponReward>();
                     wReward.LoadWeapon(item as WeaponData, m_player);
+                    m_rewards.Add(wReward);
+                    m_rewards[m_rewards.Count - 1].m_id = m_rewards.Count - 1;
                 }
                 else
                 {
-                    ItemReward iReward = GameObject.Instantiate(m_itemRewardOption, m_window.transform).GetComponent<ItemReward>();
+                    ItemReward iReward = GameObject.Instantiate(m_itemRewardOption, m_pannel.transform).GetComponent<ItemReward>();
                     iReward.LoadItem(item as ItemData, m_player);
+                    m_rewards.Add(iReward);
+                    m_rewards[m_rewards.Count - 1].m_id = m_rewards.Count - 1;
                 }
             }
         }
+    }
+
+    public void Select(int item)
+    {
+        m_rewards[m_select].Unselect();
+        m_select = item;
+    }
+
+    public void Confirm()
+    {
+        m_rewards[m_select].GiveReward();
     }
 
     public void Hide()

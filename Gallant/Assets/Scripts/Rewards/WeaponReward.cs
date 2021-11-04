@@ -10,7 +10,7 @@ public class WeaponReward : Reward
 
     public Image m_weaponImageLoc;
     public Image m_abilityImageLoc;
-
+    private Image m_background;
     public Text m_levelText;
 
     public GameObject[] m_stars;
@@ -27,9 +27,15 @@ public class WeaponReward : Reward
     private int m_damageDiffScale = 2;
     private float m_speedDiffScale = 3.0f;
     private float m_knockDiffScale = 50.0f;
-
+    private Color m_baseColor;
     private Player_Controller m_activePlayer;
     private WeaponData m_activeWeapon;
+
+    private void Start()
+    {
+        m_background = GetComponent<Image>();
+        m_baseColor = m_background.color;
+    }
 
     public void LoadWeapon(WeaponData data, Player_Controller player)
     {
@@ -136,5 +142,15 @@ public class WeaponReward : Reward
 
         DroppedWeapon.CreateDroppedWeapon(m_activePlayer.transform.position + pos.normalized, m_activeWeapon);
         GetComponentInParent<RewardWindow>().Hide();
+    }
+    public override void Select()
+    {
+        base.Select();
+        m_background.color = Color.white;
+    }
+
+    public override void Unselect()
+    {
+        m_background.color = m_baseColor;
     }
 }

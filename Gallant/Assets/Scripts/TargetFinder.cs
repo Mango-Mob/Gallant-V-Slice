@@ -44,6 +44,7 @@ public class TargetFinder : MonoBehaviour
                 gate.SetActive(true);
                 script.StartCombat();
             }
+            GetComponent<Collider>().enabled = false;
         }
     }
 }

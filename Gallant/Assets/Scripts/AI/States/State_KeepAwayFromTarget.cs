@@ -19,7 +19,10 @@ public class State_KeepAwayFromTarget : State
 
     public override void Update()
     {
-        if(m_myActor.m_target == null)
+        if (m_myActor.m_animator != null && m_myActor.m_animator.m_hasVelocity)
+            m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero, 0.25f);
+
+        if (m_myActor.m_target == null)
         {
             m_myActor.SetState(new State_Idle(m_myActor));
             return;
