@@ -79,19 +79,31 @@ public class Player_Controller : MonoBehaviour
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.R))
+            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyPressed(KeyType.R))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
-                    playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
+                {
+                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeapon, Hand.LEFT))
+                    {
+                        playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
+                        playerPickup.RemoveDropFromList(droppedWeapon);
+                    }
+                }
             }
 
             // Right hand pickup
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RIGHT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.F))
+            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID) || InputManager.instance.IsKeyPressed(KeyType.F))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
-                    playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
+                {
+                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeapon, Hand.RIGHT))
+                    {
+                        playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
+                        playerPickup.RemoveDropFromList(droppedWeapon);
+                    }
+                }
             }
 
             // Weapon attacks
