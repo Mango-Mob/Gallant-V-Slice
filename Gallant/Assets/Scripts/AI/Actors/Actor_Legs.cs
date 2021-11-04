@@ -15,27 +15,29 @@ public class Actor_Legs : MonoBehaviour
 
     [Range(0.0f, 2.0f)]
     public float m_speedModifier = 1.0f;
+    public bool m_isKnocked = false;
 
     //External Accessors
-    public Vector3 velocity { get{ return m_agent.velocity; } }
-    public Vector3 localVelocity { get {return Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity;}}
+    public Vector3 velocity { get{ return (m_isKnocked) ? Vector3.zero : m_agent.velocity; } }
+    public Vector3 localVelocity { get {return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity;}}
 
     //Statistics:
     public float m_angleSpeed = 45f;
 
     //Accessables:
     protected NavMeshAgent m_agent;
-    
+    protected Rigidbody m_body;
+
     //Target Orientation
     protected Vector3 m_targetPosition;
     protected Quaternion m_targetRotation;
 
-    private bool m_isKnocked = false;
-
+    
     // Start is called before the first frame update
     void Awake()
     {
         m_agent = GetComponent<NavMeshAgent>();
+        m_body = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -110,52 +112,28 @@ public class Actor_Legs : MonoBehaviour
         return Quaternion.Angle(transform.rotation, lookAt);
     }
 
-    public void KnockBack(Vector3 force, float mass)
+    public void KnockBack(Vector3 force)
     {
-        Vector3 direct = force.normalized;
-        float power = force.magnitude;
+        force.y = 0;
+        m_agent.updatePosition = false;
+        m_body.AddForce(force, ForceMode.Impulse);
 
-        float percentage = (100 / (100 + mass));
+        if (m_body != null && !m_isKnocked)
+            StartCoroutine(KnockbackRoutine());
 
-        Vector3 targetLoc = transform.position + direct * (power * percentage);
-
-        StartCoroutine(KnockbackRoutine(targetLoc));
+        m_isKnocked = true;
     }
 
-    private IEnumerator KnockbackRoutine(Vector3 targetlocation)
+    private IEnumerator KnockbackRoutine()
     {
-        m_isKnocked = true;
-        m_agent.destination = targetlocation;
-        NavMeshPath path = new NavMeshPath();
-        //Calculate if the knockback is in a straight line
-        if(m_agent.CalculatePath(targetlocation, path))
+        do
         {
-            //path.corners;
-            if(path.corners.Length > 2)
-            {
-                //We have a turn, replace with straight line
-                m_agent.destination = path.corners[1];
-            }
-        }
+            yield return new WaitForFixedUpdate();
+        } while (m_body.velocity.magnitude > 3.5f);
 
-        float startAngSpeed = m_agent.angularSpeed;
-        float startSpeed = m_agent.speed;
-        float startAccel = m_agent.acceleration;
-
-        m_agent.angularSpeed = 0;
-        m_agent.speed = 150;
-        m_agent.acceleration = 300;
-
-        while (Vector3.Distance(transform.position, m_agent.destination) > 1.0f)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        m_agent.angularSpeed = startAngSpeed;
-        m_agent.speed = startSpeed;
-        m_agent.acceleration = startAccel;
+        m_agent.Warp(transform.position);
+        m_agent.updatePosition = true;
         m_isKnocked = false;
-
         yield return false;
     }
 }

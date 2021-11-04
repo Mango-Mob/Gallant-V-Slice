@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region Application_Singleton
-
+    public static int currentLevel = 0;
     private static GameManager _instance = null;
     public static GameManager instance
     {
@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     }
     private void TimeUpdate()
     {
-
+        
     }
     public void SlowTime(float _percentage, float _duration)
     {

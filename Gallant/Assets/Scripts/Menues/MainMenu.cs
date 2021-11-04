@@ -36,6 +36,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
+        GameManager.currentLevel = 0;
         LevelLoader.instance.LoadNewLevel("MainLevel_1");
     }
     public void MainDisplay()

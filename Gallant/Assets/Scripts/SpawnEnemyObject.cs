@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class SpawnEnemyObject : MonoBehaviour
 
     private GameObject m_presetTarget = null;
     private Collider m_triggerBox = null;
+    private EnemySpawner m_owner = null; 
     // Start is called before the first frame update
     void Start()
     {
@@ -49,10 +51,11 @@ public class SpawnEnemyObject : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Environment") && m_ObjectToSpawn != null)
+        if(other.gameObject.layer == LayerMask.NameToLayer("Default") && m_ObjectToSpawn != null)
         {
             GameObject enemy = GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
             enemy.GetComponent<Actor>().m_target = m_presetTarget;
+            m_owner.AddEnemy(enemy.GetComponent<Actor>());
             m_ObjectToSpawn = null;
             Destroy(gameObject);
         }
@@ -60,5 +63,10 @@ public class SpawnEnemyObject : MonoBehaviour
     public void PresetTarget(GameObject target)
     {
         m_presetTarget = target;
+    }
+
+    public void SetOwner(EnemySpawner enemySpawner)
+    {
+        m_owner = enemySpawner;
     }
 }

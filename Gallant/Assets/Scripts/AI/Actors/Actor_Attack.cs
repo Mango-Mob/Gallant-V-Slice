@@ -90,7 +90,7 @@ public abstract class Actor_Attack
         if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Player_Controller player = hitCollider.GetComponent<Player_Controller>();
-            player.DamagePlayer(m_baseDamage * user.m_myData.m_damageModifier);
+            player.DamagePlayer(m_baseDamage * user.m_myData.m_damageModifier, user.gameObject);
         }
         else if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Shadow"))
         {

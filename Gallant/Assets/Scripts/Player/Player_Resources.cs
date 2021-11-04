@@ -52,6 +52,7 @@ public class Player_Resources : MonoBehaviour
         {
             // Kill
             m_dead = true;
+            playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
             StartCoroutine(BackToMenu());
         }

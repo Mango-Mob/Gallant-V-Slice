@@ -37,9 +37,9 @@ public class State_Idle : State
             }
         }
 
-        if(m_myActor.m_myData.m_states.Contains(Type.WAIT))
+        if(m_myActor.m_target != null && m_myActor.m_myData.m_states.Contains(Type.KEEP_AWAY_FROM_TARGET))
         {
-            m_myActor.SetState(new State_Wait(m_myActor));
+            m_myActor.SetState(new State_KeepAwayFromTarget(m_myActor));
         }
     }
 
