@@ -5,4 +5,11 @@ using UnityEngine;
 public abstract class Reward : MonoBehaviour
 {
     public abstract void GiveReward();
+    public abstract void Unselect();
+
+    public int m_id;
+    public virtual void Select()
+    {
+        GetComponentInParent<RewardWindow>().Select(m_id);
+    }
 }

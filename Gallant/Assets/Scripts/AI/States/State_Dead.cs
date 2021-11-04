@@ -30,6 +30,7 @@ public class State_Dead : State
     {
         m_timer += Time.deltaTime;
         m_myActor.m_legs.Halt();
+        m_myActor.GetComponent<Collider>().enabled = false;
         if (m_myActor.m_material != null && !m_myActor.m_material.m_isDisolving)
         {
             m_myActor.DestroySelf();

@@ -65,7 +65,7 @@ namespace SwampRangeMinion_Attack
                 return;
             }
 
-            GameObject projPrefab = LoadObjectData("SpitProjectile");
+            GameObject projPrefab = LoadObjectData("RockProjectile");
             user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_myData.m_damageModifier, 25f);
         }
 
