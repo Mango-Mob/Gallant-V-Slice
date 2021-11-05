@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class RewardWindow : MonoBehaviour
@@ -15,6 +16,11 @@ public class RewardWindow : MonoBehaviour
     public Text m_abilityDescription;
     public Text m_abilityCooldownText;
 
+    [Header("Confirm Buttons")]
+    public GameObject m_keyboardButton;
+    public GameObject m_gamePadButton;
+    private Image m_pressDurationImage;
+
     public List<ItemData> m_items = new List<ItemData>();
 
     private const float probFirstWeapon = 1.0f;
@@ -22,12 +28,16 @@ public class RewardWindow : MonoBehaviour
     private const float probThirdWeapon = 0.05f;
 
     public Player_Controller m_player;
+    public float m_pressDuration = 1.0f;
 
-    private int m_select = 0;
-    
+    private int m_select = -1;
+    private float m_timer = 0.0f;
     private List<Reward> m_rewards = new List<Reward>();
     private void Start()
     {
+        m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
+        m_pressDurationImage.fillAmount = 0.0f;
+
         Hide();
     }
 
@@ -37,6 +47,38 @@ public class RewardWindow : MonoBehaviour
         if(InputManager.instance.IsKeyDown(KeyType.O))
         {
             Show(1);
+        }
+
+        m_keyboardButton.SetActive(!InputManager.instance.isInGamepadMode);
+        m_gamePadButton.SetActive(InputManager.instance.isInGamepadMode && m_select != -1);
+
+        if(m_window.activeInHierarchy)
+        {
+            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.WEST, 0))
+            {
+                m_timer += Time.unscaledDeltaTime;
+                if (m_timer >= m_pressDuration)
+                {
+                    Confirm();
+                }
+                else
+                {
+                    m_pressDurationImage.fillAmount = m_timer / m_pressDuration;
+                }
+            }
+            else
+            {
+                m_pressDurationImage.fillAmount = 0.0f;
+            }
+
+            if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
+            }
+            else if(!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
     }
 
@@ -104,19 +146,40 @@ public class RewardWindow : MonoBehaviour
                     m_rewards[m_rewards.Count - 1].m_id = m_rewards.Count - 1;
                 }
             }
+            EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
+        }
+    }
+
+    public void Hover(int id)
+    {
+        WeaponReward temp = m_rewards[id] as WeaponReward;
+        if (temp != null)
+        {
+            m_abilityImage.gameObject.SetActive(true);
+
+            m_abilityImage.sprite = temp.m_activeWeapon.abilityData.abilityIcon;
+            m_abilityDescription.text = AbilityData.EvaluateDescription(temp.m_activeWeapon.abilityData);
+
+            if(temp.m_activeWeapon.abilityData.cooldownTime > 0)
+                m_abilityCooldownText.text = temp.m_activeWeapon.abilityData.cooldownTime.ToString() + "s";
+            else
+                m_abilityCooldownText.text = "";
+            return;
+        }
+        ItemReward temp2 = m_rewards[id] as ItemReward;
+        if (temp2 != null)
+        {
+            m_abilityImage.gameObject.SetActive(false);
+            m_abilityDescription.text = temp2.m_currentlyLoaded.description;
+            m_abilityCooldownText.text = "";
+
         }
     }
 
     public void Select(int item)
     {
-        m_rewards[m_select].Unselect();
-        WeaponReward temp = m_rewards[item] as WeaponReward;
-        if (temp != null)
-        {
-            m_abilityImage.sprite = temp.m_activeWeapon.abilityData.abilityIcon;
-            m_abilityDescription.text = AbilityData.EvaluateDescription(temp.m_activeWeapon.abilityData);
-            m_abilityCooldownText.text = temp.m_activeWeapon.abilityData.cooldownTime.ToString() + "s";
-        }
+        if(m_select != -1)
+            m_rewards[m_select].Unselect();
 
         m_select = item;
     }
@@ -129,5 +192,6 @@ public class RewardWindow : MonoBehaviour
     public void Hide()
     {
         m_window.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

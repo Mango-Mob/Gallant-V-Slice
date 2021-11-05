@@ -9,10 +9,9 @@ public class ItemReward : Reward
 
     public Image m_itemImageLoc;
     private Image m_background;
-    public Text m_description;
 
     private Color m_baseColor;
-    private ItemData m_currentlyLoaded;
+    public ItemData m_currentlyLoaded { get; private set; }
     private Player_Controller m_activePlayer;
 
     private void Start()
@@ -24,8 +23,6 @@ public class ItemReward : Reward
     public void LoadItem(ItemData data, Player_Controller player)
     {
         m_title.text = data.itemName;
-
-        m_description.text = "Description: \n" + data.description;
 
         m_itemImageLoc.sprite = data.itemIcon;
 

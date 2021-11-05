@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
     public GameObject m_mainDisplay;
     //public GameObject m_settingDisplay;
 
+    public Button m_firstSelectedButton;
 
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
@@ -31,6 +32,18 @@ public class MainMenu : MonoBehaviour
         {
             GameManager.instance.enableTimer = true;
             GetComponent<SoloAudioAgent>().Play();
+        }
+
+        if(m_mainDisplay.activeInHierarchy)
+        {
+            if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
+            }
+            else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
     }
 

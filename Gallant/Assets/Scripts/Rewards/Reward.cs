@@ -12,4 +12,9 @@ public abstract class Reward : MonoBehaviour
     {
         GetComponentInParent<RewardWindow>().Select(m_id);
     }
+
+    public virtual void ShowMyDescription()
+    {
+        GetComponentInParent<RewardWindow>().Hover(m_id);
+    }
 }

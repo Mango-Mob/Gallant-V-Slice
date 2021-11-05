@@ -43,7 +43,10 @@ public class ProjectileObject : MonoBehaviour
         {
             //Damage shadow
             AdrenalineProvider provider = other.GetComponent<AdrenalineProvider>();
-            provider.GiveAdrenaline();
+            if(provider != null)
+            {
+                provider.GiveAdrenaline();
+            }
             Destroy(gameObject);
         }
     }
