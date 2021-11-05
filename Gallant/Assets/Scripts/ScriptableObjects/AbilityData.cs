@@ -46,6 +46,7 @@ public class AbilityData : ScriptableObject
         {
             string before = description.Substring(0, i);
             string insert = "";
+            int indexOfDecimal = -1;
             string after = description.Substring(i + 2);
             switch (description[i+1])
             {
@@ -54,15 +55,24 @@ public class AbilityData : ScriptableObject
                     break;
                 case 'l':
                     string life = data.lifetime.ToString();
-                    insert = life.Substring(0, life.IndexOf('.') + 1) + 's';
+                    indexOfDecimal = life.IndexOf('.') + 2;
+                    insert = (indexOfDecimal != -1 ? life.Substring(0, indexOfDecimal) : life);
                     break;
                 case 'e':
                     string effect = data.effectiveness.ToString();
-                    insert = effect.Substring(0, effect.IndexOf('.') + 1) + 's';
+                    indexOfDecimal = effect.IndexOf('.') + 2;
+                    insert = (indexOfDecimal != -1 ? effect.Substring(0, indexOfDecimal) : effect);
+                    break;
+                case 'p':
+                    string percentage = (data.effectiveness * 100.0f).ToString();
+
+                    indexOfDecimal = percentage.IndexOf('.');
+                    insert = (indexOfDecimal != -1 ? percentage.Substring(0, indexOfDecimal) : percentage);
                     break;
                 case 't':
                     string time = data.duration.ToString();
-                    insert = time.Substring(0, time.IndexOf('.') + 1) + 's';
+                    indexOfDecimal = time.IndexOf('.') + 2;
+                    insert = (indexOfDecimal != -1 ? time.Substring(0, indexOfDecimal) : time);
                     break;
                 case '%':
                     insert = "%";
