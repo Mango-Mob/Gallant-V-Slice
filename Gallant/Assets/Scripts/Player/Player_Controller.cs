@@ -14,6 +14,7 @@ public class Player_Controller : MonoBehaviour
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
+    public bool m_isDisabledInput = false;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -50,7 +51,7 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UI_PauseMenu.isPaused || playerResources.m_dead)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
             return;
 
         // Set animation speeds based on stats
