@@ -8,20 +8,20 @@ public class WeaponReward : Reward
 {
     public Text m_title;
 
-    public Image m_weaponImageLoc;
-    public Image m_abilityImageLoc;
+    [SerializeField] private Image m_weaponImageLoc;
+    [SerializeField] private Image m_abilityImageLoc;
     private Image m_background;
-    public Text m_levelText;
+    [SerializeField] private Text m_levelText;
 
-    public GameObject[] m_stars;
+    [SerializeField] private GameObject[] m_stars;
 
-    public Text m_leftDamage;
-    public Text m_leftSpeed;
-    public Text m_leftKnockback;
+    [SerializeField] private Text m_leftDamage;
+    [SerializeField] private Text m_leftSpeed;
+    [SerializeField] private Text m_leftKnockback;
 
-    public Text m_rightDamage;
-    public Text m_rightSpeed;
-    public Text m_rightKnockback;
+    [SerializeField] private Text m_rightDamage;
+    [SerializeField] private Text m_rightSpeed;
+    [SerializeField] private Text m_rightKnockback;
 
     //For each diffScale more +/- are displayed.
     private int m_damageDiffScale = 2;
@@ -29,7 +29,7 @@ public class WeaponReward : Reward
     private float m_knockDiffScale = 50.0f;
     private Color m_baseColor;
     private Player_Controller m_activePlayer;
-    private WeaponData m_activeWeapon;
+    public WeaponData m_activeWeapon { get; private set; }
 
     private void Start()
     {

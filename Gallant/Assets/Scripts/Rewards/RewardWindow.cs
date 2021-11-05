@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RewardWindow : MonoBehaviour
 {
@@ -8,6 +9,11 @@ public class RewardWindow : MonoBehaviour
     public GameObject m_pannel;
     public GameObject m_weaponRewardOption;
     public GameObject m_itemRewardOption;
+
+    [Header("Ability Description")]
+    public Image m_abilityImage;
+    public Text m_abilityDescription;
+    public Text m_abilityCooldownText;
 
     public List<ItemData> m_items = new List<ItemData>();
 
@@ -28,7 +34,10 @@ public class RewardWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(InputManager.instance.IsKeyDown(KeyType.O))
+        {
+            Show(1);
+        }
     }
 
     public void Show(int level)
@@ -101,6 +110,14 @@ public class RewardWindow : MonoBehaviour
     public void Select(int item)
     {
         m_rewards[m_select].Unselect();
+        WeaponReward temp = m_rewards[item] as WeaponReward;
+        if (temp != null)
+        {
+            m_abilityImage.sprite = temp.m_activeWeapon.abilityData.abilityIcon;
+            m_abilityDescription.text = AbilityData.EvaluateDescription(temp.m_activeWeapon.abilityData);
+            m_abilityCooldownText.text = temp.m_activeWeapon.abilityData.cooldownTime.ToString() + "s";
+        }
+
         m_select = item;
     }
 

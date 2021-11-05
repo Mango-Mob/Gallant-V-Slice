@@ -15,6 +15,8 @@ public class AbilityData : ScriptableObject
     public string weaponTitle; //_ <weapon> of <title>
     public Ability abilityPower;
     public Sprite abilityIcon;
+    [TextArea(10, 15)]
+    public string description;
 
     [Space(10)]
     [Range(1, 3)]
@@ -30,4 +32,49 @@ public class AbilityData : ScriptableObject
     public float effectiveness = 0.0f; // The effectiveness of any buff or status effect applied to the target. (does not apply to all abilities)
     [Tooltip("The duration of any buff or status effect applied to the target. (does not apply to all abilities).")]
     public float duration = 0.0f; // The duration of any buff or status effect applied to the target. (does not apply to all abilities)
+
+    public static string EvaluateDescription(AbilityData data)
+    {
+        string description = data.description;
+        int nextIndex = description.IndexOf('%');
+
+        if (nextIndex == -1)
+            return description;
+
+        //Loop through all instances of %, while extending up the string
+        for (int i = nextIndex; i < description.Length && i != -1; i = nextIndex)
+        {
+            string before = description.Substring(0, i);
+            string insert = "";
+            string after = description.Substring(i + 2);
+            switch (description[i+1])
+            {
+                case 'd': //%d = damage
+                    insert = Mathf.FloorToInt(data.damage).ToString();
+                    break;
+                case 'l':
+                    string life = data.lifetime.ToString();
+                    insert = life.Substring(0, life.IndexOf('.') + 1) + 's';
+                    break;
+                case 'e':
+                    string effect = data.effectiveness.ToString();
+                    insert = effect.Substring(0, effect.IndexOf('.') + 1) + 's';
+                    break;
+                case 't':
+                    string time = data.duration.ToString();
+                    insert = time.Substring(0, time.IndexOf('.') + 1) + 's';
+                    break;
+                case '%':
+                    insert = "%";
+                    break;
+                default:
+                    Debug.LogError($"Evaluation Description: Char not supported: {description[i + 1]}");
+                    break;
+            }
+            description = string.Concat(before, insert, after);
+            nextIndex = description.IndexOf('%', nextIndex + insert.Length);
+        }
+
+        return description;
+    }
 }

@@ -91,6 +91,8 @@ public class InputManager : MonoBehaviour
     protected Mouse mouse;
     protected Keyboard keyboard = Keyboard.current;
     protected int gamepadCount;
+
+    public bool isInGamepadMode { get; private set; } = false;
     private void InitialFunc()
     {
         mouse = Mouse.current;
