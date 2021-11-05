@@ -120,6 +120,18 @@ public class InputManager : MonoBehaviour
             }
             gamepadCount = Gamepad.all.Count;
         }
+        if (IsAnyKeyDown() ||IsAnyMouseButtonDown())
+        {
+            isInGamepadMode = false;
+        }
+        else
+        {
+            int gamepadID = InputManager.instance.GetAnyGamePad();
+            if (InputManager.instance.IsAnyGamePadInput(gamepadID))
+            {
+                isInGamepadMode = true;
+            }
+        }
     }
 
     public int GetAnyGamePad()
