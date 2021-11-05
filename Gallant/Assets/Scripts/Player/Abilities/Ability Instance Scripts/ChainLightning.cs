@@ -96,7 +96,8 @@ public class ChainLightning : MonoBehaviour
         lineRenderer.SetPosition(0, m_handTransform.position);
         foreach (var target in m_hitTargets)
         {
-            lineRenderer.SetPosition(m_hitTargets.IndexOf(target) + 1, target.transform.position);
+            if (target != null)
+                lineRenderer.SetPosition(m_hitTargets.IndexOf(target) + 1, target.transform.position);
         }
 
         m_lifeTimer += Time.fixedDeltaTime;
