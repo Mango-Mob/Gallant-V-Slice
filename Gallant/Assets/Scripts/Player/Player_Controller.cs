@@ -15,6 +15,7 @@ public class Player_Controller : MonoBehaviour
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
+    public float m_standMoveWeightLerpSpeed = 0.5f;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -54,25 +55,45 @@ public class Player_Controller : MonoBehaviour
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
             return;
 
+        // Set gamepad being used
+        int gamepadID = InputManager.instance.GetAnyGamePad();
+
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
         animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed);
 
+        bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
+        bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+
+        if (!rightAttackHeld && animator.GetBool("RightAttackHeld"))
+            Debug.Log("WTF");
+        
+        animator.SetBool("RightAttackHeld", rightAttackHeld);
+        animator.SetBool("LeftAttackHeld", leftAttackHeld);
+
+        if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
+            playerAttack.StopBlock(Hand.RIGHT);
+        if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
+            playerAttack.StopBlock(Hand.LEFT);
+
+        float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
+        float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
         // Set avatar mask to be used
         if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
         {
-            animator.SetLayerWeight(animator.GetLayerIndex("Arm"), 1.0f);
-            animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), 0.0f);
+            armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
         else
         {
-            animator.SetLayerWeight(animator.GetLayerIndex("Arm"), 0.0f);
-            animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), 1.0f);
+            armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
 
+        //Debug.Log(armWeight + ", " + standArmWeight);
 
-        // Set gamepad being used
-        int gamepadID = InputManager.instance.GetAnyGamePad();
+        animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
+        animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));
 
         // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);

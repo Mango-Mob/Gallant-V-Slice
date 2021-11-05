@@ -42,10 +42,16 @@ public class Player_Attack : MonoBehaviour
     [SerializeField] private UI_WeaponIcon m_leftWeaponIcon;
     [SerializeField] private UI_WeaponIcon m_rightWeaponIcon;
 
+    [Header("Held Gameobjects")]
+    private GameObject m_shieldBlockPrefab;
+    private GameObject m_rightHeldObjectInstance;
+    private GameObject m_leftHeldObjectInstance;
+
     private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
+        m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider"); ;
     }
 
     /*******************
@@ -142,6 +148,7 @@ public class Player_Attack : MonoBehaviour
                 break;
             case Weapon.SHIELD: // Use shield
                 WeaponAttack(thisData, transform.position);
+                BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
                 playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.BOOMERANG: // Use boomerang
@@ -336,6 +343,48 @@ public class Player_Attack : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region ShieldBlock
+    public void BeginBlock(Hand _hand)
+    {
+        if (_hand == Hand.LEFT)
+        {
+            if (m_leftHeldObjectInstance != null)
+            {
+                Destroy(m_leftHeldObjectInstance);
+            }
+
+            m_leftHeldObjectInstance = Instantiate(m_shieldBlockPrefab, playerController.playerMovement.playerModel.transform);
+        }
+        else
+        {
+            if (m_rightHeldObjectInstance != null)
+            {
+                Destroy(m_rightHeldObjectInstance);
+            }
+
+            m_rightHeldObjectInstance = Instantiate(m_shieldBlockPrefab, playerController.playerMovement.playerModel.transform);
+        }
+    }
+    public void StopBlock(Hand _hand)
+    {
+        if (_hand == Hand.LEFT)
+        {
+            if (m_leftHeldObjectInstance != null)
+            {
+                Destroy(m_leftHeldObjectInstance);
+            }
+        }
+        else
+        {
+            if (m_rightHeldObjectInstance != null)
+            {
+                Destroy(m_rightHeldObjectInstance);
+            }
+        }
+    }
+
     #endregion
 
     #region Boomerang
