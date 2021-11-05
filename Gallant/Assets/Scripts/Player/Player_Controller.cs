@@ -186,7 +186,7 @@ public class Player_Controller : MonoBehaviour
     }
     private Vector2 GetPlayerMovementVector()
     {
-        if (GameManager.instance.useGamepad) // If using gamepad
+        if (InputManager.instance.isInGamepadMode) // If using gamepad
         {
             int gamepadID = InputManager.instance.GetAnyGamePad();
             return InputManager.instance.GetGamepadStick(StickType.LEFT, gamepadID);
@@ -207,7 +207,7 @@ public class Player_Controller : MonoBehaviour
 
     private Vector2 GetPlayerAimVector()
     {
-        if (GameManager.instance.useGamepad) // If using gamepad
+        if (InputManager.instance.isInGamepadMode) // If using gamepad
         {
             int gamepadID = InputManager.instance.GetAnyGamePad();
             return InputManager.instance.GetGamepadStick(StickType.RIGHT, gamepadID);

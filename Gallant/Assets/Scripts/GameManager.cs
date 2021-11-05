@@ -59,7 +59,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject m_player;
 
-    public bool useGamepad = false;
     internal bool enableTimer = false;
 
     // Start is called before the first frame update
@@ -67,16 +66,7 @@ public class GameManager : MonoBehaviour
     {
         //Cursor.visible = false;
         //Cursor.lockState = CursorLockMode.Confined;
-        int gamepadID = InputManager.instance.GetAnyGamePad();
         m_player = GameObject.FindGameObjectWithTag("Player");
-        if (InputManager.instance.IsAnyKeyDown() || InputManager.instance.IsAnyMouseButtonDown())
-        {
-            useGamepad = false;
-        }
-        if (InputManager.instance.IsAnyGamePadInput(gamepadID))
-        {
-            useGamepad = true;
-        }
     }
 
     // Update is called once per frame
@@ -88,14 +78,6 @@ public class GameManager : MonoBehaviour
         //Time.timeScale = currentTime;
 
         int gamepadID = InputManager.instance.GetAnyGamePad();
-        if (InputManager.instance.IsAnyKeyDown() || InputManager.instance.IsAnyMouseButtonDown())
-        {
-            useGamepad = false;
-        }
-        if (InputManager.instance.IsAnyGamePadInput(gamepadID))
-        {
-            useGamepad = true;
-        }
     }
 
     private void OnLevelWasLoaded(int level)
