@@ -64,6 +64,10 @@ public class Player_Controller : MonoBehaviour
 
         bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
         bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+
+        if (!rightAttackHeld && animator.GetBool("RightAttackHeld"))
+            Debug.Log("WTF");
+        
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
@@ -86,7 +90,7 @@ public class Player_Controller : MonoBehaviour
             standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
 
-        Debug.Log(armWeight + ", " + standArmWeight);
+        //Debug.Log(armWeight + ", " + standArmWeight);
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));

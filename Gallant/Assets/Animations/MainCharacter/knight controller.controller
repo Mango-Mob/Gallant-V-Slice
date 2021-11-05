@@ -488,7 +488,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: RightAttackHeld
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3368158315612374860}
   m_Solo: 0
@@ -498,10 +501,10 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.1141026
   m_TransitionOffset: 0.1358975
   m_ExitTime: 0.84440553
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
-  m_OrderedInterruption: 1
+  m_OrderedInterruption: 0
   m_CanTransitionToSelf: 1
 --- !u!1101 &-5969357756847364081
 AnimatorStateTransition:
@@ -1083,7 +1086,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -8565690504756560095}
-    m_Position: {x: 870, y: 80, z: 0}
+    m_Position: {x: 560, y: 80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3368158315612374860}
     m_Position: {x: 310, y: 110, z: 0}
@@ -1966,6 +1969,18 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
+  - m_Name: LeftAttackHeld
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: RightAttackHeld
+    m_Type: 4
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -2007,7 +2022,7 @@ AnimatorController:
       m_Motion: {fileID: 7400000, guid: 43473ba6053a8b443b98ec362ef20d53, type: 2}
     - serializedVersion: 2
       m_State: {fileID: 4296423414974703441}
-      m_Motion: {fileID: 7400000, guid: 2da2eda3f53aa5640b4e16d66f94babf, type: 2}
+      m_Motion: {fileID: 7400000, guid: 87f33174d959aed4fb0451b699b342fe, type: 2}
     - serializedVersion: 2
       m_State: {fileID: 2277696439279036921}
       m_Motion: {fileID: 7400000, guid: c9c4a68ada132a24885bd4fe737610c8, type: 2}
@@ -3117,7 +3132,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2da2eda3f53aa5640b4e16d66f94babf, type: 2}
+  m_Motion: {fileID: 7400000, guid: 87f33174d959aed4fb0451b699b342fe, type: 2}
   m_Tag: 
   m_SpeedParameter: AttackSpeed
   m_MirrorParameter: 
@@ -3845,7 +3860,10 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions: []
+  m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: LeftAttackHeld
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3368158315612374860}
   m_Solo: 0
@@ -3855,7 +3873,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.112695396
   m_TransitionOffset: 0.13730471
   m_ExitTime: 0.8381837
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1

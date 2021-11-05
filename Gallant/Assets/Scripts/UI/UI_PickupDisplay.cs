@@ -79,7 +79,7 @@ public class UI_PickupDisplay : UI_Element
         m_leftPickupTimer.fillAmount = Mathf.Clamp(m_leftPickupTimer.fillAmount - Time.deltaTime, 0.0f, 1.0f);
         m_rightPickupTimer.fillAmount = Mathf.Clamp(m_rightPickupTimer.fillAmount - Time.deltaTime, 0.0f, 1.0f);
 
-        if (InputManager.instance.isInGamepadMode)
+        if (m_gamepadButtons != InputManager.instance.isInGamepadMode)
         {
             m_gamepadButtons = InputManager.instance.isInGamepadMode;
 
