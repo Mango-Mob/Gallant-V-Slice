@@ -14,8 +14,12 @@ public class DroppedWeapon : MonoBehaviour
     public GameObject m_defaultModel;
     public GameObject m_weaponModel;
 
+    public UI_PickupDisplay m_pickupDisplay;
+
     private void Start()
     {
+        //m_pickupDisplay = GetComponentInChildren<UI_PickupDisplay>();
+
         if (m_weaponData != null)
         {
             m_defaultModel.GetComponent<MeshRenderer>().enabled = false;
@@ -33,6 +37,14 @@ public class DroppedWeapon : MonoBehaviour
     {
         m_defaultModel.transform.Rotate(new Vector3(0, 30, 0) * Time.fixedDeltaTime);
         m_defaultModel.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Mathf.Sin(Time.timeSinceLevelLoad * 1.0f) * 30.0f);
+    }
+
+    public void ToggleDisplay(bool _enabled)
+    {
+        m_pickupDisplay.gameObject.SetActive(_enabled);
+
+        if (_enabled)
+            m_pickupDisplay.ResetPickupTimer();
     }
 
     /*******************

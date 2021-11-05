@@ -27,20 +27,14 @@ public class ChainLightning : MonoBehaviour
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.forward * m_chainRange, m_chainRange, transform.forward, m_hitRange, m_enemyDetectionMask);
 
-        //Actor actorHit = hits[0].collider.GetComponent<Actor>();
-        //if (actorHit != null)
-        //{
-        //    lineRenderer.SetPosition(1, actorHit.transform.position);
-        //    m_hitTargets.Add(actorHit);
-        //    actorHit.DealDamage(m_data.damage);
-        //    lastTargetPos = actorHit.transform.position;
-        //}
-
         foreach (var hit in hits)
         {
             Actor actor = hit.collider.GetComponent<Actor>();
             if (actor != null)
             {
+                if (actor.CheckIsDead())
+                    continue;
+
                 lineRenderer.SetPosition(1, actor.transform.position);
                 m_hitTargets.Add(actor);
                 actor.DealDamage(m_data.damage);
@@ -102,7 +96,8 @@ public class ChainLightning : MonoBehaviour
         lineRenderer.SetPosition(0, m_handTransform.position);
         foreach (var target in m_hitTargets)
         {
-            lineRenderer.SetPosition(m_hitTargets.IndexOf(target) + 1, target.transform.position);
+            if (target != null)
+                lineRenderer.SetPosition(m_hitTargets.IndexOf(target) + 1, target.transform.position);
         }
 
         m_lifeTimer += Time.fixedDeltaTime;

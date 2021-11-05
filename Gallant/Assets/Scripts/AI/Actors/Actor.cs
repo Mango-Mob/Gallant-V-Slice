@@ -228,4 +228,9 @@ public class Actor : StateMachine
     {
         Destroy(gameObject);
     }
+
+    public bool CheckIsDead()
+    {
+        return m_isDead;
+    }
 }
