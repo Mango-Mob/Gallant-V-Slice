@@ -12,6 +12,7 @@ public class UI_AbilityIcon : UI_Element
 {
     [SerializeField] public Image m_icon;
     [SerializeField] public Image m_cooldown;
+    [SerializeField] public GameObject[] m_stars;
 
     /*******************
      * SetCooldownFill : Sets the value of resource fill
@@ -37,6 +38,23 @@ public class UI_AbilityIcon : UI_Element
         }
         else
             m_icon.enabled = false;
+    }
+
+    /*******************
+     * SetPowerLevel : Sets power level of display
+     * @author : William de Beer
+     * @param : (int) Power level integer
+     */
+    public void SetPowerLevel(int _powerLevel)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            m_stars[i].SetActive(true);
+        }
+        for (int i = 0; i < 3 - _powerLevel; i++)
+        {
+            m_stars[i].SetActive(false);
+        }
     }
 
     #region Parent override functions
