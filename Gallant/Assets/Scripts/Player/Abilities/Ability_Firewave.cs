@@ -12,6 +12,11 @@ public class Ability_Firewave : AbilityBase
 {
     public GameObject m_wavePrefab;
 
+    new private void Awake()
+    {
+        base.Awake();
+        m_isPassive = false;
+    }
     private void Start()
     {
         m_wavePrefab = Resources.Load<GameObject>("Abilities/FirewaveProjectile");

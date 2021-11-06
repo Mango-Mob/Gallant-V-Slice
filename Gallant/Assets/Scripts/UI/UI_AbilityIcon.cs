@@ -8,11 +8,23 @@ using UnityEngine.UI;
  * @file : UI_AbilityIcon.cs
  * @year : 2021
  */
+
+public enum FrameType
+{
+    NONE,
+    PASSIVE,
+    ACTIVE,
+}
+
 public class UI_AbilityIcon : UI_Element
 {
-    [SerializeField] public Image m_icon;
-    [SerializeField] public Image m_cooldown;
-    [SerializeField] public GameObject[] m_stars;
+    [SerializeField] private Image m_icon;
+    [SerializeField] private Image m_cooldown;
+    [SerializeField] private GameObject[] m_stars;
+
+    [Header("Frames")]
+    [SerializeField] private GameObject m_activeFrame;
+    [SerializeField] private GameObject m_passiveFrame;
 
     /*******************
      * SetCooldownFill : Sets the value of resource fill
@@ -56,6 +68,26 @@ public class UI_AbilityIcon : UI_Element
             m_stars[i].SetActive(false);
         }
     }
+
+    public void SetFrame(FrameType _frameType)
+    {
+        switch (_frameType)
+        {
+            case FrameType.NONE:
+                m_activeFrame.SetActive(false);
+                m_passiveFrame.SetActive(false);
+                break;
+            case FrameType.PASSIVE:
+                m_activeFrame.SetActive(false);
+                m_passiveFrame.SetActive(true);
+                break;
+            case FrameType.ACTIVE:
+                m_activeFrame.SetActive(true);
+                m_passiveFrame.SetActive(false);
+                break;
+        }
+    }
+
 
     #region Parent override functions
     public override bool IsContainingVector(Vector2 _pos)

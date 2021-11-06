@@ -12,6 +12,11 @@ public class Ability_Lightning : AbilityBase
 {
     public GameObject m_boltPrefab;
 
+    new private void Awake()
+    {
+        base.Awake();
+        m_isPassive = false;
+    }
     private void Start()
     {
         m_boltPrefab = Resources.Load<GameObject>("Abilities/ChainLightning");

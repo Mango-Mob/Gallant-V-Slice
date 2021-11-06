@@ -13,6 +13,11 @@ public class Ability_FrostEvade : AbilityBase
     public GameObject m_pathPrefab;
     private GameObject m_lastProjectile;
 
+    new private void Awake()
+    {
+        base.Awake();
+        m_isPassive = true;
+    }
     private void Start()
     {
         m_isPassive = true;
