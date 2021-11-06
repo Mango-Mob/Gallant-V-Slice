@@ -136,11 +136,15 @@ public class Player_Abilities : MonoBehaviour
                 Destroy(m_leftAbility);
                 m_leftAbility = abilityScript;
                 m_leftAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
+                m_leftAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
+                m_leftAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
                 break;
             case Hand.RIGHT:
                 Destroy(m_rightAbility);
                 m_rightAbility = abilityScript;
                 m_rightAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
+                m_rightAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
+                m_rightAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");

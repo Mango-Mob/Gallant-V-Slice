@@ -11,10 +11,14 @@ using UnityEngine;
 public class Ability_Thorns : AbilityBase
 {
     public GameObject m_thornsVFXPrefab;
+    new private void Awake()
+    {
+        base.Awake();
+        m_isPassive = true;
+    }
     private void Start()
     {
         m_thornsVFXPrefab = Resources.Load<GameObject>("Abilities/ThornsBarrierVFX");
-        m_isPassive = true;
     }
     public override void AbilityFunctionality()
     {

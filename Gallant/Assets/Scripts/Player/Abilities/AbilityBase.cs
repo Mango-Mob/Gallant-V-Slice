@@ -17,7 +17,7 @@ public abstract class AbilityBase : MonoBehaviour
     public bool m_canUse { get; private set; } = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
-    private void Awake()
+    protected void Awake()
     {
         playerController = GetComponent<Player_Controller>();
     }

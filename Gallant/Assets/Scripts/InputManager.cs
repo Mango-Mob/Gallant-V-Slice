@@ -452,10 +452,10 @@ public class InputManager : MonoBehaviour
                 Debug.LogWarning($"Unsupported mouse button type in GetMouseDown.");
                 return false;
             case MouseButton.LEFT:
-                return mouse.rightButton.wasPressedThisFrame;
+                return mouse.leftButton.wasPressedThisFrame;
 
             case MouseButton.RIGHT:
-                return mouse.leftButton.wasPressedThisFrame;
+                return mouse.rightButton.wasPressedThisFrame;
         }
 
     }
@@ -473,10 +473,10 @@ public class InputManager : MonoBehaviour
                 Debug.LogWarning($"Unsupported mouse button type in GetMouseDown.");
                 return false;
             case MouseButton.LEFT:
-                return mouse.rightButton.isPressed;
+                return mouse.leftButton.isPressed;
 
             case MouseButton.RIGHT:
-                return mouse.leftButton.isPressed;
+                return mouse.rightButton.isPressed;
         }
     }
 }
