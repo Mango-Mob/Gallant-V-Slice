@@ -60,7 +60,8 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("AttackSpeed", playerStats.m_attackSpeed);
+        animator.SetFloat("LeftAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
+        animator.SetFloat("RightAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
 
         bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
         bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
