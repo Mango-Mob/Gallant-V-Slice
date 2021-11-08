@@ -11,10 +11,14 @@ using UnityEngine;
 public class Ability_Thorns : AbilityBase
 {
     public GameObject m_thornsVFXPrefab;
+    new private void Awake()
+    {
+        base.Awake();
+        m_isPassive = true;
+    }
     private void Start()
     {
-        m_thornsVFXPrefab = Resources.Load<GameObject>("Abilities/TempThornsVFX");
-        m_isPassive = true;
+        m_thornsVFXPrefab = Resources.Load<GameObject>("Abilities/ThornsBarrierVFX");
     }
     public override void AbilityFunctionality()
     {
@@ -26,9 +30,15 @@ public class Ability_Thorns : AbilityBase
     }
     public override void AbilityOnHitRecieved(GameObject _attacker, float _damage)
     {
+        GameObject barrier = Instantiate(m_thornsVFXPrefab, transform);
+
         if (_attacker != null)
+        {
             playerController.playerAttack.DamageTarget(_attacker, _damage * m_data.effectiveness);
-        Instantiate(m_thornsVFXPrefab, transform.position + transform.up, Quaternion.Euler(-90, 0, 0));
+            barrier.transform.forward = (_attacker.transform.position - transform.position).normalized;
+            barrier.GetComponent<ThornsVFX>().target = _attacker;
+        }
+
     }
     public override void AbilityOnHitDealt(GameObject _target, float _damage)
     {

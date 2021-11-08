@@ -42,10 +42,16 @@ public class Player_Attack : MonoBehaviour
     [SerializeField] private UI_WeaponIcon m_leftWeaponIcon;
     [SerializeField] private UI_WeaponIcon m_rightWeaponIcon;
 
+    [Header("Held Gameobjects")]
+    private GameObject m_shieldBlockPrefab;
+    private GameObject m_rightHeldObjectInstance;
+    private GameObject m_leftHeldObjectInstance;
+
     private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
+        m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider"); ;
     }
 
     /*******************
@@ -138,12 +144,16 @@ public class Player_Attack : MonoBehaviour
         {
             case Weapon.SWORD: // Use sword
                 WeaponAttack(thisData, transform.position);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.SHIELD: // Use shield
                 WeaponAttack(thisData, transform.position);
+                BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.BOOMERANG: // Use boomerang
                 ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
+                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
@@ -308,6 +318,15 @@ public class Player_Attack : MonoBehaviour
         }
     }
 
+    public void ShowWeapons(bool _show)
+    {
+        if (m_leftWeaponObject != null)
+            m_leftWeaponObject.SetActive(_show);
+
+        if (m_rightWeaponObject != null)
+            m_rightWeaponObject.SetActive(_show);
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (playerController != null)
@@ -324,6 +343,48 @@ public class Player_Attack : MonoBehaviour
             }
         }
     }
+    #endregion
+
+    #region ShieldBlock
+    public void BeginBlock(Hand _hand)
+    {
+        if (_hand == Hand.LEFT)
+        {
+            if (m_leftHeldObjectInstance != null)
+            {
+                Destroy(m_leftHeldObjectInstance);
+            }
+
+            m_leftHeldObjectInstance = Instantiate(m_shieldBlockPrefab, playerController.playerMovement.playerModel.transform);
+        }
+        else
+        {
+            if (m_rightHeldObjectInstance != null)
+            {
+                Destroy(m_rightHeldObjectInstance);
+            }
+
+            m_rightHeldObjectInstance = Instantiate(m_shieldBlockPrefab, playerController.playerMovement.playerModel.transform);
+        }
+    }
+    public void StopBlock(Hand _hand)
+    {
+        if (_hand == Hand.LEFT)
+        {
+            if (m_leftHeldObjectInstance != null)
+            {
+                Destroy(m_leftHeldObjectInstance);
+            }
+        }
+        else
+        {
+            if (m_rightHeldObjectInstance != null)
+            {
+                Destroy(m_rightHeldObjectInstance);
+            }
+        }
+    }
+
     #endregion
 
     #region Boomerang

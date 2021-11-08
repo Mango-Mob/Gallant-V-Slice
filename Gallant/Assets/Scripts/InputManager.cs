@@ -91,6 +91,8 @@ public class InputManager : MonoBehaviour
     protected Mouse mouse;
     protected Keyboard keyboard = Keyboard.current;
     protected int gamepadCount;
+
+    public bool isInGamepadMode { get; private set; } = false;
     private void InitialFunc()
     {
         mouse = Mouse.current;
@@ -117,6 +119,18 @@ public class InputManager : MonoBehaviour
                 Debug.Log($"{Gamepad.all[i].displayName} has connected as a GAMEPAD (ID: {i}) to the InputManager.");
             }
             gamepadCount = Gamepad.all.Count;
+        }
+        if (IsAnyKeyDown() ||IsAnyMouseButtonDown())
+        {
+            isInGamepadMode = false;
+        }
+        else
+        {
+            int gamepadID = InputManager.instance.GetAnyGamePad();
+            if (InputManager.instance.IsAnyGamePadInput(gamepadID))
+            {
+                isInGamepadMode = true;
+            }
         }
     }
 
@@ -438,10 +452,10 @@ public class InputManager : MonoBehaviour
                 Debug.LogWarning($"Unsupported mouse button type in GetMouseDown.");
                 return false;
             case MouseButton.LEFT:
-                return mouse.rightButton.wasPressedThisFrame;
+                return mouse.leftButton.wasPressedThisFrame;
 
             case MouseButton.RIGHT:
-                return mouse.leftButton.wasPressedThisFrame;
+                return mouse.rightButton.wasPressedThisFrame;
         }
 
     }
@@ -459,10 +473,10 @@ public class InputManager : MonoBehaviour
                 Debug.LogWarning($"Unsupported mouse button type in GetMouseDown.");
                 return false;
             case MouseButton.LEFT:
-                return mouse.rightButton.isPressed;
+                return mouse.leftButton.isPressed;
 
             case MouseButton.RIGHT:
-                return mouse.leftButton.isPressed;
+                return mouse.rightButton.isPressed;
         }
     }
 }

@@ -8,28 +8,34 @@ public class WeaponReward : Reward
 {
     public Text m_title;
 
-    public Image m_weaponImageLoc;
-    public Image m_abilityImageLoc;
+    [SerializeField] private Image m_weaponImageLoc;
+    [SerializeField] private Image m_abilityImageLoc;
+    private Image m_background;
+    [SerializeField] private Text m_levelText;
 
-    public Text m_levelText;
+    [SerializeField] private GameObject[] m_stars;
 
-    public GameObject[] m_stars;
+    [SerializeField] private Text m_leftDamage;
+    [SerializeField] private Text m_leftSpeed;
+    [SerializeField] private Text m_leftKnockback;
 
-    public Text m_leftDamage;
-    public Text m_leftSpeed;
-    public Text m_leftKnockback;
+    [SerializeField] private Text m_rightDamage;
+    [SerializeField] private Text m_rightSpeed;
+    [SerializeField] private Text m_rightKnockback;
 
-    public Text m_rightDamage;
-    public Text m_rightSpeed;
-    public Text m_rightKnockback;
-
-    //For each diffScale more +/- are displayed.
-    private int m_damageDiffScale = 2;
-    private float m_speedDiffScale = 3.0f;
-    private float m_knockDiffScale = 3.0f;
+    static public int m_damageDiffScale = 2;
+    static public float m_speedDiffScale = 3.0f;
+    static public float m_knockDiffScale = 50.0f;
+    private Color m_baseColor;
 
     private Player_Controller m_activePlayer;
-    private WeaponData m_activeWeapon;
+    public WeaponData m_activeWeapon { get; private set; }
+
+    private void Start()
+    {
+        m_background = GetComponent<Image>();
+        m_baseColor = m_background.color;
+    }
 
     public void LoadWeapon(WeaponData data, Player_Controller player)
     {
@@ -91,7 +97,7 @@ public class WeaponReward : Reward
     * @param : (float) The actual difference between the player and this weapon.
     * @param : (float) The current difference scale.
     */
-    private void UpdateCompareField(Text compareField, float rewardStat, float currentStat, float diffScale)
+    public static void UpdateCompareField(Text compareField, float rewardStat, float currentStat, float diffScale)
     {
         if (diffScale == 0)
             return;
@@ -115,7 +121,7 @@ public class WeaponReward : Reward
         }
     }
 
-    private string GetPrefix(int abilityLevel)
+    public static string GetPrefix(int abilityLevel)
     {
         switch (abilityLevel)
         {
@@ -136,5 +142,15 @@ public class WeaponReward : Reward
 
         DroppedWeapon.CreateDroppedWeapon(m_activePlayer.transform.position + pos.normalized, m_activeWeapon);
         GetComponentInParent<RewardWindow>().Hide();
+    }
+    public override void Select()
+    {
+        base.Select();
+        m_background.color = Color.white;
+    }
+
+    public override void Unselect()
+    {
+        m_background.color = m_baseColor;
     }
 }

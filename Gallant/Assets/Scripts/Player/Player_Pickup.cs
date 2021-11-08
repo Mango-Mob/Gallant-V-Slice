@@ -10,8 +10,14 @@ using UnityEngine;
  */
 public class Player_Pickup : MonoBehaviour
 {
+    private Player_Controller playerController;
     // List of dropped weapons in range of player
     private List<DroppedWeapon> weaponsInRange = new List<DroppedWeapon>();
+
+    private void Start()
+    {
+        playerController = GetComponentInParent<Player_Controller>();
+    }
 
     /*******************
      * FunctionName : Gets the closest weapon to the player inside the trigger box
@@ -37,8 +43,12 @@ public class Player_Pickup : MonoBehaviour
                 closestWeapon = weapon;
             }
         }
-        weaponsInRange.Remove(closestWeapon); // Remove the weapon that is to be picked up
         return closestWeapon; // Return weapon 
+    }
+
+    public void RemoveDropFromList(DroppedWeapon _weapon)
+    {
+        weaponsInRange.Remove(_weapon); // Remove the weapon that is to be picked up
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,7 +56,9 @@ public class Player_Pickup : MonoBehaviour
         DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
         if (weapon != null)
         {
-            // Create weapon information panel
+            // Toggle on weapon information panel
+            weapon.ToggleDisplay(true);
+            weapon.m_pickupDisplay.InitDisplayValues(playerController.playerAttack.m_rightWeapon, Hand.RIGHT);
 
             // Add to list
             weaponsInRange.Add(weapon);
@@ -57,8 +69,8 @@ public class Player_Pickup : MonoBehaviour
         DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
         if (weapon != null)
         {
-            // Destroy weapon information panel
-
+            // Toggle off weapon information panel
+            weapon.ToggleDisplay(false);
 
             // Remove from list
             weaponsInRange.Remove(weapon);

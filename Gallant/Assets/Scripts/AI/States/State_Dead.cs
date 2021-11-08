@@ -9,9 +9,7 @@ public class State_Dead : State
 {
     public State_Dead(Actor _user) : base(_user) { }
 
-    private SkinnedMeshRenderer mesh;
     private float m_timer = 0f;
-    private float m_secondTimer = 0f;
     public override void Start()
     {
         m_myActor.m_currentStateDisplay = "DEAD";
@@ -25,26 +23,20 @@ public class State_Dead : State
 
             m_myActor.m_animator.SetTrigger("Dead");
         }
-        
-        mesh = m_myActor.GetComponentInChildren<SkinnedMeshRenderer>();
+        m_myActor.m_material?.StartDisolve();
     }
 
     public override void Update()
     {
-        m_secondTimer += Time.deltaTime;
-        if (mesh != null && mesh.material.name.Contains("Disolve"))
+        m_timer += Time.deltaTime;
+        m_myActor.m_legs.Halt();
+        m_myActor.GetComponent<Collider>().enabled = false;
+        if (m_myActor.m_material != null && !m_myActor.m_material.m_isDisolving)
         {
-            m_timer += Time.deltaTime;
-            float maxTime = 4.5f;
-            float disolveVal = 1.0f - m_timer / maxTime;
-
-            mesh.material.SetFloat("Fade", disolveVal);
-
-            if (m_timer > maxTime)
-                m_myActor.DestroySelf();
+            m_myActor.DestroySelf();
         }
 
-        if(m_secondTimer > 5.0f)
+        if(m_timer > 5.0f)
         {
             m_myActor.DestroySelf();
         }

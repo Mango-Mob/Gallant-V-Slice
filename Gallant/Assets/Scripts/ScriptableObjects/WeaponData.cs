@@ -8,7 +8,7 @@ using UnityEngine;
  * @file : WeaponData.cs
  * @year : 2021
  */
-[CreateAssetMenu(fileName = "weaponData", menuName = "Weapon Data", order = 1)]
+[CreateAssetMenu(fileName = "weaponData", menuName = "Game Data/Weapon Data", order = 1)]
 public class WeaponData : ScriptableObject
 {
     public string weaponName;
@@ -32,20 +32,20 @@ public class WeaponData : ScriptableObject
 
     public static WeaponData GenerateWeapon(int _level)
     {
-        WeaponData data = null;
+        WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
         Weapon newWeaponType = (Weapon)Random.Range(0, 3);
         switch (newWeaponType)
         {
             case Weapon.SWORD:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/swordData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
                 break;
             case Weapon.SHIELD:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/shieldData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
                 break;
             case Weapon.BOOMERANG:
-                data = Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData");
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
                 break;
             default:
                 Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
@@ -62,14 +62,14 @@ public class WeaponData : ScriptableObject
 
         // Random ability and power level is assigned.
         Ability newAbilityType = (Ability)Random.Range(0, 6);
-        int curve = Random.Range(0, 5) + Random.Range(0, 5) - 4;
+        int curve = Random.Range(0, 3) + Random.Range(0, 3) - 2;
         int result = Mathf.Max(_level + curve, 0);
 
         // Power level
         int powerLevel = 0;
-        if (result < 5)
+        if (result < 3)
             powerLevel = 1;
-        else if (result < 10)
+        else if (result < 6)
             powerLevel = 2;
         else
             powerLevel = 3;
