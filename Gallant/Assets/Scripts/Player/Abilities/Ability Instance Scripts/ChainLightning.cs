@@ -49,27 +49,6 @@ public class ChainLightning : MonoBehaviour
             lineRenderer.SetPosition(1, closestTarget.transform.position);
         }
 
-
-
-        //RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.forward * m_chainRange, m_chainRange, transform.forward, m_hitRange, m_enemyDetectionMask);
-        //foreach (var hit in hits)
-        //{
-        //    Actor actor = hit.collider.GetComponent<Actor>();
-        //    if (actor != null)
-        //    {
-        //        if (actor.CheckIsDead())
-        //            continue;
-
-        //        lineRenderer.SetPosition(1, actor.transform.position);
-        //        m_hitTargets.Add(actor);
-        //        actor.DealDamage(m_data.damage);
-        //        lastTargetPos = actor.transform.position;
-        //        break;
-        //    }
-        //}
-
-
-
         if (m_hitTargets.Count == 0)
         {
             lineRenderer.SetPosition(1, transform.position + transform.forward * m_hitRange);
