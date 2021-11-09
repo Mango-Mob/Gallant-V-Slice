@@ -366,7 +366,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 701224707}
+      - m_Target: {fileID: 296631767}
         m_MethodName: ProcessOption
         m_Mode: 3
         m_Arguments:
@@ -426,8 +426,9 @@ GameObject:
   - component: {fileID: 296631765}
   - component: {fileID: 296631764}
   - component: {fileID: 296631763}
+  - component: {fileID: 296631767}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Dialog System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -513,6 +514,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &296631767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296631762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a194f131ff18444d84105565eee7661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_interact:
+    m_PersistentCalls:
+      m_Calls: []
+  m_window: {fileID: 701224705}
+  m_characterName: {fileID: 1029802670}
+  m_dialog: {fileID: 302848681}
+  m_options:
+  - {fileID: 2075407661}
+  - {fileID: 48916657}
+  - {fileID: 1632427925}
+  - {fileID: 1476801512}
+  m_characterBody: {fileID: 1155488486}
+  m_characterFace: {fileID: 1972694810}
+  m_testFile: {fileID: 4900000, guid: 5d254a8454386894380fd2fec4970f09, type: 3}
 --- !u!1 &302848679
 GameObject:
   m_ObjectHideFlags: 0
@@ -771,9 +798,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 701224706}
-  - component: {fileID: 701224707}
   m_Layer: 5
-  m_Name: Dialog System
+  m_Name: Dialog Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -800,28 +826,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &701224707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 701224705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a194f131ff18444d84105565eee7661, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_characterName: {fileID: 1029802670}
-  m_dialog: {fileID: 302848681}
-  m_options:
-  - {fileID: 2075407661}
-  - {fileID: 48916657}
-  - {fileID: 1632427925}
-  - {fileID: 1476801512}
-  m_characterBody: {fileID: 1155488486}
-  m_characterFace: {fileID: 1972694810}
-  m_testFile: {fileID: 4900000, guid: 5d254a8454386894380fd2fec4970f09, type: 3}
 --- !u!4 &771162920
 Transform:
   m_ObjectHideFlags: 0
@@ -6232,11 +6236,11 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 48916658}
+  m_TargetGraphic: {fileID: 1476801513}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 701224707}
+      - m_Target: {fileID: 296631767}
         m_MethodName: ProcessOption
         m_Mode: 3
         m_Arguments:
@@ -6523,11 +6527,11 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 48916658}
+  m_TargetGraphic: {fileID: 1632427926}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 701224707}
+      - m_Target: {fileID: 296631767}
         m_MethodName: ProcessOption
         m_Mode: 3
         m_Arguments:
@@ -85253,11 +85257,11 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 48916658}
+  m_TargetGraphic: {fileID: 2075407662}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 701224707}
+      - m_Target: {fileID: 296631767}
         m_MethodName: ProcessOption
         m_Mode: 3
         m_Arguments:
