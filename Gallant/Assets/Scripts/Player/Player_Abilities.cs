@@ -24,10 +24,14 @@ public class Player_Abilities : MonoBehaviour
     public AbilityBase m_leftAbility;
     public AbilityBase m_rightAbility;
 
-    [Header("Ability Icons")]
-    [SerializeField] private UI_AbilityIcon m_leftAbilityIcon;
-    [SerializeField] private UI_AbilityIcon m_rightAbilityIcon;
+    private UI_AbilityIcon m_leftAbilityIcon;
+    private UI_AbilityIcon m_rightAbilityIcon;
 
+    private void Awake()
+    {
+        m_leftAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityL");
+        m_rightAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityR");
+    }
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();

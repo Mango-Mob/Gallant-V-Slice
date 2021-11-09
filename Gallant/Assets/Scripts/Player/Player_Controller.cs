@@ -147,6 +147,11 @@ public class Player_Controller : MonoBehaviour
             }
         }
 
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RS, gamepadID) || InputManager.instance.IsKeyDown(KeyType.L_ALT))
+        {
+            playerMovement.LockOnTarget();
+        }
+
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.V))
         {
             // Heal from adrenaline
@@ -264,7 +269,28 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
+    public List<Actor> GetActorsInfrontOfPlayer(float _angle, float _distance)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        List<Actor> targets = new List<Actor>();
 
+        foreach (var collider in colliders)
+        {
+            Actor actor = collider.GetComponent<Actor>();
+            if (actor == null)
+                continue;
+
+            Vector3 direction = (actor.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+            float TEMPCOS = Mathf.Cos(_angle);
+            if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
+            {
+                targets.Add(actor);
+            }
+
+        }
+        return targets;
+    }
     public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)

@@ -16,13 +16,19 @@ public class Player_Resources : MonoBehaviour
     public float m_adrenaline { get; private set; } = 0.0f;
 
     private Player_Controller playerController;
-    public UI_Bar healthBar;
-    public UI_OrbResource adrenalineOrbs;
+    public UI_Bar healthBar { get; private set; }
+    public UI_PortraitHP portrait { get; private set; }
+    public UI_OrbResource adrenalineOrbs { get; private set; }
 
     public float m_adrenalineHeal = 40.0f;
     public bool m_dead { get; private set; } = false;
 
-
+    private void Awake()
+    {
+        healthBar = HUDManager.instance.GetElement<UI_Bar>("HP");
+        portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
+        adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbResource>("Adrenaline");
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -32,8 +38,12 @@ public class Player_Resources : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
         if (healthBar != null)
-            healthBar.SetValue(m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth));
+            healthBar.SetValue(healthPercentage);
+
+        if (portrait != null)
+            portrait.UpdatePortrait(healthPercentage);
 
         if (adrenalineOrbs != null)
             adrenalineOrbs.SetValue(m_adrenaline);
