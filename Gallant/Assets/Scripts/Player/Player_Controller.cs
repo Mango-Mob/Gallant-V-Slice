@@ -177,6 +177,10 @@ public class Player_Controller : MonoBehaviour
         {
             StunPlayer(0.2f, transform.up * 80.0f);
         }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_FIVE))
+        {
+            AdrenalineDrop.CreateAdrenalineDropGroup(5, new Vector3(0, transform.position.y + 0.5f, 0));
+        }
 
         // Item debug
         if (InputManager.instance.IsKeyDown(KeyType.NUM_SIX))
