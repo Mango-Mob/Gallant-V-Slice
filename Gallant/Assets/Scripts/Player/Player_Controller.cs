@@ -296,10 +296,8 @@ public class Player_Controller : MonoBehaviour
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
 
-        if (playerAbilities.m_leftAbility != null)
-            playerAbilities.m_leftAbility.AbilityOnHitRecieved(_attacker, _damage);
-        if (playerAbilities.m_rightAbility != null)
-            playerAbilities.m_rightAbility.AbilityOnHitRecieved(_attacker, _damage);
+        playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, _attacker.gameObject, _damage);
+        playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, _attacker.gameObject, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
         playerResources.ChangeHealth(-_damage * (1.0f - playerStats.m_damageResistance));

@@ -17,6 +17,7 @@ public class Ability_FrostEvade : AbilityBase
     {
         base.Awake();
         m_isPassive = true;
+        m_isSynergyAvailable = true;
     }
     private void Start()
     {
@@ -54,7 +55,7 @@ public class Ability_FrostEvade : AbilityBase
 
             if (m_lastProjectile.GetComponent<Frostpath>() != null)
             {
-                m_lastProjectile.GetComponent<Frostpath>().m_data = m_data;
+                m_lastProjectile.GetComponent<Frostpath>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
                 m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(transform.position);
             }
         }

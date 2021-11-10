@@ -311,10 +311,8 @@ public class Player_Attack : MonoBehaviour
      */
     public void DamageTarget(GameObject _target, float _damage)
     {
-        if (playerController.playerAbilities.m_leftAbility != null)
-            playerController.playerAbilities.m_leftAbility.AbilityOnHitDealt(_target.gameObject, _damage);
-        if (playerController.playerAbilities.m_rightAbility != null)
-            playerController.playerAbilities.m_rightAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+        playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
+        playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
         Actor actor = _target.GetComponent<Actor>();
         if (actor != null)

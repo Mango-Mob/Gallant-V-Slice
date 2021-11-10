@@ -7,6 +7,7 @@ public class FirewaveProjectile : MonoBehaviour
     public float m_speed = 10.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
+    [SerializeField] private GameObject flameParticles;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,17 @@ public class FirewaveProjectile : MonoBehaviour
         transform.position += transform.forward * m_speed * Time.fixedDeltaTime;
         m_lifeTimer += Time.fixedDeltaTime;
         if (m_lifeTimer > m_data.lifetime)
+        {
+            ParticleSystem[] particleSystems = flameParticles.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particles in particleSystems)
+            {
+                particles.Stop();
+            }
+
+            flameParticles.transform.SetParent(null);
+            flameParticles.GetComponent<VFXTimerScript>().m_startedTimer = true;
             Destroy(gameObject);
+        }
     }
     private void OnTriggerEnter(Collider other)
     {

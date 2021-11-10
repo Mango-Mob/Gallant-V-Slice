@@ -101,22 +101,17 @@ public class Player_Movement : MonoBehaviour
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
-            if (playerController.playerAbilities.m_leftAbility != null)
-                playerController.playerAbilities.m_leftAbility.AbilityWhileRolling();
-            if (playerController.playerAbilities.m_rightAbility != null)
-                playerController.playerAbilities.m_rightAbility.AbilityWhileRolling();
+            playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.WHILE_ROLLING);
+            playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.WHILE_ROLLING);
 
             m_rollTimer -= Time.fixedDeltaTime;
             if (m_rollTimer <= 0.0f)
             {
                 m_isRolling = false;
 
-                if (playerController.playerAbilities.m_leftAbility != null)
-                    playerController.playerAbilities.m_leftAbility.AbilityOnEndRoll();
-                if (playerController.playerAbilities.m_rightAbility != null)
-                    playerController.playerAbilities.m_rightAbility.AbilityOnEndRoll();
+                playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
+                playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
             }
-
         }
         else
         {
@@ -250,10 +245,8 @@ public class Player_Movement : MonoBehaviour
             {
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 
-                if (playerController.playerAbilities.m_leftAbility != null)
-                    playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
-                if (playerController.playerAbilities.m_rightAbility != null)
-                    playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
+                playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
+                playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
 
                 playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed));
                 var animControllers = playerController.animator.runtimeAnimatorController;
