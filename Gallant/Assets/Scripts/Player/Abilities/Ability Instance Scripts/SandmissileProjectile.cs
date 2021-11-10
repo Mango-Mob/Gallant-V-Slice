@@ -5,6 +5,8 @@ using UnityEngine;
 public class SandmissileProjectile : MonoBehaviour
 {
     [SerializeField] private GameObject m_sandAreaPrefab;
+    public ParticleSystem sandParticles { get; private set; }
+
     public AbilityData m_data;
     private bool m_spawning = true;
     private float m_targetScale;
@@ -21,6 +23,7 @@ public class SandmissileProjectile : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        sandParticles = GetComponentInChildren<ParticleSystem>();
         m_rigidbody = GetComponent<Rigidbody>();
         m_targetScale = transform.localScale.x;
         transform.localScale = Vector3.zero;
@@ -76,6 +79,9 @@ public class SandmissileProjectile : MonoBehaviour
     }
     private void DetonateProjectile()
     {
+        sandParticles.Stop();
+        sandParticles.transform.SetParent(null);
+        sandParticles.GetComponent<VFXTimerScript>().m_startedTimer = true;
         if (m_sandAreaPrefab != null)
         {
             GameObject area = Instantiate(m_sandAreaPrefab,
