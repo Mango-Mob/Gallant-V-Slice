@@ -49,33 +49,34 @@ public class SandmissileProjectile : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, m_targetRange);
+        // Homing code
+        //Collider[] colliders = Physics.OverlapSphere(transform.position, m_targetRange);
 
-        List<Collider> actors = new List<Collider>();
-        foreach (var collider in colliders)
-        {
-            if (collider.GetComponent<Actor>())
-                actors.Add(collider);
-        }
+        //List<Collider> actors = new List<Collider>();
+        //foreach (var collider in colliders)
+        //{
+        //    if (collider.GetComponent<Actor>())
+        //        actors.Add(collider);
+        //}
 
-        if (actors.Count > 0)
-        {
-            float closestDistance = Mathf.Infinity;
-            Collider closestTarget = null;
+        //if (actors.Count > 0)
+        //{
+        //    float closestDistance = Mathf.Infinity;
+        //    Collider closestTarget = null;
 
-            foreach (var actor in actors)
-            {
-                float distance = Vector3.Distance(actor.transform.position, transform.position);
+        //    foreach (var actor in actors)
+        //    {
+        //        float distance = Vector3.Distance(actor.transform.position, transform.position);
 
-                if (distance < closestDistance)
-                {
-                    closestDistance = distance;
-                    closestTarget = actor;
-                }
-            }
+        //        if (distance < closestDistance)
+        //        {
+        //            closestDistance = distance;
+        //            closestTarget = actor;
+        //        }
+        //    }
 
-            m_rigidbody.AddForce(Time.fixedDeltaTime * (closestTarget.transform.position - transform.position + transform.up).normalized * m_forceMultiplier /* * (1.0f - (closestDistance / m_targetRange))*/);
-        }
+        //    //m_rigidbody.AddForce(Time.fixedDeltaTime * (closestTarget.transform.position - transform.position + transform.up).normalized * m_forceMultiplier /* * (1.0f - (closestDistance / m_targetRange))*/);
+        //}
     }
     private void DetonateProjectile()
     {
