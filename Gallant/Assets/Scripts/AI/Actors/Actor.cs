@@ -88,7 +88,7 @@ public class Actor : StateMachine
     // Update is called once per frame
     void Update()
     {
-        if (m_currentState != null && m_legs != null && !m_legs.m_isKnocked)
+        if (m_currentState != null && m_legs != null  && !m_legs.m_isKnocked)
             m_currentState.Update(); //If state exists, update it.
 
         if(m_animator != null && m_animator.m_hasVelocity)
