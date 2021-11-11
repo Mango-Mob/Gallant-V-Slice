@@ -74,7 +74,7 @@ public class SlowStatus : StatusEffect
 
     protected override void LoadDisplayImage()
     {
-        m_displayImage = Resources.Load<Sprite>("UI/SlowStatusIcon");
+        m_displayImage = Resources.Load<Sprite>("UI/Slow");
     }
 
     protected override void LoadDisplayVFX()

@@ -78,6 +78,7 @@ public class StatusEffectContainer : MonoBehaviour
                 bar.SetImage(effect.m_displayImage);
                 bar.SetColor(effect.m_displayColor);
             }
+            effect.StartActor(m_actor);
         }
         else
         {
@@ -96,6 +97,7 @@ public class StatusEffectContainer : MonoBehaviour
                 m_actor.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
                 Destroy(display.element.gameObject);
             }
+            display.effect.EndActor(m_actor);
         }
         else
         {
