@@ -42,7 +42,7 @@ public class SandArea : MonoBehaviour
             StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
             if (status != null)
             {
-                status.AddStatusEffect(new SlowStatus(m_data.effectiveness, m_data.duration));
+                status.AddStatusEffect(new WeakenStatus(m_data.effectiveness, m_data.duration));
             }
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FirewaveProjectile : MonoBehaviour
 {
+    private List<Actor> m_hitList = new List<Actor>();
     public float m_speed = 10.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
@@ -37,12 +38,12 @@ public class FirewaveProjectile : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
-
             Actor actor = other.GetComponent<Actor>();
-            if (actor != null)
+            if (actor != null && !m_hitList.Contains(actor))
             {
+                Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
                 actor.DealDamage(m_data.damage);
+                m_hitList.Add(actor);
             }
 
             StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();

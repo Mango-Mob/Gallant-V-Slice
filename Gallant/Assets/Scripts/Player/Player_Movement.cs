@@ -66,7 +66,7 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
-        if (m_currentTarget != null && Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f)
+        if (m_currentTarget != null && (m_currentTarget.CheckIsDead() || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
         {
             m_currentTarget = null;
         }
