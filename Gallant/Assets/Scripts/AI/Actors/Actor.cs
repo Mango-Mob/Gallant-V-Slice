@@ -38,6 +38,7 @@ public class Actor : StateMachine
     private bool m_isDead = false;
     private float m_currentHealth;
     private UI_Bar m_healthBar;
+    private float m_resist;
 
     //Called upon the creation of the class.
     private void Awake()
@@ -57,7 +58,8 @@ public class Actor : StateMachine
         m_material = GetComponentInChildren<Actor_Material>();
         m_ui = GetComponentInChildren<Actor_UI>();
 
-        m_tracker?.RecordResistance(m_myData.resistance);
+        m_resist = m_myData.resistance;
+        m_tracker?.RecordResistance(m_resist);
 
         if (m_myData.name != "")
         {
@@ -83,6 +85,7 @@ public class Actor : StateMachine
         {
             m_healthBar = m_ui.GetElement<UI_Bar>();
         }
+        
     }
 
     // Update is called once per frame
@@ -96,10 +99,11 @@ public class Actor : StateMachine
     
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
 
-        if (InputManager.instance.IsKeyDown(KeyType.J))
+        if (InputManager.instance.IsKeyDown(KeyType.H))
         {
-            DealDamage(50.0f);
+            GetComponent<StatusEffectContainer>().AddStatusEffect(new WeakenStatus(0.5f, 5.0f));
         }
+        m_tracker?.RecordResistance(m_resist);
     }
 
     /*********************
@@ -185,6 +189,11 @@ public class Actor : StateMachine
 
             m_material?.ShowHit();
         }
+    }
+
+    public void SetResistance(float m_amount)
+    {
+        m_resist = Mathf.Clamp(m_amount, -99.0f, m_myData.resistance);
     }
 
     private void HandleHitLoc(Vector3 fromPos)
