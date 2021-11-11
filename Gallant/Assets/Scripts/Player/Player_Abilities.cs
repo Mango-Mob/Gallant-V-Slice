@@ -120,7 +120,8 @@ public class Player_Abilities : MonoBehaviour
                 abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
                 break;
             case Ability.HP_BUFF:
-                break;
+                    abilityScript = gameObject.AddComponent<Ability_Barrier>();
+                    break;
             case Ability.THORNS:
                 abilityScript = gameObject.AddComponent<Ability_Thorns>();
                     break;
@@ -180,10 +181,11 @@ public class Player_Abilities : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
-                if (m_leftAbility == null || (m_leftAbility.m_isSynergyAvailable && m_leftAbility.GetType() == m_rightAbility.GetType()))
-                {
-                    return;
-                }
+                if (m_rightAbility != null)
+                    if (m_leftAbility == null || (m_leftAbility.m_isSynergyAvailable && m_leftAbility.GetType() == m_rightAbility.GetType()))
+                    {
+                        return;
+                    }
                 abilityScript = m_leftAbility;
                 break;
             case Hand.RIGHT:

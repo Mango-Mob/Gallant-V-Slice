@@ -167,8 +167,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            //playerResources.ChangeHealth(-10.0f, FindObjectOfType<Actor>().gameObject);
-            DamagePlayer(1.0f, FindObjectOfType<Actor>().gameObject, false);
+            DamagePlayer(20.0f, FindObjectOfType<Actor>().gameObject, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -185,6 +184,10 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FIVE))
         {
             AdrenalineDrop.CreateAdrenalineDropGroup(5, new Vector3(0, transform.position.y + 0.5f, 0));
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_ZERO))
+        {
+            playerResources.ChangeBarrier(10.0f);
         }
 
         // Item debug
@@ -300,7 +303,7 @@ public class Player_Controller : MonoBehaviour
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-_damage * (1.0f - playerStats.m_damageResistance));
+        playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
     }

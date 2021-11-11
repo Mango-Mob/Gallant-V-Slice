@@ -103,6 +103,7 @@ public class SandmissileProjectile : MonoBehaviour
     {
         if (other.GetComponent<Actor>() != null)
         {
+            other.GetComponent<Actor>().DealDamage(m_data.damage);
             DetonateProjectile();
         }
     }
