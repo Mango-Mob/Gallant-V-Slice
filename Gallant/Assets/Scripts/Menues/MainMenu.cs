@@ -17,8 +17,8 @@ public class MainMenu : MonoBehaviour
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
 
-    //[Header("Collection")]
-    //public CollectionMenu m_collectionMenu;
+    [Header("Collection")]
+    public GameObject m_collectionMenu;
 
     // Start is called before the first frame update
     void Start()
@@ -55,18 +55,20 @@ public class MainMenu : MonoBehaviour
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);
-        //m_collectionMenu?.gameObject.SetActive(false);
+        m_collectionMenu.SetActive(false);
         m_mainDisplay.SetActive(true);
     }
     public void Settings()
     {
         m_settingsMenu.gameObject.SetActive(true);
         m_mainDisplay.SetActive(false);
+        m_collectionMenu.SetActive(false);
     }
     public void Collection()
     {
-        //m_collectionMenu.gameObject.SetActive(true);
+        m_collectionMenu.SetActive(true);
         m_mainDisplay.SetActive(false);
+        m_settingsMenu.gameObject.SetActive(false);
     }
 
     public void QuitGame()

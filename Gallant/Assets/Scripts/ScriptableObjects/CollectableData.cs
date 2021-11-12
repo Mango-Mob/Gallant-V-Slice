@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "itemData", menuName = "Game Data/Item Data", order = 1)]
-public class ItemData : ScriptableObject
+[CreateAssetMenu(fileName = "collectableData", menuName = "Game Data/Collectalbe Data", order = 1)]
+public class CollectableData : ScriptableObject
 {
     [Header("Item Information")]
+    public string collectableID;
     public string itemName;
-    public ItemEffect itemEffect;
     public Sprite itemIcon;
 
     [TextArea(10, 15)]
