@@ -175,7 +175,13 @@ public class Player_Attack : MonoBehaviour
         //playerController.animator.SetBool("LeftBoomerang", false);
         //playerController.animator.SetBool("RightBoomerang", false);
     }
-
+    public bool IsDuelWielding()
+    {
+        if (m_leftWeapon != null && m_rightWeapon != null)
+            return m_leftWeapon.weaponType == m_rightWeapon.weaponType;
+        else
+            return false;
+    }
     public Hand GetCurrentAttackingHand()
     {
         bool usingRight = false;

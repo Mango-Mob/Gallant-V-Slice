@@ -47,6 +47,8 @@ public class Ability_Barrier : AbilityBase
 
             projectile.GetComponent<BarrierProjectile>().m_barrierValue = playerController.playerResources.m_barrier;
             projectile.GetComponent<BarrierProjectile>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
+
+            playerController.playerResources.ResetBarrier();
         }
     }
     public override void AbilityPassive()

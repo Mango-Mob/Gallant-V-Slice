@@ -27,6 +27,9 @@ public class Player_Controller : MonoBehaviour
     public Player_Stats playerStats { private set; get; }
     public Player_AudioAgent playerAudioAgent { private set; get; }
 
+    [Header("Dual Wielding Stats")]
+    public float m_dualWieldSpeed = 1.3f;
+    private float m_dualWieldBonus = 1.0f;
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -61,8 +64,8 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("LeftAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
-        animator.SetFloat("RightAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
+        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
 
         bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
         bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
@@ -127,6 +130,11 @@ public class Player_Controller : MonoBehaviour
 
             bool rightWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
             bool leftWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+
+            if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                m_dualWieldBonus = m_dualWieldSpeed;
+            else
+                m_dualWieldBonus = 1.0f;
 
             // Weapon attacks
             if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)

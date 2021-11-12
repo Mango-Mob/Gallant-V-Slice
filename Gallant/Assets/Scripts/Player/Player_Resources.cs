@@ -109,6 +109,10 @@ public class Player_Resources : MonoBehaviour
         return overflow;
     }
 
+    public void ResetBarrier()
+    {
+        m_barrier = 0.0f;
+    }
     IEnumerator BackToMenu()
     {
         yield return new WaitForSecondsRealtime(3);
