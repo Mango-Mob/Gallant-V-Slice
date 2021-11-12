@@ -58,7 +58,7 @@ public class BurnStatus : StatusEffect
 
     protected override void LoadDisplayImage()
     {
-        m_displayImage = Resources.Load<Sprite>("UI/BurnStatusIcon");
+        m_displayImage = Resources.Load<Sprite>("UI/Burn");
     }
 
     protected override void LoadDisplayVFX()

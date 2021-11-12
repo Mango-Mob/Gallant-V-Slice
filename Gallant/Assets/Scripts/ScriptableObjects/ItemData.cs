@@ -10,5 +10,6 @@ public class ItemData : ScriptableObject
     public ItemEffect itemEffect;
     public Sprite itemIcon;
 
+    [TextArea(10, 15)]
     public string description;
 }

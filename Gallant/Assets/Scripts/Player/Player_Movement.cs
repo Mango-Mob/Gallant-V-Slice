@@ -41,9 +41,17 @@ public class Player_Movement : MonoBehaviour
     private float m_rollCDTimer = 0.0f;
     public float m_rollCD = 1.0f;
 
+    [Header("Targeting")]
+    public Actor m_currentTarget;
+    [SerializeField] private float m_maxAngle = 60.0f;
+    [SerializeField] private float m_maxDistance = 20.0f;
+    private UI_LockonTarget m_lockonTarget;
+
     // Start is called before the first frame update
     void Start()
     {
+        m_lockonTarget = HUDManager.instance.GetElement<UI_LockonTarget>("LockonTarget");
+
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
 
@@ -56,7 +64,16 @@ public class Player_Movement : MonoBehaviour
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
         }
     }
+    private void Update()
+    {
+        if (m_currentTarget != null && (m_currentTarget.CheckIsDead() || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
+        {
+            m_currentTarget = null;
+        }
 
+        if (m_lockonTarget != null)
+            m_lockonTarget.UpdateTarget(m_currentTarget != null ? m_currentTarget.gameObject : null);
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -84,22 +101,17 @@ public class Player_Movement : MonoBehaviour
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
-            if (playerController.playerAbilities.m_leftAbility != null)
-                playerController.playerAbilities.m_leftAbility.AbilityWhileRolling();
-            if (playerController.playerAbilities.m_rightAbility != null)
-                playerController.playerAbilities.m_rightAbility.AbilityWhileRolling();
+            playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.WHILE_ROLLING);
+            playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.WHILE_ROLLING);
 
             m_rollTimer -= Time.fixedDeltaTime;
             if (m_rollTimer <= 0.0f)
             {
                 m_isRolling = false;
 
-                if (playerController.playerAbilities.m_leftAbility != null)
-                    playerController.playerAbilities.m_leftAbility.AbilityOnEndRoll();
-                if (playerController.playerAbilities.m_rightAbility != null)
-                    playerController.playerAbilities.m_rightAbility.AbilityOnEndRoll();
+                playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
+                playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
             }
-
         }
         else
         {
@@ -173,7 +185,13 @@ public class Player_Movement : MonoBehaviour
         Vector3 movement = Vector3.zero;
         if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
         {
-            if (_aim.magnitude != 0) // If the player is trying to aim...
+            if (m_currentTarget != null)
+            {
+                // Make player model face target direction
+                Vector3 normalizedAim = (m_currentTarget.transform.position - transform.position).normalized;
+                RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
+            }
+            else if (_aim.magnitude != 0) // If the player is trying to aim...
             {
                 // Make player model face aim direction
                 Vector3 normalizedAim = Vector3.zero;
@@ -197,7 +215,7 @@ public class Player_Movement : MonoBehaviour
                 movement = normalizedMove * speed * _deltaTime;
 
                 // If player is not trying to aim, aim in direction of movement.
-                if (_aim.magnitude == 0)
+                if (_aim.magnitude == 0 && m_currentTarget == null)
                     RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
 
                 // Movement Animation control
@@ -206,7 +224,7 @@ public class Player_Movement : MonoBehaviour
                 rotationVector += normalizedMove.z * playerModel.transform.right;
                 rotationVector += normalizedMove.x * playerModel.transform.forward;
 
-                if (_aim.magnitude == 0)
+                if (_aim.magnitude == 0 && m_currentTarget == null)
                 {
                     playerController.animator.SetFloat("Horizontal", 0.0f);
                     playerController.animator.SetFloat("Vertical", _move.magnitude);
@@ -227,10 +245,8 @@ public class Player_Movement : MonoBehaviour
             {
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 
-                if (playerController.playerAbilities.m_leftAbility != null)
-                    playerController.playerAbilities.m_leftAbility.AbilityOnBeginRoll();
-                if (playerController.playerAbilities.m_rightAbility != null)
-                    playerController.playerAbilities.m_rightAbility.AbilityOnBeginRoll();
+                playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
+                playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
 
                 playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed));
                 var animControllers = playerController.animator.runtimeAnimatorController;
@@ -286,6 +302,38 @@ public class Player_Movement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(playerModel.transform.eulerAngles.y, targetAngle, ref m_turnSmoothVelocity, m_turnSmoothTime);
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
         }
+    }
+
+    public void LockOnTarget()
+    {
+        if (m_currentTarget != null)
+        {
+            m_currentTarget = null;
+            Debug.Log("Stopped targeting");
+            return;
+        }
+
+        List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
+
+        float closestDistance = Mathf.Infinity;
+        Actor closestTarget = null;
+
+        foreach (var actor in actors)
+        {
+            float distance = Vector3.Distance(actor.transform.position, transform.position);
+
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = actor;
+            }
+        }
+
+        if (closestTarget == null)
+            Debug.Log("Could not find target");
+        else
+            Debug.Log("Found target " + closestTarget.name);
+        m_currentTarget = closestTarget;
     }
 
     /*******************

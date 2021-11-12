@@ -16,6 +16,7 @@ public class Player_Controller : MonoBehaviour
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
+    private Hand m_lastAttackHand = Hand.NONE;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -26,6 +27,9 @@ public class Player_Controller : MonoBehaviour
     public Player_Stats playerStats { private set; get; }
     public Player_AudioAgent playerAudioAgent { private set; get; }
 
+    [Header("Dual Wielding Stats")]
+    public float m_dualWieldSpeed = 1.3f;
+    private float m_dualWieldBonus = 1.0f;
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -60,8 +64,8 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("LeftAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
-        animator.SetFloat("RightAttackSpeed", playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
+        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
 
         bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
         bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
@@ -124,16 +128,40 @@ public class Player_Controller : MonoBehaviour
                 }
             }
 
+            bool rightWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
+            bool leftWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+
+            if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                m_dualWieldBonus = m_dualWieldSpeed;
+            else
+                m_dualWieldBonus = 1.0f;
+
             // Weapon attacks
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.RIGHT))
+            if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
             {
-                playerAttack.StartUsing(Hand.RIGHT);
-                //playerAttack.UseWeapon(false);
+                if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                {
+                    if (m_lastAttackHand == Hand.RIGHT)
+                    {
+                        playerAttack.StartUsing(Hand.LEFT);
+                    }
+                    else
+                    {
+                        playerAttack.StartUsing(Hand.RIGHT);
+                    }
+                }
+                else if (rightWeaponAttack)
+                {
+                    playerAttack.StartUsing(Hand.RIGHT);
+                }
+                else if (leftWeaponAttack)
+                {
+                    playerAttack.StartUsing(Hand.LEFT);
+                }
             }
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseDown(MouseButton.LEFT))
+            else
             {
-                playerAttack.StartUsing(Hand.LEFT);
-                //playerAttack.UseWeapon(true);
+                m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
             }
 
             // Ability attacks
@@ -145,6 +173,11 @@ public class Player_Controller : MonoBehaviour
             {
                 playerAbilities.StartUsing(Hand.LEFT);
             }
+        }
+
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RS, gamepadID) || InputManager.instance.IsKeyDown(KeyType.L_ALT))
+        {
+            playerMovement.LockOnTarget();
         }
 
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.V))
@@ -162,8 +195,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            //playerResources.ChangeHealth(-10.0f, FindObjectOfType<Actor>().gameObject);
-            DamagePlayer(1.0f, FindObjectOfType<Actor>().gameObject, false);
+            DamagePlayer(20.0f, FindObjectOfType<Actor>().gameObject, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -176,6 +208,14 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
             StunPlayer(0.2f, transform.up * 80.0f);
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_FIVE))
+        {
+            AdrenalineDrop.CreateAdrenalineDropGroup(5, new Vector3(0, transform.position.y + 0.5f, 0));
+        }
+        if (InputManager.instance.IsKeyDown(KeyType.NUM_ZERO))
+        {
+            playerResources.ChangeBarrier(10.0f);
         }
 
         // Item debug
@@ -260,19 +300,38 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
+    public List<Actor> GetActorsInfrontOfPlayer(float _angle, float _distance)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        List<Actor> targets = new List<Actor>();
 
+        foreach (var collider in colliders)
+        {
+            Actor actor = collider.GetComponent<Actor>();
+            if (actor == null)
+                continue;
+
+            Vector3 direction = (actor.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+            float TEMPCOS = Mathf.Cos(_angle);
+            if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
+            {
+                targets.Add(actor);
+            }
+
+        }
+        return targets;
+    }
     public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
 
-        if (playerAbilities.m_leftAbility != null)
-            playerAbilities.m_leftAbility.AbilityOnHitRecieved(_attacker, _damage);
-        if (playerAbilities.m_rightAbility != null)
-            playerAbilities.m_rightAbility.AbilityOnHitRecieved(_attacker, _damage);
+        playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
+        playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-_damage * (1.0f - playerStats.m_damageResistance));
+        playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
     }

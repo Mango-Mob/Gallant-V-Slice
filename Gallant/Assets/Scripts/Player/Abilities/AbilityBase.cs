@@ -1,6 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public enum PassiveType
+{
+    PASSIVE,
+    HIT_RECIEVED,
+    HIT_DEALT,
+    BEGIN_ROLL,
+    WHILE_ROLLING,
+    END_ROLL,
+}
 
 /****************
  * AbilityBase: Base class for ability
@@ -17,6 +26,11 @@ public abstract class AbilityBase : MonoBehaviour
     public bool m_canUse { get; private set; } = true;
     private float m_cooldownTimer = 0.0f;
     protected Player_Controller playerController;
+
+    [Header("Double Synergy")]
+    public AbilityData m_synergyData;
+    public bool m_isSynergyAvailable { get; protected set; } = false;
+
     protected void Awake()
     {
         playerController = GetComponent<Player_Controller>();

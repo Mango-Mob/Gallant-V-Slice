@@ -33,6 +33,7 @@ public class Ability_Lightning : AbilityBase
                 modelTransform.rotation);
             
             projectile.GetComponent<ChainLightning>().m_data = m_data;
+            projectile.GetComponent<ChainLightning>().m_user = playerController;
             projectile.GetComponent<ChainLightning>().m_handTransform = 
                 m_attachedHand == Hand.LEFT ? GetComponent<Player_Attack>().m_leftHandTransform : GetComponent<Player_Attack>().m_rightHandTransform;
         }

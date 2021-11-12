@@ -87,4 +87,16 @@ public class AbilityData : ScriptableObject
 
         return description;
     }
+
+    public static AbilityData CreateWeaponDataSynergy(AbilityData _data1, AbilityData _data2)
+    {
+        AbilityData data = CreateInstance<AbilityData>();
+
+        data.damage = (_data1.damage + _data2.damage) * 0.75f;
+        data.lifetime = (_data1.lifetime + _data2.lifetime) * 0.75f;
+        data.effectiveness = (_data1.effectiveness + _data2.effectiveness) * 0.75f;
+        data.duration = (_data1.duration + _data2.duration) * 0.75f;
+
+        return data;
+    }
 }

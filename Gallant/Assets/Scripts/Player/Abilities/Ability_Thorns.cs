@@ -32,9 +32,11 @@ public class Ability_Thorns : AbilityBase
     {
         GameObject barrier = Instantiate(m_thornsVFXPrefab, transform);
 
+        AbilityData dataToUse = m_synergyData != null ? m_synergyData : m_data;
+
         if (_attacker != null)
         {
-            playerController.playerAttack.DamageTarget(_attacker, _damage * m_data.effectiveness);
+            playerController.playerAttack.DamageTarget(_attacker, _damage * dataToUse.effectiveness);
             barrier.transform.forward = (_attacker.transform.position - transform.position).normalized;
             barrier.GetComponent<ThornsVFX>().target = _attacker;
         }

@@ -24,7 +24,15 @@ public class AdrenalineDrop : MonoBehaviour
 
         for (int i = 0; i < _count; i++)
         {
-            Instantiate(orbPrefab, _position, Quaternion.Euler(0, 0, 0));
+            Vector3 offset;
+            do
+            {
+                offset = new Vector3(Random.Range(-1.0f, 1.0f), 0, Random.Range(-1.0f, 1.0f));
+            } while (offset.x == 0 && offset.z == 0);
+
+            offset = offset.normalized * Random.Range(0.0f, 1.0f);
+
+            Instantiate(orbPrefab, _position + offset, Quaternion.Euler(0, 0, 0));
         }
     }    
 

@@ -80,8 +80,8 @@ public class WeaponData : ScriptableObject
             case Ability.FIREWAVE:
                 data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
                 break;
-            case Ability.ACID_POOL:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/acidpool" + powerLevel.ToString());
+            case Ability.SAND_MISSILE:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + powerLevel.ToString());
                 break;
             case Ability.LIGHTNING_BOLT:
                 data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
@@ -90,7 +90,7 @@ public class WeaponData : ScriptableObject
                 data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
                 break;
             case Ability.HP_BUFF:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/hpbuff" + powerLevel.ToString());
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + powerLevel.ToString());
                 break;
             case Ability.THORNS:
                 data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
@@ -100,8 +100,8 @@ public class WeaponData : ScriptableObject
                 break;
         }
 
-        if (data.abilityData == null)
-            TempReroll(ref data, powerLevel);
+        //if (data.abilityData == null)
+        //    TempReroll(ref data, powerLevel);
 
         // Create weapon name
         if(data.abilityData != null)
@@ -111,26 +111,30 @@ public class WeaponData : ScriptableObject
         return data;
     }
 
-    public static void TempReroll(ref WeaponData data, int powerLevel)
-    {
-        int newAbilityTypeNo = Random.Range(0, 4);
-        if (newAbilityTypeNo == 0)
-        {
-            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
-        }
-        else if (newAbilityTypeNo == 1)
-        {
-            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
-        }
-        else if (newAbilityTypeNo == 2)
-        {
-            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
-        }
-        else if (newAbilityTypeNo == 3)
-        {
-            data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
-        }
-    }
+    //public static void TempReroll(ref WeaponData data, int powerLevel)
+    //{
+    //    int newAbilityTypeNo = Random.Range(0, 5);
+    //    if (newAbilityTypeNo == 0)
+    //    {
+    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
+    //    }
+    //    else if (newAbilityTypeNo == 1)
+    //    {
+    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
+    //    }
+    //    else if (newAbilityTypeNo == 2)
+    //    {
+    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
+    //    }
+    //    else if (newAbilityTypeNo == 3)
+    //    {
+    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
+    //    }
+    //    else if (newAbilityTypeNo == 4)
+    //    {
+    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + powerLevel.ToString());
+    //    }
+    //}
 
     public void Clone(WeaponData other)
     {

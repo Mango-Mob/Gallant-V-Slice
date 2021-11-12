@@ -55,6 +55,7 @@ public class SoloAudioAgent : AudioAgent
     /// </summary>
     public void Play() 
     {
+        player.SetClip(mainClip);
         player.SetLooping(isLooping);
         player.Play();
     }
