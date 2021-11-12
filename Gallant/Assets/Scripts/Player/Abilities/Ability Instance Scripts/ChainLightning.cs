@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ChainLightning : MonoBehaviour
 {
+    public Player_Controller m_user;
     public LayerMask m_enemyDetectionMask;
     public AbilityData m_data;
     [SerializeField] private LineRenderer lineRenderer;
@@ -11,6 +12,7 @@ public class ChainLightning : MonoBehaviour
     public int m_maxTargets = 3;
     public Transform m_handTransform;
 
+    public float m_hitAngle = 45.0f;
     public float m_hitRange = 10.0f;
     public float m_chainRange = 3.0f;
 
@@ -23,36 +25,40 @@ public class ChainLightning : MonoBehaviour
         lineRenderer.SetPosition(0, m_handTransform.position);
 
         Vector3 lastTargetPos = m_handTransform.position;
-        Actor[] actors = FindObjectsOfType<Actor>();
+        //Actor[] actors = FindObjectsOfType<Actor>();
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position + transform.forward * m_chainRange, m_chainRange, transform.forward, m_hitRange, m_enemyDetectionMask);
+        List<Actor> actors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
 
-        foreach (var hit in hits)
+        float closestDistance = Mathf.Infinity;
+        Actor closestTarget = null;
+
+        foreach (var actor in actors)
         {
-            Actor actor = hit.collider.GetComponent<Actor>();
-            if (actor != null)
-            {
-                if (actor.CheckIsDead())
-                    continue;
+            float distance = Vector3.Distance(actor.transform.position, transform.position);
 
-                lineRenderer.SetPosition(1, actor.transform.position);
-                m_hitTargets.Add(actor);
-                actor.DealDamage(m_data.damage);
-                lastTargetPos = actor.transform.position;
-                break;
+            if (distance < closestDistance)
+            {
+                closestDistance = distance;
+                closestTarget = actor;
             }
+        }
+
+        if (closestTarget != null)
+        {
+            m_hitTargets.Add(closestTarget);
+            lineRenderer.SetPosition(1, closestTarget.transform.position);
         }
 
         if (m_hitTargets.Count == 0)
         {
-            lineRenderer.SetPosition(1, transform.position + transform.forward * (m_hitRange + m_chainRange));
+            lineRenderer.SetPosition(1, transform.position + transform.forward * m_hitRange);
             return;
         }
 
         for (int i = 1; i < m_maxTargets; i++)
         {
             Actor bestTarget = null;
-            float closestDistance = Mathf.Infinity;
+            closestDistance = Mathf.Infinity;
             foreach (var actor in actors)
             {
                 if (actor == bestTarget || m_hitTargets.Contains(actor))

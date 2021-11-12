@@ -4,7 +4,7 @@ using UnityEngine;
 public enum Ability
 {
     FIREWAVE,
-    ACID_POOL,
+    SAND_MISSILE,
     LIGHTNING_BOLT,
     ICE_ROLL,
     HP_BUFF,
@@ -24,10 +24,14 @@ public class Player_Abilities : MonoBehaviour
     public AbilityBase m_leftAbility;
     public AbilityBase m_rightAbility;
 
-    [Header("Ability Icons")]
-    [SerializeField] private UI_AbilityIcon m_leftAbilityIcon;
-    [SerializeField] private UI_AbilityIcon m_rightAbilityIcon;
+    private UI_AbilityIcon m_leftAbilityIcon;
+    private UI_AbilityIcon m_rightAbilityIcon;
 
+    private void Awake()
+    {
+        m_leftAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityL");
+        m_rightAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityR");
+    }
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();
@@ -106,7 +110,8 @@ public class Player_Abilities : MonoBehaviour
             case Ability.FIREWAVE:
                 abilityScript = gameObject.AddComponent<Ability_Firewave>();
                 break;
-            case Ability.ACID_POOL:
+            case Ability.SAND_MISSILE:
+                abilityScript = gameObject.AddComponent<Ability_SandMissile>();
                 break;
             case Ability.LIGHTNING_BOLT:
                 abilityScript = gameObject.AddComponent<Ability_Lightning>();
@@ -115,7 +120,8 @@ public class Player_Abilities : MonoBehaviour
                 abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
                 break;
             case Ability.HP_BUFF:
-                break;
+                    abilityScript = gameObject.AddComponent<Ability_Barrier>();
+                    break;
             case Ability.THORNS:
                 abilityScript = gameObject.AddComponent<Ability_Thorns>();
                     break;
@@ -134,20 +140,85 @@ public class Player_Abilities : MonoBehaviour
         {
             case Hand.LEFT:
                 Destroy(m_leftAbility);
+
+                if (m_rightAbility != null)
+                    m_rightAbility.m_synergyData = null;
+
                 m_leftAbility = abilityScript;
                 m_leftAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
                 m_leftAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_leftAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
+
                 break;
             case Hand.RIGHT:
                 Destroy(m_rightAbility);
+
+                if (m_rightAbility != null)
+                    m_rightAbility.m_synergyData = null;
+
                 m_rightAbility = abilityScript;
                 m_rightAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
                 m_rightAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_rightAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
+
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
+                break;
+        }
+
+        if (m_leftAbility != null && m_rightAbility != null && 
+            m_leftAbility.m_isSynergyAvailable && m_rightAbility.m_isSynergyAvailable && 
+            m_leftAbility.GetType() == m_rightAbility.GetType())
+        {
+            m_rightAbility.m_synergyData = AbilityData.CreateWeaponDataSynergy(m_leftAbility.m_data, m_rightAbility.m_data);
+        }
+    }
+
+    public void PassiveProcess(Hand _hand, PassiveType _type, GameObject _object = null, float _damage = 0.0f)
+    {
+        AbilityBase abilityScript = null;
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_rightAbility != null)
+                    if (m_leftAbility == null || (m_leftAbility.m_isSynergyAvailable && m_leftAbility.GetType() == m_rightAbility.GetType()))
+                    {
+                        return;
+                    }
+                abilityScript = m_leftAbility;
+                break;
+            case Hand.RIGHT:
+                abilityScript = m_rightAbility;
+                break;
+        }
+
+        if (abilityScript == null)
+            return;
+
+        switch (_type)
+        {
+            case PassiveType.PASSIVE:
+                abilityScript.AbilityPassive();
+                break;
+            case PassiveType.HIT_RECIEVED:
+                if (_object == null)
+                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                abilityScript.AbilityOnHitRecieved(_object, _damage);
+                break;
+            case PassiveType.HIT_DEALT:
+                if (_object == null)
+                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                abilityScript.AbilityOnHitDealt(_object, _damage);
+                break;
+            case PassiveType.BEGIN_ROLL:
+                abilityScript.AbilityOnBeginRoll();
+                break;
+            case PassiveType.WHILE_ROLLING:
+                abilityScript.AbilityWhileRolling();
+                break;
+            case PassiveType.END_ROLL:
+                abilityScript.AbilityOnEndRoll();
                 break;
         }
     }

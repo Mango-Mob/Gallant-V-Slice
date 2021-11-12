@@ -23,7 +23,6 @@ public class Ability_Firewave : AbilityBase
     }
     public override void AbilityFunctionality()
     {
-        Debug.Log("Fire go woosh");
         if (m_wavePrefab != null)
         {
             Transform modelTransform = playerController.playerMovement.playerModel.transform;

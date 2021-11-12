@@ -12,6 +12,7 @@ public enum Hand
 {
     LEFT,
     RIGHT,
+    NONE,
 }
 /****************
  * Player_Attack: Contains logic for different player weapon attacks
@@ -39,8 +40,8 @@ public class Player_Attack : MonoBehaviour
     private GameObject m_boomerangeProjectilePrefab;
 
     [Header("Weapon Icons")]
-    [SerializeField] private UI_WeaponIcon m_leftWeaponIcon;
-    [SerializeField] private UI_WeaponIcon m_rightWeaponIcon;
+    private UI_WeaponIcon m_leftWeaponIcon;
+    private UI_WeaponIcon m_rightWeaponIcon;
 
     [Header("Held Gameobjects")]
     private GameObject m_shieldBlockPrefab;
@@ -51,9 +52,15 @@ public class Player_Attack : MonoBehaviour
     {
         playerController = GetComponent<Player_Controller>();
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
-        m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider"); ;
+        m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider");
+
+        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
+        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
 
+    private void Start()
+    {
+    }
     /*******************
      * StartUsing : Begin the use of held weapon via animation.
      * @author : William de Beer
@@ -106,7 +113,7 @@ public class Player_Attack : MonoBehaviour
         }
 
         //playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
-        playerController.animator.SetTrigger(animatorTriggerName);
+        playerController.animator.SetBool(animatorTriggerName, true);
     }
 
     /*******************
@@ -159,7 +166,45 @@ public class Player_Attack : MonoBehaviour
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
                 break;
         }
+
+
+        //playerController.animator.SetBool("LeftShield", false);
+        //playerController.animator.SetBool("RightShield", false);
+        //playerController.animator.SetBool("LeftSword", false);
+        //playerController.animator.SetBool("RightSword", false);
+        //playerController.animator.SetBool("LeftBoomerang", false);
+        //playerController.animator.SetBool("RightBoomerang", false);
     }
+    public bool IsDuelWielding()
+    {
+        if (m_leftWeapon != null && m_rightWeapon != null)
+            return m_leftWeapon.weaponType == m_rightWeapon.weaponType;
+        else
+            return false;
+    }
+    public Hand GetCurrentAttackingHand()
+    {
+        bool usingRight = false;
+        bool usingLeft = false;
+
+        if (playerController.animator.GetBool("RightShield")
+            || playerController.animator.GetBool("RightSword")
+            || playerController.animator.GetBool("RightBoomerang"))
+            usingRight = true;
+        if (playerController.animator.GetBool("LeftShield")
+            || playerController.animator.GetBool("LeftSword") 
+            || playerController.animator.GetBool("LeftBoomerang"))
+            usingLeft = true;
+
+        if (usingRight == usingLeft)
+            return Hand.NONE;
+        else if (usingRight)
+            return Hand.RIGHT;
+        else // Using Left
+            return Hand.LEFT;
+
+    }
+
     /*******************
      * PickUpWeapon : Pick up a weapon and add it to hand.
      * @author : William de Beer
@@ -305,10 +350,8 @@ public class Player_Attack : MonoBehaviour
      */
     public void DamageTarget(GameObject _target, float _damage)
     {
-        if (playerController.playerAbilities.m_leftAbility != null)
-            playerController.playerAbilities.m_leftAbility.AbilityOnHitDealt(_target.gameObject, _damage);
-        if (playerController.playerAbilities.m_rightAbility != null)
-            playerController.playerAbilities.m_rightAbility.AbilityOnHitDealt(_target.gameObject, _damage);
+        playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
+        playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
         Actor actor = _target.GetComponent<Actor>();
         if (actor != null)
