@@ -46,7 +46,7 @@ public class Ability_Barrier : AbilityBase
                 modelTransform.rotation);
 
             projectile.GetComponent<BarrierProjectile>().m_barrierValue = playerController.playerResources.m_barrier;
-            projectile.GetComponent<BarrierProjectile>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
+            projectile.GetComponent<BarrierProjectile>().m_data = m_data;
 
             playerController.playerResources.ResetBarrier();
         }
