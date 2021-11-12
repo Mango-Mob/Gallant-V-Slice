@@ -16,6 +16,7 @@ public class Player_Controller : MonoBehaviour
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
+    private Hand m_lastAttackHand = Hand.NONE;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -124,16 +125,35 @@ public class Player_Controller : MonoBehaviour
                 }
             }
 
+            bool rightWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
+            bool leftWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+
             // Weapon attacks
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT))
+            if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
             {
-                playerAttack.StartUsing(Hand.RIGHT);
-                //playerAttack.UseWeapon(false);
+                if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                {
+                    if (m_lastAttackHand == Hand.RIGHT)
+                    {
+                        playerAttack.StartUsing(Hand.LEFT);
+                    }
+                    else
+                    {
+                        playerAttack.StartUsing(Hand.RIGHT);
+                    }
+                }
+                else if (rightWeaponAttack)
+                {
+                    playerAttack.StartUsing(Hand.RIGHT);
+                }
+                else if (leftWeaponAttack)
+                {
+                    playerAttack.StartUsing(Hand.LEFT);
+                }
             }
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT))
+            else
             {
-                playerAttack.StartUsing(Hand.LEFT);
-                //playerAttack.UseWeapon(true);
+                m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
             }
 
             // Ability attacks

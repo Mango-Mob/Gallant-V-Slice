@@ -12,6 +12,7 @@ public enum Hand
 {
     LEFT,
     RIGHT,
+    NONE,
 }
 /****************
  * Player_Attack: Contains logic for different player weapon attacks
@@ -112,7 +113,7 @@ public class Player_Attack : MonoBehaviour
         }
 
         //playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
-        playerController.animator.SetTrigger(animatorTriggerName);
+        playerController.animator.SetBool(animatorTriggerName, true);
     }
 
     /*******************
@@ -165,7 +166,39 @@ public class Player_Attack : MonoBehaviour
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
                 break;
         }
+
+
+        //playerController.animator.SetBool("LeftShield", false);
+        //playerController.animator.SetBool("RightShield", false);
+        //playerController.animator.SetBool("LeftSword", false);
+        //playerController.animator.SetBool("RightSword", false);
+        //playerController.animator.SetBool("LeftBoomerang", false);
+        //playerController.animator.SetBool("RightBoomerang", false);
     }
+
+    public Hand GetCurrentAttackingHand()
+    {
+        bool usingRight = false;
+        bool usingLeft = false;
+
+        if (playerController.animator.GetBool("RightShield")
+            || playerController.animator.GetBool("RightSword")
+            || playerController.animator.GetBool("RightBoomerang"))
+            usingRight = true;
+        if (playerController.animator.GetBool("LeftShield")
+            || playerController.animator.GetBool("LeftSword") 
+            || playerController.animator.GetBool("LeftBoomerang"))
+            usingLeft = true;
+
+        if (usingRight == usingLeft)
+            return Hand.NONE;
+        else if (usingRight)
+            return Hand.RIGHT;
+        else // Using Left
+            return Hand.LEFT;
+
+    }
+
     /*******************
      * PickUpWeapon : Pick up a weapon and add it to hand.
      * @author : William de Beer
