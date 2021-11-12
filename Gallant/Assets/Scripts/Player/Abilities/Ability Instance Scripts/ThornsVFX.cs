@@ -19,6 +19,6 @@ public class ThornsVFX : MonoBehaviour
         if (target != null)
             transform.forward = (target.transform.position + transform.up * 0.5f - transform.position).normalized;
 
-        barrier.transform.localScale -= new Vector3(1, 1, 1) * Time.deltaTime;
+        barrier.transform.localScale += new Vector3(1, 1, 1) * Time.deltaTime;
     }
 }
