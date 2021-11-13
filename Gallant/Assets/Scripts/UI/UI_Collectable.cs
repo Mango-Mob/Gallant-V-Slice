@@ -8,7 +8,7 @@ public class UI_Collectable : UI_Element
     public Image m_collectableIcon;
     public Button m_interactButton;
 
-    private CollectableData m_data;
+    public CollectableData m_data;
     private UI_CollectionList m_list;
     // Start is called before the first frame update
     void Start()
