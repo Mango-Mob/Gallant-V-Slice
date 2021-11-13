@@ -21,7 +21,7 @@ MonoBehaviour:
     x: 544
     y: -133
     width: 832
-    height: 1798
+    height: 1799
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614618}
   - {fileID: 8926484042661614622}
   - {fileID: 8926484042661614631}
+  - {fileID: 8926484042661614639}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -88,6 +89,19 @@ MonoBehaviour:
     min: -Infinity
     max: Infinity
     descendantCount: 0
+  - name: life time
+    path: life time
+    tooltip: 
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0
+    min: -Infinity
+    max: Infinity
+    descendantCount: 0
   m_GraphVersion: 4
   m_saved: 1
   m_SubgraphDependencies: []
@@ -110,7 +124,7 @@ VisualEffectResource:
       VFX_USE_ANGLEX_CURRENT 1\n#define VFX_USE_ANGLEY_CURRENT 1\n#define VFX_USE_ANGLEZ_CURRENT
       1\n#define VFX_USE_ALIVE_CURRENT 1\n#define VFX_USE_AGE_CURRENT 1\n#define
       VFX_LOCAL_SPACE 1\n#include \"Packages/com.unity.visualeffectgraph/Shaders/RenderPipeline/Universal/VFXDefines.hlsl\"\n\n\nCBUFFER_START(parameters)\n   
-      float3 Box_size_b;\n    uint PADDING_0;\nCBUFFER_END\n\nstruct Attributes\n{\n   
+      float3 Box_size_b;\n    float Lifetime_a;\nCBUFFER_END\n\nstruct Attributes\n{\n   
       float lifetime;\n    float3 position;\n    uint seed;\n    float angleX;\n   
       float angleY;\n    float angleZ;\n    bool alive;\n    float age;\n};\n\nstruct
       SourceAttributes\n{\n};\n\n\n\n\n#define USE_DEAD_LIST (VFX_USE_ALIVE_CURRENT
@@ -179,11 +193,11 @@ VisualEffectResource:
       if (!GetParticleIndex(particleIndex, stripIndex))\n            return;\n\n       
       const StripData stripData = GetStripDataFromStripIndex(stripIndex, PARTICLE_PER_STRIP_COUNT);\n\t\tInitStripAttributes(particleIndex,
       attributes, stripData);\n\t\t// TODO Change seed to be sure we're deterministic
-      on random with strip\n#endif\n        \n        {\n            SetAttribute_F0142CB9(
-      /*inout */attributes.lifetime, (float)3);\n        }\n        {\n           
-      PositionAABox_0( /*inout */attributes.position,  /*inout */attributes.seed,
-      float3(0, 0, 0), Box_size_b);\n        }\n        {\n            SetAttribute_48A7BEFF(
-      /*inout */attributes.angleX,  /*inout */attributes.angleY,  /*inout */attributes.angleZ,
+      on random with strip\n#endif\n        \n        SetAttribute_F0142CB9( /*inout
+      */attributes.lifetime, Lifetime_a);\n        {\n            PositionAABox_0(
+      /*inout */attributes.position,  /*inout */attributes.seed, float3(0, 0, 0),
+      Box_size_b);\n        }\n        {\n            SetAttribute_48A7BEFF( /*inout
+      */attributes.angleX,  /*inout */attributes.angleY,  /*inout */attributes.angleZ,
       float3(90, 0, 0));\n        }\n        \n\n\t\t\n#if VFX_USE_ALIVE_CURRENT\n       
       if (attributes.alive)\n#endif       \n        {\n#if USE_DEAD_LIST\n\t       
       uint deadIndex = deadListIn.DecrementCounter();\n            uint index = deadListIn[deadIndex];\n#else\n           
@@ -913,7 +927,7 @@ VisualEffectResource:
         - m_ExpressionIndex: 8
           m_Value: 0
         - m_ExpressionIndex: 17
-          m_Value: 3
+          m_Value: 0
       m_Vector2f:
         m_Array:
         - m_ExpressionIndex: 13
@@ -985,6 +999,8 @@ VisualEffectResource:
       index: 0
     - nameId: Ground size
       index: 5
+    - nameId: life time
+      index: 17
     - nameId: Radius
       index: 4
     m_Buffers:
@@ -1159,6 +1175,8 @@ VisualEffectResource:
         index: 1
       temporaryBuffers: []
       values:
+      - nameId: Lifetime_a
+        index: 17
       - nameId: Box_size_b
         index: 15
       params:
@@ -3050,7 +3068,8 @@ MonoBehaviour:
       m_Regex: 
       m_RegexMaxLength: 0
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661614640}
 --- !u!114 &8926484042661614611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3999,3 +4018,80 @@ MonoBehaviour:
     attributes: []
   m_Direction: 0
   m_LinkedSlots: []
+--- !u!114 &8926484042661614639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661614640}
+  m_ExposedName: life time
+  m_Exposed: 1
+  m_Order: 3
+  m_Category: 
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661614640}
+      inputSlot: {fileID: 8926484042661614610}
+    position: {x: 682, y: 319}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661614640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661614640}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661614639}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+    attributes: []
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661614610}
