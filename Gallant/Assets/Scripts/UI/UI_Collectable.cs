@@ -8,6 +8,8 @@ public class UI_Collectable : UI_Element
     public Image m_collectableIcon;
     public Button m_interactButton;
 
+    public bool m_unlocked = false;
+
     public CollectableData m_data;
     private UI_CollectionList m_list;
     // Start is called before the first frame update
@@ -19,13 +21,13 @@ public class UI_Collectable : UI_Element
     // Update is called once per frame
     void Update()
     {
-        
+        m_interactButton.interactable = m_unlocked;
     }
 
     public void SetData(CollectableData data)
     {
         m_data = data;
-        m_interactButton.interactable = PlayerPrefs.GetInt(data.collectableID, 0) == 1;
+        m_unlocked = PlayerPrefs.GetInt(data.collectableID, 0) == 1;
         m_collectableIcon.sprite = m_data.itemIcon;
     }
     public void SetParentList(UI_CollectionList list)
