@@ -202,7 +202,6 @@ public class Player_Attack : MonoBehaviour
             return Hand.RIGHT;
         else // Using Left
             return Hand.LEFT;
-
     }
 
     /*******************
@@ -218,10 +217,11 @@ public class Player_Attack : MonoBehaviour
                 // Drop old weapon
                 if (m_leftWeapon != null)
                 {
+                    if (m_leftWeapon.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
+                        m_leftWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
                     DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_leftWeapon);
                     playerController.playerStats.RemoveEffect(m_leftWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
-
                 // Set new weapon
                 m_leftWeapon = _weapon.m_weaponData;
                 ApplyWeaponData(Hand.LEFT);
@@ -231,11 +231,11 @@ public class Player_Attack : MonoBehaviour
                 // Drop old weapon
                 if (m_rightWeapon != null)
                 {
+                    if (m_rightWeapon.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
+                        m_rightWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
                     DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_rightWeapon);
                     playerController.playerStats.RemoveEffect(m_rightWeapon.itemEffect); // Remove any passive effect the weapon had
                 }
-
-
                 // Set new weapon
                 m_rightWeapon = _weapon.m_weaponData;
                 ApplyWeaponData(Hand.RIGHT);
@@ -306,6 +306,12 @@ public class Player_Attack : MonoBehaviour
     {
         if (m_leftWeaponInUse || m_rightWeaponInUse)
             return;
+
+        if (m_leftWeapon != null && m_leftWeapon.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
+            m_leftWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
+
+        if (m_rightWeapon != null && m_rightWeapon.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
+            m_rightWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
 
         // Store old left hand weapon for future use
         WeaponData _leftHandStore = m_leftWeapon;

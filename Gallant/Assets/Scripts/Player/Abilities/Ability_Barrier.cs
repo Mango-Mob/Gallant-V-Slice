@@ -18,8 +18,9 @@ public class Ability_Barrier : AbilityBase
         m_isPassive = false;
         m_isSynergyAvailable = true;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_projectilePrefab = Resources.Load<GameObject>("Abilities/BarrierProjectile");
         playerController = GetComponent<Player_Controller>();
     }

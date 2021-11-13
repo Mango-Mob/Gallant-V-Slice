@@ -43,8 +43,9 @@ GameObject:
   - component: {fileID: 7952282714876839969}
   - component: {fileID: 2120754797835932054}
   - component: {fileID: 1765092466306948159}
+  - component: {fileID: 7752615586399795492}
   m_Layer: 0
-  m_Name: Dust running
+  m_Name: LocalSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4722,6 +4723,20 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &7752615586399795492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936874261900051183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017cc8c452271914bb83239e8539b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_startedTimer: 0
+  m_timer: 2
 --- !u!1 &5880251271695856758
 GameObject:
   m_ObjectHideFlags: 0
@@ -4733,8 +4748,9 @@ GameObject:
   - component: {fileID: 4560663563712091979}
   - component: {fileID: 33459335719927978}
   - component: {fileID: 5114741178715388827}
+  - component: {fileID: 7217889686526771886}
   m_Layer: 0
-  m_Name: Dust running (1)
+  m_Name: WorldSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9412,3 +9428,17 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &7217889686526771886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5880251271695856758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017cc8c452271914bb83239e8539b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_startedTimer: 0
+  m_timer: 2

@@ -100,9 +100,6 @@ public class WeaponData : ScriptableObject
                 break;
         }
 
-        //if (data.abilityData == null)
-        //    TempReroll(ref data, powerLevel);
-
         // Create weapon name
         if(data.abilityData != null)
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
@@ -111,30 +108,68 @@ public class WeaponData : ScriptableObject
         return data;
     }
 
-    //public static void TempReroll(ref WeaponData data, int powerLevel)
-    //{
-    //    int newAbilityTypeNo = Random.Range(0, 5);
-    //    if (newAbilityTypeNo == 0)
-    //    {
-    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
-    //    }
-    //    else if (newAbilityTypeNo == 1)
-    //    {
-    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
-    //    }
-    //    else if (newAbilityTypeNo == 2)
-    //    {
-    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
-    //    }
-    //    else if (newAbilityTypeNo == 3)
-    //    {
-    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
-    //    }
-    //    else if (newAbilityTypeNo == 4)
-    //    {
-    //        data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + powerLevel.ToString());
-    //    }
-    //}
+    public static WeaponData GenerateSpecificWeapon(int _weaponLevel, Weapon _weaponType, Ability _abilityType, int _powerLevel)
+    {
+        WeaponData data = CreateInstance<WeaponData>();
+
+        // Weapon type.
+        switch (_weaponType)
+        {
+            case Weapon.SWORD:
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                break;
+            case Weapon.SHIELD:
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
+                break;
+            case Weapon.BOOMERANG:
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
+                break;
+            default:
+                Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
+                return null;
+        }
+
+        data.abilityData = null;
+
+        // Damage / Speed are randomly assigned (between a range that increases based on the level value).
+        data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+        data.m_speed += (int)(data.m_speed * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+
+        data.m_level = _powerLevel;
+
+        // Ability
+        switch (_abilityType)
+        {
+            case Ability.FIREWAVE:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
+                break;
+            case Ability.SAND_MISSILE:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
+                break;
+            case Ability.LIGHTNING_BOLT:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
+                break;
+            case Ability.ICE_ROLL:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
+                break;
+            case Ability.HP_BUFF:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
+                break;
+            case Ability.THORNS:
+                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
+                break;
+            default:
+                Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
+                break;
+        }
+
+        // Create weapon name
+        if (data.abilityData != null)
+            data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
+
+        //Return new weapon.
+        return data;
+    }
 
     public void Clone(WeaponData other)
     {

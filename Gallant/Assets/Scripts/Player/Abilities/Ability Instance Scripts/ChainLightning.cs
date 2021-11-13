@@ -8,9 +8,8 @@ public class ChainLightning : MonoBehaviour
     public LayerMask m_enemyDetectionMask;
     public AbilityData m_data;
     [SerializeField] private GameObject lightningPrefabVFX;
-    [SerializeField] private LineRenderer lineRenderer;
     private List<Actor> m_hitTargets = new List<Actor>();
-    public int m_maxTargets = 3;
+    private int m_maxTargets = 3;
     public Transform m_handTransform;
 
     public float m_hitAngle = 45.0f;
@@ -22,8 +21,7 @@ public class ChainLightning : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lineRenderer.positionCount = 2;
-        lineRenderer.SetPosition(0, m_handTransform.position);
+        m_maxTargets = (int)m_data.effectiveness;
 
         Vector3 lastTargetPos = m_handTransform.position;
         Actor[] actors = FindObjectsOfType<Actor>();
@@ -51,18 +49,14 @@ public class ChainLightning : MonoBehaviour
             CreateVFX(transform.position, closestTarget.transform.position);
 
             lastTargetPos = closestTarget.transform.position;
-            //lineRenderer.SetPosition(1, closestTarget.transform.position);
         }
-
-        StartCoroutine(TargetSearch(lastTargetPos, actors));
-
-        if (m_hitTargets.Count == 0)
+        else
         {
-            lineRenderer.SetPosition(1, transform.position + transform.forward * m_hitRange);
+            CreateVFX(transform.position, transform.position + transform.forward * m_hitRange);
             return;
         }
 
-        
+        StartCoroutine(TargetSearch(lastTargetPos, actors));
     }
 
     IEnumerator TargetSearch(Vector3 _lastPosition, Actor[] _enemies)
@@ -70,7 +64,7 @@ public class ChainLightning : MonoBehaviour
         float waitTime = 0.15f;
         yield return new WaitForSeconds(waitTime);
 
-        for (int i = 1; i < m_maxTargets; i++)
+        for (int i = 0; i < m_maxTargets; i++)
         {
             Actor bestTarget = null;
             float closestDistance = Mathf.Infinity;
@@ -93,8 +87,6 @@ public class ChainLightning : MonoBehaviour
 
             if (bestTarget != null)
             {
-                lineRenderer.positionCount = i + 2;
-                lineRenderer.SetPosition(i + 1, bestTarget.transform.position);
                 m_hitTargets.Add(bestTarget);
                 bestTarget.DealDamage(m_data.damage);
 
@@ -108,6 +100,7 @@ public class ChainLightning : MonoBehaviour
                 break;
             }
         }
+        yield return new WaitForSeconds(waitTime);
     }
 
     private void CreateVFX(Vector3 _origin, Vector3 _target)

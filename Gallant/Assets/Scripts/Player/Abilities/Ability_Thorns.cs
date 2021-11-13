@@ -16,8 +16,9 @@ public class Ability_Thorns : AbilityBase
         base.Awake();
         m_isPassive = true;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_thornsVFXPrefab = Resources.Load<GameObject>("Abilities/ThornsBarrierVFX");
     }
     public override void AbilityFunctionality()
