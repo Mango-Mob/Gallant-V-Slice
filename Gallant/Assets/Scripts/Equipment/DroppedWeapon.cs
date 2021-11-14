@@ -45,8 +45,9 @@ public class DroppedWeapon : MonoBehaviour
                 m_weaponBubble.material.color = newColor;
                 m_weaponBubble.material.SetColor("_EmissionColor", newColor);
 
+                newColor.a = 1.0f;
                 ParticleSystem.MainModule mainModule = m_particleSystem.main;
-                mainModule.startColor = newColor;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
 
                 m_particleSystem.Play();
             }
