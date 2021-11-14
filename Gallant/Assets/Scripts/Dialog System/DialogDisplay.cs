@@ -20,17 +20,23 @@ public class DialogDisplay : MonoBehaviour
 
     public TextAsset m_testFile;
     private int m_currentScene = 0;
+
     // Start is called before the first frame update
     void Awake()
     {
         m_optionResult = new DialogResult[m_options.Length];
-        LoadDialog(m_testFile);
+        Hide();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(InputManager.instance.IsKeyDown(KeyType.M))
+        {
+            LoadDialog(m_testFile);
+            Show();
+            
+        }
     }
 
     public void Show()
