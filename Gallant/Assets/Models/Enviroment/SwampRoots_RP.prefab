@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 1644110992817921285}
   - component: {fileID: 1644110992817921284}
   - component: {fileID: 1644110992817921283}
-  m_Layer: 0
+  - component: {fileID: 7381364823800258034}
+  - component: {fileID: 4279416293128776612}
+  m_Layer: 11
   m_Name: SwampRoots_RP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,3 +81,57 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7381364823800258034
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644110992817921282}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7536086982503751090, guid: 1915f775239b5474c882d9701d3d576d, type: 3}
+--- !u!114 &4279416293128776612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1644110992817921282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e24756265c4bee43879ccc4650abbc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_base: {fileID: 2100000, guid: 8fc5750545e23074babbaa292a4a3508, type: 2}
+  m_fade: {fileID: 2100000, guid: 783ff4fc6da706547978a3e206d37e02, type: 2}
+  m_fadeValue: 0
+  m_fadeTime: 5
+  m_fadeBlend:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.08187626
+      outSlope: -0.08187626
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.14423008
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: -0.67138267
+      outSlope: -0.67138267
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08430928
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
