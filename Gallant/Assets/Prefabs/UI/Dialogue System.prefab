@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -739.8, y: 169.9}
-  m_SizeDelta: {x: 388.40063, y: 54.22075}
+  m_AnchoredPosition: {x: -523, y: 178.1}
+  m_SizeDelta: {x: 388.40063, y: 57.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5204776553470526757
 CanvasRenderer:
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_Font: {fileID: 12800000, guid: 6d2548040291df34db9c343555cf04f3, type: 3}
     m_FontSize: 45
     m_FontStyle: 0
     m_BestFit: 0
@@ -166,7 +166,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5204776553662044296}
   m_Layer: 5
-  m_Name: Dialog Window
+  m_Name: Dialogue Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -206,8 +206,10 @@ GameObject:
   - component: {fileID: 5204776554062361182}
   - component: {fileID: 5204776554062361177}
   - component: {fileID: 5204776554062361181}
+  - component: {fileID: 2117833610616151361}
+  - component: {fileID: 8896045088514421289}
   m_Layer: 5
-  m_Name: Dialog System
+  m_Name: Dialogue System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -319,6 +321,43 @@ MonoBehaviour:
   m_characterBody: {fileID: 5204776555491513708}
   m_characterFace: {fileID: 5204776554664681616}
   m_testFile: {fileID: 4900000, guid: 5d254a8454386894380fd2fec4970f09, type: 3}
+--- !u!222 &2117833610616151361
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5204776554062361176}
+  m_CullTransparentMesh: 0
+--- !u!114 &8896045088514421289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5204776554062361176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: e606c36f04d3ffc44afd400f7146b4fc, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5204776554118780205
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +370,7 @@ GameObject:
   - component: {fileID: 5204776554118780192}
   - component: {fileID: 5204776554118780195}
   m_Layer: 5
-  m_Name: Dialog
+  m_Name: Dialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -351,10 +390,10 @@ RectTransform:
   m_Father: {fileID: 5204776555132181755}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -30, y: -150}
+  m_SizeDelta: {x: 1350, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5204776554118780192
 CanvasRenderer:
@@ -384,24 +423,33 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 38
+    m_Font: {fileID: 12800000, guid: 6d2548040291df34db9c343555cf04f3, type: 3}
+    m_FontSize: 22
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 3
+    m_MinSize: 1
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: This is a sample dialog, hello world I am a sample dialog! This is a sample
-    dialog, hello world I am a sample dialog! This is a sample dialog, hello world
-    I am a sample dialog! This is a sample dialog, hello world I am a sample dialog!
-    This is a sample dialog, hello world I am a sample dialog! This is a sample dialog,
-    hello world I am a sample dialog! This is a sample dialog, hello world I am a
-    sample dialog! This is a sample dialog, hello world I am a sample dialog!
+  m_Text: "\u201CYou know, I think you\u2019re capable of shining far brighter than
+    anyone I\u2019ve ever known.\u201D\r\n\r\n\u201CWhat?\u201D He pressed his hand
+    to his cheek. \u201CYou\u2019re making me blush.\u201D\r\n\r\n\u201CI\u2019m
+    serious. It\u2019s why I constantly suggest ways you could improve yourself.\u201D
+    Her eyes flickered back to his face. \u201CYou work hard, you always try to make
+    your loved ones happy, you love what you do and you\u2019re damn good at it.\u201D\r\n\r\n\u201CSt-Stop
+    it.\u201D\r\n\r\n\u201CNo. I\u2019ll repeat it as much as I have to. Think of
+    it as me apologizing to you for constantly calling you dumb, an idiot or a dumbass.\u201D\r\n\r\n\u201CYou
+    don\u2019t have to.\u201D\r\n\r\n\u201CJust take the apology, you-\u201D She
+    caught herself before she insulted him again. \u201CYou fleshbag.\u201D\r\n\r\n\u201CThat\u2019s
+    new.\u201D\r\n\r\n\u201CThanks. I try.\u201D She turned back to face the screen
+    and resumed typing. He kissed her cheek. Elle blinked. \u201CWhat was that for?\u201D\r\n\r\n\u201CFor
+    not calling me an idiot, jagi. And all the other stuff you said.\u201D\r\n\r\n\u201CYou\u2019re
+    just asking for it, aren\u2019t you?\u201D\r\n\r\n\u201COkay, okay. I\u2019ll
+    stop.\u201D\r\n"
 --- !u!1 &5204776554360444557
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,7 +541,7 @@ GameObject:
   - component: {fileID: 5204776554385598264}
   - component: {fileID: 5204776554385598267}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -623,7 +671,7 @@ GameObject:
   - component: {fileID: 5204776554498964132}
   - component: {fileID: 5204776554498964135}
   m_Layer: 5
-  m_Name: Button (3)
+  m_Name: Button1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -983,7 +1031,7 @@ GameObject:
   - component: {fileID: 5204776554878062620}
   - component: {fileID: 5204776554878062623}
   m_Layer: 5
-  m_Name: Button (1)
+  m_Name: Button3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1136,7 +1184,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -181}
+  m_AnchoredPosition: {x: 0, y: -177.3}
   m_SizeDelta: {x: 1000, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5204776555024432236
@@ -1152,7 +1200,7 @@ GameObject:
   - component: {fileID: 5204776555024432227}
   - component: {fileID: 5204776555024432226}
   m_Layer: 5
-  m_Name: Button (2)
+  m_Name: Button4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1304,10 +1352,10 @@ RectTransform:
   m_Father: {fileID: 5204776553662044296}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -310}
-  m_SizeDelta: {x: -30, y: -650}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 230}
+  m_SizeDelta: {x: 1500, y: 430}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5204776555132181753
 CanvasRenderer:
