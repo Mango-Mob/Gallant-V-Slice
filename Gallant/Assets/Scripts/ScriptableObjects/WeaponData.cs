@@ -102,7 +102,10 @@ public class WeaponData : ScriptableObject
 
         // Create weapon name
         if(data.abilityData != null)
+        { 
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
+            data.abilityData.lastCooldown = 0.0f;
+        }
 
         //Return new weapon.
         return data;
@@ -165,7 +168,10 @@ public class WeaponData : ScriptableObject
 
         // Create weapon name
         if (data.abilityData != null)
+        {
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
+            data.abilityData.lastCooldown = 0.0f;
+        }
 
         //Return new weapon.
         return data;
