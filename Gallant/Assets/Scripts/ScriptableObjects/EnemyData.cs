@@ -10,6 +10,9 @@ public class EnemyData : ScriptableObject
     public float health;
     public string name;
     public float baseSpeed;
+    public float adrenalineGainMin;
+    public float adrenalineGainMax;
+
     [Tooltip("Used to calculate how effective knockbacks are.")]
     public float mass;
     public bool invincible = false;
