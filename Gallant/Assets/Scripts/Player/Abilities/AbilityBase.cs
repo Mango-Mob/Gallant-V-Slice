@@ -24,7 +24,7 @@ public abstract class AbilityBase : MonoBehaviour
     public Hand m_attachedHand; 
     public bool m_isPassive { get; protected set; } = false;
     public bool m_canUse { get; private set; } = true;
-    private float m_cooldownTimer = 0.0f;
+    public float m_cooldownTimer { get; private set; } = 0.0f;
     protected Player_Controller playerController;
 
     [Header("Double Synergy")]
@@ -34,6 +34,10 @@ public abstract class AbilityBase : MonoBehaviour
     protected void Awake()
     {
         playerController = GetComponent<Player_Controller>();
+    }
+    protected void Start()
+    {
+        m_cooldownTimer = m_data.lastCooldown;
     }
     public void Update()
     {

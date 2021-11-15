@@ -17,8 +17,9 @@ public class Ability_SandMissile : AbilityBase
         base.Awake();
         m_isPassive = false;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_missilePrefab = Resources.Load<GameObject>("Abilities/SandmissileProjectile");
     }
     public override void AbilityFunctionality()

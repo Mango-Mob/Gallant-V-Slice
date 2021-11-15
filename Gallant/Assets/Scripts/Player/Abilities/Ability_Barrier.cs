@@ -18,8 +18,9 @@ public class Ability_Barrier : AbilityBase
         m_isPassive = false;
         m_isSynergyAvailable = true;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_projectilePrefab = Resources.Load<GameObject>("Abilities/BarrierProjectile");
         playerController = GetComponent<Player_Controller>();
     }
@@ -46,7 +47,7 @@ public class Ability_Barrier : AbilityBase
                 modelTransform.rotation);
 
             projectile.GetComponent<BarrierProjectile>().m_barrierValue = playerController.playerResources.m_barrier;
-            projectile.GetComponent<BarrierProjectile>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
+            projectile.GetComponent<BarrierProjectile>().m_data = m_data;
 
             playerController.playerResources.ResetBarrier();
         }

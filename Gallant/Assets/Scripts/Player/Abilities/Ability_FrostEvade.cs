@@ -19,8 +19,9 @@ public class Ability_FrostEvade : AbilityBase
         m_isPassive = true;
         m_isSynergyAvailable = true;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_isPassive = true;
 
         m_pathPrefab = Resources.Load<GameObject>("Abilities/Frostpath");
