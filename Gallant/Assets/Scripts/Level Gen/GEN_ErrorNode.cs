@@ -19,9 +19,11 @@ public class GEN_ErrorNode : MonoBehaviour
             foreach (var hit in m_hits)
             {
                 Gizmos.DrawLine(transform.position, hit.bounds.center);
-                Gizmos.DrawCube(hit.bounds.center, m_boxSize);                
             }
         }
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawCube(Vector3.zero, m_boxSize);
+        Gizmos.matrix = Matrix4x4.identity;
     }
 
     public static void CreateErrorAt(Vector3 position, Quaternion rotation, Vector3 boxSize, List<Collider> hits)
