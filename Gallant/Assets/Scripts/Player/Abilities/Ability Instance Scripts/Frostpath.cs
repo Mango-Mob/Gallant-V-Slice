@@ -57,10 +57,10 @@ public class Frostpath : MonoBehaviour
     public void StartLife()
     {
         m_beganLife = true;
-
-        for (int i = 0; i <= 3; i++)
+        float count = 8.0f;
+        for (int i = 0; i <= count; i++)
         {
-            SpawnVFX(Vector3.Lerp(m_startPos, m_endPos, i / 3.0f));
+            SpawnVFX(Vector3.Lerp(m_startPos, m_endPos, i / count));
         }
     }
     public void SetEdgePoint(Vector3 _pos)
