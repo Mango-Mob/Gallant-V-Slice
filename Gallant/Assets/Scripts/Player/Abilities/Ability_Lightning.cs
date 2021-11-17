@@ -17,8 +17,9 @@ public class Ability_Lightning : AbilityBase
         base.Awake();
         m_isPassive = false;
     }
-    private void Start()
+    new private void Start()
     {
+        base.Start();
         m_boltPrefab = Resources.Load<GameObject>("Abilities/ChainLightning");
     }
     public override void AbilityFunctionality()

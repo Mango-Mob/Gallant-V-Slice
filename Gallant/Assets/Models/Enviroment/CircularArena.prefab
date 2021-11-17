@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_spawnWidth: 0.25
-  m_spawnArcHeight: 6
-  m_distOffEdge: 14
+  m_spawnArcHeight: 7
+  m_distOffEdge: 6
   m_spawnDelay: 1
   m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
     type: 3}
@@ -60,8 +60,9 @@ MonoBehaviour:
   m_reward: {fileID: 0}
   m_spawnSpots: 12
   m_waves:
-  - {fileID: 11400000, guid: 93af370db860a58409aeb83127f2e9f9, type: 2}
-  - {fileID: 11400000, guid: e3ab46fadf4881149a4719b32edd00cb, type: 2}
+  - {fileID: 11400000, guid: db12e2fdb3a80c6468fa2d8a85bbc037, type: 2}
+  - {fileID: 11400000, guid: 60d67aa3fa7f2b84cb28e2a5e610d821, type: 2}
+  - {fileID: 11400000, guid: 906bf939798faf248a3072cf3c79be41, type: 2}
 --- !u!135 &671269334426167778
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -88,7 +89,8 @@ GameObject:
   - component: {fileID: 7893887192970397542}
   - component: {fileID: 531638191562830733}
   - component: {fileID: 7283146617960917813}
-  m_Layer: 0
+  - component: {fileID: 3764202795540995071}
+  m_Layer: 11
   m_Name: CircularArena_CircularArenaPillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,6 +188,70 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 4.122, z: -0.011000001}
   m_TimeToStationary: 0.5
+--- !u!114 &3764202795540995071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018195649069836686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e24756265c4bee43879ccc4650abbc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_base: {fileID: 2100000, guid: 7f6f0f31c321ddf459ae194ae0daa80d, type: 2}
+  m_fade: {fileID: 2100000, guid: aad6ed5ac76ff66438b8ed49bf7501c8, type: 2}
+  m_fadeValue: 0
+  m_fadeTime: 0.25
+  m_fadeInBlend:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0.51644886
+      outSlope: 0.51644886
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.13700235
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_fadeOutBlend:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.0431603
+      outSlope: -0.0431603
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.32786885
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: -0.7594338
+      outSlope: -0.7594338
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.0714286
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1484958609977227012
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,6 +27,10 @@ public class Player_Abilities : MonoBehaviour
     private UI_AbilityIcon m_leftAbilityIcon;
     private UI_AbilityIcon m_rightAbilityIcon;
 
+    [SerializeField] private float m_globalCooldown = 1.0f;
+    private float m_leftHandGlobalTimer = 0.0f;
+    private float m_rightHandGlobalTimer = 0.0f;
+
     private void Awake()
     {
         m_leftAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityL");
@@ -45,6 +49,12 @@ public class Player_Abilities : MonoBehaviour
 
         if (m_rightAbilityIcon != null && m_rightAbility != null)
             m_rightAbilityIcon.SetCooldownFill(m_rightAbility.GetCooldownTime());
+
+        if (m_leftHandGlobalTimer > 0.0f)
+            m_leftHandGlobalTimer -= Time.deltaTime;
+
+        if (m_rightHandGlobalTimer > 0.0f)
+            m_rightHandGlobalTimer -= Time.deltaTime;
     }
 
     /*******************
@@ -57,12 +67,18 @@ public class Player_Abilities : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
-                if (m_leftAbility != null && m_leftAbility.m_canUse && !m_leftAbility.m_isPassive)
+                if (m_leftHandGlobalTimer <= 0.0f && m_leftAbility != null && m_leftAbility.m_canUse && !m_leftAbility.m_isPassive)
+                {
                     playerController.animator.SetTrigger("LeftCast");
+                    m_leftHandGlobalTimer = m_globalCooldown;
+                }
                 break;
             case Hand.RIGHT:
-                if (m_rightAbility != null && m_rightAbility.m_canUse && !m_rightAbility.m_isPassive)
+                if (m_rightHandGlobalTimer <= 0.0f && m_rightAbility != null && m_rightAbility.m_canUse && !m_rightAbility.m_isPassive)
+                {
                     playerController.animator.SetTrigger("RightCast");
+                    m_rightHandGlobalTimer = m_globalCooldown;
+                }
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
@@ -149,6 +165,8 @@ public class Player_Abilities : MonoBehaviour
                 m_leftAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_leftAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
 
+                if (m_leftAbility == null)
+                    m_leftAbilityIcon.SetCooldownFill(0.0f);
                 break;
             case Hand.RIGHT:
                 Destroy(m_rightAbility);
@@ -161,6 +179,8 @@ public class Player_Abilities : MonoBehaviour
                 m_rightAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_rightAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
 
+                if (m_rightAbility == null)
+                    m_rightAbilityIcon.SetCooldownFill(0.0f);
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");

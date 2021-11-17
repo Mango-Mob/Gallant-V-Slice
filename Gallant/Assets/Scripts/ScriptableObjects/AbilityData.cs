@@ -17,6 +17,7 @@ public class AbilityData : ScriptableObject
     public Sprite abilityIcon;
     [TextArea(10, 15)]
     public string description;
+    [ColorUsage(false, true)] public Color droppedEnergyColor;
 
     [Space(10)]
     [Range(1, 3)]
@@ -32,6 +33,8 @@ public class AbilityData : ScriptableObject
     public float effectiveness = 0.0f; // The effectiveness of any buff or status effect applied to the target. (does not apply to all abilities)
     [Tooltip("The duration of any buff or status effect applied to the target. (does not apply to all abilities).")]
     public float duration = 0.0f; // The duration of any buff or status effect applied to the target. (does not apply to all abilities)
+
+    public float lastCooldown = 0.0f;
 
     public static string EvaluateDescription(AbilityData data)
     {

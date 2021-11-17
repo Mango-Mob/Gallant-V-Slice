@@ -16,7 +16,7 @@ public class TargetFinder : MonoBehaviour
     {
         if(gate != null)
         {
-            gate.SetActive(false);
+            gate.GetComponent<Animator>().enabled = false;
         }
     }
 
@@ -41,7 +41,7 @@ public class TargetFinder : MonoBehaviour
             testActor.m_target = other.gameObject;
             if (gate != null)
             {
-                gate.SetActive(true);
+                gate.GetComponent<Animator>().enabled = true;
                 script.StartCombat();
             }
             GetComponent<Collider>().enabled = false;

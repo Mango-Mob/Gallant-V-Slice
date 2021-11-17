@@ -177,7 +177,12 @@ public class Actor : StateMachine
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
-                if(m_myData.m_states.Contains(State.Type.DEAD))
+                float amount = UnityEngine.Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax);
+                int orbCount = UnityEngine.Random.Range(2, 6);
+
+                AdrenalineDrop.CreateAdrenalineDropGroup((uint)orbCount, transform.position, amount/orbCount);
+
+                if (m_myData.m_states.Contains(State.Type.DEAD))
                 {
                     SetState(new State_Dead(this));
                 }

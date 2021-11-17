@@ -73,6 +73,14 @@ public class Player_Controller : MonoBehaviour
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
+        float swordRunWeight = 0.0f;
+        if (playerAttack.m_leftWeapon != null)
+            swordRunWeight += playerAttack.m_leftWeapon.weaponType == Weapon.SWORD ? -1.0f : 0.0f;
+        if (playerAttack.m_rightWeapon != null)
+            swordRunWeight += playerAttack.m_rightWeapon.weaponType == Weapon.SWORD ? 1.0f : 0.0f;
+
+        animator.SetFloat("SwordRunWeight", swordRunWeight);
+
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.StopBlock(Hand.RIGHT);
         if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)

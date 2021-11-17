@@ -11,9 +11,14 @@ using UnityEngine;
 public class DroppedWeapon : MonoBehaviour
 {
     public WeaponData m_weaponData; // Data of contained weapon
+
+    [Header("Floating Object")]
     public GameObject m_defaultModel;
     public GameObject m_weaponModel;
+    public Renderer m_weaponBubble;
+    public ParticleSystem m_particleSystem;
 
+    [Header("Display")]
     public UI_PickupDisplay m_pickupDisplay;
 
     private void Start()
@@ -31,6 +36,21 @@ public class DroppedWeapon : MonoBehaviour
             }
             m_weaponModel.transform.GetChild(0).rotation = Quaternion.Euler(-75, 0, 0);
             m_weaponModel.transform.GetChild(0).localScale *= m_weaponData.m_dropScaleMultiplier; 
+
+            if (m_weaponData.abilityData != null)
+            {
+                Color newColor = m_weaponData.abilityData.droppedEnergyColor;
+                newColor.a = 0.12f;
+
+                m_weaponBubble.material.color = newColor;
+                m_weaponBubble.material.SetColor("_EmissionColor", newColor);
+
+                newColor.a = 1.0f;
+                ParticleSystem.MainModule mainModule = m_particleSystem.main;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+
+                m_particleSystem.Play();
+            }
         }
     }
     private void FixedUpdate()
