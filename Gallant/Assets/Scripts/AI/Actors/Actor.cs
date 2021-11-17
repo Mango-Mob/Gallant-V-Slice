@@ -16,6 +16,7 @@ public class Actor : StateMachine
     public EnemyData m_myData;
     public string m_currentStateDisplay;
     public float m_idealDistance = 0.0f;
+    public Transform m_selfTargetTransform;
 
     //Accessables:
     public Actor_Legs m_legs { get; private set; } //The Legs of the actor
