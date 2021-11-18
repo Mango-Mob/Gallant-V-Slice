@@ -267,12 +267,12 @@ public class Player_Movement : MonoBehaviour
                 m_rollTimer = m_rollDuration;
 
                 // Create adrenaline provider
-                if (m_adrenShadowPrefab != null)
-                {
-                    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
-                    provider.m_durationInSeconds = m_shadowDuration;
-                    provider.m_playerRef = this;
-                }
+                //if (m_adrenShadowPrefab != null)
+                //{
+                //    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
+                //    provider.m_durationInSeconds = m_shadowDuration;
+                //    provider.m_playerRef = this;
+                //}
 
                 if (normalizedMove.magnitude != 0.0)
                 {
