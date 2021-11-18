@@ -97,6 +97,11 @@ public class StatusEffectContainer : MonoBehaviour
                 m_actor.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
                 Destroy(display.element.gameObject);
             }
+            //Remove vfx
+            if(display.effect.m_vfxInWorld != null)
+            {
+                Destroy(display.effect.m_vfxInWorld);
+            }
             display.effect.EndActor(m_actor);
         }
         else

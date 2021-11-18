@@ -16,6 +16,8 @@ public abstract class StatusEffect
     //Display vfx for world
     public GameObject m_vfxDisplayPrefab { get; protected set; }
 
+    public GameObject m_vfxInWorld { get; protected set; }
+
     //Strength which is abstractly defined by each status effect.
     public float m_strength;
 

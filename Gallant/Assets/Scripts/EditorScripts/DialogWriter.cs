@@ -87,8 +87,11 @@ public class DialogWriter : EditorWindow
                 GUILayout.BeginHorizontal();
                 m_displayFoldout = EditorGUILayout.Foldout(m_displayFoldout, "Player options");
                 EditorGUILayout.Space();
-                int count = EditorGUILayout.IntField(m_options.Count);
+                int count = EditorGUILayout.IntField(m_options != null ? m_options.Count : 0);
                 GUILayout.EndHorizontal();
+
+                if (m_options == null && count >= 0)
+                    m_options = new List<DialogOption>();
 
                 while (count > m_options.Count)
                     m_options.Add(new DialogOption(m_currentIndex));
@@ -150,11 +153,16 @@ public class DialogWriter : EditorWindow
             }
             if (GUILayout.Button("Save", GUILayout.Width((position.width - 5))))
             {
+                if (m_currentIndex >= 0)
+                    SaveItem();
+
                 SaveFile(m_currentFile);
             }
             if (GUILayout.Button("Close file and save", GUILayout.Width((position.width - 5))))
             {
-                
+                if (m_currentIndex >= 0)
+                    SaveItem();
+
                 SaveFile(m_currentFile);
                 Clear();
                 m_currentFile = null;

@@ -27,6 +27,7 @@ public class BurnStatus : StatusEffect
     public override void StartActor(Actor _actor)
     {
         //Show vfx
+        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _actor.m_selfTargetTransform);
     }
 
     public override void StartPlayer(Player_Controller _player)
@@ -48,7 +49,7 @@ public class BurnStatus : StatusEffect
 
     public override void EndActor(Actor _actor)
     {
-        //Delete vfx
+        
     }
 
     public override void EndPlayer(Player_Controller _player)
@@ -63,6 +64,6 @@ public class BurnStatus : StatusEffect
 
     protected override void LoadDisplayVFX()
     {
-        //Debug.LogError("Burn status effect doesn't currently load the Display vfx.");
+        m_vfxDisplayPrefab = Resources.Load<GameObject>("VFX/Burn");
     }
 }
