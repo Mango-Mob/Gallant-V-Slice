@@ -326,7 +326,6 @@ public class Player_Controller : MonoBehaviour
             {
                 targets.Add(actor);
             }
-
         }
         return targets;
     }
@@ -334,6 +333,20 @@ public class Player_Controller : MonoBehaviour
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
+
+        if (playerAttack.m_isBlocking && _attacker != null)
+        {
+            List<Actor> actors = GetActorsInfrontOfPlayer(playerAttack.m_blockingAngle, 50.0f);
+            foreach (var actor in actors)
+            {
+                if (actor.gameObject == _attacker)
+                {
+                    // PLAY BLOCK SOUND
+                    Debug.Log("BLOCK");
+                    return;
+                }
+            }
+        }
 
         playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
