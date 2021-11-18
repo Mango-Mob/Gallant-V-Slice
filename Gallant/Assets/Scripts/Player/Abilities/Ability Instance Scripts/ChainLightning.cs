@@ -7,7 +7,10 @@ public class ChainLightning : MonoBehaviour
     public Player_Controller m_user;
     public LayerMask m_enemyDetectionMask;
     public AbilityData m_data;
+
     [SerializeField] private GameObject lightningPrefabVFX;
+    [SerializeField] private GameObject lightningHitPrefabVFX;
+
     private List<Actor> m_hitTargets = new List<Actor>();
     private int m_maxTargets = 3;
     public Transform m_handTransform;
@@ -23,7 +26,7 @@ public class ChainLightning : MonoBehaviour
     {
         m_maxTargets = (int)m_data.effectiveness;
 
-        Vector3 lastTargetPos = m_handTransform.position;
+        Vector3 lastTargetPos = transform.position;
         Actor[] actors = FindObjectsOfType<Actor>();
         List<Actor> closeActors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
 
@@ -32,7 +35,7 @@ public class ChainLightning : MonoBehaviour
 
         foreach (var actor in closeActors)
         {
-            float distance = Vector3.Distance(actor.transform.position, transform.position);
+            float distance = Vector3.Distance(actor.transform.position, lastTargetPos);
 
             if (distance < closestDistance)
             {
@@ -90,9 +93,14 @@ public class ChainLightning : MonoBehaviour
                 m_hitTargets.Add(bestTarget);
                 bestTarget.DealDamage(m_data.damage);
 
+                // Chain VFX
                 CreateVFX(_lastPosition, bestTarget.transform.position);
 
+                // Hit VFX
+                Instantiate(lightningHitPrefabVFX, _lastPosition, Quaternion.identity);
+
                 _lastPosition = bestTarget.transform.position;
+
                 yield return new WaitForSeconds(waitTime);
             }
             else
