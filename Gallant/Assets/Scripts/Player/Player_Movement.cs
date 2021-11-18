@@ -72,7 +72,7 @@ public class Player_Movement : MonoBehaviour
         }
 
         if (m_lockonTarget != null)
-            m_lockonTarget.UpdateTarget(m_currentTarget != null ? m_currentTarget.gameObject : null);
+            m_lockonTarget.UpdateTarget(m_currentTarget != null ? m_currentTarget.m_selfTargetTransform.gameObject : null);
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -267,12 +267,12 @@ public class Player_Movement : MonoBehaviour
                 m_rollTimer = m_rollDuration;
 
                 // Create adrenaline provider
-                if (m_adrenShadowPrefab != null)
-                {
-                    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
-                    provider.m_durationInSeconds = m_shadowDuration;
-                    provider.m_playerRef = this;
-                }
+                //if (m_adrenShadowPrefab != null)
+                //{
+                //    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
+                //    provider.m_durationInSeconds = m_shadowDuration;
+                //    provider.m_playerRef = this;
+                //}
 
                 if (normalizedMove.magnitude != 0.0)
                 {
@@ -320,7 +320,7 @@ public class Player_Movement : MonoBehaviour
 
         foreach (var actor in actors)
         {
-            float distance = Vector3.Distance(actor.transform.position, transform.position);
+            float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
 
             if (distance < closestDistance)
             {

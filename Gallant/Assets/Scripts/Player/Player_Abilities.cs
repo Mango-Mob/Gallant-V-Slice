@@ -9,6 +9,8 @@ public enum Ability
     ICE_ROLL,
     HP_BUFF,
     THORNS,
+
+    NONE,
 }
 /****************
  * Player_Abilities: Description
@@ -19,6 +21,7 @@ public enum Ability
 public class Player_Abilities : MonoBehaviour
 {
     public Player_Controller playerController { private set; get; }
+    [SerializeField] private AbilityPassiveVFX m_passiveVFX;
 
     [Header("Ability Information")]
     public AbilityBase m_leftAbility;
@@ -193,6 +196,11 @@ public class Player_Abilities : MonoBehaviour
         {
             m_rightAbility.m_synergyData = AbilityData.CreateWeaponDataSynergy(m_leftAbility.m_data, m_rightAbility.m_data);
         }
+
+        if (_ability != null)
+            m_passiveVFX.SetAbility(_hand, _ability.abilityPower);
+        else
+            m_passiveVFX.SetAbility(_hand, Ability.NONE);
     }
 
     public void PassiveProcess(Hand _hand, PassiveType _type, GameObject _object = null, float _damage = 0.0f)

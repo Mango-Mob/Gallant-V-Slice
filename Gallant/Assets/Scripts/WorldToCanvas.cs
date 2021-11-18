@@ -16,6 +16,11 @@ public class WorldToCanvas : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ForceUpdate();
+    }
+
+    public void ForceUpdate()
+    {
         if (m_anchorTransform != null)
         {
             Vector3 pos = m_camera.WorldToScreenPoint(m_anchorTransform.transform.position);

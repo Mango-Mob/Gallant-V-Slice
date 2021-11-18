@@ -48,6 +48,10 @@ public class Player_Attack : MonoBehaviour
     private GameObject m_rightHeldObjectInstance;
     private GameObject m_leftHeldObjectInstance;
 
+    [Header("Blocking")]
+    public float m_blockingAngle = 45.0f;
+    public bool m_isBlocking { private set; get; } = false;
+
     private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
@@ -415,6 +419,7 @@ public class Player_Attack : MonoBehaviour
 
             m_rightHeldObjectInstance = Instantiate(m_shieldBlockPrefab, playerController.playerMovement.playerModel.transform);
         }
+        m_isBlocking = true;
     }
     public void StopBlock(Hand _hand)
     {
@@ -423,6 +428,7 @@ public class Player_Attack : MonoBehaviour
             if (m_leftHeldObjectInstance != null)
             {
                 Destroy(m_leftHeldObjectInstance);
+                m_isBlocking = false;
             }
         }
         else
@@ -430,6 +436,7 @@ public class Player_Attack : MonoBehaviour
             if (m_rightHeldObjectInstance != null)
             {
                 Destroy(m_rightHeldObjectInstance);
+                m_isBlocking = false;
             }
         }
     }

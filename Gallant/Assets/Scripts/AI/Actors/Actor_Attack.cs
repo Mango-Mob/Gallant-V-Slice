@@ -95,8 +95,8 @@ public abstract class Actor_Attack
         else if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Shadow"))
         {
             //Damage shadow
-            AdrenalineProvider provider = hitCollider.GetComponent<AdrenalineProvider>();
-            provider.GiveAdrenaline();
+            //AdrenalineProvider provider = hitCollider.GetComponent<AdrenalineProvider>();
+            //provider.GiveAdrenaline();
         }
     }
 
