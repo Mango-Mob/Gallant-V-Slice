@@ -25,6 +25,7 @@ public class UI_LockonTarget : UI_Element
             m_worldToCanvas.m_anchorTransform = null;
             m_image.enabled = false;
         }
+        m_worldToCanvas.ForceUpdate();
     }
 
     #region Parent override functions

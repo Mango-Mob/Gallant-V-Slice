@@ -35,7 +35,7 @@ public class ChainLightning : MonoBehaviour
 
         foreach (var actor in closeActors)
         {
-            float distance = Vector3.Distance(actor.transform.position, lastTargetPos);
+            float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, lastTargetPos);
 
             if (distance < closestDistance)
             {
@@ -49,9 +49,9 @@ public class ChainLightning : MonoBehaviour
             m_hitTargets.Add(closestTarget);
             closestTarget.DealDamage(m_data.damage);
 
-            CreateVFX(transform.position, closestTarget.transform.position);
+            CreateVFX(transform.position, closestTarget.m_selfTargetTransform.transform.position);
 
-            lastTargetPos = closestTarget.transform.position;
+            lastTargetPos = closestTarget.m_selfTargetTransform.transform.position;
         }
         else
         {
@@ -67,7 +67,7 @@ public class ChainLightning : MonoBehaviour
         float waitTime = 0.15f;
         yield return new WaitForSeconds(waitTime);
 
-        for (int i = 0; i < m_maxTargets; i++)
+        for (int i = 1; i < m_maxTargets; i++)
         {
             Actor bestTarget = null;
             float closestDistance = Mathf.Infinity;
@@ -76,7 +76,7 @@ public class ChainLightning : MonoBehaviour
                 if (actor == bestTarget || m_hitTargets.Contains(actor))
                     continue;
 
-                float distance = Vector3.Distance(actor.transform.position, _lastPosition);
+                float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, _lastPosition);
 
                 if (distance > m_chainRange)
                     continue;
@@ -94,12 +94,12 @@ public class ChainLightning : MonoBehaviour
                 bestTarget.DealDamage(m_data.damage);
 
                 // Chain VFX
-                CreateVFX(_lastPosition, bestTarget.transform.position);
+                CreateVFX(_lastPosition, bestTarget.m_selfTargetTransform.transform.position);
 
                 // Hit VFX
                 Instantiate(lightningHitPrefabVFX, _lastPosition, Quaternion.identity);
 
-                _lastPosition = bestTarget.transform.position;
+                _lastPosition = bestTarget.m_selfTargetTransform.transform.position;
 
                 yield return new WaitForSeconds(waitTime);
             }

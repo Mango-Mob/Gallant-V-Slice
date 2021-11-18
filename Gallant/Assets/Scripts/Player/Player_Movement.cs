@@ -72,7 +72,7 @@ public class Player_Movement : MonoBehaviour
         }
 
         if (m_lockonTarget != null)
-            m_lockonTarget.UpdateTarget(m_currentTarget != null ? m_currentTarget.gameObject : null);
+            m_lockonTarget.UpdateTarget(m_currentTarget != null ? m_currentTarget.m_selfTargetTransform.gameObject : null);
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -320,7 +320,7 @@ public class Player_Movement : MonoBehaviour
 
         foreach (var actor in actors)
         {
-            float distance = Vector3.Distance(actor.transform.position, transform.position);
+            float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
 
             if (distance < closestDistance)
             {
