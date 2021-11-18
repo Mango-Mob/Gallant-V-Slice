@@ -5,7 +5,7 @@ using UnityEngine;
 public class FirewaveProjectile : MonoBehaviour
 {
     private List<Actor> m_hitList = new List<Actor>();
-    public float m_speed = 10.0f;
+    public float m_speed = 25.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
     [SerializeField] private GameObject flameParticles;

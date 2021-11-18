@@ -5,6 +5,7 @@ using UnityEngine;
 public class SandmissileProjectile : MonoBehaviour
 {
     [SerializeField] private GameObject m_sandAreaPrefab;
+    [SerializeField] private GameObject m_sandPoofPrefab;
 
     public ParticleSystem[] m_particleSystems { get; private set; }
 
@@ -86,6 +87,12 @@ public class SandmissileProjectile : MonoBehaviour
             system.Stop();
             system.transform.SetParent(null);
             system.GetComponent<VFXTimerScript>().m_startedTimer = true;
+        }
+        if (m_sandPoofPrefab != null)
+        {
+            GameObject poof = Instantiate(m_sandPoofPrefab,
+                transform.position,
+                transform.rotation);
         }
         if (m_sandAreaPrefab != null)
         {
