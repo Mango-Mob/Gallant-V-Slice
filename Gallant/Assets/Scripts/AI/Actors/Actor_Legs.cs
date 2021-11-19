@@ -116,6 +116,7 @@ public class Actor_Legs : MonoBehaviour
     {
         force.y = 0;
         m_agent.updatePosition = false;
+        m_body.isKinematic = false;
         m_body.AddForce(force, ForceMode.Impulse);
 
         if (m_body != null && !m_isKnocked)
@@ -133,6 +134,7 @@ public class Actor_Legs : MonoBehaviour
 
         m_agent.Warp(transform.position);
         m_agent.updatePosition = true;
+        m_body.isKinematic = true;
         m_isKnocked = false;
         yield return false;
     }

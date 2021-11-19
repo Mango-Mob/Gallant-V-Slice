@@ -11,6 +11,7 @@ public class TargetFinder : MonoBehaviour
     public GameObject gate;
     public AtmosphereScript script;
     private float m_time = 0;
+    public int nextSceneIndex = 2;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +29,7 @@ public class TargetFinder : MonoBehaviour
             m_time += Time.deltaTime;
             if (m_time > 3.0f)
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene(nextSceneIndex);
             }
             
         }
