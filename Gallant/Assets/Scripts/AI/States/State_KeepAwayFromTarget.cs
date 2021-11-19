@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class State_KeepAwayFromTarget : State
 {
@@ -20,7 +21,7 @@ public class State_KeepAwayFromTarget : State
     public override void Update()
     {
         if (m_myActor.m_animator != null && m_myActor.m_animator.m_hasVelocity)
-            m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", Vector2.zero, 0.25f);
+            m_myActor.m_animator.SetVector3("VelocityHorizontal", "",  "VelocityVertical", m_myActor.m_legs.localVelocity.normalized, 0.25f);
 
         if (m_myActor.m_target == null)
         {
@@ -34,8 +35,15 @@ public class State_KeepAwayFromTarget : State
         {
             //MOVE
             Vector3 direct = m_myActor.transform.position - m_myActor.m_target.transform.position;
-            m_myActor.m_legs.SetTargetLocation(m_myActor.transform.position + direct.normalized * (m_myActor.m_idealDistance - dist), true);
-            m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized, 0.25f);
+            NavMeshHit hit;
+            if(NavMesh.SamplePosition(m_myActor.transform.position + direct.normalized, out hit, 0.5f, ~0))
+            {
+                m_myActor.m_legs.SetTargetLocation(hit.position, true);
+            }
+            else if (NavMesh.SamplePosition(m_myActor.transform.position - direct.normalized, out hit, 0.5f, ~0))
+            {
+                m_myActor.m_legs.SetTargetLocation(hit.position, true);
+            }
         }
         else
         {
