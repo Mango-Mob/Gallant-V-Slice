@@ -58,12 +58,12 @@ public class Player_Attack : MonoBehaviour
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
         m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider");
 
-        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
-        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
 
     private void Start()
     {
+        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
+        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
     /*******************
      * StartUsing : Begin the use of held weapon via animation.
