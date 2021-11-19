@@ -11,11 +11,16 @@ public class Actor_Material : MonoBehaviour
     private Material m_myMaterial;
 
     private float m_timer = 0.0f;
-    
+
+    public Color m_default { get; protected set; }
+
+    private Color m_current;
     private void Awake()
     {
         m_myMesh = GetComponent<Renderer>();
         m_myMaterial = m_myMesh.material;
+        m_default = m_myMesh.material.color;
+        m_current = m_default;
     }
 
     // Start is called before the first frame update
@@ -58,7 +63,16 @@ public class Actor_Material : MonoBehaviour
             Debug.LogWarning("Disolve called when texture isn't a disolve shader.");
         }
     }
-
+    public void SetColor(Color _col)
+    {
+        m_current = _col;
+        m_myMaterial.color = m_current;
+    }
+    public void RefreshColor()
+    {
+        m_current = m_default;
+        m_myMaterial.color = m_current;
+    }
     public void ShowHit()
     {
         StartCoroutine(ShowHitRoutine(0.02f));

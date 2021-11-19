@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class KnockUpArea : MonoBehaviour
 {
-    private float m_rangeDisplay = 1.0f;
+    public GameObject m_knockUpVFX;
+    public float m_previewRadius = 1.0f;
+
     public void StartKnockUp(float radius, float damage, float delay)
     {
-        m_rangeDisplay = radius;
+        m_previewRadius = radius;
         StartCoroutine(KnockUpInArea(radius, damage, delay));
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, m_rangeDisplay);
+        Gizmos.DrawWireSphere(transform.position, m_previewRadius);
     }
 
     public IEnumerator KnockUpInArea(float radius, float damage, float delay)
@@ -30,7 +32,7 @@ public class KnockUpArea : MonoBehaviour
                 if (player != null)
                 {
                     player.DamagePlayer(damage);
-                    player.StunPlayer(2.0f, Vector3.up * 20f);
+                    player.StunPlayer(0.8f, Vector3.up * 20f);
                 }
             }
             else if (hit.gameObject.layer == LayerMask.NameToLayer("Shadow"))
@@ -40,6 +42,7 @@ public class KnockUpArea : MonoBehaviour
                 provider.GiveAdrenaline();
             }
         }
+        Instantiate(m_knockUpVFX, transform.position, Quaternion.identity);
         Destroy(gameObject);
         yield return null;
     }

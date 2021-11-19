@@ -35,6 +35,7 @@ public class State_KeepAwayFromTarget : State
             //MOVE
             Vector3 direct = m_myActor.transform.position - m_myActor.m_target.transform.position;
             m_myActor.m_legs.SetTargetLocation(m_myActor.transform.position + direct.normalized * (m_myActor.m_idealDistance - dist), true);
+            m_myActor.m_animator.SetVector2("VelocityHorizontal", "VelocityVertical", m_myActor.m_legs.localVelocity.normalized, 0.25f);
         }
         else
         {

@@ -129,8 +129,9 @@ namespace SwampBoss_Attack
                 GameObject projPrefab = LoadObjectData("RaiseWaterProjectile");
 
                 GameObject projInWorld = GameObject.Instantiate(projPrefab, hitCollider.transform.position + hitCollider.transform.forward * -1.25f, Quaternion.identity);
-                KnockUpArea knockUp = projInWorld.AddComponent<KnockUpArea>();
-                knockUp.StartKnockUp(2f, m_baseDamage * user.m_myData.m_damageModifier, 0.5f);
+                projInWorld.transform.forward = Vector3.up;
+                KnockUpArea knockUp = projInWorld.GetComponent<KnockUpArea>();
+                knockUp.StartKnockUp(2.5f, m_baseDamage * user.m_myData.m_damageModifier, 0.5f);
             }
         }
 

@@ -77,7 +77,7 @@ public class Actor : StateMachine
     }
 
     // Called at the start of the first update call
-    private void Start()
+    protected virtual void Start()
     {
         if (m_myData.m_states.Contains(State.Type.IDLE))
             SetState(new State_Idle(this));
@@ -90,7 +90,7 @@ public class Actor : StateMachine
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (m_currentState != null && m_legs != null  && !m_legs.m_isKnocked)
             m_currentState.Update(); //If state exists, update it.
@@ -100,10 +100,6 @@ public class Actor : StateMachine
     
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
 
-        if (InputManager.instance.IsKeyDown(KeyType.H))
-        {
-            GetComponent<StatusEffectContainer>().AddStatusEffect(new WeakenStatus(0.5f, 5.0f));
-        }
         m_tracker?.RecordResistance(m_resist);
     }
 

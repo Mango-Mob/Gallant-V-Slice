@@ -112,7 +112,19 @@ public class DialogDisplay : MonoBehaviour
                 if(i < m_file.m_list[index].results.Count)
                 {
                     m_options[i].GetComponentInChildren<Text>().text = m_file.m_list[index].results[i].resultText;
-                    m_options[i].interactable = true;
+                    if (m_file.m_list[index].results[i].resultType == "INTERACT" && m_interact != null)
+                    {
+                        m_options[i].interactable = true;
+                    }
+                    else if (m_file.m_list[index].results[i].resultType != "INTERACT")
+                    {
+                        m_options[i].interactable = true;
+                    }
+                    else
+                    {
+                        m_options[i].interactable = false;
+                    }
+                    
                 }
                 else
                 {
