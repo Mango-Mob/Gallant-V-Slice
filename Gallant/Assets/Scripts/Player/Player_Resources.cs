@@ -33,14 +33,14 @@ public class Player_Resources : MonoBehaviour
 
     private void Awake()
     {
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
         healthBar = HUDManager.instance.GetElement<UI_Bar>("HP");
         barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
         adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbResource>("Adrenaline");
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
         playerController = GetComponent<Player_Controller>();
     }
 
@@ -86,7 +86,8 @@ public class Player_Resources : MonoBehaviour
             m_dead = true;
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            StartCoroutine(BackToMenu());
+            LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
+            //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
     }
@@ -116,7 +117,7 @@ public class Player_Resources : MonoBehaviour
     IEnumerator BackToMenu()
     {
         yield return new WaitForSecondsRealtime(3);
-        SceneManager.LoadScene(0);   
+        LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
     }
 
     /*******************

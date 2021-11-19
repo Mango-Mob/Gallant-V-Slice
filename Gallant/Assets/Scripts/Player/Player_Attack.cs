@@ -25,6 +25,7 @@ public class Player_Attack : MonoBehaviour
     public Player_Controller playerController { private set; get; }
     public float m_swingHeight = 1.0f;
     public LayerMask m_attackTargets;
+    private bool m_attackedThisFrame = false;
 
     [Header("Hand Transforms")]
     public Transform m_leftHandTransform;
@@ -58,13 +59,19 @@ public class Player_Attack : MonoBehaviour
         m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
         m_shieldBlockPrefab = Resources.Load<GameObject>("WeaponUtil/ShieldBlockCollider");
 
+        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
+        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
 
     private void Start()
     {
-        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
-        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
+
+    private void Update()
+    {
+        m_attackedThisFrame = false;
+    }
+
     /*******************
      * StartUsing : Begin the use of held weapon via animation.
      * @author : William de Beer
@@ -127,6 +134,11 @@ public class Player_Attack : MonoBehaviour
     */
     public void UseWeapon(bool _left)
     {
+        if (m_attackedThisFrame)
+            return;
+
+        m_attackedThisFrame = true;
+
         WeaponData thisData;
         Vector3 thisHandPosition;
 
@@ -339,17 +351,21 @@ public class Player_Attack : MonoBehaviour
      */
     private void WeaponAttack(WeaponData _data, Vector3 _source)
     {
+        List<GameObject> hitList = new List<GameObject>();
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset, _data.hitSize, m_attackTargets);
         foreach (var collider in colliders)
         {
-            Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
-            DamageTarget(collider.gameObject, _data.m_damage);
+            if (hitList.Contains(collider.gameObject))
+                continue;
 
+            DamageTarget(collider.gameObject, _data.m_damage);
             Actor actor = collider.GetComponent<Actor>();
-            if (actor != null)
+            if (actor != null && !hitList.Contains(collider.gameObject))
             {
+                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
                 actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
             }
+            hitList.Add(collider.gameObject);
         }
     }
 

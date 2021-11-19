@@ -35,9 +35,9 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
-        transitionPrefab = Resources.Load<GameObject>("Prefabs/Transitions/TransitionCanvas");
-        youdiedPrefab = Resources.Load<GameObject>("Prefabs/Transitions/YouDiedCanvas");
-        youwinPrefab = Resources.Load<GameObject>("Prefabs/Transitions/YouWinCanvas");
+        transitionPrefab = Resources.Load<GameObject>("Transitions/TransitionCanvas");
+        youdiedPrefab = Resources.Load<GameObject>("Transitions/YouDiedCanvas");
+        youwinPrefab = Resources.Load<GameObject>("Transitions/YouWinCanvas");
 
         if (_instance == null)
         {
@@ -141,37 +141,37 @@ public class LevelLoader : MonoBehaviour
         float timeMult = 1.0f;
         isTransitioning = true;
 
-        //switch (_transition)
-        //{
-        //    case Transition.CROSSFADE:
-        //        transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
-        //        break;
-        //    case Transition.YOUDIED:
-        //        transition = Instantiate(youdiedPrefab, transform).GetComponent<Animator>();
-        //        timeMult = 5.0f;
-        //        break;
-        //    case Transition.YOUWIN:
-        //        transition = Instantiate(youwinPrefab, transform).GetComponent<Animator>();
-        //        timeMult = 3.5f;
-        //        break;
-        //}
+        switch (_transition)
+        {
+            case Transition.CROSSFADE:
+                transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
+                break;
+            case Transition.YOUDIED:
+                transition = Instantiate(youdiedPrefab, transform).GetComponent<Animator>();
+                timeMult = 5.0f;
+                break;
+            case Transition.YOUWIN:
+                transition = Instantiate(youwinPrefab, transform).GetComponent<Animator>();
+                timeMult = 3.5f;
+                break;
+        }
 
-        //transition.speed = 1.0f / timeMult;
-        //
-        //if (transition != null)
-        //{
-        //    // Wait to let animation finish playing
-        //    yield return new WaitForSeconds(transitionTime * timeMult);
-        //}
-        // Load Scene
+        transition.speed = 1.0f / timeMult;
+
+        if (transition != null)
+        {
+            // Wait to let animation finish playing
+            yield return new WaitForSeconds(transitionTime * timeMult);
+        }
+        //Load Scene
         SceneManager.LoadScene(_name);
-        //yield return new WaitForSeconds(transitionTime * timeMult);
+        yield return new WaitForSeconds(transitionTime * timeMult);
 
-        //if (transition != null)
-        //{
-        //    Destroy(transition.gameObject);
-        //    transition = null;
-        //}
+        if (transition != null)
+        {
+            Destroy(transition.gameObject);
+            transition = null;
+        }
         isTransitioning = false;
         yield return null;
     }

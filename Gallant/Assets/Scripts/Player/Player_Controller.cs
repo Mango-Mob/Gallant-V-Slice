@@ -63,6 +63,8 @@ public class Player_Controller : MonoBehaviour
         playerAttack.ApplyWeaponData(Hand.RIGHT);
     }
 
+    
+
     // Update is called once per frame
     void Update()
     {
@@ -234,7 +236,7 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ZERO))
         {
             //playerResources.ChangeBarrier(10.0f);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            LevelLoader.instance.ReloadLevel();
         }
 
         // Item debug
