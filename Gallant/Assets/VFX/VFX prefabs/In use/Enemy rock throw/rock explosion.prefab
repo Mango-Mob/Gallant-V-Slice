@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 5261847943941124747}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.3, z: -0.78}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_Children: []
   m_Father: {fileID: 5261847944461390894}
   m_RootOrder: 0
@@ -4820,6 +4820,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5261847944461390894}
+  - component: {fileID: 1319771632279862201}
   m_Layer: 0
   m_Name: rock explosion
   m_TagString: Untagged
@@ -4836,13 +4837,27 @@ Transform:
   m_GameObject: {fileID: 5261847944461390895}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 93.1, y: 4.600687, z: -18.2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 5261847943941124746}
   - {fileID: 5079606045649689114}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1319771632279862201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5261847944461390895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017cc8c452271914bb83239e8539b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_startedTimer: 1
+  m_timer: 1
 --- !u!1 &6428222317260964568
 GameObject:
   m_ObjectHideFlags: 0
@@ -4870,7 +4885,7 @@ Transform:
   m_GameObject: {fileID: 6428222317260964568}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.3000002, z: -0.77999973}
-  m_LocalScale: {x: 0.40356, y: 0.40356, z: 0.40356}
+  m_LocalScale: {x: 0.10089, y: 0.10089, z: 0.10089}
   m_Children: []
   m_Father: {fileID: 5261847944461390894}
   m_RootOrder: 1

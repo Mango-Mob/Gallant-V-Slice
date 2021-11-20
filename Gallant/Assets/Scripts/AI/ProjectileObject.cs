@@ -21,6 +21,7 @@ public class ProjectileObject : MonoBehaviour
 
             if(m_timer >= m_duration)
             {
+                Instantiate(m_hitVfX, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }

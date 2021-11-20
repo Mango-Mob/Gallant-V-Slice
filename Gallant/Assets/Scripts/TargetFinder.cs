@@ -15,7 +15,8 @@ public class TargetFinder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(gate != null)
+        script = FindObjectOfType<AtmosphereScript>();
+        if (gate != null)
         {
             gate.GetComponent<Animator>().enabled = false;
         }
@@ -29,9 +30,9 @@ public class TargetFinder : MonoBehaviour
             m_time += Time.deltaTime;
             if (m_time > 3.0f)
             {
+                
                 SceneManager.LoadScene(nextSceneIndex);
             }
-            
         }
     }
 

@@ -43,7 +43,7 @@ public class Shopkeeper : Actor
 
     public void Reward()
     {
-        m_reward.Show(GameManager.currentLevel);
+        m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
         m_display.m_interact = null;
         m_hasGivenReward = true;
     }

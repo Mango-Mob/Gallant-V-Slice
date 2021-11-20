@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1593293067124039170}
   - component: {fileID: 2815780943856161851}
   - component: {fileID: 9074848675766274387}
-  - component: {fileID: 246784957210035503}
+  - component: {fileID: 664591774367456097}
   m_Layer: 0
   m_Name: CampFire
   m_TagString: Untagged
@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 246784957210035500}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.70710677}
-  m_LocalPosition: {x: -11.627, y: -0.0064398, z: -12.839}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.6177, y: 1.8141301, z: 2.5067}
   m_Children:
   - {fileID: 7779845831616903423}
@@ -82,8 +82,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &246784957210035503
-BoxCollider:
+--- !u!136 &664591774367456097
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,9 +92,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.1129556, y: 0.635031, z: 2.0425832}
-  m_Center: {x: -4.9551654, y: -0.06, z: 4.6901765}
+  m_Radius: 1.0564775
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: -4.9551644, y: 0.0866225, z: 4.6901755}
 --- !u!1 &3663784741802700489
 GameObject:
   m_ObjectHideFlags: 0
