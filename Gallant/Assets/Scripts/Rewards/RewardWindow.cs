@@ -56,30 +56,33 @@ public class RewardWindow : MonoBehaviour
 
         if(m_window.activeInHierarchy)
         {
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.WEST, 0))
+            if(m_select >= 0)
             {
-                m_timer += Time.unscaledDeltaTime;
-                if (m_timer >= m_pressDuration)
+                if (InputManager.instance.IsGamepadButtonPressed(ButtonType.WEST, 0))
                 {
-                    Confirm();
+                    m_timer += Time.unscaledDeltaTime;
+                    if (m_timer >= m_pressDuration)
+                    {
+                        Confirm();
+                    }
+                    else
+                    {
+                        m_pressDurationImage.fillAmount = m_timer / m_pressDuration;
+                    }
                 }
                 else
                 {
-                    m_pressDurationImage.fillAmount = m_timer / m_pressDuration;
+                    m_pressDurationImage.fillAmount = 0.0f;
                 }
-            }
-            else
-            {
-                m_pressDurationImage.fillAmount = 0.0f;
-            }
 
-            if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
-            {
-                EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
-            }
-            else if(!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
-            {
-                EventSystem.current.SetSelectedGameObject(null);
+                if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+                {
+                    EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
+                }
+                else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(null);
+                }
             }
         }
     }
@@ -107,11 +110,22 @@ public class RewardWindow : MonoBehaviour
             {
                 if (roll <= m_weaponProbability[i] * rollSize)
                 {
+                    WeaponData weapon;
+                    do
+                    {
+                        weapon = WeaponData.GenerateWeapon(level);
+                    } while (!IsUniqueWeapon(rewards, weapon));
+
                     rewards.Add(WeaponData.GenerateWeapon(level));
                 }
                 else
                 {
-                    int select = Random.Range(0, m_items.Count);
+                    int select;
+                    do
+                    {
+                        select = Random.Range(0, m_items.Count);
+                    } while (!IsUniqueItem(rewards, m_items[select]));
+
                     rewards.Add(m_items[select]);
                 }
             }
@@ -181,5 +195,37 @@ public class RewardWindow : MonoBehaviour
     {
         m_window.SetActive(false);
         EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public bool IsUniqueWeapon(List<ScriptableObject> list, WeaponData data)
+    {
+        foreach (var reward in list)
+        {
+            WeaponData weaponReward = reward as WeaponData;
+            if (weaponReward != null)
+            {
+                if(weaponReward.weaponType == data.weaponType && weaponReward.abilityData.abilityPower == data.abilityData.abilityPower)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public bool IsUniqueItem(List<ScriptableObject> list, ItemData data)
+    {
+        foreach (var reward in list)
+        {
+            ItemData itemReward = reward as ItemData;
+            if (itemReward != null)
+            {
+                if (itemReward.itemEffect == data.itemEffect)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
