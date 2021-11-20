@@ -10,6 +10,7 @@ public class AdrenalineDrop : MonoBehaviour
     [SerializeField] private float m_forceMultiplier = 2.0f;
 
     private Player_Controller m_targetPlayer;
+    [SerializeField] private Animator m_animator;
 
     private float m_targetScale;
     private bool m_spawning = true;
@@ -63,6 +64,8 @@ public class AdrenalineDrop : MonoBehaviour
         transform.localScale = Vector3.zero;
 
         StartCoroutine(Spawning());
+        //Invoke("StartDeathAnimation", 10.0f);
+        //DestroyObject();
     }
 
     // Update is called once per frame
@@ -97,11 +100,15 @@ public class AdrenalineDrop : MonoBehaviour
         }
     }
 
+    public void DestroyObject()
+    {
+        Destroy(gameObject);
+    }
+
     IEnumerator Spawning()
     {
         yield return new WaitForSecondsRealtime(1.5f);
         m_spawning = false;
         GetComponent<Rigidbody>().isKinematic = false;
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /****************
  * Player_Controller: Controls interactions between different player components and handles player input.
@@ -49,9 +50,20 @@ public class Player_Controller : MonoBehaviour
         playerStats = GetComponentInChildren<Player_Stats>();
         playerAudioAgent = GetComponent<Player_AudioAgent>();
 
+        if (GameManager.m_containsPlayerInfo)
+        {
+            playerAttack.m_leftWeapon = GameManager.RetrieveWeaponData(Hand.LEFT);
+            playerAttack.m_rightWeapon = GameManager.RetrieveWeaponData(Hand.RIGHT);
+
+            playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
+            playerStats.EvaluateEffects();
+        }
+
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
     }
+
+    
 
     // Update is called once per frame
     void Update()
@@ -223,13 +235,15 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ZERO))
         {
-            playerResources.ChangeBarrier(10.0f);
+            //playerResources.ChangeBarrier(10.0f);
+            LevelLoader.instance.ReloadLevel();
         }
 
         // Item debug
         if (InputManager.instance.IsKeyDown(KeyType.NUM_SIX))
         {
-            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+            //playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+            StorePlayerInfo();
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_SEVEN))
         {
@@ -355,5 +369,10 @@ public class Player_Controller : MonoBehaviour
         playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
+    }
+
+    public void StorePlayerInfo()
+    {
+        GameManager.StorePlayerInfo(playerAttack.m_leftWeapon, playerAttack.m_rightWeapon, playerStats.m_effects);
     }
 }

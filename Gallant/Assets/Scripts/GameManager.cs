@@ -124,4 +124,56 @@ public class GameManager : MonoBehaviour
     {
         currentLevel += deltaLevel;
     }
+
+    #region Player Info Storage
+    private struct PlayerInfo
+    {
+        public WeaponData m_leftWeapon;
+        public WeaponData m_rightWeapon;
+         
+        public Dictionary<ItemEffect, int> m_effects;
+    }
+
+    static public bool m_containsPlayerInfo = false;
+    static private PlayerInfo m_playerInfo;
+
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<ItemEffect, int> _effects)
+    {
+        m_playerInfo.m_leftWeapon = _leftWeapon;
+        m_playerInfo.m_rightWeapon = _rightWeapon;
+
+        m_playerInfo.m_effects = _effects;
+
+        m_containsPlayerInfo = true;
+    }
+
+    public static WeaponData RetrieveWeaponData(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                return m_playerInfo.m_leftWeapon;
+            case Hand.RIGHT:
+                return m_playerInfo.m_rightWeapon;
+            default:
+                return null;
+        }
+    }
+
+    public static Dictionary<ItemEffect, int> RetrieveEffectsDictionary()
+    {
+        return m_playerInfo.m_effects;
+    }
+
+    public static void ResetPlayerInfo()
+    {
+        m_playerInfo.m_leftWeapon = null;
+        m_playerInfo.m_rightWeapon = null;
+
+        m_playerInfo.m_effects = null;
+
+        m_containsPlayerInfo = false;
+    }
+
+    #endregion
 }
