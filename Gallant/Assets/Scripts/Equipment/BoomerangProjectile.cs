@@ -103,7 +103,7 @@ public class BoomerangProjectile : MonoBehaviour
             Actor actor = other.GetComponent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+                //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
         }
     }
