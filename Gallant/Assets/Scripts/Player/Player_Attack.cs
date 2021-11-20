@@ -359,7 +359,7 @@ public class Player_Attack : MonoBehaviour
                 continue;
 
             DamageTarget(collider.gameObject, _data.m_damage);
-            Actor actor = collider.GetComponent<Actor>();
+            Actor actor = collider.GetComponentInParent<Actor>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
@@ -379,7 +379,7 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Actor actor = _target.GetComponent<Actor>();
+        Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
         {
             actor.DealDamage(_damage, transform.position);

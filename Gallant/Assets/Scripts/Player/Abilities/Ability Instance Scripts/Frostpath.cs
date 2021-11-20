@@ -95,12 +95,12 @@ public class Frostpath : MonoBehaviour
         {
             Debug.Log("Slowing " + other.name + ".");
 
-            Actor actor = other.GetComponent<Actor>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
 
             }
-            StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
+            StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
             {
                 status.AddStatusEffect(new SlowStatus(m_data.effectiveness, m_data.duration));
