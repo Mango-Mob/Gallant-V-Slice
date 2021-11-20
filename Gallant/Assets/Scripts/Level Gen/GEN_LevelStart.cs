@@ -25,7 +25,7 @@ public class GEN_LevelStart : MonoBehaviour
         {
             depth = _depth;
             gameobject = _gameobject;
-
+            gameobject.GetComponentInChildren<GEN_PrefabSection>().depth = _depth;
             GEN_EntryNode entry = gameobject.GetComponentInChildren<GEN_EntryNode>();
             gameobject.transform.position += (gameobject.transform.position - entry.transform.position);
 
@@ -37,10 +37,11 @@ public class GEN_LevelStart : MonoBehaviour
             depth = parent.depth + 1;
 
             //Instantiate the prefab under the selected exit.
+            prefab.GetComponent<GEN_PrefabSection>().depth = depth;
             gameobject = Instantiate(prefab, exit.transform);
             GEN_EntryNode entry = gameobject.GetComponentInChildren<GEN_EntryNode>();
 
-            gameobject.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            //gameobject.transform.localRotation = Quaternion.Euler(0, 180, 0);
             gameobject.transform.position += (gameobject.transform.position - entry.transform.position);
             
             exitList = new List<GEN_ExitNode>(gameobject.GetComponentsInChildren<GEN_ExitNode>());
@@ -60,6 +61,7 @@ public class GEN_LevelStart : MonoBehaviour
             GEN_ExitNode exit = parent.exitList[selectedExit];
 
             //Instantiate the prefab under the selected exit.
+            prefab.GetComponent<GEN_PrefabSection>().depth = depth;
             gameobject = Instantiate(prefab, exit.transform);
             GEN_EntryNode entry = gameobject.GetComponentInChildren<GEN_EntryNode>();
 
@@ -159,6 +161,11 @@ public class GEN_LevelStart : MonoBehaviour
         _gameObject.transform.localRotation = Quaternion.Euler(0, 180, 0);
         m_levelSections.Add(new Section(_gameObject, 0));
 
+        if(m_distance - 1 == 0)
+        {
+            GenerateBossRoom();
+        }
+
         List<Section> currentSections = new List<Section>(m_levelSections);
         while (currentSections.Count > 0) //m_levelSections[m_levelSections.Count - 1].depth < m_distance && 
         {
@@ -186,39 +193,16 @@ public class GEN_LevelStart : MonoBehaviour
                 m_levelSections[m_levelSections.Count - 1].gameobject.name = $"<Gen> Section [{m_levelSections.Count - 1}]";
                 m_levelSections[m_levelSections.Count - 1].gameobject.transform.SetParent(transform);
             }
-            
+
+            //BOSS AREA START
             if (m_levelSections[m_levelSections.Count - 1].depth >= m_distance - 1)
             {
-                Physics.SyncTransforms();
-                //Try generate Boss
-                GEN_PrefabSection owner = m_levelEnd.GetComponent<GEN_PrefabSection>();
-                owner.Awake();
-
-                List<GEN_ExitNode> exits = new List<GEN_ExitNode>(m_levelSections[m_levelSections.Count - 1].exitList);
-                for (int i = exits.Count - 1; i >= 0; i--)
+                if(GenerateBossRoom())
                 {
-                    foreach (var collider in owner.m_levelColliders)
-                    {
-                        if (!collider.enabled)
-                            continue;
-
-                        List<Collider> hitColliders = collider.IsOverlapping(exits[i].transform, Quaternion.Euler(0, 180, 0), m_layersToCheck, GEN_LevelGenMainWindow.showErrors);
-                        if (hitColliders.Count > 0)
-                        {
-                            exits.RemoveAt(i);
-                            break; //Stop looping
-                        }
-                    }
-                }
-                
-                if(exits.Count > 0)
-                {
-                    int select = UnityEngine.Random.Range(0, exits.Count);
-                    m_levelSections.Add(new Section(m_levelSections[m_levelSections.Count - 1], exits[select], m_levelEnd));
-                    m_levelSections[m_levelSections.Count - 1].gameobject.transform.SetParent(transform);
                     break;
                 }
             }
+            //BOSS AREA END
 
             //Clear any sections with zero exits
             for (int i = currentSections.Count - 1; i >= 0; i--)
@@ -232,11 +216,45 @@ public class GEN_LevelStart : MonoBehaviour
 
         for (int i = 0; i < m_levelSections.Count; i++)
         {
-            //m_levelSections[i].gameobject.transform.SetParent(transform);
+            m_levelSections[i].gameobject.transform.SetParent(transform);
             m_levelSections[i].SetActiveColliders(true);
         }
 
         Debug.Log($"Generate level in: {(DateTime.Now - start).TotalMilliseconds} ms");
+    }
+
+    private bool GenerateBossRoom()
+    {
+        Physics.SyncTransforms();
+
+        GEN_PrefabSection owner = m_levelEnd.GetComponent<GEN_PrefabSection>();
+        owner.Awake();
+
+        List<GEN_ExitNode> exits = new List<GEN_ExitNode>(m_levelSections[m_levelSections.Count - 1].exitList);
+        for (int i = exits.Count - 1; i >= 0; i--)
+        {
+            foreach (var collider in owner.m_levelColliders)
+            {
+                if (!collider.enabled)
+                    continue;
+
+                List<Collider> hitColliders = collider.IsOverlapping(exits[i].transform, Quaternion.Euler(0, 180, 0), m_layersToCheck, GEN_LevelGenMainWindow.showErrors);
+                if (hitColliders.Count > 0)
+                {
+                    exits.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        if (exits.Count > 0)
+        {
+            int select = UnityEngine.Random.Range(0, exits.Count);
+            m_levelSections.Add(new Section(m_levelSections[m_levelSections.Count - 1], exits[select], m_levelEnd));
+            m_levelSections[m_levelSections.Count - 1].gameobject.transform.SetParent(transform);
+            return true;
+        }
+        return false;
     }
 
     private List<GameObject> GetListOfValidPrefabs(Transform parent, Quaternion prefabLocalRotation)

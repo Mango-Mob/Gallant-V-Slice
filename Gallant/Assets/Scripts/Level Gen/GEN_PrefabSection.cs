@@ -5,6 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GEN_PrefabSection : MonoBehaviour
 {
+    public int depth;
     [SerializeField] public List<GEN_LevelCollider> m_levelColliders { get; private set; }
     [SerializeField] public List<Collider> m_colliders { get; private set; }
 

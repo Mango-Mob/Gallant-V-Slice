@@ -161,7 +161,6 @@ public class RewardWindow : MonoBehaviour
             m_abilityImage.gameObject.SetActive(false);
             m_abilityDescription.text = temp2.m_currentlyLoaded.description;
             m_abilityCooldownText.text = "";
-
         }
     }
 

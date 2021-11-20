@@ -9,6 +9,8 @@ public class ProjectileObject : MonoBehaviour
     public float m_duration { private get; set; } = -1;
     public Vector3 m_velocity { private get; set; } = Vector3.zero;
 
+    public GameObject m_hitVfX;
+
     private float m_timer = 0;
 
     private void Update()
@@ -19,6 +21,7 @@ public class ProjectileObject : MonoBehaviour
 
             if(m_timer >= m_duration)
             {
+                Instantiate(m_hitVfX, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }
@@ -37,16 +40,7 @@ public class ProjectileObject : MonoBehaviour
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
             player.DamagePlayer(m_damage);
-            Destroy(gameObject);
-        }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Shadow"))
-        {
-            //Damage shadow
-            AdrenalineProvider provider = other.GetComponent<AdrenalineProvider>();
-            if(provider != null)
-            {
-                provider.GiveAdrenaline();
-            }
+            Instantiate(m_hitVfX, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

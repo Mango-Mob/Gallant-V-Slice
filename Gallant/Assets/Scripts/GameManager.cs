@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -7,7 +8,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region Application_Singleton
-    public static int currentLevel = 0;
+    public static float currentLevel = 0;
+    public static float deltaLevel = 0.25f;
     private static GameManager _instance = null;
     public static GameManager instance
     {
@@ -53,7 +55,7 @@ public class GameManager : MonoBehaviour
             _instance = null;
     }
 
-    #endregion
+    #endregion 
 
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
@@ -116,6 +118,11 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.m_globalPitch = Time.timeScale;
         Time.fixedDeltaTime = 0.02f;
         yield return null;
+    }
+
+    public static void Advance()
+    {
+        currentLevel += deltaLevel;
     }
 
     #region Player Info Storage

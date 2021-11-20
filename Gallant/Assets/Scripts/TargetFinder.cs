@@ -11,11 +11,13 @@ public class TargetFinder : MonoBehaviour
     public GameObject gate;
     public AtmosphereScript script;
     private float m_time = 0;
+    private Player_Controller m_player;
     public int nextSceneIndex = 2;
     // Start is called before the first frame update
     void Start()
     {
-        if(gate != null)
+        script = FindObjectOfType<AtmosphereScript>();
+        if (gate != null)
         {
             gate.GetComponent<Animator>().enabled = false;
         }
@@ -29,9 +31,9 @@ public class TargetFinder : MonoBehaviour
             m_time += Time.deltaTime;
             if (m_time > 3.0f)
             {
+                m_player.StorePlayerInfo();
                 SceneManager.LoadScene(nextSceneIndex);
             }
-            
         }
     }
 
@@ -40,6 +42,7 @@ public class TargetFinder : MonoBehaviour
         if(other.tag == "Player")
         {
             testActor.m_target = other.gameObject;
+            m_player = other.GetComponentInChildren<Player_Controller>();
             if (gate != null)
             {
                 gate.GetComponent<Animator>().enabled = true;
