@@ -11,6 +11,8 @@ public class Shopkeeper : Actor
     public RewardWindow m_reward;
     public DialogDisplay m_display;
 
+    private Player_Controller m_player;
+
     private bool m_ShowUI = false;
     private bool m_hasGivenReward = false;
     // Start is called before the first frame update
@@ -30,8 +32,8 @@ public class Shopkeeper : Actor
     public void TalkTo()
     {
         m_display.LoadDialog(m_dialog);
-
-        if(!m_hasGivenReward)
+        //m_player?.m_isDisabledInput = true;
+        if (!m_hasGivenReward)
         {
             m_display.m_interact = new UnityEngine.Events.UnityEvent();
             m_display.m_interact.AddListener(Reward);
@@ -47,11 +49,13 @@ public class Shopkeeper : Actor
         m_display.m_interact = null;
         m_hasGivenReward = true;
     }
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
             m_ShowUI = true;
+            m_player = other.GetComponent<Player_Controller>();
             GetComponentInChildren<Interactable>().m_isReady = true;
         }
     }
