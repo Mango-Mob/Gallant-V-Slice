@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class DialogDisplay : MonoBehaviour
 {
     public UnityEvent m_interact;
+    public GameObject m_defaultSelected;
+    public Player_Controller m_player; 
+
     [SerializeField] private GameObject m_window;
     [SerializeField] private Text m_characterName;
     [SerializeField] private Text m_dialog;
@@ -31,21 +35,27 @@ public class DialogDisplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.IsKeyDown(KeyType.M))
+        if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
         {
-            LoadDialog(m_testFile);
-            Show();
-            
+            EventSystem.current.SetSelectedGameObject(m_defaultSelected);
+        }
+        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 
     public void Show()
     {
         m_window.SetActive(true);
+        m_player.m_isDisabledInput = true;
+
+
     }
     public void Hide()
     {
         m_window.SetActive(false);
+        m_player.m_isDisabledInput = false;
     }
 
     public void ProcessOption(int i)
@@ -89,6 +99,15 @@ public class DialogDisplay : MonoBehaviour
             m_characterName.text = m_activeCharacter.m_name;
             m_currentScene = 0;
             LoadScene(m_currentScene);
+        }
+
+        if (InputManager.instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(m_defaultSelected);
+        }
+        else if (!InputManager.instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 
