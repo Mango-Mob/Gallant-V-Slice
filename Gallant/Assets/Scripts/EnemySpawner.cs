@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GEN.Nodes;
+using GEN.Users;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +62,7 @@ public class EnemySpawner : MonoBehaviour
     {
         foreach (var gate in m_gatesLoc)
         {
-            if (gate.GetComponentInChildren<GEN_ExitNode>())
+            if (gate.GetComponentInChildren<ExitNode>())
                 continue;
 
             Instantiate(m_gatePrefab, gate.transform);
@@ -250,7 +251,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void GenerateWaves()
     {
-        GEN_PrefabSection section = GetComponentInParent<GEN_PrefabSection>();
+        PrefabSection section = GetComponentInParent<PrefabSection>();
         int depth = (section != null) ? section.depth : Mathf.RoundToInt(GameManager.currentLevel);
         float budget = (depth + 1) * budgetPerDepth;
 
