@@ -95,6 +95,7 @@ namespace PrototypeBoss_Attack
             {
                 Player_Controller player = hitCollider.GetComponent<Player_Controller>();
                 //Add player knockback
+                player.StunPlayer(0.1f, (player.transform.position - user.transform.position).normalized * 2.0f);
             }
             base.Invoke(user, hitCollider);
         }
@@ -160,11 +161,6 @@ namespace PrototypeBoss_Attack
          */
         public override void Invoke(Actor user, Collider hitCollider)
         {
-            if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                Player_Controller player = hitCollider.GetComponent<Player_Controller>();
-                //Knockback player.
-            }
             base.Invoke(user, hitCollider);
         }
 

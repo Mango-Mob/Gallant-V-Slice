@@ -21,6 +21,7 @@ public class ProjectileObject : MonoBehaviour
 
             if(m_timer >= m_duration)
             {
+                Instantiate(m_hitVfX, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }
@@ -38,7 +39,7 @@ public class ProjectileObject : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
-            player.DamagePlayer(m_damage);
+            player.DamagePlayer(m_damage, gameObject);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

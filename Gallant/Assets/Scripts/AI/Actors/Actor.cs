@@ -47,11 +47,11 @@ public class Actor : StateMachine
         m_damagedColliders = new List<Collider>();
 
         //Load information from Scriptable Object
-        m_currentHealth = m_myData.health;
+        m_currentHealth = m_myData.health + m_myData.deltaHealth * Mathf.FloorToInt(GameManager.currentLevel);
 
         m_legs = GetComponentInChildren<Actor_Legs>();
         if(m_legs != null)
-            m_legs.m_baseSpeed = m_myData.baseSpeed;
+            m_legs.m_baseSpeed = m_myData.baseSpeed + m_myData.deltaSpeed * Mathf.FloorToInt(GameManager.currentLevel);
 
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
@@ -59,7 +59,7 @@ public class Actor : StateMachine
         m_material = GetComponentInChildren<Actor_Material>();
         m_ui = GetComponentInChildren<Actor_UI>();
 
-        m_resist = m_myData.resistance;
+        m_resist = m_myData.resistance + m_myData.deltaResistance * Mathf.FloorToInt(GameManager.currentLevel);
         m_tracker?.RecordResistance(m_resist);
 
         if (m_myData.name != "")
@@ -160,7 +160,7 @@ public class Actor : StateMachine
     {
         if (!m_isDead)
         {
-            _damage = EnemyData.CalculateDamage(_damage, m_myData.resistance);
+            _damage = EnemyData.CalculateDamage(_damage, m_resist);
 
             if (_damage <= 0)
                 return;
@@ -174,7 +174,7 @@ public class Actor : StateMachine
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
-                float amount = UnityEngine.Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax);
+                float amount = UnityEngine.Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax) + m_myData.deltaAdrenaline * Mathf.FloorToInt(GameManager.currentLevel);
                 int orbCount = UnityEngine.Random.Range(2, 6);
 
                 AdrenalineDrop.CreateAdrenalineDropGroup((uint)orbCount, transform.position, amount/orbCount);
@@ -195,7 +195,7 @@ public class Actor : StateMachine
 
     public void SetResistance(float m_amount)
     {
-        m_resist = Mathf.Clamp(m_amount, -99.0f, m_myData.resistance);
+        m_resist = Mathf.Clamp(m_amount, -99.0f, m_myData.deltaSpeed * Mathf.FloorToInt(GameManager.currentLevel));
     }
 
     private void HandleHitLoc(Vector3 fromPos)

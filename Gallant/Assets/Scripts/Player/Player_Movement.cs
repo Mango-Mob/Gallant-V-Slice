@@ -96,6 +96,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
+            if (m_lastMoveDirection.magnitude == 0.0f)
+                m_lastMoveDirection = transform.forward;
+
             // Move player in stored direction while roll is active
             characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime
                 + transform.up * m_yVelocity * Time.fixedDeltaTime);

@@ -109,7 +109,7 @@ public class Player_Stats : MonoBehaviour
      * EvaluateEffects : Calculates item effect power
      * @author : William de Beer
      */
-    private void EvaluateEffects()
+    public void EvaluateEffects()
     {
         foreach (var effect in m_effects)
         {

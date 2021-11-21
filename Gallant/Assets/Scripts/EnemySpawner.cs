@@ -6,6 +6,9 @@ using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public const float budgetPerDepth = 100f;
+
+
     public float m_spawnWidth = 0.25f;
     public float m_spawnArcHeight = 5.0f;
     public float m_distOffEdge = 1.0f;
@@ -15,8 +18,8 @@ public class EnemySpawner : MonoBehaviour
     public AtmosphereScript m_music;
 
     private Player_Controller m_player = null;
-    private BoxCollider m_roomBCollider;
-    public GameObject[] m_gates;
+    public GameObject m_gatePrefab;
+    public GameObject[] m_gatesLoc;
 
     public bool m_isSphere = true;
     public float m_radius = 10.0f;
@@ -24,10 +27,11 @@ public class EnemySpawner : MonoBehaviour
 
     public RewardWindow m_reward;
 
+    public int m_spawnSpots = 12;
 
-    public int m_spawnSpots = 12; 
-
+    public bool m_generateWavesOnAwake = false;
     public List<RoomData> m_waves = new List<RoomData>();
+    public List<RoomData> m_allWaves = new List<RoomData>();
     private struct SpawnLocation
     {
         public Vector3 m_start;
@@ -44,20 +48,29 @@ public class EnemySpawner : MonoBehaviour
     private void Awake()
     {
         m_music = FindObjectOfType<AtmosphereScript>();
-        m_roomBCollider = GetComponent<BoxCollider>();
+        m_reward = FindObjectOfType<RewardWindow>();
 
-        foreach (var gate in m_gates)
+        if (m_generateWavesOnAwake && m_allWaves.Count > 0)
         {
-            gate.SetActive(false);
+            GenerateWaves();
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        foreach (var gate in m_gatesLoc)
+        {
+            if (gate.GetComponentInChildren<GEN_ExitNode>())
+                continue;
+
+            Instantiate(m_gatePrefab, gate.transform);
+            gate.SetActive(false);
+        }
+
         for (int i = 0; i < m_spawnSpots; i++)
         {
-            if (m_roomBCollider != null)
+            if (!m_isSphere)
                 GenerateASpawnPointInBox(m_size);
             else
                 GenerateASpawnPointInSphere(m_radius);
@@ -211,13 +224,14 @@ public class EnemySpawner : MonoBehaviour
                     m_isSpawning = StartCoroutine(SpawnWave());
                     return;
                 }
-            
-                foreach (var gate in m_gates)
+
+                foreach (var gate in m_gatesLoc)
                 {
-                    gate.GetComponent<Animator>().SetBool("Open", true);
+                    gate.GetComponentInChildren<Animator>()?.SetBool("Open", true);
                 }
-            
-                m_reward.Show(++GameManager.currentLevel);
+
+                GameManager.Advance();
+                m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
                 m_music.EndCombat();
                 Destroy(this);
             }
@@ -234,14 +248,49 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
+    public void GenerateWaves()
+    {
+        GEN_PrefabSection section = GetComponentInParent<GEN_PrefabSection>();
+        int depth = (section != null) ? section.depth : Mathf.RoundToInt(GameManager.currentLevel);
+        float budget = (depth + 1) * budgetPerDepth;
+
+        //Remove all waves that cost more than the budget.
+        for (int i = m_allWaves.Count - 1; i >= 0; i--)
+        {
+            if (m_allWaves[i].CalculateCost() > budget)
+            {
+                m_allWaves.RemoveAt(i);
+            }
+        }
+
+        while (m_allWaves.Count > 0 && budget > 0)
+        {
+            int select = UnityEngine.Random.Range(0, m_allWaves.Count);
+            m_waves.Add(m_allWaves[select]);
+            budget -= m_allWaves[select].CalculateCost();
+            //Remove all waves that cost more than the budget.
+            for (int i = m_allWaves.Count - 1; i >= 0; i--)
+            {
+                if(m_allWaves[i].CalculateCost() > budget)
+                {
+                    m_allWaves.RemoveAt(i);
+                }
+            }
+        }
+
+        m_waves.Sort(RoomData.SortAlgorithm);
+    }
+
     public void StartCombat()
     {
-        if (m_gates[0].activeInHierarchy)
+        if (m_gatesLoc[0].activeInHierarchy)
             return;
+
         m_music.StartCombat();
-        foreach (var gate in m_gates)
+
+        foreach (var gate in m_gatesLoc)
         {
-            gate.SetActive(true);
+           gate.SetActive(true);
         }
     }
 

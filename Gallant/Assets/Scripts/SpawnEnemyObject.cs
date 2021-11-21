@@ -10,6 +10,7 @@ public class SpawnEnemyObject : MonoBehaviour
     public Vector3 m_end;
     public float m_height;
     public float m_time;
+    public float m_spawnCost;
 
     private float m_deltaTime;
     private float m_deltaDeltaTime;

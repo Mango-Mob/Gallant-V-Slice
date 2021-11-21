@@ -8,9 +8,12 @@ public class EnemyData : ScriptableObject
 {
     [Header("Base Stats")]
     public float health;
+    
     public string name;
     public float baseSpeed;
+
     public float adrenalineGainMin;
+    
     public float adrenalineGainMax;
 
     [Tooltip("Used to calculate how effective knockbacks are.")]
@@ -22,6 +25,14 @@ public class EnemyData : ScriptableObject
     public float resistance;
 
     public float m_damageModifier = 1.0f;
+
+    [Header("Changes per room level")]
+    public float deltaHealth = 0;
+    public float deltaSpeed = 0;
+    public float deltaAdrenaline = 0;
+    public float deltaResistance = 0;
+    public float deltaDamageMod = 0;
+    
 
     public List<State.Type> m_states = new List<State.Type>();
 

@@ -100,10 +100,10 @@ public class BoomerangProjectile : MonoBehaviour
 
             m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
 
-            Actor actor = other.GetComponent<Actor>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+                //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
         }
     }

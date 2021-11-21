@@ -38,7 +38,7 @@ public class FirewaveProjectile : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Actor actor = other.GetComponent<Actor>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null && !m_hitList.Contains(actor))
             {
                 Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
@@ -46,7 +46,7 @@ public class FirewaveProjectile : MonoBehaviour
                 m_hitList.Add(actor);
             }
 
-            StatusEffectContainer status = other.GetComponent<StatusEffectContainer>();
+            StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
             {
                 status.AddStatusEffect(new BurnStatus(m_data.effectiveness, m_data.duration));
