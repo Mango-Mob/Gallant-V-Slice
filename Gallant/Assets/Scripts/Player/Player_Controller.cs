@@ -335,7 +335,6 @@ public class Player_Controller : MonoBehaviour
 
             Vector3 direction = (actor.transform.position - transform.position).normalized;
             float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
-            float TEMPCOS = Mathf.Cos(_angle);
             if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
             {
                 targets.Add(actor);
