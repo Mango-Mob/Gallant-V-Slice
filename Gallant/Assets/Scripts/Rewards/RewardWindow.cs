@@ -14,6 +14,7 @@ public class RewardWindow : MonoBehaviour
     [Header("Ability Description")]
     public Image m_abilityImage;
     public Text m_abilityDescription;
+    public Text m_abilityCooldownHeader;
     public Text m_abilityCooldownText;
 
     [Header("Confirm Buttons")]
@@ -163,10 +164,16 @@ public class RewardWindow : MonoBehaviour
             m_abilityImage.sprite = temp.m_activeWeapon.abilityData.abilityIcon;
             m_abilityDescription.text = AbilityData.EvaluateDescription(temp.m_activeWeapon.abilityData);
 
-            if(temp.m_activeWeapon.abilityData.cooldownTime > 0)
+            if (temp.m_activeWeapon.abilityData.cooldownTime > 0)
+            {
+                m_abilityCooldownHeader.text = "Cooldown:";
                 m_abilityCooldownText.text = temp.m_activeWeapon.abilityData.cooldownTime.ToString() + "s";
+            }
             else
+            {
+                m_abilityCooldownHeader.text = "";
                 m_abilityCooldownText.text = "";
+            }
             return;
         }
         ItemReward temp2 = m_rewards[id] as ItemReward;
@@ -174,6 +181,7 @@ public class RewardWindow : MonoBehaviour
         {
             m_abilityImage.gameObject.SetActive(false);
             m_abilityDescription.text = temp2.m_currentlyLoaded.description;
+            m_abilityCooldownHeader.text = "";
             m_abilityCooldownText.text = "";
         }
     }
