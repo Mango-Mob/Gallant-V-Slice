@@ -2,27 +2,46 @@
 
 namespace GEN.Nodes
 {
-    /****************
-     * PreviewNode : A component used to manage the preview texture for the levelStart component.
+    /**
+     * A component used to manage the preview texture for the levelStart component.
      * @author : Michael Jordan
-     * @file : PreviewNode.cs
-     * @year : 2021
      */
     public class PreviewNode : MonoBehaviour
     {
-        //Camera components:
-        private Camera m_myCamera;
-        private LayerMask m_layers;
-
-        //Camera's render target
+        /** a public variable. 
+         * The camera's target texture.
+         */
         public RenderTexture m_texture { get; private set; }
 
-        //Position manipulation
+        /** a public variable. 
+        * The node's initial position at start up.
+        */
         public Vector3 m_positionInitial { get; set; }
+
+        /** a public variable. 
+        * The node's offset from the initial position.
+        */
         public Vector3 m_positionOffset { get; private set; }
+
+        /** a public variable. 
+        * The node's size, which translate to the camera's ortho size.
+        */
         public float m_sizeOffset { get; private set; }
 
-        //Called when the component is loaded into the scene (Immediately).
+        /** a private variable. 
+         * The camera used by this node.
+         */
+        private Camera m_myCamera;
+
+        /** a private variable. 
+         * The camera's cull mask.
+         */
+        private LayerMask m_layers;
+
+        /**
+         * Awake function.
+         * Called when the component is loaded into the scene (Immediately).
+         */
         private void Awake()
         {
             //Initialise the fundamental variables.
@@ -48,35 +67,32 @@ namespace GEN.Nodes
             m_myCamera.targetTexture = m_texture;
         }
 
-        /*******************
-         * SetOffset : Sets the camera's offset position and orthographic Size.
-         * @author : Michael Jordan
-         * @param : (Vector3) Offset from initial position.
-         * @param : (float) New Size for the orthographic camera.
+        /**
+         * Sets the camera's offset position and orthographic Size.
+         * @param : _position Offset from initial position.
+         * @param : _size New Size for the orthographic camera.
          */
-        public void SetOffset(Vector3 _position, float size)
+        public void SetOffset(Vector3 _position, float _size)
         {
             //Set new offset variables
             m_positionOffset = _position;
-            m_sizeOffset = size;
+            m_sizeOffset = _size;
 
             //Update the status of this gameObject
             transform.position = m_positionInitial + m_positionOffset;
             m_myCamera.orthographicSize = m_sizeOffset;
         }
 
-        /*******************
-         * Render : Forward's the call to the preview camera to do a render update.
-         * @author : Michael Jordan
+        /**
+         * Forward's the call to the preview camera to do a render update.
          */
         public void Render()
         {
             m_myCamera.Render();
         }
 
-        /*******************
-         * Instantiate : A static function that creates a peview camera in the game world.
-         * @author : Michael Jordan
+        /**
+         * A static function that creates a peview camera in the game world.
          * @param : (Transform) Transform of the target.
          * @param : (Vector3) Forward of the camera.
          * @param : (LayerMask) LayerMask to cull for the texture.
@@ -98,9 +114,8 @@ namespace GEN.Nodes
             return node;
         }
 
-        /*******************
+        /**
          * CleanAll : Removes all instances of a preview node from the game world.
-         * @author : Michael Jordan
          */
         public static void CleanAll()
         {
