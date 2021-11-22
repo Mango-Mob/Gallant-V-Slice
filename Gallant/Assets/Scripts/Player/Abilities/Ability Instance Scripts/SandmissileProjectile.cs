@@ -57,7 +57,7 @@ public class SandmissileProjectile : MonoBehaviour
         //List<Collider> actors = new List<Collider>();
         //foreach (var collider in colliders)
         //{
-        //    if (collider.GetComponent<Actor>())
+        //    if (collider.GetComponentInParent<Actor>())
         //        actors.Add(collider);
         //}
 
@@ -112,9 +112,9 @@ public class SandmissileProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Actor>() != null)
+        if (other.GetComponentInParent<Actor>() != null)
         {
-            other.GetComponent<Actor>().DealDamage(m_data.damage);
+            other.GetComponentInParent<Actor>().DealDamage(m_data.damage);
             DetonateProjectile();
         }
     }

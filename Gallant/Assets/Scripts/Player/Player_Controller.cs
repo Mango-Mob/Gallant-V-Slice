@@ -329,7 +329,7 @@ public class Player_Controller : MonoBehaviour
 
         foreach (var collider in colliders)
         {
-            Actor actor = collider.GetComponent<Actor>();
+            Actor actor = collider.GetComponentInParent<Actor>();
             if (actor == null)
                 continue;
 

@@ -48,7 +48,7 @@ public class BarrierProjectile : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Actor actor = other.GetComponent<Actor>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
                 actor.DealDamage(m_data.damage * m_barrierValue / 50.0f);
