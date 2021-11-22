@@ -12,6 +12,13 @@ public class SandArea : MonoBehaviour
     void Start()
     {
         sandParticles = GetComponentInChildren<ParticleSystem>();
+
+        //if (sandParticles != null)
+        //{
+        //    ParticleSystem.MainModule mainModule = sandParticles.main;
+        //    mainModule.duration = m_data.lifetime;
+        //    sandParticles.Play();
+        //}
     }
 
     // Update is called once per frame

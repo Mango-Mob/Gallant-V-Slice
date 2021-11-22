@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
@@ -9,11 +10,17 @@ public class SettingsMenu : MonoBehaviour
     [Header("Display Components")]
     public Button m_displayBtn;
     public GameObject m_displayMenu;
+    public GameObject m_displayDefaultSelected;
     public Dropdown m_resList;
     public Dropdown m_fullscreen;
 
+    public GameObject[] m_controllerDisplay;
+    public Color m_bumperColor;
+
+
     [Header("Audio Components")]
     public Button m_audioBtn;
+    public GameObject m_audioDefaultSelected;
     public GameObject m_audioMenu;
     public List<Slider> m_sliders = new List<Slider>();
 
@@ -21,9 +28,9 @@ public class SettingsMenu : MonoBehaviour
     public Button m_controlsBtn;
     public GameObject m_controlsMenu;
 
-
     private Resolution[] m_localResolutions;
-
+    private int m_currentMenuID = 0;
+    private int m_maxID = 2;
     // Start is called before the first frame update
     void Start()
     {
@@ -52,6 +59,8 @@ public class SettingsMenu : MonoBehaviour
         m_resList.AddOptions(resOptions);
         m_resList.SetValueWithoutNotify(selected);
 
+        m_displayBtn.GetComponent<Image>().color = m_bumperColor;
+
         m_fullscreen.ClearOptions();
         List<string> options = new List<string>();
         options.Add("Exclusive Fullscreen");
@@ -66,11 +75,56 @@ public class SettingsMenu : MonoBehaviour
     void Update()
     {
         AudioUpdate();
+        foreach (var item in m_controllerDisplay)
+        {
+            item.SetActive(InputManager.instance.isInGamepadMode);
+        }
+
+        if(InputManager.instance.IsGamepadButtonDown(ButtonType.LB, 0) &&  m_currentMenuID > 0)
+        {
+            m_currentMenuID--;
+            UpdateMenu();
+        }
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, 0) && m_currentMenuID < m_maxID)
+        {
+            m_currentMenuID++;
+            UpdateMenu();
+        }
+
+        if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        {
+            if(m_displayMenu.activeInHierarchy)
+                EventSystem.current.SetSelectedGameObject(m_displayDefaultSelected);
+            else
+                EventSystem.current.SetSelectedGameObject(m_audioDefaultSelected);
+        }
+        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
+    private void UpdateMenu()
+    {
+        switch (m_currentMenuID)
+        {
+            default:
+            case 0:
+                ShowDisplay();
+                break;
+            case 1:
+                ShowAudio();
+                break;
+            case 2:
+                ShowControls();
+                break;
+        }
     }
 
     private void OnEnable()
     {
         ShowDisplay();
+        EventSystem.current.SetSelectedGameObject(null);
     }
     private void OnDestroy()
     {
@@ -96,6 +150,10 @@ public class SettingsMenu : MonoBehaviour
         m_audioBtn.interactable = true;
         m_controlsBtn.interactable = true;
 
+        m_displayBtn.GetComponent<Image>().color = Color.white;
+        m_audioBtn.GetComponent<Image>().color = Color.white;
+        m_controlsBtn.GetComponent<Image>().color = Color.white;
+
         m_displayMenu.SetActive(false);
         m_audioMenu.SetActive(false);
         m_controlsMenu.SetActive(false);
@@ -104,20 +162,41 @@ public class SettingsMenu : MonoBehaviour
     public void ShowDisplay()
     {
         Refresh();
+        m_displayBtn.GetComponent<Image>().color = m_bumperColor;
         m_displayBtn.interactable = false;
         m_displayMenu.SetActive(true);
+
+        if (InputManager.instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(m_displayDefaultSelected);
+        }
+        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void ShowAudio()
     {
         Refresh();
+        m_audioBtn.GetComponent<Image>().color = m_bumperColor;
         m_audioBtn.interactable = false;
         m_audioMenu.SetActive(true);
+
+        if (InputManager.instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(m_audioDefaultSelected);
+        }
+        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void ShowControls()
     {
         Refresh();
+        m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
         m_controlsBtn.interactable = false;
         m_controlsMenu.SetActive(true);
     }

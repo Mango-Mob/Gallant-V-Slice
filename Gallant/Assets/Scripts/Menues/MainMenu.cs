@@ -28,11 +28,11 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, 0) || InputManager.instance.IsKeyDown(KeyType.T))
-        {
-            GameManager.instance.enableTimer = true;
-            GetComponent<SoloAudioAgent>().Play();
-        }
+        //if(InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, 0) || InputManager.instance.IsKeyDown(KeyType.T))
+        //{
+        //    GameManager.instance.enableTimer = true;
+        //    GetComponent<SoloAudioAgent>().Play();
+        //}
 
         if(m_mainDisplay.activeInHierarchy)
         {

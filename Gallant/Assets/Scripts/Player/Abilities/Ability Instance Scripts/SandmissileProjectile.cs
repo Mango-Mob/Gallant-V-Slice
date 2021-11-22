@@ -112,8 +112,10 @@ public class SandmissileProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponentInParent<Actor>() != null)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable") && other.GetComponentInParent<Actor>() != null)
         {
+            Debug.Log("Hit " + other.name + " with sand for " + m_data.damage);
+
             other.GetComponentInParent<Actor>().DealDamage(m_data.damage);
             DetonateProjectile();
         }
