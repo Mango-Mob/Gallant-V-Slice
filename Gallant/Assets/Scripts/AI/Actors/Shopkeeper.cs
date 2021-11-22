@@ -42,7 +42,6 @@ public class Shopkeeper : Actor
         m_display.Show();
         
     }
-
     public void Reward()
     {
         m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));

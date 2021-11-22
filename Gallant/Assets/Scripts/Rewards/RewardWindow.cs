@@ -74,6 +74,7 @@ public class RewardWindow : MonoBehaviour
                 else
                 {
                     m_pressDurationImage.fillAmount = 0.0f;
+                    m_timer = 0.0f;
                 }
 
                 if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)

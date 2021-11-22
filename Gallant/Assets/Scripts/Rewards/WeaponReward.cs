@@ -146,7 +146,7 @@ public class WeaponReward : Reward
     public override void Select()
     {
         base.Select();
-        m_background.color = Color.white;
+        m_background.color = m_selectedColour;
     }
 
     public override void Unselect()
