@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 89141439023779117}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.552562, y: -0.6010667, z: 1.1172708}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.32481, y: 0.32481, z: 0.32481}
   m_Children:
   - {fileID: 5276606332012801603}
@@ -103,6 +103,9 @@ VisualEffect:
       - m_Value: 3
         m_Name: size
         m_Overridden: 1
+      - m_Value: 1
+        m_Name: Alpha
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -112,7 +115,10 @@ VisualEffect:
     m_Uint:
       m_Array: []
     m_Int:
-      m_Array: []
+      m_Array:
+      - m_Value: 200000
+        m_Name: Rate
+        m_Overridden: 1
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
@@ -447,7 +453,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.1
-      minScalar: 0.15
+      minScalar: 0.07
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -908,7 +914,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 2.1
+      value: 0.69
       mode: 0
       spread: 0
       speed:
