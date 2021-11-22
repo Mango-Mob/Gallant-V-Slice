@@ -40,7 +40,7 @@ public class DroppedWeapon : MonoBehaviour
             if (m_weaponData.abilityData != null)
             {
                 Color newColor = m_weaponData.abilityData.droppedEnergyColor;
-                newColor.a = 0.12f;
+                newColor.a = m_weaponBubble.material.color.a;
 
                 m_weaponBubble.material.color = newColor;
                 m_weaponBubble.material.SetColor("_EmissionColor", newColor);

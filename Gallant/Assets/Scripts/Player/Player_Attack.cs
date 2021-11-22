@@ -444,6 +444,7 @@ public class Player_Attack : MonoBehaviour
             if (m_leftHeldObjectInstance != null)
             {
                 Destroy(m_leftHeldObjectInstance);
+                m_leftHeldObjectInstance = null;
                 m_isBlocking = false;
             }
         }
@@ -452,6 +453,7 @@ public class Player_Attack : MonoBehaviour
             if (m_rightHeldObjectInstance != null)
             {
                 Destroy(m_rightHeldObjectInstance);
+                m_rightHeldObjectInstance = null;
                 m_isBlocking = false;
             }
         }
