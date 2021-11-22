@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class BarrierProjectile : MonoBehaviour
 {
@@ -12,38 +13,44 @@ public class BarrierProjectile : MonoBehaviour
 
     [SerializeField] private GameObject particles;
     [SerializeField] private GameObject model;
-    [SerializeField] private GameObject[] cubes;
+    [SerializeField] private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        model.transform.localScale = new Vector3(1, 1, 1) * (0.5f + (m_barrierValue / 40.0f));
+        transform.localScale = new Vector3(1, 1, 1) * (0.5f + (m_barrierValue / 40.0f));
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        cubes[0].transform.Rotate(new Vector3(m_rotateRate * Time.deltaTime, m_rotateRate * Time.deltaTime, m_rotateRate * Time.deltaTime));
-        cubes[1].transform.Rotate(new Vector3(-m_rotateRate * Time.deltaTime, -m_rotateRate * Time.deltaTime, -m_rotateRate * Time.deltaTime));
-
         transform.position += transform.forward * m_speed * Time.fixedDeltaTime;
         m_lifeTimer += Time.fixedDeltaTime;
         if (m_lifeTimer > m_data.lifetime)
         {
-            if (particles != null)
-            {
-                ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
-                foreach (var particles in particleSystems)
-                {
-                    particles.Stop();
-                }
-
-                particles.transform.SetParent(null);
-                particles.GetComponent<VFXTimerScript>().m_startedTimer = true;
-            }
-            Destroy(gameObject);
+            Detonate();
         }
     }
+
+    private void Detonate()
+    {
+
+        if (particles != null)
+        {
+            ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particles in particleSystems)
+            {
+                particles.Stop();
+            }
+
+            particles.transform.SetParent(null);
+            particles.GetComponent<VFXTimerScript>().m_startedTimer = true;
+        }
+
+        animator.SetTrigger("Explode");
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
@@ -52,7 +59,7 @@ public class BarrierProjectile : MonoBehaviour
             if (actor != null)
             {
                 actor.DealDamage(m_data.damage * m_barrierValue / 50.0f);
-                Destroy(gameObject);
+                Detonate();
             }
         }
     }
