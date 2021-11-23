@@ -3,25 +3,33 @@ using UnityEngine;
 
 namespace GEN.Nodes
 {
-    /****************
-     * ErrorNode : A component used to help debug the random generation.
+    /**
+     * A component used to help debug the random generation.
      * @author : Michael Jordan
-     * @file : ErrorNode.cs
-     * @year : 2021
      */
-
     public class ErrorNode : MonoBehaviour
     {
         [Header("User Settings")]
+
+        /** a public variable. 
+         * A display colour for the error.
+         */
         public Color m_displayColor = Color.red;
 
-        //List of all collisions that caused this error.
+        /** a public variable. 
+         * List of all collisions that caused this error.
+         */
         public List<Collider> m_hits { get; private set; }
 
-        //Display size to use for rendering.
+        /** a private variable. 
+         * Display size to use for rendering..
+         */
         private Vector3 m_bounds;
 
-        //Draws when gizmos is enabled
+        /**
+         * OnDrawGizmos function.
+         * Draws when gizmos is enabled.
+         */
         public void OnDrawGizmos()
         {
             //Set Colour
@@ -52,13 +60,12 @@ namespace GEN.Nodes
             Gizmos.matrix = Matrix4x4.identity;
         }
 
-        /*******************
-         * Instantiate : A static function that creates an error node in the game world.
-         * @author : Michael Jordan
-         * @param : (Vector3) Position of the error.
-         * @param : (Quaternion) Rotation of the error.
-         * @param : (Vector3) Size of the error.
-         * @param : (List<Collider>) A list of all the hit's that caused this error (default = null).
+        /**
+         * A static function that creates an error node in the game world.
+         * @param _position Position of the error.
+         * @param _rotation Rotation of the error.
+         * @param _boundSize Size of the error.
+         * @param _hits A list of all the hit's that caused this error (default = null).
          */
         public static void Instantiate(Vector3 _position, Quaternion _rotation, Vector3 _boundSize, List<Collider> _hits = null)
         {
@@ -78,9 +85,8 @@ namespace GEN.Nodes
             node.m_hits = _hits;
         }
 
-        /*******************
+        /**
          * CleanAll : Removes all instances of an error node from the game world.
-         * @author : Michael Jordan
          */
         public static void CleanAll()
         {

@@ -311,6 +311,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_currentTarget != null)
         {
+            if(m_currentTarget.m_myOutline != null)
+                m_currentTarget.m_myOutline.enabled = false;
+
             m_currentTarget = null;
             Debug.Log("Stopped targeting");
             return;
@@ -336,7 +339,11 @@ public class Player_Movement : MonoBehaviour
             Debug.Log("Could not find target");
         else
             Debug.Log("Found target " + closestTarget.name);
+
         m_currentTarget = closestTarget;
+
+        if (m_currentTarget.m_myOutline != null)
+            m_currentTarget.m_myOutline.enabled = true;
     }
 
     /*******************

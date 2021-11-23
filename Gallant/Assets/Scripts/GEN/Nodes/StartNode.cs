@@ -6,30 +6,36 @@ using UnityEngine;
 
 namespace GEN.Nodes
 {
-    /****************
-     * Section : A supplementary class that is exclusively used in StartNode.
+    /**
+     * A supplementary class which is exclusively used in StartNode.
      * @author : Michael Jordan
-     * @file : StartNode.cs
-     * @year : 2021
+     * Used to store instantiated prefabs, at runtime, where each section corresponds to a new
+     * prefab. This class ix exclusively used by StartNode.
      */
     public class Section
     {
-        //How deap into the tree this section is
+        /** a public variable. 
+         * How deap into the tree this section is 
+         */
         public int depth { get; private set; }
-        //The worldObject that is occupying this section
+
+        /** a public variable. 
+         * The worldObject that is occupying this section.
+         */
         public GameObject worldObject { get; private set; }
 
-        //List of all remaining exits associated with the worldObject
+        /** a public variable. 
+        * List of all remaining exits associated with the worldObject.
+        */
         public List<ExitNode> exitList { get; private set; }
 
-        /*******************
-         * Initialise : Initialises the section by setting all variables, instantiating the worldObject and destroying the enterance.
-         * @author : Michael Jordan
-         * @param : (GameObject) prefab used for reference.
-         * @param : (Transform) parent of the this section.
-         * @param : (int) depth of this section from the root section.
+        /**
+         * Initialises the section by setting all variables, instantiating the worldObject and destroying the enterance.
+         * @param _object prefab used for reference.
+         * @param _parent parent of the this section.
+         * @param _depth depth of this section from the root section.
          */
-        private void Initialise(GameObject _object, Transform parent, int _depth)
+        private void Initialise(GameObject _object, Transform _parent, int _depth)
         {
             //Set depth
             depth = _depth;
@@ -38,7 +44,7 @@ namespace GEN.Nodes
             _object.GetComponent<PrefabSection>().depth = depth;
             
             //Create the worldObject
-            worldObject = GameObject.Instantiate(_object, parent.transform);
+            worldObject = GameObject.Instantiate(_object, _parent.transform);
 
             //Get the prefabSection of the world object
             PrefabSection prefabSection = worldObject.GetComponent<PrefabSection>();
@@ -56,36 +62,46 @@ namespace GEN.Nodes
             UnityEngine.Object.DestroyImmediate(prefabSection.m_entry);
         }
 
-        /*******************
-         * SetActiveColliders : Enables/Disables all colliders attached to the worldObject's exits.
-         * @author : Michael Jordan
-         * @param : (bool) active status of all colliders.
+        /**
+         * Enables/Disables all colliders attached to the worldObject's exits.
+         * @param _status status of all colliders.
          */
-        public void SetActiveColliders(bool status)
+        public void SetActiveColliders(bool _status)
         {
             foreach (var item in exitList)
             {
                 foreach (var collider in item.GetComponentsInChildren<Collider>())
                 {
-                    collider.enabled = status;
+                    collider.enabled = _status;
                 }
             }
         }
 
-        //Constructor
-        public Section(Transform parent, GameObject _prefab)
+        /** 
+         * A constructor.
+         * Generates the section with no exit or other section required.
+         * @param _parent Transform of the parent object to attach to.
+         * @param _prefab Gameobject to create a copy of in the game world.
+         */
+        public Section(Transform _parent, GameObject _prefab)
         {
-            Initialise(_prefab, parent, 0);
+            Initialise(_prefab, _parent, 0);
             worldObject.transform.localRotation = Quaternion.Euler(0, 180, 0);
         }
 
-        //Constructor
-        public Section(Section _parent, int _selectedExit, GameObject _prefab)
+        /** 
+         * A constructor.
+         * Generates the section at the selected exit of the parent provided.
+         * @param _parent Section to generate from.
+         * @param _selected Selected index for which exit to generate from.
+         * @param _prefab Gameobject to create a copy of in the game world.
+         */
+        public Section(Section _parent, int _selected, GameObject _prefab)
         {
             //Find selected exit
-            ExitNode exit = _parent.exitList[_selectedExit];
+            ExitNode exit = _parent.exitList[_selected];
 
-            Initialise(_prefab, _parent.exitList[_selectedExit].transform, _parent.depth + 1);
+            Initialise(_prefab, _parent.exitList[_selected].transform, _parent.depth + 1);
 
             worldObject.transform.localRotation = Quaternion.Euler(0, 180, 0);
 
@@ -93,7 +109,13 @@ namespace GEN.Nodes
             UnityEngine.Object.DestroyImmediate(exit);
         }
 
-        //Constructor
+        /** 
+         * A constructor.
+         * Generates the section at the provided exit, of the parent provided.
+         * @param _parent Section to generate from.
+         * @param _exit Actual exit to generate from.
+         * @param _prefab Gameobject to create a copy of in the game world.
+         */
         public Section(Section _parent, ExitNode _exit, GameObject _prefab)
         {
             Initialise(_prefab, _exit.transform, _parent.depth + 1);
@@ -105,38 +127,66 @@ namespace GEN.Nodes
 
     }
 
-    /****************
-     * StartNode : A component used to generate a full level of sections and a single cap.
-     * @author : Michael Jordan
-     * @file : StartNode.cs
-     * @year : 2021
+    /**
+     * A component used to generate a full level of sections and a single cap.
+     * A branching tree design for creating the level, while also detecting and avoiding any ingame collisions.
      */
     public class StartNode : MonoBehaviour
     {
         [Header("User Settings")]
-        [Tooltip("Seed to generate the level with.")]
-        [SerializeField] public int m_seed = 0;
 
-        [Range(1, 20)]
-        [Tooltip("How many sections to generate from the start node before adding the cap.")]
-        [SerializeField] public int m_distance = 1;
+        /** a public variable.
+         * Seed to generate the level with.
+         */
+        [SerializeField][Tooltip("Seed to generate the level with.")] 
+        public int m_seed = 0;
 
-        [Tooltip("Layers to check for, to disable all generation into a colliders of said layer.")]
-        [SerializeField] public LayerMask m_layersToCheck = ~0;
-    
+        /** a public variable. 
+         * How many sections to generate from the start node before adding the cap.
+         */
+        [SerializeField][Tooltip("How many sections to generate from the start node before adding the cap.")]
+        [Range(1, 20)] public int m_distance = 1;
+
+        /** a public variable. 
+         * Layers to check for, to disable all generation into a colliders of said layer.
+         */
+        [SerializeField][Tooltip("Layers to check for, to disable all generation into a colliders of said layer.")]
+        public LayerMask m_layersToCheck = ~0;
+
+        /** a public variable. 
+         * Allow the node to generatte the whole level when the scene loads.
+         */
         [Tooltip("Allow the node to generatte the whole level when the scene loads.")]
         public bool m_GenerateLevelOnAwake = false;
+
+        /** a public variable. 
+         * Allow the node to generatte a random seed when the scene loads.
+         */
         [Tooltip("Allow the node to generatte a random seed when the scene loads.")]
         public bool m_GenerateSeedOnAwake = true;
 
-        [HideInInspector]
-        [SerializeField] private GameObject[] m_levelPrefabs;
-        [HideInInspector]
-        [SerializeField] private GameObject m_levelEnd;
-        [HideInInspector]
-        [SerializeField] private List<Section> m_levelSections = new List<Section>();
+        /** a private variable. 
+         * An array of prefabs to use when generating the level.
+         */
+        [SerializeField][HideInInspector]
+         private GameObject[] m_levelPrefabs;
 
-        //Called when the component is loaded into the scene (Immediately).
+        /** a private variable. 
+         * A prefab to use when concluding a level.
+         */
+        [HideInInspector][SerializeField] 
+        private GameObject m_levelEnd;
+
+        /** a private variable. 
+         * A list of dynamically created sections.
+         */
+        [HideInInspector][SerializeField] 
+        private List<Section> m_levelSections = new List<Section>();
+
+        /**
+         * Awake function.
+         * Called when the component is loaded into the scene (Immediately).
+         */
         private void Awake()
         {
             if(m_GenerateSeedOnAwake)
@@ -149,12 +199,15 @@ namespace GEN.Nodes
             }
         }
 
-        /*******************
-         * Generate : Generate the level using the prefabs provided.
-         * @author : Michael Jordan
-         * @param : (int) seed to generate the level with (default = random).
+        /**
+         * Generate the level using the prefabs provided.
+         * Starting from a randomly selected prefab, each designated exit is checked for another prefab.
+         * Once a depth as been reached, of which is the distance from the start node, the node will attempt to place the cap section.
+         * In the event of a cap not being able to placed, the function will keep going until another section has reached the depth 
+         * requirement or until the section limit is met. The section limit is dynamically set to m_distance^2.
+         * @param _seed seed to generate the level with (default = random).
          */
-        public void Generate(int seed = 0)
+        public void Generate(int _seed = 0)
         {
             //Check for errors
             if(!IsArrayFull(m_levelPrefabs))
@@ -169,8 +222,8 @@ namespace GEN.Nodes
     
             //Set seed and start timer
             DateTime start = DateTime.Now;
-            m_seed = seed;
-            if (seed == 0)
+            m_seed = _seed;
+            if (_seed == 0)
             {
                 m_seed = (int)System.DateTime.Now.Ticks;
             }
@@ -267,10 +320,10 @@ namespace GEN.Nodes
             Debug.Log($"Generate level in: {(DateTime.Now - start).TotalMilliseconds} ms");
         }
 
-        /*******************
-         * GenerateBossRoom : Generate the cap section.
-         * @author : Michael Jordan
-         * @return : (bool) status of the cap being generated.
+        /**
+         * Generate the cap section.
+         * Starts to check if the cap can be placed from each exit of the last section, then randomly selects a valid one.
+         * @return status of the cap being generated.
          */
         private bool GenerateCapRoom()
         {
@@ -314,11 +367,10 @@ namespace GEN.Nodes
             return false;
         }
 
-        /*******************
-         * Copy : Copy this startNode's section/cap to the variables provided.
-         * @author : Michael Jordan
-         * @param : (out List<GameObject>) list of sections prefabs to occupy.
-         * @param : (out GameObject) cap prefab to occupy.
+        /**
+         * Copy this startNode's section/cap to the variables provided.
+         * @param _sectionPrefabs list of sections prefabs to occupy  (output).
+         * @param _endCapPrefab cap prefab to occupy (output).
          */
         public void Copy(out List<GameObject> _sectionPrefabs, out GameObject _endCapPrefab)
         {
@@ -326,34 +378,32 @@ namespace GEN.Nodes
             _endCapPrefab = m_levelEnd;
         }
 
-        /*******************
-         * Paste : Paste the section/cap to this startNode.
-         * @author : Michael Jordan
-         * @param : (GameObject[]) array of sections prefabs.
-         * @param : (GameObject) cap prefab.
-         * @return : (bool) status of the paste.
+        /**
+         * Paste the section/cap to this startNode.
+         * @param _prefabs array of sections prefabs.
+         * @param _endCap cap prefab.
+         * @return status of the paste.
          */
-        public bool Paste(GameObject[] prefabs, GameObject endCap)
+        public bool Paste(GameObject[] _prefabs, GameObject _endCap)
         {
-            if (!IsArrayFull(prefabs))
+            if (!IsArrayFull(_prefabs))
             {
                 Debug.LogError("<GEN> Level start was created without a complete list of prefabs.");
                 return false;
             }
 
-            m_levelPrefabs = prefabs;
-            m_levelEnd = endCap;
+            m_levelPrefabs = _prefabs;
+            m_levelEnd = _endCap;
             return true;
         }
 
-        /*******************
-         * GetListOfValidPrefabs : Compares all prefabs to the world, to see if any are valid.
-         * @author : Michael Jordan
-         * @param : (Transform) parent transform to test each prefab from.
-         * @param : (Quaternion) rotation of the prefab to use.
-         * @return : (List<GameObject>) list of valid prefabs.
+        /**
+         * Compares all prefabs to the world, to see if any are valid.
+         * @param _parent parent transform to test each prefab from.
+         * @param _prefabLocalRotation rotation of the prefab to use.
+         * @return list of valid prefabs.
          */
-        private List<GameObject> GetListOfValidPrefabs(Transform parent, Quaternion prefabLocalRotation)
+        private List<GameObject> GetListOfValidPrefabs(Transform _parent, Quaternion _prefabLocalRotation)
         {
             //Select initial prefab
             List<GameObject> prefabList = new List<GameObject>(m_levelPrefabs);
@@ -368,7 +418,7 @@ namespace GEN.Nodes
                     if (!collider.enabled)
                         continue;
     
-                    List<Collider> hitColliders = collider.IsOverlapping(parent, prefabLocalRotation, m_layersToCheck);
+                    List<Collider> hitColliders = collider.IsOverlapping(_parent, _prefabLocalRotation, m_layersToCheck);
                     if (hitColliders.Count > 0)
                     {
                         prefabList.RemoveAt(i);
@@ -379,9 +429,8 @@ namespace GEN.Nodes
             return prefabList;
         }
 
-        /*******************
-         * Clear : Clear all children of this node.
-         * @author : Michael Jordan
+        /**
+         * Clear all children of this node.
          */
         public void Clear()
         {
@@ -389,9 +438,8 @@ namespace GEN.Nodes
             ErrorNode.CleanAll();
         }
 
-        /*******************
-         * CalculateAveragePosition : Calculate the average position of all sections.
-         * @author : Michael Jordan
+        /**
+         * Calculate the average position of all sections.
          * @return : (Vector3) average position of all sections.
          */
         public Vector3 CalculateAveragePosition()
@@ -404,9 +452,8 @@ namespace GEN.Nodes
             return (m_levelSections.Count > 0) ? pos / m_levelSections.Count : transform.position;
         }
 
-        /*******************
-         * ClearSections : Clear all sections saved inside this node.
-         * @author : Michael Jordan
+        /**
+         * Clear all sections saved inside this node.
          */
         private void ClearSections()
         {
@@ -424,23 +471,22 @@ namespace GEN.Nodes
             }
         }
 
-        /*******************
-         * IsArrayFull : Checks an array of prefabs to see if any are null.
-         * @author : Michael Jordan
-         * @param : (GameObject[]) array to check.
-         * @return : (bool) status of the array.
+        /**
+         * Checks an array of prefabs to see if any are null.
+         * @param _prefabs array of prefabs to check.
+         * @return status of the array.
          */
-        private bool IsArrayFull(GameObject[] prefabs)
+        private bool IsArrayFull(GameObject[] _prefabs)
         {
             //Edge case
-            if (prefabs == null)
+            if (_prefabs == null)
                 return false;
 
             //Edge case
-            if (prefabs.Length == 0)
+            if (_prefabs.Length == 0)
                 return false;
     
-            foreach (var item in prefabs)
+            foreach (var item in _prefabs)
             {
                 if (item == null)
                 {
@@ -450,7 +496,10 @@ namespace GEN.Nodes
             return true;
         }
 
-        //Draws when gizmos is enabled
+        /**
+         * OnDrawGizmos function.
+         * Draws when gizmos is enabled.
+         */
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;

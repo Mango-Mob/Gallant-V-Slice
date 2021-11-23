@@ -5,38 +5,52 @@ using UnityEngine;
 
 namespace GEN.Nodes
 {
-    /****************
-     * ColliderNode : A component used to idenify the gameObject as the exit to the section/cap.
+    /**
+     * A component used to idenify the gameObject as the exit to the section/cap.
      * @author : Michael Jordan
-     * @file : ColliderNode.cs
-     * @year : 2021
      */
     public class ColliderNode : MonoBehaviour
     {
         [Header("User Settings")]
-        [SerializeField] public Vector3 m_origin;
-        [SerializeField] public Vector3 m_size = new Vector3(1, 1, 1);
-        [SerializeField] public Vector3 m_eulerRotation;
 
-        //Set up a dual link between this node and the owner
+        /** a public variable. 
+         * Origin of the collider.
+         */
+        [SerializeField]
+        public Vector3 m_origin;
+
+        /** a public variable. 
+         * Size of the collider.
+         */
+        [SerializeField] 
+        public Vector3 m_size = new Vector3(1, 1, 1);
+
+        /** a public variable. 
+         * Euler rotation of the collider.
+         */
+        [SerializeField] 
+        public Vector3 m_eulerRotation;
+
+        /** a public variable. 
+         * Prefab section that owns this collider.
+         */
         public PrefabSection m_owner { protected get; set; } = null;
 
-        /*******************
-         * IsOverlapping : Get all the colliders that overlap with this ColliderNode.
-         * @author : Michael Jordan
-         * @param : (Transform) Parent of this node.
-         * @param : (Quaternion) Local rotation to preview the overlap with.
-         * @param : (LayerMask) Layer mask to filter collision check.
+        /**
+         * Get all the colliders that overlap with this ColliderNode.
+         * @param : _parent Parent of this node.
+         * @param : _local Local rotation to preview the overlap with.
+         * @param : _mask Layer mask to filter collision check.
          */
-        public List<Collider> IsOverlapping(Transform parent, Quaternion local, LayerMask layer)
+        public List<Collider> IsOverlapping(Transform _parent, Quaternion _local, LayerMask _mask)
         {
             Vector3 center = Vector3.zero;
 
             //If the owner exists, move the center slightly based on the entry node offset.
             if (m_owner != null)
             {
-                center = parent.TransformPoint(local * m_origin + transform.position);
-                center -= parent.rotation * local * (m_owner.transform.position - m_owner.m_entry.transform.position);
+                center = _parent.TransformPoint(_local * m_origin + transform.position);
+                center -= _parent.rotation * _local * (m_owner.transform.position - m_owner.m_entry.transform.position);
             }
 
             //Calculate the extents
@@ -48,7 +62,7 @@ namespace GEN.Nodes
             halfExtents.z = Mathf.Abs(halfExtents.z);
 
             //Calculate all the physical overlaps
-            List<Collider> others = new List<Collider>(Physics.OverlapBox(center, halfExtents, parent.rotation * local, layer));
+            List<Collider> others = new List<Collider>(Physics.OverlapBox(center, halfExtents, _parent.rotation * _local, _mask));
 
             //Filter out colliders
             for (int i = others.Count - 1; i >= 0; i--)
@@ -64,13 +78,16 @@ namespace GEN.Nodes
             //If errors are enabled in the main window AND there was an error
             if (LevelGenMainWindow.showErrors && others.Count >= 1)
             {
-                ErrorNode.Instantiate(center, parent.rotation * local, halfExtents * 2, others);
+                ErrorNode.Instantiate(center, _parent.rotation * _local, halfExtents * 2, others);
             }
 
             return others;
         }
 
-        //Draws when gizmos is enabled
+        /**
+         * OnDrawGizmos function.
+         * Draws when gizmos is enabled.
+         */
         private void OnDrawGizmos()
         {
             //Don't show if this isn't enabled

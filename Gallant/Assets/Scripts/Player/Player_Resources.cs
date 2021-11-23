@@ -24,6 +24,7 @@ public class Player_Resources : MonoBehaviour
     public UI_OrbResource adrenalineOrbs { get; private set; }
 
     public float m_adrenalineHeal = 40.0f;
+    [SerializeField] private GameObject healVFXPrefab;
     public bool m_dead { get; private set; } = false;
 
     [Header("Barrier")]
@@ -59,8 +60,14 @@ public class Player_Resources : MonoBehaviour
         }
 
         float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+
         if (healthBar != null)
-            healthBar.SetValue(healthPercentage);
+        {
+            float healthDiff = healthPercentage - healthBar.GetValue();
+            healthBar.SetValue(((Mathf.Abs(healthDiff) > 0.05f) // Check if health lerp difference is beyond range.
+                ? (healthBar.GetValue() + Mathf.Sign(healthDiff) * Time.deltaTime) :  // If beyond range, lerp towards target.
+                healthPercentage)); // If within range, set value.
+        }
 
         if (portrait != null)
             portrait.UpdatePortrait(healthPercentage);
@@ -86,7 +93,7 @@ public class Player_Resources : MonoBehaviour
             m_dead = true;
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
+            LevelLoader.instance.LoadNewLevel("EndScreen", LevelLoader.Transition.YOUDIED);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
@@ -141,6 +148,10 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             ChangeHealth(m_adrenalineHeal);
             ChangeAdrenaline(-1.0f);
+
+            // Create VFX
+            if (healVFXPrefab)
+                Instantiate(healVFXPrefab, transform);
         }
     }
 }

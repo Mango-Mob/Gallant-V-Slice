@@ -7,75 +7,113 @@ using GEN.Users;
 
 namespace GEN.Windows
 {
+    /**
+     * An editor window to stream line the creation of nodes and a generating level.
+     * @author : Michael Jordan
+     */
     public class LevelGenMainWindow : EditorWindow
     {
+        /** a public variable. 
+         * Enables the display of errors.
+         */
         public static bool showErrors = true;
-        private GameObject m_selected;
 
-        private Texture m_levelStartIcon;
-        private GUIContent m_levelStartButton;
-
-        private Texture m_levelEntryIcon;
-        private GUIContent m_levelEntryButton;
-
-        private Texture m_levelExitIcon;
-        private GUIContent m_levelExitButton;
-
-        private Texture m_levelColliderIcon;
-        private GUIContent m_levelColliderButton;
-
-        private GUIStyle m_style;
-
-        private Vector2 scrollPos;
-
-        private List<GameObject> m_sectionPrefabs = new List<GameObject>();
-        private GameObject m_endCapPrefab;
-
-        private GUIStyle m_headerStyle;
-        private GUIStyle m_normalStyle;
-        private GUIStyle m_boldLinkStyle;
-        private GUIStyle m_confirmButton;
-        private GUIStyle m_declineButton;
-        private GUIStyle m_confirmText;
-        private GUIStyle m_declineText;
-
-        private bool m_showConfirmation = false;
-
+        /** An enum. 
+         * To determine which window is currently being displayed.
+         */
         private enum Window
         {
-            MAIN, START, PREFAB,
+            MAIN,    /**< enum value Main. */
+            START,   /**< enum value Start. */
+            PREFAB   /**< enum value Prefab. */
         }
 
+        /** An enum. 
+         * To determine which prefab window is currently being displayed.
+         */
         private enum PrefabWindow
         {
-            NULL, SECTION, CAP
+            NULL,    /**< enum value NULL. */
+            SECTION, /**< enum value Section. */
+            CAP      /**< enum value Cap. */
         }
 
+        /** a private variable. 
+         * Currently displayed window.
+         */
         private Window m_currentWindow = Window.MAIN;
+
+        /** a private variable. 
+         * Currently displayed prefab window.
+         */
         private PrefabWindow m_currentPrefabWindow = PrefabWindow.NULL;
 
+        /** a private variable. 
+         * A reference to the currently selected gameObject.
+         */
+        private GameObject m_selected;
+
+        /** a private variable. 
+         * The current Scroll position.
+         */
+        private Vector2 scrollPos;
+
+        /** a private variable. 
+         * Currently saved section prefabs to pass on.
+         */
+        private List<GameObject> m_sectionPrefabs = new List<GameObject>();
+
+        /** a private variable. 
+         * Currently saved cap prefab to pass on.
+         */
+        private GameObject m_endCapPrefab;
+
+        /** a private variable. 
+         * Label Header style.
+         */
+        private GUIStyle m_headerStyle;
+
+        /** a private variable. 
+         * Normal label style.
+         */
+        private GUIStyle m_normalStyle;
+
+        /** a private variable. 
+         * Bold label style.
+         */
+        private GUIStyle m_boldLinkStyle;
+
+        /** a private variable. 
+         * Confirm label.
+         */
+        private GUIStyle m_confirmText;
+
+        /** a private variable. 
+         * Decline label.
+         */
+        private GUIStyle m_declineText;
+
+        /** a private variable. 
+         * Display/Ask the player if they are confiming.
+         */
+        private bool m_showConfirmation = false;
+
+        /**
+         * Initialises the window.
+         * Initialises the window and creates it for the user.
+         */
         [MenuItem("Tools/Level Generator")]
         public static void Init()
         {
             EditorWindow.GetWindow<LevelGenMainWindow>("Level Generator");
         }
 
+        /**
+         * Awake function.
+         * Called when the window is loaded.
+         */
         private void Awake()
         {
-            m_style = new GUIStyle();
-            m_style.richText = true;
-
-            m_levelStartIcon = Resources.Load("LevelStartIcon") as Texture;
-            m_levelStartButton = new GUIContent(m_levelStartIcon);
-
-            m_levelEntryIcon = Resources.Load("EnteranceIcon") as Texture;
-            m_levelEntryButton = new GUIContent(m_levelEntryIcon);
-
-            m_levelExitIcon = Resources.Load("ExitIcon") as Texture;
-            m_levelExitButton = new GUIContent(m_levelExitIcon);
-
-            m_levelColliderIcon = Resources.Load("ColliderIcon") as Texture;
-            m_levelColliderButton = new GUIContent(m_levelColliderIcon);
 
             m_headerStyle = new GUIStyle(EditorStyles.label);
             m_headerStyle.fontSize = 25;
@@ -99,23 +137,12 @@ namespace GEN.Windows
             m_boldLinkStyle = new GUIStyle(EditorStyles.linkLabel);
             m_boldLinkStyle.fontStyle = FontStyle.Bold;
             m_boldLinkStyle.alignment = EditorStyles.boldLabel.alignment;
-
-            m_confirmButton = new GUIStyle(EditorStyles.miniButton);
-            m_confirmButton.normal.textColor = Color.green;
-            m_declineButton = new GUIStyle(EditorStyles.miniButton);
-            m_declineButton.normal.textColor = Color.red;
-
-        }
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-        private void OnDestroy()
-        {
-        
         }
 
+        /**
+         * OnInspectorUpdate function.
+         * Called each update frame of the editor.
+         */
         private void OnInspectorUpdate()
         {
             GameObject select = Selection.activeObject as GameObject;
@@ -136,6 +163,10 @@ namespace GEN.Windows
             }
         }
 
+        /**
+         * OnGUI function.
+         * Called each repaint call of the editor.
+         */
         private void OnGUI()
         {
             switch (m_currentWindow)
@@ -153,6 +184,9 @@ namespace GEN.Windows
             }
         }
 
+        /**
+         * Render's the main window onto the screen.
+         */
         private void MainWindow()
         {
             GUILayout.BeginHorizontal();
@@ -189,6 +223,9 @@ namespace GEN.Windows
             }
         }
 
+        /**
+        * Render's the Level generator window onto the screen.
+        */
         private void LevelStartMenu()
         {
             HyperLinkHeader();
@@ -224,6 +261,7 @@ namespace GEN.Windows
                 m_sectionPrefabs.Clear();
                 m_endCapPrefab = null;
             }
+
             EditorGUILayout.BeginHorizontal();
             GUI.enabled = m_selected != null && m_selected.GetComponent<StartNode>() != null;
             string name = (m_selected != null) ? "\n"+m_selected.name : "";
@@ -231,12 +269,14 @@ namespace GEN.Windows
             {
                 m_selected.GetComponent<StartNode>().Copy(out m_sectionPrefabs, out m_endCapPrefab);
             }
+
             GUI.enabled = m_selected != null && CanGenerate() && m_selected.GetComponent<StartNode>() != null;
             if (GUILayout.Button($"Paste{name}", GUILayout.Height(40)))
             {
                 m_selected.GetComponent<StartNode>().Paste(m_sectionPrefabs.ToArray(), m_endCapPrefab);
             }
             EditorGUILayout.EndHorizontal();
+
             GUI.enabled = CanGenerate();
             if (GUILayout.Button("Generate Start Object"))
             {
@@ -266,7 +306,10 @@ namespace GEN.Windows
                 m_currentWindow = Window.MAIN;
             }
         }
-    
+
+        /**
+        * Render's the prefab window onto the screen.
+        */
         private void PrefabMenu()
         {
             switch (m_currentPrefabWindow)
@@ -299,7 +342,8 @@ namespace GEN.Windows
                             EditorGUILayout.EndHorizontal();
                             EditorGUILayout.BeginHorizontal();
 
-                            if (GUILayout.Button("Yes", m_confirmButton))
+                            GUI.backgroundColor = Color.green;
+                            if (GUILayout.Button("Yes"))
                             {
                                 PrefabSection start = m_selected.GetComponent<PrefabSection>();
                                 EntryNode entry = m_selected.GetComponentInChildren<EntryNode>();
@@ -336,10 +380,12 @@ namespace GEN.Windows
                                     }
                                 }
                             }
-                            if (GUILayout.Button("No", m_declineButton))
+                            GUI.backgroundColor = Color.red;
+                            if (GUILayout.Button("No"))
                             {
                                 m_showConfirmation = false;
                             }
+                            GUI.backgroundColor = Color.white;
                             EditorGUILayout.EndHorizontal();
                         }
                         GUI.enabled = !m_showConfirmation && m_selected != null;
@@ -367,6 +413,9 @@ namespace GEN.Windows
             }
         }
 
+        /**
+        * Render's the section window onto the screen.
+        */
         private void SectionMenu()
         {
             HyperLinkHeader();
@@ -376,26 +425,41 @@ namespace GEN.Windows
             if (m_selected != null)
             {
                 bool canSelect = false;
-            
+
+                #region prefabSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.Toggle("Contains a Prefab Section", m_selected.GetComponent<PrefabSection>(), GUILayout.Width(200));
                 isValid = canSelect;
+
+                //Func
                 GUI.enabled = !canSelect;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject = m_selected.AddComponent<PrefabSection>().gameObject;
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject = m_selected;
                 }
-                GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region entrySection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.Toggle("Contains a Entry Node", m_selected.GetComponentInChildren<EntryNode>(), GUILayout.Width(200));
                 isValid = canSelect && isValid;
+
+                //Func
                 GUI.enabled = !canSelect;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -406,18 +470,28 @@ namespace GEN.Windows
                     Selection.activeGameObject.transform.localRotation = Quaternion.identity;
                     Selection.activeGameObject.AddComponent<EntryNode>();
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeObject = m_selected.GetComponentInChildren<EntryNode>().gameObject;
                 }
-                EditorGUILayout.EndHorizontal();
-                GUI.enabled = true;
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region exitSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
                 ExitNode[] exitList = m_selected.GetComponentsInChildren<ExitNode>();
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.IntField("Contains Exit Nodes", exitList.Length, GUILayout.Width(200)) > 0;
                 isValid = canSelect && isValid;
+
+                //Func
+                GUI.enabled = true;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Transform parent = Selection.activeGameObject.transform;
@@ -428,6 +502,8 @@ namespace GEN.Windows
                     Selection.activeGameObject.transform.localRotation = Quaternion.Euler(0, 180, 0);
                     Selection.activeGameObject.AddComponent<ExitNode>();
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -438,17 +514,27 @@ namespace GEN.Windows
                     }
                     Selection.objects = selectList;
                 }
-                GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region colliderSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
                 ColliderNode[] colliderList = m_selected.GetComponentsInChildren<ColliderNode>();
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.IntField("Contains Level Colliders", colliderList.Length, GUILayout.Width(200)) > 0;
                 isValid = canSelect && isValid;
+
+                //Func
+                GUI.enabled = true;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject.AddComponent<ColliderNode>();
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -459,14 +545,20 @@ namespace GEN.Windows
                     }
                     Selection.objects = selectList;
                 }
-                GUI.enabled = true;
+                
                 EditorGUILayout.EndHorizontal();
+                #endregion
+
+                GUI.enabled = true;
             }
             else
             {
                 EditorGUILayout.LabelField("No game object selected.");
             }
             GUILayout.FlexibleSpace();
+            Rect rect = EditorGUILayout.GetControlRect(false, 1);
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             if (isValid)
@@ -479,12 +571,18 @@ namespace GEN.Windows
             }
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
+            rect = EditorGUILayout.GetControlRect(false, 1);
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+
             if (GUILayout.Button("Back", GUILayout.Height(50)))
             {
                 m_currentPrefabWindow = PrefabWindow.NULL;
             }
         }
 
+        /**
+        * Render's the cap window onto the screen.
+        */
         private void CapWindow()
         {
             HyperLinkHeader();
@@ -494,25 +592,41 @@ namespace GEN.Windows
             if (m_selected != null)
             {
                 bool canSelect = false;
+
+                #region prefabSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.Toggle("Contains a Prefab Section", m_selected.GetComponent<PrefabSection>(), GUILayout.Width(200));
                 isValid = canSelect;
+
+                //Func
                 GUI.enabled = !canSelect;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject = m_selected.AddComponent<PrefabSection>().gameObject;
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject = m_selected;
                 }
                 GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region entrySection
                 EditorGUILayout.BeginHorizontal();
+                //Variable
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.Toggle("Contains a Entry Node", m_selected.GetComponentInChildren<EntryNode>(), GUILayout.Width(200));
                 isValid = isValid && canSelect;
+
+                //Func
                 GUI.enabled = !canSelect;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -523,18 +637,27 @@ namespace GEN.Windows
                     Selection.activeGameObject.transform.localRotation = Quaternion.identity;
                     Selection.activeGameObject.AddComponent<EntryNode>();
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeObject = m_selected.GetComponentInChildren<EntryNode>().gameObject;
                 }
-                EditorGUILayout.EndHorizontal();
-                GUI.enabled = true;
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region exitSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
                 ExitNode[] exitList = m_selected.GetComponentsInChildren<ExitNode>();
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.Toggle("Contains NO Exit Nodes", exitList.Length == 0, GUILayout.Width(200));
                 isValid = isValid && canSelect;
+
+                //Func
                 GUI.enabled = !canSelect;
                 if (GUILayout.Button("Clean", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -546,6 +669,8 @@ namespace GEN.Windows
                         DestroyImmediate(exitList[i]);
                     }
                 }
+                //Func
+                GUI.enabled = !canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Object[] selectList = new Object[exitList.Length];
@@ -555,17 +680,27 @@ namespace GEN.Windows
                     }
                     Selection.objects = selectList;
                 }
-                GUI.enabled = true;
-                EditorGUILayout.EndHorizontal();
 
+                EditorGUILayout.EndHorizontal();
+                #endregion
+
+                #region colliderSection
                 EditorGUILayout.BeginHorizontal();
+
+                //Variable
                 ColliderNode[] colliderList = m_selected.GetComponentsInChildren<ColliderNode>();
+                GUI.enabled = false;
                 canSelect = EditorGUILayout.IntField("Contains Level Colliders", colliderList.Length, GUILayout.Width(200)) > 0;
                 isValid = isValid && canSelect;
+
+                //Func
+                GUI.enabled = true;
                 if (GUILayout.Button("Create", GUILayout.Width(position.width * 0.2f - 2)))
                 {
                     Selection.activeGameObject.AddComponent<ColliderNode>();
                 }
+
+                //Func
                 GUI.enabled = canSelect;
                 if (GUILayout.Button("Select", GUILayout.Width(position.width * 0.2f - 2)))
                 {
@@ -576,14 +711,20 @@ namespace GEN.Windows
                     }
                     Selection.objects = selectList;
                 }
-                GUI.enabled = true;
                 EditorGUILayout.EndHorizontal();
+                #endregion
+
+                GUI.enabled = true;
             }
             else
             {
                 EditorGUILayout.LabelField("No game object selected.");
             }
+
+            //End section
             GUILayout.FlexibleSpace();
+            Rect rect = EditorGUILayout.GetControlRect(false, 1);
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             if (isValid)
@@ -596,12 +737,17 @@ namespace GEN.Windows
             }
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
+            rect = EditorGUILayout.GetControlRect(false, 1);
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
             if (GUILayout.Button("Back", GUILayout.Height(50)))
             {
                 m_currentPrefabWindow = PrefabWindow.NULL;
             }
         }
 
+        /**
+        * Render's the hyperlink header to the window.
+        */
         private void HyperLinkHeader()
         {
             GUILayout.BeginHorizontal();
@@ -613,7 +759,7 @@ namespace GEN.Windows
                     m_currentWindow = Window.MAIN;
                     m_currentPrefabWindow = PrefabWindow.NULL;
                 }
-                GUILayout.Label("> ", m_normalStyle, GUILayout.Width(m_normalStyle.CalcSize(new GUIContent("> ")).x));
+                GUILayout.Label("| ", m_normalStyle, GUILayout.Width(m_normalStyle.CalcSize(new GUIContent("> ")).x));
             }
 
             switch (m_currentWindow)
@@ -633,7 +779,7 @@ namespace GEN.Windows
                             {
                                 m_currentPrefabWindow = PrefabWindow.NULL;
                             }
-                            GUILayout.Label("> ", m_normalStyle, GUILayout.Width(m_normalStyle.CalcSize(new GUIContent("> ")).x));
+                            GUILayout.Label("| ", m_normalStyle, GUILayout.Width(m_normalStyle.CalcSize(new GUIContent("> ")).x));
                         }
 
                         switch (m_currentPrefabWindow)
@@ -658,6 +804,9 @@ namespace GEN.Windows
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
         }
 
+        /**
+        * Calculates which gameObject is the root of the selected gameObject.
+        */
         private void LabelSelected()
         {
             EditorGUILayout.BeginHorizontal();
@@ -671,44 +820,56 @@ namespace GEN.Windows
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
         }
 
-
-        private GameObject ValidatePrefab(GameObject prefabIn, int EnteranceStatus, int ExitStatus)
+        /**
+        * Validates a prefab if it is elegable for the generator
+        * @param _prefabIn Prefab to validate.
+        * @param _entryAmount Amount of required entry nodes.
+        * @param _ExitAmount Amount of required exit nodes.
+        * @return A valid prefab or NULL.
+        */
+        private GameObject ValidatePrefab(GameObject _prefabIn, int _entryAmount, int _exitAmount)
         {
-            if (prefabIn == null)
+            if (_prefabIn == null)
                 return null;
 
-            EntryNode entry = prefabIn.GetComponentInChildren<EntryNode>();
-            ExitNode exit = prefabIn.GetComponentInChildren<ExitNode>();
+            EntryNode[] entry = _prefabIn.GetComponentsInChildren<EntryNode>();
+            ExitNode[] exit = _prefabIn.GetComponentsInChildren<ExitNode>();
 
-            if (entry == null && EnteranceStatus >= 1)
+            if(!((entry.Length == 0 && _entryAmount == 0) || (entry.Length > 0 && _entryAmount > 0)))
             {
-                string error = $"<GEN 001> : Prefab ({prefabIn.name}) doesn't contain an entry node.";
-                if (EnteranceStatus > 1)
+                if (_entryAmount > 1)
                 {
-                    Debug.LogError(error);
+                    Debug.LogError($"<GEN 001> : Prefab ({_prefabIn.name}) doesn't contain any entry nodes.");
                     return null;
                 }
                 else
                 {
-                    Debug.LogWarning(error);
+                    Debug.LogError($"<GEN 002> : Prefab ({_prefabIn.name}) contains an entry nodes, when it shouldn't.");
+                    return null;
                 }
             }
-            if (exit == null && ExitStatus >= 1)
+
+            if (!((exit.Length == 0 && _exitAmount == 0) || (exit.Length > 0 && _exitAmount > 0)))
             {
-                string error = $"<GEN 002> : Prefab ({prefabIn.name}) doesn't contain an exit node.";
-                if (ExitStatus > 1)
+                if (_entryAmount > 1)
                 {
-                    Debug.LogError(error);
+                    Debug.LogError($"<GEN 003> : Prefab ({_prefabIn.name}) doesn't exit any entry nodes.");
                     return null;
                 }
                 else
                 {
-                    Debug.LogWarning(error);
+                    Debug.LogError($"<GEN 004> : Prefab ({_prefabIn.name}) contains an exit nodes, when it shouldn't.");
+                    return null;
                 }
             }
-            return prefabIn;
+
+            return _prefabIn;
         }
 
+        /**
+         * Assesses if the start node can be generated.
+         * @return status of the creation.
+         */
         private bool CanGenerate()
         {
             foreach (var item in m_sectionPrefabs)

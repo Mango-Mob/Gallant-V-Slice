@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 575569691257356154}
   - component: {fileID: 4696656112809694004}
   - component: {fileID: 2702553790450865791}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Plus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4840,7 +4840,8 @@ GameObject:
   - component: {fileID: 5062412952145951575}
   - component: {fileID: 8198058189712084439}
   - component: {fileID: 5306999513752490448}
-  m_Layer: 0
+  - component: {fileID: 6787014813934510700}
+  m_Layer: 18
   m_Name: Heal_Burst_Green_Plus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4855,7 +4856,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7394962858043213167}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -45.5, y: 0, z: -31.858}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.15309, y: 0.15309, z: 0.15309}
   m_Children:
   - {fileID: 2597272477098075406}
@@ -4877,7 +4878,7 @@ ParticleSystem:
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
-  looping: 1
+  looping: 0
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -9666,6 +9667,20 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &6787014813934510700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7394962858043213167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 017cc8c452271914bb83239e8539b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_startedTimer: 1
+  m_timer: 5
 --- !u!1 &8335846334064668740
 GameObject:
   m_ObjectHideFlags: 0
@@ -9677,7 +9692,7 @@ GameObject:
   - component: {fileID: 2597272477098075406}
   - component: {fileID: 1368709112365288228}
   - component: {fileID: 7333640220284233551}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Particle System (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

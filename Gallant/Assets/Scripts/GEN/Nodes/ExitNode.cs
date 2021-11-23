@@ -3,18 +3,21 @@ using UnityEngine;
 
 namespace GEN.Nodes
 {
-    /****************
-     * ExitNode : A component used to idenify the gameObject as the exit to the section/cap.
+    /**
+     * A component used to idenify the gameObject as the exit to the section/cap.
      * @author : Michael Jordan
-     * @file : ExitNode.cs
-     * @year : 2021
      */
-
     public class ExitNode : MonoBehaviour
     {
+        /** a private variable. 
+         * A list of all children objects at start up.
+         */
         private List<GameObject> m_children = new List<GameObject>();
 
-        //Called when the component is loaded into the scene (Immediately).
+        /**
+         * Awake function.
+         * Called when the component is loaded into the scene (Immediately).
+         */
         private void Awake()
         {
             //Collect a list of all children objects, when this component was awake.
@@ -24,7 +27,10 @@ namespace GEN.Nodes
             }
         }
 
-        //Draws when gizmos is enabled
+        /**
+         * OnDrawGizmos function.
+         * Draws when gizmos is enabled.
+         */
         private void OnDrawGizmos()
         {
             //Set Colour
@@ -38,7 +44,10 @@ namespace GEN.Nodes
             Gizmos.DrawSphere(transform.position + transform.forward * 0.5f, 0.05f);
         }
 
-        //Called when this component is destroyed.
+        /**
+         * OnDestroy function.
+         * Called when this component is destroyed.
+         */
         private void OnDestroy()
         {
             //Clear all children under this component, to allow for more level generation. 

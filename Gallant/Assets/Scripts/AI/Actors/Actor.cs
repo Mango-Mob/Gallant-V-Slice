@@ -25,6 +25,8 @@ public class Actor : StateMachine
     public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
     public Actor_Material m_material { get; private set; }
 
+    public Outline m_myOutline { get; private set; }
+
     public Actor_UI m_ui { get; private set; }
 
     public GameObject m_target { get; set; } //The current focus of the actor
@@ -74,6 +76,11 @@ public class Actor : StateMachine
                 }
             }
         }
+
+        m_myOutline = GetComponentInChildren<Outline>();
+
+        if(m_myOutline != null)
+            m_myOutline.enabled = false;
     }
 
     // Called at the start of the first update call

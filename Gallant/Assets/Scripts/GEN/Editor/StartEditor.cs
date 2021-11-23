@@ -4,17 +4,38 @@ using UnityEngine;
 
 namespace GEN.Editor
 {
+    /**
+     * An Inspector element for start nodes to display the hits, if they occured.
+     * @author : Michael Jordan
+     */
     [CustomEditor(typeof(StartNode))]
     class StartEditor : UnityEditor.Editor
     {
+        /** a private variable. 
+         * Preview node used to display a preview of the level.
+         */
         private PreviewNode m_preview;
+
+        /** a private variable. 
+         * A copy of the reference texture to display onto the inspector.
+         */
         private RenderTexture m_displayTexture;
 
-        public bool m_showSettings = true;
+        /** a private variable. 
+         * Status of the exposed settings.
+         */
+        private bool m_showSettings = true;
 
+        /** a private variable. 
+         * Text style for warnings.
+         */
         private GUIStyle m_warning;
 
-        public void Awake()
+        /**
+         * Awake function.
+         * Called when the inspector is awake and showing a startNode.
+         */
+        private void Awake()
         {
             m_warning = new GUIStyle(EditorStyles.label);
             m_warning.wordWrap = true;
@@ -24,23 +45,48 @@ namespace GEN.Editor
             m_preview.SetOffset(new Vector3(0, 20, 0), 150);
         }
 
-        public void OnDestroy()
+        /**
+         * OnDestroy function.
+         * Called when the inspector changes/closes view of the node.
+         */
+        private void OnDestroy()
         {
             PreviewNode.CleanAll();
         }
 
+        /**
+         * OnInspectorGUI function.
+         * Draws when an error node is on the inspector.
+         */
         public override void OnInspectorGUI()
         {
             var levelStart = target as StartNode;
 
+            //Preview section
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("~ Preview ~", EditorStyles.boldLabel);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            if (GUILayout.Button(m_displayTexture == null ? "Show Preview" : "Hide Preview"))
+            {
+                //Enable the preview in the inspector
+                if (m_displayTexture == null)
+                    m_displayTexture = m_preview.m_texture;
+                else
+                    m_displayTexture = null;
+            }
+
             if (m_displayTexture != null)
             {
                 m_preview.Render();
+                
 
-                GUI.DrawTexture(new Rect(15, 15, EditorGUIUtility.currentViewWidth - 30, 270), m_displayTexture);
+                m_showSettings = EditorGUILayout.Foldout(m_showSettings, "Settings:");
+                float yPos = (m_showSettings) ? 150: 70;
 
-                GUILayout.Label("Preview:");
-
+                GUI.DrawTexture(new Rect(15, yPos, EditorGUIUtility.currentViewWidth - 30, 270), m_displayTexture);
                 if (m_showSettings)
                 {
                     Vector3 posOffset = m_preview.m_positionOffset;
@@ -58,30 +104,30 @@ namespace GEN.Editor
                     }
                 }
 
-                GUILayout.Space(m_showSettings ? 260 : 300);
-                if (GUILayout.Button(m_showSettings ? "Hide Preview Settings" : "Show Preview Settings"))
-                {
-                    m_showSettings = !m_showSettings;
-                }
-            }
+                
 
+                GUILayout.Space(m_showSettings ? 300 : 305);
+            }
+            GUILayout.Space(10);
             Rect rect = EditorGUILayout.GetControlRect(false, 1);
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+            GUILayout.Space(10);
 
+            //Default:
             DrawDefaultInspector();
-
+            
+            //Buttons and Warnings:
             if (levelStart.m_GenerateLevelOnAwake && levelStart.transform.childCount > 0)
-                GUILayout.Label("Warning: Do not have any objects attached to this object! They will be deleted upon play.", m_warning);
-
-            if (GUILayout.Button(m_displayTexture == null ? "Show Preview" : "Hide Preview"))
             {
-                //Enable the preview in the inspector
-                if (m_displayTexture == null)
-                    m_displayTexture = m_preview.m_texture;
-                else
-                    m_displayTexture = null;
-            }
+                rect = EditorGUILayout.GetControlRect(false, 1);
+                EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
 
+                GUILayout.Label("Warning: Do not have any objects attached to this object! They will be deleted upon play.", m_warning);
+            }
+                
+            rect = EditorGUILayout.GetControlRect(false, 1);
+            EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+            GUILayout.Space(10);
             if (GUILayout.Button("Generate"))
             {
                 levelStart.Clear();
