@@ -30,6 +30,16 @@ public class UI_PauseMenu : MonoBehaviour
         isPaused = m_window.activeInHierarchy;
     }
 
+    public void OnDisable()
+    {
+        Time.timeScale = 1.0f;
+    }
+
+    public void OnDestroy()
+    {
+        Time.timeScale = 1.0f;
+    }
+
     public void Quit()
     {
         isPaused = false;
