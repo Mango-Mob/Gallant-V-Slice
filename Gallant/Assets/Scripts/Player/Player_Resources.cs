@@ -24,7 +24,10 @@ public class Player_Resources : MonoBehaviour
     public UI_OrbResource adrenalineOrbs { get; private set; }
 
     public float m_adrenalineHeal = 40.0f;
+    [SerializeField] private GameObject healVFXPrefab;
     public bool m_dead { get; private set; } = false;
+
+    private Animator animatorHUD;
 
     [Header("Barrier")]
     private float m_barrierDecayTimer = 0.0f;
@@ -37,6 +40,8 @@ public class Player_Resources : MonoBehaviour
         barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
         adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbResource>("Adrenaline");
+
+        animatorHUD = HUDManager.instance.GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
@@ -59,8 +64,14 @@ public class Player_Resources : MonoBehaviour
         }
 
         float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+
         if (healthBar != null)
-            healthBar.SetValue(healthPercentage);
+        {
+            float healthDiff = healthPercentage - healthBar.GetValue();
+            healthBar.SetValue(((Mathf.Abs(healthDiff) > 0.05f) // Check if health lerp difference is beyond range.
+                ? (healthBar.GetValue() + Mathf.Sign(healthDiff) * Time.deltaTime) :  // If beyond range, lerp towards target.
+                healthPercentage)); // If within range, set value.
+        }
 
         if (portrait != null)
             portrait.UpdatePortrait(healthPercentage);
@@ -141,6 +152,10 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             ChangeHealth(m_adrenalineHeal);
             ChangeAdrenaline(-1.0f);
+
+            // Create VFX
+            if (healVFXPrefab)
+                Instantiate(healVFXPrefab, transform);
         }
     }
 }

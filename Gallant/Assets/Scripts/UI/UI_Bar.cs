@@ -29,6 +29,10 @@ public class UI_Bar : UI_Element
     {
         m_value = Mathf.Clamp(_value, 0.0f, 1.0f);
     }
+    public float GetValue()
+    {
+        return m_value;
+    }
 
     #region Parent override functions
     public override bool IsContainingVector(Vector2 _pos)

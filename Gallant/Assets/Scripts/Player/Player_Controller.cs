@@ -37,10 +37,13 @@ public class Player_Controller : MonoBehaviour
     private Vector3 m_movementVelocity = Vector3.zero;
     private Vector2 m_lastAimDirection = Vector2.zero;
 
+    private Animator animatorCamera;
+
     // Start is called before the first frame update
     void Start()
     {
         playerCamera = Camera.main;
+        animatorCamera = playerCamera.GetComponent<Animator>();
 
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
@@ -61,9 +64,8 @@ public class Player_Controller : MonoBehaviour
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
-    }
 
-    
+    }
 
     // Update is called once per frame
     void Update()
@@ -368,6 +370,9 @@ public class Player_Controller : MonoBehaviour
         playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
+
+        if (animatorCamera)
+            animatorCamera.SetTrigger("Shake");
     }
 
     public void StorePlayerInfo()
