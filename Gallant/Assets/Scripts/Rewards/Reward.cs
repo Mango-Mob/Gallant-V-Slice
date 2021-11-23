@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Reward : MonoBehaviour
 {
+    public Color m_selectedColour;
     public abstract void GiveReward();
     public abstract void Unselect();
 

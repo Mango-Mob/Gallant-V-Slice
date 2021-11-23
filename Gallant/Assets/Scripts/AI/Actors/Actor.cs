@@ -78,7 +78,9 @@ public class Actor : StateMachine
         }
 
         m_myOutline = GetComponentInChildren<Outline>();
-        m_myOutline.enabled = false;
+
+        if(m_myOutline != null)
+            m_myOutline.enabled = false;
     }
 
     // Called at the start of the first update call

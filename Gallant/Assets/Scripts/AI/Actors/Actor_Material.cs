@@ -54,7 +54,7 @@ public class Actor_Material : MonoBehaviour
 
     public void StartDisolve()
     {
-        if(m_myMesh.material.name.Contains("Disolve"))
+        if(m_myMesh.material.name.Contains("Disolve")) //Hit at same time = bug
         {
             m_isDisolving = true;
         }
