@@ -86,7 +86,7 @@ public class Player_Resources : MonoBehaviour
             m_dead = true;
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
+            LevelLoader.instance.LoadNewLevel("EndScreen", LevelLoader.Transition.YOUDIED);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
