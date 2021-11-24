@@ -48,6 +48,7 @@ public class Ability_FrostEvade : AbilityBase
         Debug.Log("Ice go woosh");
         if (m_pathPrefab != null)
         {
+            playerController.playerAudioAgent.Iceroll();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_pathPrefab,

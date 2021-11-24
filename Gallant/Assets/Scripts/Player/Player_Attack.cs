@@ -124,6 +124,7 @@ public class Player_Attack : MonoBehaviour
         }
 
         //playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
+        playerController.playerAudioAgent.PlayWeaponSwing();
         playerController.animator.SetBool(animatorTriggerName, true);
     }
 
@@ -167,16 +168,13 @@ public class Player_Attack : MonoBehaviour
         {
             case Weapon.SWORD: // Use sword
                 WeaponAttack(thisData, transform.position);
-                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.SHIELD: // Use shield
                 WeaponAttack(thisData, transform.position);
                 BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
-                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             case Weapon.BOOMERANG: // Use boomerang
                 ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
-                playerController.playerAudioAgent.PlayWeaponSwing();
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
@@ -312,6 +310,7 @@ public class Player_Attack : MonoBehaviour
                 }
                 break;
         }
+        playerController.playerAudioAgent.EquipWeapon();
     }
 
     /*******************
@@ -367,6 +366,8 @@ public class Player_Attack : MonoBehaviour
             }
             hitList.Add(collider.gameObject);
         }
+        if (hitList.Count != 0)
+            playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
     }
 
     /*******************
@@ -383,7 +384,6 @@ public class Player_Attack : MonoBehaviour
         if (actor != null)
         {
             actor.DealDamage(_damage, transform.position);
-            playerController.playerAudioAgent.PlaySwordHit(); // Audio
         }
     }
 

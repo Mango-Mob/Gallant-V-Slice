@@ -379,10 +379,11 @@ public class Player_Controller : MonoBehaviour
         {
             if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
             {
-                    // PLAY BLOCK SOUND
-                    Debug.Log("BLOCK");
-                    animator.SetTrigger("HitPlayer");
-                    return;
+                // PLAY BLOCK SOUND
+                Debug.Log("BLOCK");
+                animator.SetTrigger("HitPlayer");
+                playerAudioAgent.PlayShieldBlock();
+                return;
             }
         }
 
