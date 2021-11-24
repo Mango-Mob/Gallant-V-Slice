@@ -43,6 +43,8 @@ public class Actor : StateMachine
     private UI_Bar m_healthBar;
     private float m_resist;
 
+    [SerializeField] private List<Collider> m_myColliders;
+
     //Called upon the creation of the class.
     private void Awake()
     {
@@ -55,6 +57,7 @@ public class Actor : StateMachine
         if(m_legs != null)
             m_legs.m_baseSpeed = m_myData.baseSpeed + m_myData.deltaSpeed * Mathf.FloorToInt(GameManager.currentLevel);
 
+        m_myColliders = new List<Collider>(GetComponentsInChildren<Collider>());
         m_animator = GetComponentInChildren<Actor_Animator>();
         m_tracker = GetComponentInChildren<Actor_Tracker>();
         m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
@@ -181,6 +184,12 @@ public class Actor : StateMachine
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
+
+                foreach (var collider in m_myColliders)
+                {
+                    collider.enabled = false;
+                }
+
                 float amount = UnityEngine.Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax) + m_myData.deltaAdrenaline * Mathf.FloorToInt(GameManager.currentLevel);
                 int orbCount = UnityEngine.Random.Range(2, 6);
 
