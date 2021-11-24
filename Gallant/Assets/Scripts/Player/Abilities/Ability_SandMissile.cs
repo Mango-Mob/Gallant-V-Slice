@@ -27,6 +27,7 @@ public class Ability_SandMissile : AbilityBase
         Debug.Log("Fire go woosh");
         if (m_missilePrefab != null)
         {
+            playerController.playerAudioAgent.SandmissileImpact();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_missilePrefab,
@@ -34,6 +35,7 @@ public class Ability_SandMissile : AbilityBase
                 modelTransform.rotation);
 
             projectile.GetComponent<SandmissileProjectile>().m_data = m_data;
+            projectile.GetComponent<SandmissileProjectile>().playerController = playerController;
         }
     }
     public override void AbilityPassive()
