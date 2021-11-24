@@ -14,7 +14,9 @@ public class Actor_Material : MonoBehaviour
 
     public Color m_default { get; protected set; }
 
+    private Coroutine m_hit;
     private Color m_current;
+
     private void Awake()
     {
         m_myMesh = GetComponent<Renderer>();
@@ -38,11 +40,13 @@ public class Actor_Material : MonoBehaviour
             float maxTime = 4.5f;
             float disolveVal = 1.0f - m_timer / maxTime;
 
-            m_myMaterial.SetFloat("Fade", disolveVal);
+            if(m_hit == null)
+             m_myMaterial.SetFloat("Fade", disolveVal);
 
             if (m_timer > maxTime)
             {
-                m_myMaterial.SetFloat("Fade", 0.0f);
+                if (m_hit == null)
+                    m_myMaterial.SetFloat("Fade", 0.0f);
                 m_isDisolving = false;
             }
         }
@@ -54,7 +58,7 @@ public class Actor_Material : MonoBehaviour
 
     public void StartDisolve()
     {
-        if(m_myMesh.material.name.Contains("Disolve")) //Hit at same time = bug
+        if(m_myMesh.material.name.Contains("Disolve") || m_hit != null) 
         {
             m_isDisolving = true;
         }
@@ -75,7 +79,13 @@ public class Actor_Material : MonoBehaviour
     }
     public void ShowHit()
     {
-        StartCoroutine(ShowHitRoutine(0.02f));
+        if (m_isDisolving)
+            return;
+
+        if (m_hit != null)
+            StopCoroutine(m_hit);
+
+        m_hit = StartCoroutine(ShowHitRoutine(0.02f));
     }
 
     private IEnumerator ShowHitRoutine(float time)
@@ -85,7 +95,7 @@ public class Actor_Material : MonoBehaviour
         yield return new WaitForSecondsRealtime(time);
 
         m_myMesh.material = m_myMaterial;
-
+        m_hit = null;
         yield return null;
     }
 }

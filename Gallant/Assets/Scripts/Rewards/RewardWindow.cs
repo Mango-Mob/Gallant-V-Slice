@@ -52,7 +52,7 @@ public class RewardWindow : MonoBehaviour
             Show(1);
         }
 
-        m_keyboardButton.SetActive(!InputManager.instance.isInGamepadMode);
+        m_keyboardButton.SetActive(!InputManager.instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.instance.isInGamepadMode && m_select != -1);
 
         if(m_window.activeInHierarchy)
