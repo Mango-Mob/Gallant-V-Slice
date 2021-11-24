@@ -47,8 +47,11 @@ public class Actor : StateMachine
     [SerializeField] private List<Collider> m_myColliders;
 
     //Called upon the creation of the class.
-    private void Awake()
+    protected virtual void Awake()
     {
+        if(m_myData != null && !m_myData.invincible)
+            ActorManager.instance.Subscribe(this);
+
         m_damagedColliders = new List<Collider>();
 
         //Load information from Scriptable Object
@@ -113,6 +116,14 @@ public class Actor : StateMachine
         m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
 
         m_tracker?.RecordResistance(m_resist);
+    }
+
+    private void OnDestroy()
+    {
+        if(ActorManager.HasInstance())
+        {
+            ActorManager.instance.UnSubscribe(this);
+        }
     }
 
     /*********************
@@ -183,12 +194,22 @@ public class Actor : StateMachine
             if(m_tracker != null && m_tracker.m_enableAutoHealing)
                 m_currentHealth = m_myData.health;
 
+            if(!m_myData.invincible)
+            {
+                EndScreenStatistics.damageDealt += _damage;
+            }
+
+            if (GetComponent<MultiAudioAgent>() != null && m_myData.hurtSoundName != "")
+            {
+                GetComponent<MultiAudioAgent>().PlayOnce(m_myData.hurtSoundName, false, UnityEngine.Random.Range(0.85f, 1.25f));
+            }
+
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
                 if(GetComponent<MultiAudioAgent>() != null)
                 {
-                    GetComponent<MultiAudioAgent>().PlayOnce("MinionDeath");
+                    GetComponent<MultiAudioAgent>().PlayOnce(m_myData.deathSoundName);
                 }
                 foreach (var collider in m_myColliders)
                 {

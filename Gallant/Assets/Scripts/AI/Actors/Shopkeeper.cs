@@ -15,6 +15,11 @@ public class Shopkeeper : Actor
 
     private bool m_ShowUI = false;
     private bool m_hasGivenReward = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
     // Start is called before the first frame update
     protected override void Start()
     {

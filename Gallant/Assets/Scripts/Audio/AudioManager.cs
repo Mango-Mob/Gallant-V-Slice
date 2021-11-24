@@ -154,4 +154,14 @@ public class AudioManager
         }
         return max;
     }
+
+    public void PlayAudioTemporary(Vector3 _position, AudioClip _clip, VolumeChannel _channel = VolumeChannel.SOUND_EFFECT)
+    {
+        GameObject temp = new GameObject();
+        temp.transform.position = _position;
+
+        VFXAudioAgent agent = temp.AddComponent<VFXAudioAgent>();
+        agent.channel = _channel;
+        agent.Play(_clip);
+    }
 }

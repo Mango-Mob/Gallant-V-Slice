@@ -8,7 +8,6 @@ public class Collectable : MonoBehaviour
     public GameObject m_keyboardInput;
     public GameObject m_gamePadInput;
 
-    public GameObject m_audioVfx;
     public AudioClip m_pickupSound;
 
     public bool m_testMode = false;
@@ -35,9 +34,7 @@ public class Collectable : MonoBehaviour
     public void Collect()
     {
         PlayerPrefs.SetInt(m_data.collectableID, 1);
-        SoloAudioAgent audio = Instantiate(m_audioVfx, transform.position, transform.rotation).GetComponent<SoloAudioAgent>();
-        audio.mainClip = m_pickupSound;
-        audio.Play();
+        AudioManager.instance.PlayAudioTemporary(transform.position, m_pickupSound);
         Destroy(gameObject);
     }
 

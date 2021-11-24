@@ -53,6 +53,9 @@ public class GameManager : MonoBehaviour
     {
         if (_instance == this)
             _instance = null;
+
+        if (ActorManager.HasInstance())
+            ActorManager.Destroy();
     }
 
     #endregion 
@@ -74,11 +77,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //float currentTime = Time.timeScale;
-        //currentTime += Time.deltaTime;
-        //currentTime = Mathf.Clamp(currentTime, 0.0f, 1.0f);
-        //Time.timeScale = currentTime;
-
         int gamepadID = InputManager.instance.GetAnyGamePad();
     }
 
@@ -90,10 +88,6 @@ public class GameManager : MonoBehaviour
     private void InitialiseFunc()
     {
         gameObject.name = "Game Manager";
-    }
-    private void TimeUpdate()
-    {
-        
     }
     public void SlowTime(float _percentage, float _duration)
     {

@@ -1,5 +1,5 @@
 ﻿using GEN.Users;
-using GEN.Windows;
+using GEN.Data;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -76,7 +76,7 @@ namespace GEN.Nodes
             }
 
             //If errors are enabled in the main window AND there was an error
-            if (LevelGenMainWindow.showErrors && others.Count >= 1)
+            if (Globals.ShowErrors && others.Count >= 1)
             {
                 ErrorNode.Instantiate(center, _parent.rotation * _local, halfExtents * 2, others);
             }

@@ -16,7 +16,6 @@ public class EnemySpawner : MonoBehaviour
     public float m_spawnDelay = 1.0f;
 
     public GameObject m_EnemyToSpawn;
-    public AtmosphereScript m_music;
 
     private Player_Controller m_player = null;
     public GameObject m_gatePrefab;
@@ -48,7 +47,6 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        m_music = FindObjectOfType<AtmosphereScript>();
         m_reward = FindObjectOfType<RewardWindow>();
 
         if (m_generateWavesOnAwake && m_allWaves.Count > 0)
@@ -234,12 +232,10 @@ public class EnemySpawner : MonoBehaviour
                     }
 
                     GameManager.Advance();
+                    EndScreenStatistics.roomsCleared++;
                     m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
                     GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
                 }
-                
-                m_music.EndCombat();
-                
                 Destroy(this);
             }
             else
@@ -293,7 +289,6 @@ public class EnemySpawner : MonoBehaviour
         if (m_hasCombatStarted)
             return;
 
-        m_music.StartCombat();
         m_hasCombatStarted = true;
         if (IsRoom)
         {

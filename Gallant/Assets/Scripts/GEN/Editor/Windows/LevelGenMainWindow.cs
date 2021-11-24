@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEditor;
 using GEN.Nodes;
 using GEN.Users;
+using GEN.Data;
 
-namespace GEN.Windows
+namespace GEN.Editor.Windows
 {
     /**
      * An editor window to stream line the creation of nodes and a generating level.
@@ -13,11 +14,6 @@ namespace GEN.Windows
      */
     public class LevelGenMainWindow : EditorWindow
     {
-        /** a public variable. 
-         * Enables the display of errors.
-         */
-        public static bool showErrors = true;
-
         /** An enum. 
          * To determine which window is currently being displayed.
          */
@@ -198,11 +194,11 @@ namespace GEN.Windows
             Rect rect = EditorGUILayout.GetControlRect(false, 1);
             EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
 
-            bool status = EditorGUILayout.Toggle(new GUIContent(" Show Build Errors:", "Allows all generators to create error node. Error nodes are created when a level detects a section can't be used, because of a collision."), showErrors);
-            if(status != showErrors)
+            bool status = EditorGUILayout.Toggle(new GUIContent(" Show Build Errors:", "Allows all generators to create error node. Error nodes are created when a level detects a section can't be used, because of a collision."), Globals.ShowErrors);
+            if(status != Globals.ShowErrors)
             {
-                showErrors = status;
-                if(!showErrors)
+                Globals.ShowErrors = status;
+                if(!Globals.ShowErrors)
                 {
                     var list = FindObjectsOfType<ErrorNode>();
                     for (int i = list.Length - 1; i >= 0; i--)

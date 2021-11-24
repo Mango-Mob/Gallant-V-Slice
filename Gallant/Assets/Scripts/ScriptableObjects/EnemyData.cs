@@ -32,7 +32,10 @@ public class EnemyData : ScriptableObject
     public float deltaAdrenaline = 0;
     public float deltaResistance = 0;
     public float deltaDamageMod = 0;
-    
+
+    [Header("Sound Effects")]
+    public string deathSoundName;
+    public string hurtSoundName;
 
     public List<State.Type> m_states = new List<State.Type>();
 

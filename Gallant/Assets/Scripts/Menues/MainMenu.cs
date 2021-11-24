@@ -28,12 +28,6 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, 0) || InputManager.instance.IsKeyDown(KeyType.T))
-        //{
-        //    GameManager.instance.enableTimer = true;
-        //    GetComponent<SoloAudioAgent>().Play();
-        //}
-
         if(m_mainDisplay.activeInHierarchy)
         {
             if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
@@ -51,6 +45,7 @@ public class MainMenu : MonoBehaviour
     {
         GameManager.currentLevel = 0;
         GameManager.ResetPlayerInfo();
+        EndScreenStatistics.Restart();
         LevelLoader.instance.LoadNewLevel("MainLevel_1");
     }
     public void MainDisplay()
