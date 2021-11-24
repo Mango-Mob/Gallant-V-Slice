@@ -6234,7 +6234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &266998168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12875,6 +12875,7 @@ GameObject:
   - component: {fileID: 609650514}
   - component: {fileID: 609650513}
   - component: {fileID: 609650512}
+  - component: {fileID: 609650515}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -12934,6 +12935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 7
   m_distOffEdge: 6
@@ -12968,6 +12970,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+--- !u!114 &609650515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609650510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1 &611624729
 GameObject:
   m_ObjectHideFlags: 0
@@ -15102,6 +15123,7 @@ GameObject:
   - component: {fileID: 709587190}
   - component: {fileID: 709587189}
   - component: {fileID: 709587188}
+  - component: {fileID: 709587191}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -15161,6 +15183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 7
   m_distOffEdge: 6
@@ -15196,6 +15219,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+--- !u!114 &709587191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709587186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1001 &711645421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24169,6 +24211,7 @@ GameObject:
   - component: {fileID: 1175759030}
   - component: {fileID: 1175759032}
   - component: {fileID: 1175759031}
+  - component: {fileID: 1175759033}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -24201,8 +24244,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 12, y: 9, z: 12}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 10.965168, y: 9, z: 12}
+  m_Center: {x: -0.51741296, y: 0, z: 0}
 --- !u!114 &1175759032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24215,6 +24258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 6
   m_distOffEdge: 7
@@ -24237,6 +24281,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a215ef52fd9951b41b7fe85e2ae65a4b, type: 2}
   - {fileID: 11400000, guid: d7a1392e8c174e045ad5d2c4e8099267, type: 2}
   m_allWaves: []
+--- !u!114 &1175759033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175759029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1001 &1176753528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26760,6 +26823,7 @@ GameObject:
   - component: {fileID: 1261976688}
   - component: {fileID: 1261976687}
   - component: {fileID: 1261976686}
+  - component: {fileID: 1261976689}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -26819,6 +26883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 7
   m_distOffEdge: 6
@@ -26854,6 +26919,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+--- !u!114 &1261976689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261976684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1 &1264295226
 GameObject:
   m_ObjectHideFlags: 0
@@ -34081,6 +34165,7 @@ GameObject:
   - component: {fileID: 1664141004}
   - component: {fileID: 1664141006}
   - component: {fileID: 1664141005}
+  - component: {fileID: 1664141007}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -34113,8 +34198,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 15, y: 9, z: 15}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 12.201463, y: 9, z: 15}
+  m_Center: {x: -1.3992649, y: 0, z: 0}
 --- !u!114 &1664141006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34127,6 +34212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 7
   m_distOffEdge: 6.5
@@ -34151,6 +34237,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 3f18590cc01f5fc4bafcba00b4015820, type: 2}
   m_allWaves: []
+--- !u!114 &1664141007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664141003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1 &1684535717
 GameObject:
   m_ObjectHideFlags: 0
@@ -39015,6 +39120,83 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1864799761}
   m_Mesh: {fileID: 1189826045856631217, guid: 841e3a4b4dfd4ca42a6855b1f2848271, type: 3}
+--- !u!1 &1866599760
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1866599761}
+  - component: {fileID: 1866599763}
+  - component: {fileID: 1866599762}
+  m_Layer: 2
+  m_Name: EnemySpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1866599761
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866599760}
+  m_LocalRotation: {x: -0, y: -0.0000014603138, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -3.27}
+  m_LocalScale: {x: 1.4001399, y: 1.4001399, z: 1.4001399}
+  m_Children: []
+  m_Father: {fileID: 37432}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1866599762
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866599760}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 11.634425, y: 9.549314, z: 12.732418}
+  m_Center: {x: -0.51741195, y: 0, z: 0.3662084}
+--- !u!114 &1866599763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866599760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsRoom: 0
+  m_spawnWidth: 0.25
+  m_spawnArcHeight: 5
+  m_distOffEdge: 7
+  m_spawnDelay: 1
+  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
+    type: 3}
+  m_music: {fileID: 0}
+  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
+    type: 3}
+  m_gatesLoc: []
+  m_isSphere: 0
+  m_radius: 10.49
+  m_size: {x: 3, y: 12, z: 10.32}
+  m_reward: {fileID: 0}
+  m_spawnSpots: 6
+  m_generateWavesOnAwake: 0
+  m_waves:
+  - {fileID: 11400000, guid: a215ef52fd9951b41b7fe85e2ae65a4b, type: 2}
+  m_allWaves: []
 --- !u!1 &1877528609
 GameObject:
   m_ObjectHideFlags: 0

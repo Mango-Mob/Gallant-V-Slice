@@ -8,7 +8,7 @@ using UnityEngine.AI;
 public class EnemySpawner : MonoBehaviour
 {
     public const float budgetPerDepth = 100f;
-
+    public bool IsRoom = true;
 
     public float m_spawnWidth = 0.25f;
     public float m_spawnArcHeight = 5.0f;
@@ -40,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
 
         public Vector3 m_forward;
     }
-
+    private bool m_hasCombatStarted = false;
     private Coroutine m_isSpawning = null;
 
     private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
@@ -226,15 +226,20 @@ public class EnemySpawner : MonoBehaviour
                     return;
                 }
 
-                foreach (var gate in m_gatesLoc)
+                if(IsRoom)
                 {
-                    gate.GetComponentInChildren<Animator>()?.SetBool("Open", true);
-                }
+                    foreach (var gate in m_gatesLoc)
+                    {
+                        gate.GetComponentInChildren<Animator>()?.SetBool("Open", true);
+                    }
 
-                GameManager.Advance();
-                m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                    GameManager.Advance();
+                    m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                    GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
+                }
+                
                 m_music.EndCombat();
-                GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
+                
                 Destroy(this);
             }
             else
@@ -285,14 +290,18 @@ public class EnemySpawner : MonoBehaviour
 
     public void StartCombat()
     {
-        if (m_gatesLoc[0].activeInHierarchy)
+        if (m_hasCombatStarted)
             return;
 
         m_music.StartCombat();
-        GetComponent<MultiAudioAgent>().PlayOnce("GateClose");
-        foreach (var gate in m_gatesLoc)
+        m_hasCombatStarted = true;
+        if (IsRoom)
         {
-           gate.SetActive(true);
+            GetComponent<MultiAudioAgent>().PlayOnce("GateClose");
+            foreach (var gate in m_gatesLoc)
+            {
+                gate.SetActive(true);
+            }
         }
     }
 
