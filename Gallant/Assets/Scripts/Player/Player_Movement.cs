@@ -68,6 +68,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_currentTarget != null && (m_currentTarget.CheckIsDead() || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
         {
+            if (m_currentTarget.m_myOutline != null)
+                m_currentTarget.m_myOutline.enabled = false;
+
             m_currentTarget = null;
         }
 
@@ -341,6 +344,9 @@ public class Player_Movement : MonoBehaviour
             Debug.Log("Found target " + closestTarget.name);
 
         m_currentTarget = closestTarget;
+
+        if (!m_currentTarget)
+            return;
 
         if (m_currentTarget.m_myOutline != null)
             m_currentTarget.m_myOutline.enabled = true;

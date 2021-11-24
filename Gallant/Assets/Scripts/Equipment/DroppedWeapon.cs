@@ -56,6 +56,7 @@ public class DroppedWeapon : MonoBehaviour
                     Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
                     outlineScript.OutlineColor = newColor;
                     outlineScript.OutlineWidth = 3.0f;
+                    outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
                 }
             }
         }

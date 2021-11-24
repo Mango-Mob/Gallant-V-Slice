@@ -344,6 +344,32 @@ public class Player_Controller : MonoBehaviour
         }
         return targets;
     }
+    public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance)
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance);
+        List<Collider> targets = new List<Collider>();
+
+        foreach (var collider in colliders)
+        {
+            Vector3 direction = (collider.transform.position - transform.position).normalized;
+            float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+            if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
+            {
+                targets.Add(collider);
+            }
+        }
+        return targets;
+    }
+
+    public bool IsInfrontOfPlayer(float _angle, Vector3 _position)
+    {
+        Vector3 direction = (_position - transform.position);
+        direction.y = 0.0f;
+        direction.Normalize();
+        float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+
+        return dot >= Mathf.Cos(_angle * Mathf.Deg2Rad);
+    }
     public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
@@ -351,15 +377,12 @@ public class Player_Controller : MonoBehaviour
 
         if (playerAttack.m_isBlocking && _attacker != null)
         {
-            List<Actor> actors = GetActorsInfrontOfPlayer(playerAttack.m_blockingAngle, 50.0f);
-            foreach (var actor in actors)
+            if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
             {
-                if (actor.gameObject == _attacker)
-                {
                     // PLAY BLOCK SOUND
                     Debug.Log("BLOCK");
+                    animator.SetTrigger("HitPlayer");
                     return;
-                }
             }
         }
 
