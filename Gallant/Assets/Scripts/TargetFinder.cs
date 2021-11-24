@@ -32,7 +32,7 @@ public class TargetFinder : MonoBehaviour
             if (m_time > 3.0f)
             {
                 m_player.StorePlayerInfo();
-                SceneManager.LoadScene(nextSceneIndex);
+                LevelLoader.instance.LoadNewLevel("MainLevel_2");
             }
         }
     }

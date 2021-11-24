@@ -9,7 +9,6 @@ public class BarrierProjectile : MonoBehaviour
     public float m_speed = 10.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
-    private float m_rotateRate = 180.0f;
 
     [SerializeField] private GameObject particles;
     [SerializeField] private GameObject model;
@@ -34,7 +33,6 @@ public class BarrierProjectile : MonoBehaviour
 
     private void Detonate()
     {
-
         if (particles != null)
         {
             ParticleSystem[] particleSystems = particles.GetComponentsInChildren<ParticleSystem>();
@@ -58,6 +56,9 @@ public class BarrierProjectile : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
+                if (actor.CheckIsDead())
+                    return;
+
                 actor.DealDamage(m_data.damage * m_barrierValue / 50.0f);
                 Detonate();
             }

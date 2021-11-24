@@ -55,8 +55,8 @@ public class WeaponData : ScriptableObject
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
-        data.m_speed += (int)(data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
+        data.m_damage += (int)(data.m_damage * Random.Range(0.1f, 0.2f) * (_level - 1.0f));
+        data.m_speed += (data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
 
         data.m_level = _level;
 
