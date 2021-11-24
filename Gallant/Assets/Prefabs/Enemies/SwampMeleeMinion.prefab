@@ -865,6 +865,7 @@ GameObject:
   - component: {fileID: 8271445429760318489}
   - component: {fileID: 246156460309294153}
   - component: {fileID: 4531405050405771441}
+  - component: {fileID: 8648074751798027029}
   m_Layer: 0
   m_Name: SwampMeleeMinion
   m_TagString: Boss
@@ -917,7 +918,9 @@ MonoBehaviour:
   m_myData: {fileID: 11400000, guid: 2058dedf721e45a429a20acf9b171341, type: 2}
   m_currentStateDisplay: 
   m_idealDistance: 0
+  m_damageModifier: 1
   m_selfTargetTransform: {fileID: 5041717079019819068}
+  m_myColliders: []
 --- !u!114 &3222191498181553979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -986,6 +989,25 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8648074751798027029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3222191498181553953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 15ef024c5d51fbc488a4c11b97d49e37, type: 3}
+  - {fileID: 8300000, guid: f23c7d605e403aa42b8d469acba25e7f, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1 &3373716781430251276
 GameObject:
   m_ObjectHideFlags: 0

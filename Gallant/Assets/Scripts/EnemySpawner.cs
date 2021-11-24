@@ -234,6 +234,7 @@ public class EnemySpawner : MonoBehaviour
                 GameManager.Advance();
                 m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
                 m_music.EndCombat();
+                GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
                 Destroy(this);
             }
             else
@@ -288,7 +289,7 @@ public class EnemySpawner : MonoBehaviour
             return;
 
         m_music.StartCombat();
-
+        GetComponent<MultiAudioAgent>().PlayOnce("GateClose");
         foreach (var gate in m_gatesLoc)
         {
            gate.SetActive(true);

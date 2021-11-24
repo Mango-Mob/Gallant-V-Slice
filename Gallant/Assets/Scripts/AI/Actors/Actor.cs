@@ -186,7 +186,10 @@ public class Actor : StateMachine
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
-
+                if(GetComponent<MultiAudioAgent>() != null)
+                {
+                    GetComponent<MultiAudioAgent>().PlayOnce("MinionDeath");
+                }
                 foreach (var collider in m_myColliders)
                 {
                     collider.enabled = false;
