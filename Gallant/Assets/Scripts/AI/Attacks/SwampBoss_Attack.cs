@@ -70,7 +70,7 @@ namespace SwampBoss_Attack
             }
 
             GameObject projPrefab = LoadObjectData("SpitProjectile");
-            user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_myData.m_damageModifier, 50f);
+            user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_damageModifier, 50f);
         }
 
         /*******************
@@ -131,7 +131,7 @@ namespace SwampBoss_Attack
                 GameObject projInWorld = GameObject.Instantiate(projPrefab, hitCollider.transform.position + hitCollider.transform.forward * -1.25f, Quaternion.identity);
                 projInWorld.transform.forward = Vector3.up;
                 KnockUpArea knockUp = projInWorld.GetComponent<KnockUpArea>();
-                knockUp.StartKnockUp(2.5f, m_baseDamage * user.m_myData.m_damageModifier, 0.5f);
+                knockUp.StartKnockUp(2.5f, m_baseDamage * user.m_damageModifier, 0.5f);
             }
         }
 

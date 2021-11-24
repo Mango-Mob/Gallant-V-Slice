@@ -16,6 +16,7 @@ public class Actor : StateMachine
     public EnemyData m_myData;
     public string m_currentStateDisplay;
     public float m_idealDistance = 0.0f;
+    public float m_damageModifier = 1.0f;
     public Transform m_selfTargetTransform;
 
     //Accessables:
@@ -80,6 +81,7 @@ public class Actor : StateMachine
             }
         }
 
+        m_damageModifier = m_myData.m_damageModifier + m_myData.deltaDamageMod * Mathf.FloorToInt(GameManager.currentLevel);
         m_myOutline = GetComponentInChildren<Outline>();
 
         if(m_myOutline != null)
