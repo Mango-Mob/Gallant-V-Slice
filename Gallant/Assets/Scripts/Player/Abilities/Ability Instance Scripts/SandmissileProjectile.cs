@@ -116,8 +116,15 @@ public class SandmissileProjectile : MonoBehaviour
         {
             Debug.Log("Hit " + other.name + " with sand for " + m_data.damage);
 
-            other.GetComponentInParent<Actor>().DealDamage(m_data.damage);
-            DetonateProjectile();
+            Actor actor = other.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                if (actor.CheckIsDead())
+                    return;
+
+                actor.DealDamage(m_data.damage);
+                DetonateProjectile();
+            }
         }
     }
 }
