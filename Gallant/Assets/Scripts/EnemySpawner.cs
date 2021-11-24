@@ -232,7 +232,7 @@ public class EnemySpawner : MonoBehaviour
                     }
 
                     GameManager.Advance();
-                    EndScreenStatistics.roomsCleared++;
+                    EndScreenMenu.roomsCleared++;
                     m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
                     GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
                 }

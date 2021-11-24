@@ -196,7 +196,7 @@ public class Actor : StateMachine
 
             if(!m_myData.invincible)
             {
-                EndScreenStatistics.damageDealt += _damage;
+                EndScreenMenu.damageDealt += _damage;
             }
 
             if (GetComponent<MultiAudioAgent>() != null && m_myData.hurtSoundName != "")

@@ -47,7 +47,7 @@ public class RewardWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        EndScreenStatistics.elapsedTimeInSeconds += Time.deltaTime;
+        EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
 
         if (InputManager.instance.IsKeyDown(KeyType.O))
         {

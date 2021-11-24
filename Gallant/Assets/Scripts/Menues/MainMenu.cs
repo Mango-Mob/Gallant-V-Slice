@@ -45,7 +45,7 @@ public class MainMenu : MonoBehaviour
     {
         GameManager.currentLevel = 0;
         GameManager.ResetPlayerInfo();
-        EndScreenStatistics.Restart();
+        EndScreenMenu.Restart();
         LevelLoader.instance.LoadNewLevel("MainLevel_1");
     }
     public void MainDisplay()

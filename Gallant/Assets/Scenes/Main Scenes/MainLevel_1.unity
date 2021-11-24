@@ -18253,6 +18253,82 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 888700162}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &900315185
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 900315186}
+  - component: {fileID: 900315188}
+  - component: {fileID: 900315187}
+  m_Layer: 2
+  m_Name: EnemySpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &900315186
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900315185}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000039488073}
+  m_LocalPosition: {x: -80.32008, y: -0.24350166, z: 11.189364}
+  m_LocalScale: {x: 1.4001399, y: 1.4001399, z: 1.4001399}
+  m_Children: []
+  m_Father: {fileID: 1235409508}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &900315187
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900315185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 11.634425, y: 9.549314, z: 12.732418}
+  m_Center: {x: -0.51741195, y: 0, z: 0.3662084}
+--- !u!114 &900315188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900315185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsRoom: 0
+  m_spawnWidth: 0.25
+  m_spawnArcHeight: 5
+  m_distOffEdge: 7
+  m_spawnDelay: 1
+  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
+    type: 3}
+  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
+    type: 3}
+  m_gatesLoc: []
+  m_isSphere: 0
+  m_radius: 10.49
+  m_size: {x: 3, y: 12, z: 10.32}
+  m_reward: {fileID: 0}
+  m_spawnSpots: 6
+  m_generateWavesOnAwake: 0
+  m_waves:
+  - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
+  m_allWaves: []
 --- !u!1 &902849963
 GameObject:
   m_ObjectHideFlags: 0
@@ -39217,7 +39293,7 @@ MonoBehaviour:
   m_spawnSpots: 6
   m_generateWavesOnAwake: 0
   m_waves:
-  - {fileID: 11400000, guid: a215ef52fd9951b41b7fe85e2ae65a4b, type: 2}
+  - {fileID: 11400000, guid: 84ad4e8940fd6a24f8d66bd3d8f43c12, type: 2}
   m_allWaves: []
 --- !u!1 &1877528609
 GameObject:
