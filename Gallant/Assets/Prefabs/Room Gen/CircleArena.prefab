@@ -298,6 +298,7 @@ GameObject:
   - component: {fileID: 7503869047407268248}
   - component: {fileID: 2812694762814524156}
   - component: {fileID: 7599741472966964585}
+  - component: {fileID: 7767814679321842647}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -389,6 +390,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 5, z: 9}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7767814679321842647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2761829752105472021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  audioPlayersCount: 1
+  channel: 1
 --- !u!1 &3339525892942227561
 GameObject:
   m_ObjectHideFlags: 0
@@ -4009,15 +4029,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d05da7cedc676b47ac21ef71225c6b9, type: 3}
---- !u!4 &4910711038761574244 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7129011483983756097, guid: 1d05da7cedc676b47ac21ef71225c6b9,
-    type: 3}
-  m_PrefabInstance: {fileID: 2794782118896542757}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &828601620025053489 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3294039319997134100, guid: 1d05da7cedc676b47ac21ef71225c6b9,
+    type: 3}
+  m_PrefabInstance: {fileID: 2794782118896542757}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4910711038761574244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7129011483983756097, guid: 1d05da7cedc676b47ac21ef71225c6b9,
     type: 3}
   m_PrefabInstance: {fileID: 2794782118896542757}
   m_PrefabAsset: {fileID: 0}

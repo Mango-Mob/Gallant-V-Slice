@@ -65,7 +65,9 @@ MonoBehaviour:
   m_myData: {fileID: 11400000, guid: e626cd5265d665d408fbc11683d24757, type: 2}
   m_currentStateDisplay: 
   m_idealDistance: 0
+  m_damageModifier: 1
   m_selfTargetTransform: {fileID: 2560665945864547701}
+  m_myColliders: []
 --- !u!114 &5742023275758704543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -800,6 +802,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5527570519435290064}
   - component: {fileID: 6923029924940858491}
+  - component: {fileID: 2640312132812381426}
   m_Layer: 0
   m_Name: Bag
   m_TagString: Untagged
@@ -876,6 +879,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.017999992, z: 0}
     m_Extent: {x: 0.007141637, y: 0.0119999945, z: 0.007141636}
   m_DirtyAABB: 0
+--- !u!114 &2640312132812381426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7426828033790350898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8f79a1eeb4ef34c961f26725ca5724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_hitMaterial: {fileID: 2100000, guid: a35d7d69d7d41924a890a7b42459b975, type: 2}
 --- !u!1 &8018664380735678958
 GameObject:
   m_ObjectHideFlags: 0
