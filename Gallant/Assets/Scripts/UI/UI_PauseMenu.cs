@@ -7,11 +7,13 @@ public class UI_PauseMenu : MonoBehaviour
 {
     public GameObject m_window;
     public static bool isPaused = false;
+    public Pause_TomeDisplay m_tomeList;
 
-    private void SetPause(bool state)
+    public void SetPause(bool state)
     {
         Time.timeScale = state ? 0.0f : 1.0f;
         m_window.SetActive(state);
+        m_tomeList.UpdateTomes();
     }
 
     // Start is called before the first frame update
