@@ -27,8 +27,6 @@ public class Player_Resources : MonoBehaviour
     [SerializeField] private GameObject healVFXPrefab;
     public bool m_dead { get; private set; } = false;
 
-    private Animator animatorHUD;
-
     [Header("Barrier")]
     private float m_barrierDecayTimer = 0.0f;
     public float m_barrierDecayDelay = 0.5f;
@@ -40,8 +38,6 @@ public class Player_Resources : MonoBehaviour
         barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
         adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbResource>("Adrenaline");
-
-        animatorHUD = HUDManager.instance.GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
