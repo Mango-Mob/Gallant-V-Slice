@@ -342,6 +342,9 @@ public class Player_Movement : MonoBehaviour
 
         m_currentTarget = closestTarget;
 
+        if (!m_currentTarget)
+            return;
+
         if (m_currentTarget.m_myOutline != null)
             m_currentTarget.m_myOutline.enabled = true;
     }
