@@ -91,6 +91,7 @@ public class Player_Resources : MonoBehaviour
         {
             // Kill
             m_dead = true;
+            playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
             LevelLoader.instance.LoadNewLevel("EndScreen", LevelLoader.Transition.YOUDIED);
@@ -134,6 +135,9 @@ public class Player_Resources : MonoBehaviour
      */
     public void ChangeAdrenaline(float _amount)
     {
+        if (_amount > 0.0f)
+            playerController.playerAudioAgent.PlayOrbPickup();
+
         m_adrenaline += _amount;
         m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
     }

@@ -26,6 +26,8 @@ public class Ability_Firewave : AbilityBase
     {
         if (m_wavePrefab != null)
         {
+            playerController.playerAudioAgent.FirewaveLaunch();
+
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_wavePrefab,

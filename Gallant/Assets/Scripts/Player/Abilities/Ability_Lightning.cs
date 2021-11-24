@@ -27,6 +27,7 @@ public class Ability_Lightning : AbilityBase
         Debug.Log("Lightning go bzz");
         if (m_boltPrefab != null)
         {
+            playerController.playerAudioAgent.Lightning();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_boltPrefab,
