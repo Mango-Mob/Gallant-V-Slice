@@ -50,6 +50,13 @@ public class DroppedWeapon : MonoBehaviour
                 mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
 
                 m_particleSystem.Play();
+
+                foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
+                {
+                    Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
+                    outlineScript.OutlineColor = newColor;
+                    outlineScript.OutlineWidth = 3.0f;
+                }
             }
         }
     }
