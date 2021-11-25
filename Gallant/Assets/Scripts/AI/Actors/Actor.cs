@@ -202,7 +202,7 @@ public class Actor : StateMachine
 
             if (GetComponent<MultiAudioAgent>() != null && m_myData.hurtSoundName != "")
             {
-                GetComponent<MultiAudioAgent>().PlayOnce(m_myData.hurtSoundName, false, UnityEngine.Random.Range(0.85f, 1.25f));
+                GetComponent<MultiAudioAgent>().PlayOnce(m_myData.hurtSoundName, false, UnityEngine.Random.Range(0.75f, 1.35f));
             }
 
             if (m_currentHealth <= 0 && !m_myData.invincible)

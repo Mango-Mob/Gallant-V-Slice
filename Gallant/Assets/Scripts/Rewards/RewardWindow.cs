@@ -49,10 +49,12 @@ public class RewardWindow : MonoBehaviour
     {
         EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
 
+#if UNITY_EDITOR
         if (InputManager.instance.IsKeyDown(KeyType.O))
         {
             Show(1);
         }
+#endif
 
         m_keyboardButton.SetActive(!InputManager.instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.instance.isInGamepadMode && m_select != -1);

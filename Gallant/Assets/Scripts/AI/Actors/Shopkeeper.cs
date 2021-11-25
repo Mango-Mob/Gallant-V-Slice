@@ -20,6 +20,7 @@ public class Shopkeeper : Actor
         base.Awake();
         m_player = FindObjectOfType<Player_Controller>();
     }
+
     // Start is called before the first frame update
     protected override void Start()
     {

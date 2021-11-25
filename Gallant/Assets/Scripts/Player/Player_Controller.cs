@@ -37,6 +37,8 @@ public class Player_Controller : MonoBehaviour
     private Vector3 m_movementVelocity = Vector3.zero;
     private Vector2 m_lastAimDirection = Vector2.zero;
 
+    private bool m_isAiming = false;
+
     private Animator animatorCamera;
 
     // Start is called before the first frame update
@@ -300,7 +302,12 @@ public class Player_Controller : MonoBehaviour
         }
         else // If using mouse
         {
-            if (InputManager.instance.IsKeyPressed(KeyType.L_CTRL) || InputManager.instance.IsKeyPressed(KeyType.L_SHIFT))
+            if(InputManager.instance.IsKeyDown(KeyType.L_CTRL) || InputManager.instance.IsKeyDown(KeyType.L_SHIFT))
+            {
+                m_isAiming = !m_isAiming;
+            }
+
+            if (m_isAiming)
             {
                 // Raycast to find raycast point
                 RaycastHit hit;
