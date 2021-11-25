@@ -9,7 +9,7 @@ public class EnemyData : ScriptableObject
     [Header("Base Stats")]
     public float health;
     
-    public string name;
+    public string enemyName;
     public float baseSpeed;
 
     public float adrenalineGainMin;

@@ -71,13 +71,13 @@ public class Actor : StateMachine
         m_resist = m_myData.resistance + m_myData.deltaResistance * Mathf.FloorToInt(GameManager.currentLevel);
         m_tracker?.RecordResistance(m_resist);
 
-        if (m_myData.name != "")
+        if (m_myData.enemyName != "")
         {
             m_myAttacks = new List<Actor_Attack>();
             //Search the system for all Actor_Attack classes under the namespace: "name_Attack"
             foreach (System.Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.name}_Attack")
+                if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.enemyName}_Attack")
                 {
                     m_myAttacks.Add(Activator.CreateInstance(type) as Actor_Attack);
                 }
