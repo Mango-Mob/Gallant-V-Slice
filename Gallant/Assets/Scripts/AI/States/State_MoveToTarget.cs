@@ -31,8 +31,16 @@ public class State_MoveToTarget : State
             }
             return;
         }
-        m_myActor.m_legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
 
+        if(Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) > m_myActor.m_idealDistance)
+        {
+            m_myActor.m_legs.SetTargetLocation(m_myActor.m_target.transform.position, true);
+        }
+        else
+        {
+            m_myActor.m_legs.Halt();
+        }
+        
         if(m_myActor.m_myData.m_states.Contains(Type.ATTACK))
         {
             List<Actor_Attack> currentAttacks = new List<Actor_Attack>(m_myActor.m_myAttacks);

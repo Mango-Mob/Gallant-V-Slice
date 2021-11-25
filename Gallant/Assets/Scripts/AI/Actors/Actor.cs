@@ -43,6 +43,7 @@ public class Actor : StateMachine
     private float m_currentHealth;
     private UI_Bar m_healthBar;
     private float m_resist;
+    private float m_maxHp;
 
     [SerializeField] private List<Collider> m_myColliders;
 
@@ -55,8 +56,8 @@ public class Actor : StateMachine
         m_damagedColliders = new List<Collider>();
 
         //Load information from Scriptable Object
-        m_currentHealth = m_myData.health + m_myData.deltaHealth * Mathf.FloorToInt(GameManager.currentLevel);
-
+        m_maxHp = m_myData.health + m_myData.deltaHealth * Mathf.FloorToInt(GameManager.currentLevel);
+        m_currentHealth = m_maxHp;
         m_legs = GetComponentInChildren<Actor_Legs>();
         if(m_legs != null)
             m_legs.m_baseSpeed = m_myData.baseSpeed + m_myData.deltaSpeed * Mathf.FloorToInt(GameManager.currentLevel);
@@ -113,7 +114,7 @@ public class Actor : StateMachine
         if(m_animator != null && m_animator.m_hasVelocity)
             m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
     
-        m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
+        m_healthBar?.SetValue((float) m_currentHealth/m_maxHp);
 
         m_tracker?.RecordResistance(m_resist);
     }
