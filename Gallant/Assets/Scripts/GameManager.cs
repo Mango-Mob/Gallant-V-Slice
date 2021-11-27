@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
     #region Application_Singleton
     public static float currentLevel = 0;
-    public static float deltaLevel = 0.25f;
+    public static float deltaLevel = 1/3;
     private static GameManager _instance = null;
     public static GameManager instance
     {

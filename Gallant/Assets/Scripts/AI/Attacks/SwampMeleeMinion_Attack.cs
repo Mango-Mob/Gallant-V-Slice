@@ -38,6 +38,7 @@ namespace SwampMeleeMinion_Attack
         public override void BeginAttack(Actor user)
         {
             user.m_animator.SetTrigger("MeleeAttack");
+            user.GetComponent<MultiAudioAgent>()?.PlayOnce("MinionAttack", false, UnityEngine.Random.Range(0.85f, 1.25f));
             base.BeginAttack(user);
         }
 
