@@ -11,6 +11,8 @@ public class ItemReward : Reward
     private Image m_background;
 
     private Color m_baseColor;
+    public AudioClip m_collectAudio;
+
     public ItemData m_currentlyLoaded { get; private set; }
     private Player_Controller m_activePlayer;
 
@@ -34,6 +36,8 @@ public class ItemReward : Reward
     {
         m_activePlayer?.playerStats.AddEffect(m_currentlyLoaded.itemEffect);
         GetComponentInParent<RewardWindow>().Hide();
+        if(m_activePlayer != null)
+            AudioManager.instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
     }
 
     public override void Select()

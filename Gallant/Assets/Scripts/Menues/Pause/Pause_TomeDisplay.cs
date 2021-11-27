@@ -19,20 +19,21 @@ public class Pause_TomeDisplay : MonoBehaviour
     // Update is called once per frame
     public void UpdateTomes()
     {
-        foreach (var item in m_player.playerStats.m_effects)
-        {
-            Pause_Tome temp = null;
-            if(m_tomeDisplays.TryGetValue(item.Key, out temp))
+        if(m_player != null && m_player.playerStats != null)
+            foreach (var item in m_player.playerStats.m_effects)
             {
-                temp.SetAmount(item.Value);
+                Pause_Tome temp = null;
+                if(m_tomeDisplays.TryGetValue(item.Key, out temp))
+                {
+                    temp.SetAmount(item.Value);
+                }
+                else
+                {
+                    temp = Instantiate(m_tomePrefab, transform).GetComponent<Pause_Tome>();
+                    temp.SetTome(m_itemImages[(int)item.Key]);
+                    temp.SetAmount(item.Value);
+                    m_tomeDisplays.Add(item.Key, temp);
+                }
             }
-            else
-            {
-                temp = Instantiate(m_tomePrefab, transform).GetComponent<Pause_Tome>();
-                temp.SetTome(m_itemImages[(int)item.Key]);
-                temp.SetAmount(item.Value);
-                m_tomeDisplays.Add(item.Key, temp);
-            }
-        }
     }
 }

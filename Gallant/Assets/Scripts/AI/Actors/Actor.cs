@@ -43,17 +43,21 @@ public class Actor : StateMachine
     private float m_currentHealth;
     private UI_Bar m_healthBar;
     private float m_resist;
+    private float m_maxHp;
 
     [SerializeField] private List<Collider> m_myColliders;
 
     //Called upon the creation of the class.
-    private void Awake()
+    protected virtual void Awake()
     {
+        if(m_myData != null && !m_myData.invincible)
+            ActorManager.instance.Subscribe(this);
+
         m_damagedColliders = new List<Collider>();
 
         //Load information from Scriptable Object
-        m_currentHealth = m_myData.health + m_myData.deltaHealth * Mathf.FloorToInt(GameManager.currentLevel);
-
+        m_maxHp = m_myData.health + m_myData.deltaHealth * Mathf.FloorToInt(GameManager.currentLevel);
+        m_currentHealth = m_maxHp;
         m_legs = GetComponentInChildren<Actor_Legs>();
         if(m_legs != null)
             m_legs.m_baseSpeed = m_myData.baseSpeed + m_myData.deltaSpeed * Mathf.FloorToInt(GameManager.currentLevel);
@@ -68,13 +72,13 @@ public class Actor : StateMachine
         m_resist = m_myData.resistance + m_myData.deltaResistance * Mathf.FloorToInt(GameManager.currentLevel);
         m_tracker?.RecordResistance(m_resist);
 
-        if (m_myData.name != "")
+        if (m_myData.enemyName != "")
         {
             m_myAttacks = new List<Actor_Attack>();
             //Search the system for all Actor_Attack classes under the namespace: "name_Attack"
             foreach (System.Type type in Assembly.GetExecutingAssembly().GetTypes())
             {
-                if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.name}_Attack")
+                if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.enemyName}_Attack")
                 {
                     m_myAttacks.Add(Activator.CreateInstance(type) as Actor_Attack);
                 }
@@ -110,9 +114,17 @@ public class Actor : StateMachine
         if(m_animator != null && m_animator.m_hasVelocity)
             m_animator.SetFloat("VelocityHaste", m_legs.m_speedModifier);
     
-        m_healthBar?.SetValue((float) m_currentHealth/m_myData.health);
+        m_healthBar?.SetValue((float) m_currentHealth/m_maxHp);
 
         m_tracker?.RecordResistance(m_resist);
+    }
+
+    private void OnDestroy()
+    {
+        if(ActorManager.HasInstance())
+        {
+            ActorManager.instance.UnSubscribe(this);
+        }
     }
 
     /*********************
@@ -183,12 +195,22 @@ public class Actor : StateMachine
             if(m_tracker != null && m_tracker.m_enableAutoHealing)
                 m_currentHealth = m_myData.health;
 
+            if(!m_myData.invincible)
+            {
+                EndScreenMenu.damageDealt += _damage;
+            }
+
+            if (GetComponent<MultiAudioAgent>() != null && m_myData.hurtSoundName != "")
+            {
+                GetComponent<MultiAudioAgent>().PlayOnce(m_myData.hurtSoundName, false, UnityEngine.Random.Range(0.75f, 1.35f));
+            }
+
             if (m_currentHealth <= 0 && !m_myData.invincible)
             {
                 m_isDead = true;
                 if(GetComponent<MultiAudioAgent>() != null)
                 {
-                    GetComponent<MultiAudioAgent>().PlayOnce("MinionDeath");
+                    GetComponent<MultiAudioAgent>().PlayOnce(m_myData.deathSoundName);
                 }
                 foreach (var collider in m_myColliders)
                 {

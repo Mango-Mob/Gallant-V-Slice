@@ -47,10 +47,14 @@ public class RewardWindow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.IsKeyDown(KeyType.O))
+        EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
+
+#if UNITY_EDITOR
+        if (InputManager.instance.IsKeyDown(KeyType.O))
         {
             Show(1);
         }
+#endif
 
         m_keyboardButton.SetActive(!InputManager.instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.instance.isInGamepadMode && m_select != -1);
@@ -95,6 +99,7 @@ public class RewardWindow : MonoBehaviour
         m_rewards.Clear();
         if (level >= 0)
         {
+            m_player.m_isDisabledInput = true;
             for (int i = 0; i < m_rewardSlots.Length; i++)
             {
                 for (int j = ((m_rewardSlots[i].transform as RectTransform).childCount) - 1; j >= 0; j--)
@@ -192,12 +197,15 @@ public class RewardWindow : MonoBehaviour
         if(m_select != -1)
             m_rewards[m_select].Unselect();
 
+       
         m_select = item;
     }
 
     public void Confirm()
     {
         m_rewards[m_select].GiveReward();
+        m_player.m_isDisabledInput = false;
+        m_select = -1;
     }
 
     public void Hide()

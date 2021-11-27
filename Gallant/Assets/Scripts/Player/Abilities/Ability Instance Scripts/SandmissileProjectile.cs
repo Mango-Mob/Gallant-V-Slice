@@ -7,6 +7,7 @@ public class SandmissileProjectile : MonoBehaviour
     [SerializeField] private GameObject m_sandAreaPrefab;
     [SerializeField] private GameObject m_sandPoofPrefab;
 
+    public Player_Controller playerController;
     public ParticleSystem[] m_particleSystems { get; private set; }
 
     public AbilityData m_data;
@@ -82,6 +83,9 @@ public class SandmissileProjectile : MonoBehaviour
     }
     private void DetonateProjectile()
     {
+        if (playerController)
+            playerController.playerAudioAgent.SandmissileImpact();
+
         foreach (var system in m_particleSystems)
         {
             system.Stop();

@@ -5,6 +5,14 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum DialogResult
+{
+    PROGRESS,
+    TRANSFER,
+    INTERACT,
+    END
+}
+
 public class DialogDisplay : MonoBehaviour
 {
     public UnityEvent m_interact;

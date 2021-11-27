@@ -9,7 +9,7 @@ public class EnemyData : ScriptableObject
     [Header("Base Stats")]
     public float health;
     
-    public string name;
+    public string enemyName;
     public float baseSpeed;
 
     public float adrenalineGainMin;
@@ -32,7 +32,10 @@ public class EnemyData : ScriptableObject
     public float deltaAdrenaline = 0;
     public float deltaResistance = 0;
     public float deltaDamageMod = 0;
-    
+
+    [Header("Sound Effects")]
+    public string deathSoundName;
+    public string hurtSoundName;
 
     public List<State.Type> m_states = new List<State.Type>();
 

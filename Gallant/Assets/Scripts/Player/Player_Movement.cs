@@ -359,11 +359,11 @@ public class Player_Movement : MonoBehaviour
      */
     public void GiveAdrenaline(float _val)
     {
-        playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
+        //playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
 
         playerController.playerResources.ChangeAdrenaline(_val);
 
-        GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
+        //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 
         //Slow motion
         GameManager.instance.SlowTime(0.4f, _val);

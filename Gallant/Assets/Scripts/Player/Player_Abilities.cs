@@ -101,7 +101,7 @@ public class Player_Abilities : MonoBehaviour
             if (m_leftAbility != null)
             {
                 m_leftAbility.TriggerAbility();
-                playerController.playerAudioAgent.PlayCast(); // Audio
+                //playerController.playerAudioAgent.PlayCast(); // Audio
                 m_leftAbility.StartCooldown();
             }
         }
@@ -110,7 +110,7 @@ public class Player_Abilities : MonoBehaviour
             if (m_rightAbility != null)
             {
                 m_rightAbility.TriggerAbility();
-                playerController.playerAudioAgent.PlayCast(); // Audio
+                //playerController.playerAudioAgent.PlayCast(); // Audio
                 m_rightAbility.StartCooldown();
             }
         }

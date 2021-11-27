@@ -33,6 +33,7 @@ public class CharacterData : ScriptableObject
             GUILayout.EndArea();
         }
     }
+
     public void DrawToGUI(Rect rect, int bodyID, int faceID)
     {
         if (bodyID < m_characterBody.Length && faceID < m_characterFace.Length)
@@ -51,11 +52,5 @@ public class CharacterData : ScriptableObject
             GUI.DrawTexture(new Rect(anchor.x, anchor.y, face.width * scale, face.height * scale), face);
             GUILayout.EndArea();
         }
-    }
-
-    public void DrawSliders(ref int bodyIndex, ref int faceIndex)
-    {
-        bodyIndex = EditorGUILayout.IntSlider("Body:", bodyIndex, 0, m_characterBody.Length - 1);
-        faceIndex = EditorGUILayout.IntSlider("Face:", faceIndex, 0, m_characterFace.Length - 1);
     }
 }

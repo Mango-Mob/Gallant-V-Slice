@@ -6,6 +6,7 @@ public class KnockUpArea : MonoBehaviour
 {
     public GameObject m_knockUpVFX;
     public float m_previewRadius = 1.0f;
+    public AudioClip m_clip;
 
     public void StartKnockUp(float radius, float damage, float delay)
     {
@@ -21,7 +22,7 @@ public class KnockUpArea : MonoBehaviour
     public IEnumerator KnockUpInArea(float radius, float damage, float delay)
     {
         yield return new WaitForSeconds(delay);
-
+        AudioManager.instance.PlayAudioTemporary(transform.position, m_clip);
         Collider[] hits = Physics.OverlapSphere(transform.position, radius);
 
         foreach (var hit in hits)

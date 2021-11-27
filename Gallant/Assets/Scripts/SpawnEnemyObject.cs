@@ -18,7 +18,9 @@ public class SpawnEnemyObject : MonoBehaviour
 
     private GameObject m_presetTarget = null;
     private Collider m_triggerBox = null;
-    private EnemySpawner m_owner = null; 
+    private EnemySpawner m_owner = null;
+
+    public AudioClip m_spawnSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,8 @@ public class SpawnEnemyObject : MonoBehaviour
         m_deltaDeltaTime = 0.0005f;
         m_triggerBox = GetComponent<Collider>();
         m_triggerBox.enabled = false;
+
+        AudioManager.instance.PlayAudioTemporary(transform.position, m_spawnSound);
     }
 
     // Update is called once per frame

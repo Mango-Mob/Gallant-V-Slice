@@ -32,6 +32,7 @@ public class Ability_Thorns : AbilityBase
     public override void AbilityOnHitRecieved(GameObject _attacker, float _damage)
     {
         GameObject barrier = Instantiate(m_thornsVFXPrefab, transform);
+        playerController.playerAudioAgent.ReflectiveShield();
 
         AbilityData dataToUse = m_synergyData != null ? m_synergyData : m_data;
 

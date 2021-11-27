@@ -5,13 +5,7 @@ using UnityEditor;
 using System.IO;
 using System;
 
-public enum DialogResult
-{
-    PROGRESS,
-    TRANSFER,
-    INTERACT,
-    END
-}
+
 
 public class DialogWriter : EditorWindow
 {
@@ -38,15 +32,18 @@ public class DialogWriter : EditorWindow
     {
         EditorWindow.CreateWindow<DialogWriter>("Dialog Writer");
     }
+
     public void Awake()
     {
         m_currentFile = null;
         m_options = new List<DialogOption>();
     }
+
     private void Update()
     {
         
     }
+
     private void OnGUI()
     {
         if(m_fileData == null)
@@ -81,7 +78,13 @@ public class DialogWriter : EditorWindow
                 m_activeDialog = GUI.TextArea(new Rect(95, 45, position.width - 100, 150), m_activeDialog);
 
                 GUILayout.Space(125);
-                m_character?.DrawSliders(ref m_bodyIndex, ref m_faceIndex);
+
+                if(m_character != null)
+                {
+                    m_bodyIndex = EditorGUILayout.IntSlider("Body:", m_bodyIndex, 0, m_character.m_characterBody.Length - 1);
+                    m_faceIndex = EditorGUILayout.IntSlider("Face:", m_faceIndex, 0, m_character.m_characterFace.Length - 1);
+                }
+
                 EditorGUILayout.LabelField($"Index: {m_currentIndex + 1} (of {m_maxIndex})");
 
                 GUILayout.BeginHorizontal();
@@ -265,64 +268,5 @@ public class DialogWriter : EditorWindow
         m_currentIndex = -1;
         m_maxIndex = -1;
         m_activeDialog = "";
-    }
-}
-
-public class DialogOption
-{
-    public string text;
-    public int nextDialog;
-    public DialogResult result;
-
-    public DialogOption(int currentScene)
-    {
-        text = "";
-        nextDialog = -1;
-        result = DialogResult.END;
-    }
-
-    public DialogOption(int currentScene, string _text, string _result, string other)
-    {
-        text = _text;
-        switch (_result)
-        {
-            case "PROGRESS":
-                result = DialogResult.PROGRESS;
-                nextDialog = currentScene + 1;
-                return;
-            case "END":
-                result = DialogResult.END;
-                nextDialog = -1;
-                return;
-            case "INTERACT":
-                result = DialogResult.INTERACT;
-                nextDialog = -1;
-                return;
-            case "TRANSFER":
-                result = DialogResult.TRANSFER;
-                nextDialog = int.Parse(other) + 1;
-                return;
-            default:
-                result = DialogResult.END;
-                nextDialog = -1;
-                return;
-        }
-    }
-
-    public string GetTypeText()
-    {
-        switch (result)
-        {
-            case DialogResult.PROGRESS:
-                return "PROGRESS";
-            case DialogResult.TRANSFER:
-                return "TRANSFER";
-            case DialogResult.INTERACT:
-                return "INTERACT";
-            case DialogResult.END:
-                return "END";
-            default:
-                return "";
-        }
     }
 }
