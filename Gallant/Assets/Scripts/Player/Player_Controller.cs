@@ -100,19 +100,22 @@ public class Player_Controller : MonoBehaviour
         if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.StopBlock(Hand.LEFT);
 
-        float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
-        float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
-        // Set avatar mask to be used
-        if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
-        {
-            armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-            standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-        }
-        else
-        {
-            armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-            standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-        }
+        //float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
+        //float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
+        //// Set avatar mask to be used
+        //if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
+        //{
+        //    armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //    standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //}
+        //else
+        //{
+        //    armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //    standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //}
+
+        float armWeight = 0.0f;
+        float standArmWeight = 1.0f;
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));

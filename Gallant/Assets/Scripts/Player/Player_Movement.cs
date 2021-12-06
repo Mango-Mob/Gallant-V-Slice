@@ -290,6 +290,10 @@ public class Player_Movement : MonoBehaviour
                 }
             }
         }
+
+        if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
+            movement = Vector3.zero;
+
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
