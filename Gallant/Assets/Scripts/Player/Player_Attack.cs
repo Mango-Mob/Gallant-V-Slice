@@ -196,6 +196,43 @@ public class Player_Attack : MonoBehaviour
         else
             return false;
     }
+    public Hand GetCurrentUsedHand()
+    {
+        Hand castState = GetCurrentCastingHand();
+        Hand attackState = GetCurrentAttackingHand();
+
+        if (castState != Hand.NONE && attackState != Hand.NONE)
+        {
+            if (castState != attackState)
+                return Hand.NONE;
+            else
+                return castState;
+        }
+        else
+        {
+            if (castState == Hand.NONE)
+                return attackState;
+            else
+                return castState;
+        }
+    }
+    public Hand GetCurrentCastingHand()
+    {
+        bool usingRight = false;
+        bool usingLeft = false;
+
+        if (playerController.animator.GetBool("RightCast"))
+            usingRight = true;
+        if (playerController.animator.GetBool("LeftCast"))
+            usingLeft = true;
+
+        if (usingRight == usingLeft)
+            return Hand.NONE;
+        else if (usingRight)
+            return Hand.RIGHT;
+        else // Using Left
+            return Hand.LEFT;
+    }
     public Hand GetCurrentAttackingHand()
     {
         bool usingRight = false;
