@@ -28,6 +28,7 @@ public class WeaponReward : Reward
     static public float m_knockDiffScale = 50.0f;
     private Color m_baseColor;
 
+    public AudioClip m_collectAudio;
     private Player_Controller m_activePlayer;
     public WeaponData m_activeWeapon { get; private set; }
 
@@ -142,6 +143,9 @@ public class WeaponReward : Reward
 
         DroppedWeapon.CreateDroppedWeapon(m_activePlayer.transform.position + pos.normalized, m_activeWeapon);
         GetComponentInParent<RewardWindow>().Hide();
+
+        if (m_activePlayer != null)
+            AudioManager.instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
     }
     public override void Select()
     {

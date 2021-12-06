@@ -10,6 +10,7 @@ public class ProjectileObject : MonoBehaviour
     public Vector3 m_velocity { private get; set; } = Vector3.zero;
 
     public GameObject m_hitVfX;
+    public AudioClip m_hitSound;
 
     private float m_timer = 0;
 
@@ -41,6 +42,8 @@ public class ProjectileObject : MonoBehaviour
             Player_Controller player = other.GetComponent<Player_Controller>();
             player.DamagePlayer(m_damage, gameObject);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
+
+            AudioManager.instance.PlayAudioTemporary(transform.position, m_hitSound);
             Destroy(gameObject);
         }
     }

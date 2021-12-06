@@ -12,9 +12,15 @@ public class Shopkeeper : Actor
     public DialogDisplay m_display;
 
     private Player_Controller m_player;
-
     private bool m_ShowUI = false;
     private bool m_hasGivenReward = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        m_player = FindObjectOfType<Player_Controller>();
+    }
+
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -27,18 +33,22 @@ public class Shopkeeper : Actor
         base.Update();
         m_keyboardInput.SetActive(m_ShowUI && !InputManager.instance.isInGamepadMode);
         m_gamePadInput.SetActive(m_ShowUI && InputManager.instance.isInGamepadMode);
+
+        if(m_player != null && Vector3.Distance(m_player.transform.position, transform.position) > 30.0f)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void TalkTo()
     {
         m_display.LoadDialog(m_dialog);
-        //m_player?.m_isDisabledInput = true;
         if (!m_hasGivenReward)
         {
             m_display.m_interact = new UnityEngine.Events.UnityEvent();
             m_display.m_interact.AddListener(Reward);
         }
-
+        GetComponentInChildren<Interactable>().m_isReady = false;
         m_display.Show();
         
     }
@@ -54,7 +64,6 @@ public class Shopkeeper : Actor
         if (other.tag == "Player")
         {
             m_ShowUI = true;
-            m_player = other.GetComponent<Player_Controller>();
             GetComponentInChildren<Interactable>().m_isReady = true;
         }
     }

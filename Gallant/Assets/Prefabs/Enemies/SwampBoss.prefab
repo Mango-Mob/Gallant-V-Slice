@@ -2163,6 +2163,7 @@ GameObject:
   - component: {fileID: 51733229}
   - component: {fileID: 6900963170400842279}
   - component: {fileID: 539831863017419554}
+  - component: {fileID: 1168732148501373049}
   m_Layer: 9
   m_Name: SwampBoss
   m_TagString: Boss
@@ -2201,8 +2202,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myData: {fileID: 11400000, guid: 7307b2357589ca6408b14513a025aecc, type: 2}
   m_currentStateDisplay: 
-  m_idealDistance: 0
+  m_idealDistance: 2.5
+  m_damageModifier: 1
   m_selfTargetTransform: {fileID: 8792136351278260756}
+  m_myColliders: []
 --- !u!114 &2844510379285810090
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2285,6 +2288,28 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1168732148501373049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7380378061790784048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: a6d1cd41a7e3a254a9351bf688e61a49, type: 3}
+  - {fileID: 8300000, guid: b665e9318722dc94fb22f8087c02fd95, type: 3}
+  - {fileID: 8300000, guid: d0f7436d0d4758e449d22070b000f43f, type: 3}
+  - {fileID: 8300000, guid: dd11a55d54c9f8543be39a9ff5dc712b, type: 3}
+  - {fileID: 8300000, guid: 3a9941438c28ad34daf52dcc59bf1c7a, type: 3}
+  audioPlayersCount: 5
+  channel: 1
 --- !u!1 &7380378063208078505
 GameObject:
   m_ObjectHideFlags: 0

@@ -78,6 +78,10 @@ public class JukeboxAgent : AudioAgent
         }
             
     }
+    public bool IsPlaying()
+    {
+        return player.IsPlaying() || backPlayer.IsPlaying();
+    }
 
     private void CheckAudioPlayer()
     {

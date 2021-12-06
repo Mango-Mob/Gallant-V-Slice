@@ -70,6 +70,7 @@ namespace SwampBoss_Attack
             }
 
             GameObject projPrefab = LoadObjectData("SpitProjectile");
+            user.GetComponent<MultiAudioAgent>().Play("BossSpit");
             user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_damageModifier, 50f);
         }
 
@@ -180,6 +181,12 @@ namespace SwampBoss_Attack
             base.BeginAttack(user);
         }
 
+        public override void Invoke(Actor user, Collider hitCollider)
+        {
+            base.Invoke(user, hitCollider);
+            user.GetComponent<MultiAudioAgent>().Play("BossAttack");
+        }
+
         /*******************
          * OnGizmosDraw : Draws the attack's collider to the screen using Gizmos.
          * @author : Michael Jordan
@@ -211,6 +218,7 @@ namespace SwampBoss_Attack
         public override void BeginAttack(Actor user)
         {
             user.m_animator.SetTrigger("KickAttack");
+            
             base.BeginAttack(user);
         }
 
@@ -240,6 +248,7 @@ namespace SwampBoss_Attack
                 Player_Controller player = hitCollider.GetComponent<Player_Controller>();
                 player.StunPlayer(0.5f, user.transform.forward * 25f);
             }
+            user.GetComponent<MultiAudioAgent>().Play("KickSE");
             base.Invoke(user, hitCollider);
         }
 

@@ -27,6 +27,9 @@ public class SettingsMenu : MonoBehaviour
     [Header("Control Components")]
     public Button m_controlsBtn;
     public GameObject m_controlsMenu;
+    public Image m_keyboard;
+    public Image m_controller;
+
 
     private Resolution[] m_localResolutions;
     private int m_currentMenuID = 0;
@@ -97,11 +100,15 @@ public class SettingsMenu : MonoBehaviour
                 EventSystem.current.SetSelectedGameObject(m_displayDefaultSelected);
             else
                 EventSystem.current.SetSelectedGameObject(m_audioDefaultSelected);
+
         }
         else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
+
+        m_keyboard.enabled = !InputManager.instance.isInGamepadMode;
+        m_controller.enabled = InputManager.instance.isInGamepadMode;
     }
 
     private void UpdateMenu()

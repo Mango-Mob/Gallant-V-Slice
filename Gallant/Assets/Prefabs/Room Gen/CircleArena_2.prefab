@@ -3562,7 +3562,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5480362729541824533}
   m_LocalRotation: {x: 0.018549467, y: 0.41011202, z: 0.061657567, w: 0.9097595}
-  m_LocalPosition: {x: 9.43, y: -3.54, z: -3.95}
+  m_LocalPosition: {x: 9.43, y: -2.52, z: -3.95}
   m_LocalScale: {x: 0.013648575, y: 0.013648575, z: 0.013648575}
   m_Children: []
   m_Father: {fileID: 2813868308155130474}
@@ -4962,6 +4962,7 @@ GameObject:
   - component: {fileID: 3820936889547352946}
   - component: {fileID: 8803721448616947734}
   - component: {fileID: 3770107061025263491}
+  - component: {fileID: 101658515458094519}
   m_Layer: 2
   m_Name: EnemySpawn
   m_TagString: Untagged
@@ -4995,13 +4996,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsRoom: 1
   m_spawnWidth: 0.25
   m_spawnArcHeight: 6
   m_distOffEdge: 14
   m_spawnDelay: 1
   m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
     type: 3}
-  m_music: {fileID: 0}
   m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
     type: 3}
   m_gatesLoc:
@@ -5053,6 +5054,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 20, y: 5, z: 9}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &101658515458094519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8896392095070137087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
+  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
+  audioPlayersCount: 1
+  channel: 1
 --- !u!1 &9033255928173867130
 GameObject:
   m_ObjectHideFlags: 0
