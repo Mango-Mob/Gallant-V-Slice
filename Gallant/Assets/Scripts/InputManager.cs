@@ -21,6 +21,7 @@ public enum KeyType
     NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE, NUM_ZERO,
     L_SHIFT, L_CTRL, L_ALT, TAB, ESC, SPACE,
     R_SHIFT, R_CTRL, R_ALT, ENTER,
+    TILDE,
 }
 public enum MouseButton
 {
@@ -92,6 +93,38 @@ public class InputManager : MonoBehaviour
     protected Keyboard keyboard = Keyboard.current;
     protected int gamepadCount;
 
+    private struct Bind
+    {
+        public Bind(Type _type, int _value) { enumType = _type; value = _value; }
+        public Bind(int _type, int _value) { enumType = Bind.GetTypeFromID(_type); value = _value; }
+
+        public Type enumType;
+        public int value;
+
+        public static int GetTypeID(Type _type)
+        {
+            if (_type == typeof(KeyType)) { return 0; }            
+            if (_type == typeof(MouseButton)) { return 1; }
+            if (_type == typeof(ButtonType)) { return 2; }
+            if (_type == typeof(StickType)) { return 3; }
+            return -1;
+        }
+
+        public static Type GetTypeFromID(int _type)
+        {
+            switch (_type)
+            {
+                default:
+                case 0: return typeof(KeyType);
+                case 1: return typeof(MouseButton);
+                case 2: return typeof(ButtonType);
+                case 3: return typeof(StickType);
+            }
+        }
+    }
+
+    private Dictionary<string, Bind[]> m_binds;
+
     public bool isInGamepadMode { get; private set; } = false;
     private void InitialFunc()
     {
@@ -107,6 +140,18 @@ public class InputManager : MonoBehaviour
             {
                 Debug.Log($"{Gamepad.all[i].displayName} has connected as a GAMEPAD (ID: {i}) to the InputManager.");
             }
+        }
+
+        m_binds = new Dictionary<string, Bind[]>();
+
+        int keyCount = PlayerPrefs.GetInt("BindCount", 0);
+        if(keyCount == 0)
+        {
+            SetDefaultKeyBinds();
+        }
+        else
+        {
+            LoadBinds();
         }
     }
 
@@ -131,6 +176,71 @@ public class InputManager : MonoBehaviour
             {
                 isInGamepadMode = true;
             }
+        }
+    }
+
+    private void SetDefaultKeyBinds()
+    {
+        //Movement
+        m_binds.Add("Move", new Bind[] { new Bind(typeof(StickType), (int)StickType.LEFT) });
+        m_binds.Add("Move_Forward", new Bind[]{ new Bind(typeof(KeyType), (int)KeyType.W) });
+        m_binds.Add("Move_Backward", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.S) });
+        m_binds.Add("Move_Left", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.A) }); ;
+        m_binds.Add("Move_Right", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.D) });
+        m_binds.Add("Roll", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.SPACE), new Bind(typeof(ButtonType), (int)ButtonType.EAST) });
+        
+        //Attack
+        m_binds.Add("Aim", new Bind[] { new Bind(typeof(StickType), (int)StickType.RIGHT) });
+        m_binds.Add("Toggle_Aim", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_SHIFT), new Bind(typeof(KeyType), (int)KeyType.L_CTRL) });
+        m_binds.Add("Toggle_Lockon", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_ALT), new Bind(typeof(ButtonType), (int)ButtonType.RS) });
+        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.LB) });
+        m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });
+        m_binds.Add("Left_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Q), new Bind(typeof(ButtonType), (int)ButtonType.LT) });
+        m_binds.Add("Right_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.E), new Bind(typeof(ButtonType), (int)ButtonType.RT) });
+
+        //Other
+        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
+        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.R), new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
+        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.F), new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
+        m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
+        m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
+
+        SaveBinds();
+    }
+
+    private void SaveBinds()
+    {
+        PlayerPrefs.SetInt("BindCount", m_binds.Count);
+
+        int i = 0;
+        foreach (var bind in m_binds)
+        {
+            PlayerPrefs.SetString($"Bind{i}Name", bind.Key);
+            PlayerPrefs.SetInt($"Bind{i}Count", bind.Value.Length);
+            for (int j = 0; j < bind.Value.Length; j++)
+            {
+                PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", Bind.GetTypeID(bind.Value[j].enumType));
+                PlayerPrefs.SetInt($"Bind{i}.{j}.Value", bind.Value[j].value);
+            }
+            i++;
+        }
+    }
+    public void LoadBinds()
+    {
+        int bindCount = PlayerPrefs.GetInt("BindCount");
+        for (int i = 0; i < bindCount; i++)
+        {
+            string name = PlayerPrefs.GetString($"Bind{i}Name");
+            int count = PlayerPrefs.GetInt($"Bind{i}Count");
+
+            List<Bind> list = new List<Bind>();
+            for (int j = 0; j < count; j++)
+            {
+                int type = PlayerPrefs.GetInt($"Bind{i}.{j}.TypeID");
+                int value = PlayerPrefs.GetInt($"Bind{i}.{j}.Value");
+                list.Add(new Bind(type, value));
+            }
+            m_binds.Add(name, list.ToArray());
         }
     }
 
@@ -316,15 +426,15 @@ public class InputManager : MonoBehaviour
             case KeyType.N: { return keyboard.nKey; }
             case KeyType.M: { return keyboard.mKey; }
 
-            case KeyType.NUM_ONE:     { return keyboard.numpad1Key; }
-            case KeyType.NUM_TWO:     { return keyboard.numpad2Key; }
-            case KeyType.NUM_THREE:   { return keyboard.numpad3Key; }
-            case KeyType.NUM_FOUR:    { return keyboard.numpad4Key; }
-            case KeyType.NUM_FIVE:    { return keyboard.numpad5Key; }
-            case KeyType.NUM_SIX:     { return keyboard.numpad6Key; }
-            case KeyType.NUM_SEVEN:   { return keyboard.numpad7Key; }
-            case KeyType.NUM_EIGHT:   { return keyboard.numpad8Key; }
-            case KeyType.NUM_NINE:    { return keyboard.numpad9Key; }
+            case KeyType.NUM_ONE: { return keyboard.numpad1Key; }
+            case KeyType.NUM_TWO: { return keyboard.numpad2Key; }
+            case KeyType.NUM_THREE: { return keyboard.numpad3Key; }
+            case KeyType.NUM_FOUR: { return keyboard.numpad4Key; }
+            case KeyType.NUM_FIVE: { return keyboard.numpad5Key; }
+            case KeyType.NUM_SIX: { return keyboard.numpad6Key; }
+            case KeyType.NUM_SEVEN: { return keyboard.numpad7Key; }
+            case KeyType.NUM_EIGHT: { return keyboard.numpad8Key; }
+            case KeyType.NUM_NINE: { return keyboard.numpad9Key; }
             case KeyType.NUM_ZERO: { return keyboard.numpad0Key; }
 
             case KeyType.ALP_ONE: { return keyboard.digit1Key; }
@@ -349,8 +459,8 @@ public class InputManager : MonoBehaviour
             case KeyType.R_CTRL: { return keyboard.rightCtrlKey; }
             case KeyType.R_ALT: { return keyboard.rightAltKey; }
             case KeyType.ENTER: { return keyboard.endKey; }
-
-            default:
+            case KeyType.TILDE: { return keyboard.backquoteKey; }
+                    default:
                 return null;
         }
     }
