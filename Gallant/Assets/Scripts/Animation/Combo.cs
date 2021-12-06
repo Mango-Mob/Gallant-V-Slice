@@ -18,6 +18,8 @@ public class Combo : StateMachineBehaviour
         animator.SetBool("RightSword", false);
         animator.SetBool("LeftBoomerang", false);
         animator.SetBool("RightBoomerang", false);
+        animator.SetBool("LeftCast", false);
+        animator.SetBool("RightCast", false);
     }
 
 }
