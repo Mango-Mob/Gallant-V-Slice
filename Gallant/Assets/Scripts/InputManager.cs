@@ -50,9 +50,9 @@ public class InputManager : MonoBehaviour
     #region Singleton
 
     private static InputManager _instance = null;
-    public static InputManager instance 
+    public static InputManager instance
     {
-        get 
+        get
         {
             if (_instance == null)
             {
@@ -99,6 +99,8 @@ public class InputManager : MonoBehaviour
     protected Keyboard keyboard = Keyboard.current;
     protected int gamepadCount;
 
+    public bool bindHasUpdated = true;
+
     [Header("Sprites")]
     [SerializeField] protected Sprite m_north;
     [SerializeField] protected Sprite m_south;
@@ -109,7 +111,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] protected Sprite m_dpadDown;
     [SerializeField] protected Sprite m_dpadLeft;
     [SerializeField] protected Sprite m_dpadRight;
-    
+
     [SerializeField] protected Sprite m_leftBumper;
     [SerializeField] protected Sprite m_leftTrigger;
     [SerializeField] protected Sprite m_leftStick;
@@ -123,7 +125,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] protected Sprite m_start;
     [SerializeField] protected Sprite m_select;
 
-    public struct Bind
+    public class Bind
     {
         public Bind(Type _type, int _value) { enumType = _type; value = _value; }
         public Bind(int _type, int _value) { enumType = Bind.GetTypeFromID(_type); value = _value; }
@@ -133,7 +135,7 @@ public class InputManager : MonoBehaviour
 
         public static int GetTypeID(Type _type)
         {
-            if (_type == typeof(KeyType)) { return 0; }            
+            if (_type == typeof(KeyType)) { return 0; }
             if (_type == typeof(MouseButton)) { return 1; }
             if (_type == typeof(ButtonType)) { return 2; }
             if (_type == typeof(StickType)) { return 3; }
@@ -150,6 +152,10 @@ public class InputManager : MonoBehaviour
                 case 2: return typeof(ButtonType);
                 case 3: return typeof(StickType);
             }
+        }
+        public override bool Equals(object obj)
+        {
+            return (enumType == (obj as Bind).enumType) && (value == (obj as Bind).value);
         }
     }
 
@@ -208,6 +214,52 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if (!bindHasUpdated)
+            return;
+
+        for (int i = m_binds.Count - 1; i >= 0; i--)
+        {
+            string key = m_binds.Keys.ToList()[i];
+            Bind[] array = m_binds[key];
+
+            int newSize = (array != null) ? array.Length : 0;
+
+            if (newSize == 0)
+                continue;
+
+            foreach (var bind in array)
+            {
+                if (bind == null)
+                {
+                    newSize--;
+                }
+            }
+
+            if (newSize == array.Length)
+                continue;
+
+            if (newSize > 0)
+            {
+                Bind[] newArray = new Bind[newSize];
+                int k = 0;
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (array[j] != null)
+                        newArray[k++] = array[j];
+                }
+
+                m_binds[key] = newArray;
+            }
+            else
+            {
+                m_binds[key] = null;
+            }
+        }
+
+        bindHasUpdated = false;
+    }
 
     #region Binds
     public void SetDefaultKeyBinds()
@@ -249,11 +301,19 @@ public class InputManager : MonoBehaviour
         foreach (var bind in m_binds)
         {
             PlayerPrefs.SetString($"Bind{i}Name", bind.Key);
-            PlayerPrefs.SetInt($"Bind{i}Count", bind.Value.Length);
+            PlayerPrefs.SetInt($"Bind{i}Count", (bind.Value != null) ? bind.Value.Length : 0);
             for (int j = 0; j < bind.Value.Length; j++)
             {
-                PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", Bind.GetTypeID(bind.Value[j].enumType));
-                PlayerPrefs.SetInt($"Bind{i}.{j}.Value", bind.Value[j].value);
+                if(bind.Value[j] == null)
+                {
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", -1);
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.Value", -1);
+                }
+                else
+                {
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", Bind.GetTypeID(bind.Value[j].enumType));
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.Value", bind.Value[j].value);
+                }
             }
             i++;
         }
@@ -271,7 +331,16 @@ public class InputManager : MonoBehaviour
             {
                 int type = PlayerPrefs.GetInt($"Bind{i}.{j}.TypeID");
                 int value = PlayerPrefs.GetInt($"Bind{i}.{j}.Value");
-                list.Add(new Bind(type, value));
+
+                if(type == -1 || value == -1)
+                {
+                    list.Add(null);
+                }
+                else
+                {
+                    list.Add(new Bind(type, value));
+                }
+                
             }
             m_binds.Add(name, list.ToArray());
         }
@@ -284,10 +353,47 @@ public class InputManager : MonoBehaviour
         return null;
     }
 
+    public bool DoesBindContainNull(string _id)
+    {
+        Bind[] list;
+        if(m_binds.TryGetValue(_id, out list))
+        {
+            foreach (var bind in list)
+            {
+                if(bind == null)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void SetBinds(string _id, Bind[] _binds)
     {
         if (m_binds.ContainsKey(_id))
             m_binds[_id] = _binds;
+
+        bindHasUpdated = true;
+
+        foreach (var item in m_binds)
+        {
+            if(item.Key != _id && item.Value != null)
+            {
+                for (int i = 0; i < item.Value.Length; i++)
+                {
+                    foreach (var newBinds in _binds)
+                    {
+                        if (newBinds.Equals(item.Value[i]))
+                        {
+                            //Found Dupe, clearing old dupe
+                            item.Value[i] = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public bool IsBindDown(string bindName, int gamepadID = 0)

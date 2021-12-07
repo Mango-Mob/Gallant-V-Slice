@@ -15,6 +15,7 @@ public class KeyBindOption : MonoBehaviour
     public bool m_controllerOnly = false;
     public bool m_onlyOne = false;
 
+    private bool hasQueuedRefresh = false;
     private List<InputManager.Bind> m_myBinds;
     private int m_isListening = -1;
 
@@ -25,34 +26,45 @@ public class KeyBindOption : MonoBehaviour
         {
             m_slots[1].gameObject.SetActive(false);
         }
-        m_myBinds = new List<InputManager.Bind>(InputManager.instance.GetBinds(m_bindID));
+
+        InputManager.Bind[] array = InputManager.instance.GetBinds(m_bindID);
+        m_myBinds = (array != null) ? new List<InputManager.Bind>(array) : new List<InputManager.Bind>();
         for (int i = 0; i < m_slots.Length; i++)
         {
             CleanListener(i);
         }
 
-        for (int i = 0; i < m_myBinds.Count && i < m_imageSlot.Length; i++)
+        if(m_myBinds.Count == 0)
         {
+            hasQueuedRefresh = false;
+            return;
+        }
 
-            switch (InputManager.Bind.GetTypeID(m_myBinds[i].enumType))
+        for (int i = 0; i < m_myBinds.Count && i < m_slots.Length; i++)
+        {
+            if(m_myBinds[i] != null)
             {
-                case 0:
-                    UpdateKeyboardDisplay((KeyType)m_myBinds[i].value, i);
-                    break;
-                case 1:
-                    UpdateMouseDisplay((MouseButton)m_myBinds[i].value, i);
-                    break;
-                case 2:
-                    UpdateGamepadDisplay((ButtonType)m_myBinds[i].value, i);
-                    break;
-                case 3:
-                    UpdateStickDisplay((StickType)m_myBinds[i].value, i);
-                    break;
+                switch (InputManager.Bind.GetTypeID(m_myBinds[i].enumType))
+                {
+                    case 0:
+                        UpdateKeyboardDisplay((KeyType)m_myBinds[i].value, i);
+                        break;
+                    case 1:
+                        UpdateMouseDisplay((MouseButton)m_myBinds[i].value, i);
+                        break;
+                    case 2:
+                        UpdateGamepadDisplay((ButtonType)m_myBinds[i].value, i);
+                        break;
+                    case 3:
+                        UpdateStickDisplay((StickType)m_myBinds[i].value, i);
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
         }
+        hasQueuedRefresh = false;
     }
 
     // Update is called once per frame
@@ -108,6 +120,15 @@ public class KeyBindOption : MonoBehaviour
             {
                 UpdateInputManager();
             }
+        }
+        else if(InputManager.instance.bindHasUpdated)
+        {
+            hasQueuedRefresh = true;
+        }
+
+        if(hasQueuedRefresh && !InputManager.instance.bindHasUpdated)
+        {
+            Start();
         }
     }
 

@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shopkeeper : Actor
 {
     public TextAsset m_dialog;
     public GameObject m_keyboardInput;
-    public GameObject m_gamePadInput;
+    public Image m_gamePadInput;
 
     public RewardWindow m_reward;
     public DialogDisplay m_display;
@@ -31,12 +32,57 @@ public class Shopkeeper : Actor
     protected override void Update()
     {
         base.Update();
-        m_keyboardInput.SetActive(m_ShowUI && !InputManager.instance.isInGamepadMode);
-        m_gamePadInput.SetActive(m_ShowUI && InputManager.instance.isInGamepadMode);
+        m_keyboardInput.gameObject.SetActive(m_ShowUI && !InputManager.instance.isInGamepadMode);
+        m_gamePadInput.gameObject.SetActive(m_ShowUI && InputManager.instance.isInGamepadMode);
 
         if(m_player != null && Vector3.Distance(m_player.transform.position, transform.position) > 30.0f)
         {
             gameObject.SetActive(false);
+        }
+
+        if (m_ShowUI)
+        {
+            InputManager.Bind[] binds = InputManager.instance.GetBinds("Interact");
+            bool foundKey = false;
+            bool foundButton = false;
+            for (int i = 0; i < binds.Length; i++)
+            {
+                switch (InputManager.Bind.GetTypeID(binds[i].enumType))
+                {
+                    case 0:
+                        {
+                            if (!foundKey)
+                            {
+                                foundKey = true;
+                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.instance.GetKeyString((KeyType)binds[i].value);
+                            }
+                            break;
+                        }
+                    case 1:
+                        {
+                            if (!foundKey)
+                            {
+                                foundKey = true;
+                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.instance.GetMouseButtonString((MouseButton)binds[i].value);
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (!foundButton)
+                            {
+                                foundButton = true;
+                                m_gamePadInput.sprite = InputManager.instance.GetGamepadSprite((ButtonType)binds[i].value);
+                            }
+                            break;
+                        }
+
+                    default:
+                    case 3:
+                        break;
+                }
+            }
+
         }
     }
 
