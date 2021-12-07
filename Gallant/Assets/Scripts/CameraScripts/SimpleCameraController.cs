@@ -116,14 +116,8 @@ namespace UnityTemplateProjects
         void Update()
         {
             Vector3 translation = Vector3.zero;
-            if(InputManager.instance.IsAnyKeyPressed() || InputManager.instance.IsAnyMousePressed() || InputManager.instance.GetMouseDelta() != Vector2.zero)
-            {
-                isKeyboard = true;
-            }
-            else if(InputManager.instance.IsAnyGamePadInput(-1))
-            {
-                isKeyboard = false;
-            }
+            isKeyboard = !InputManager.instance.isInGamepadMode;
+
 
             // Exit Sample  
             if (InputManager.instance.IsKeyDown(KeyType.ESC) && canQuitWithEsc)
