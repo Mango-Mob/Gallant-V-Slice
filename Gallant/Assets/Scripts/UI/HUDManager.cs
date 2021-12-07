@@ -42,7 +42,7 @@ public class HUDManager : MonoBehaviour
     void Update()
     {
         Vector2 mousePos = InputManager.instance.GetMousePositionInScreen();
-        if (InputManager.instance.GetMouseButtonDown(MouseButton.LEFT))
+        if (InputManager.instance.IsMouseButtonDown(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {
@@ -53,7 +53,7 @@ public class HUDManager : MonoBehaviour
                 }
             }
         }
-        else if(InputManager.instance.GetMouseButtonUp(MouseButton.LEFT))
+        else if(InputManager.instance.IsMouseButtonUp(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {

@@ -143,7 +143,6 @@ public class InputManager : MonoBehaviour
         }
 
         m_binds = new Dictionary<string, Bind[]>();
-
         int keyCount = PlayerPrefs.GetInt("BindCount", 0);
         if(keyCount == 0)
         {
