@@ -365,7 +365,7 @@ public class Player_Movement : MonoBehaviour
     {
         //playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
 
-        playerController.playerResources.ChangeAdrenaline(_val);
+        //playerController.playerResources.ChangeAdrenaline(_val);
 
         //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 

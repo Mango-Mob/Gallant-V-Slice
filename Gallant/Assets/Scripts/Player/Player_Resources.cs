@@ -15,13 +15,13 @@ public class Player_Resources : MonoBehaviour
     public float m_maxHealth { get; private set; } = 100.0f;
     public float m_barrier { get; private set; } = 0.0f;
     public float m_maxBarrier { get; private set; } = 50.0f;
-    public float m_adrenaline { get; private set; } = 0.0f;
+    public int m_adrenaline { get; private set; } = 0;
 
     private Player_Controller playerController;
     public UI_Bar healthBar { get; private set; }
     public UI_PortraitHP portrait { get; private set; }
     public UI_Bar barrierBar { get; private set; }
-    public UI_OrbResource adrenalineOrbs { get; private set; }
+    public UI_OrbCount adrenalineOrbs { get; private set; }
 
     public float m_adrenalineHeal = 40.0f;
     [SerializeField] private GameObject healVFXPrefab;
@@ -37,7 +37,7 @@ public class Player_Resources : MonoBehaviour
         healthBar = HUDManager.instance.GetElement<UI_Bar>("HP");
         barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
-        adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbResource>("Adrenaline");
+        adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbCount>("Adrenaline");
     }
     // Start is called before the first frame update
     void Start()
@@ -131,15 +131,15 @@ public class Player_Resources : MonoBehaviour
     /*******************
      * ChangeAdrenaline : Changes adrenaline value
      * @author : William de Beer
-     * @param : (float) Amount to add to adrenaline
+     * @param : (int) Amount to add to adrenaline
      */
-    public void ChangeAdrenaline(float _amount)
+    public void ChangeAdrenaline(int _amount)
     {
-        if (_amount > 0.0f)
+        if (_amount > 0)
             playerController.playerAudioAgent.PlayOrbPickup();
 
         m_adrenaline += _amount;
-        m_adrenaline = Mathf.Clamp(m_adrenaline, 0.0f, 3.0f);
+        m_adrenaline = m_adrenaline;
     }
     /*******************
      * UseAdrenaline : Consumes adrenaline to consume health if player has enough adrenaline.
@@ -147,11 +147,11 @@ public class Player_Resources : MonoBehaviour
      */
     public void UseAdrenaline()
     {
-        if (m_adrenaline >= 1.0f)
+        if (m_adrenaline >= 1)
         {
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             ChangeHealth(m_adrenalineHeal);
-            ChangeAdrenaline(-1.0f);
+            ChangeAdrenaline(-1);
 
             // Create VFX
             if (healVFXPrefab)

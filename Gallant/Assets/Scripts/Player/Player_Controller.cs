@@ -226,11 +226,11 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
-            playerResources.ChangeAdrenaline(-0.2f);
+            playerResources.ChangeAdrenaline(-1);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_THREE))
         {
-            playerResources.ChangeAdrenaline(0.2f);
+            playerResources.ChangeAdrenaline(1);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
