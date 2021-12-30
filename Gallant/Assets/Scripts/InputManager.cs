@@ -21,23 +21,26 @@ public enum KeyType
     NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE, NUM_ZERO,
     L_SHIFT, L_CTRL, L_ALT, TAB, ESC, SPACE,
     R_SHIFT, R_CTRL, R_ALT, ENTER,
+    TILDE, NONE
 }
 public enum MouseButton
 {
-    LEFT, MIDDLE, RIGHT
+    LEFT, MIDDLE, RIGHT, NONE
 }
 public enum ButtonType
 {
     NORTH, SOUTH, EAST, WEST,
     START, SELECT, 
     LT, LB, LS, RT, RB, RS,
-    UP, DOWN, LEFT, RIGHT
+    UP, DOWN, LEFT, RIGHT,
+    NONE
 }
 
 public enum StickType
 {
     LEFT,
-    RIGHT
+    RIGHT,
+    NONE
 }
 
 #endregion
@@ -47,16 +50,16 @@ public class InputManager : MonoBehaviour
     #region Singleton
 
     private static InputManager _instance = null;
-    public static InputManager instance 
+    public static InputManager instance
     {
-        get 
+        get
         {
             if (_instance == null)
             {
-                GameObject loader = new GameObject();
-                _instance = loader.AddComponent<InputManager>();
+                GameObject loader = GameObject.Instantiate(Resources.Load<GameObject>("InputManager"));
+                _instance = loader.GetComponent<InputManager>();
                 loader.name = "Input Manager";
-                return loader.GetComponent<InputManager>();
+                return _instance;
             }
             return _instance;
         }
@@ -84,13 +87,79 @@ public class InputManager : MonoBehaviour
     private void OnDestroy()
     {
         if (_instance == this)
+        {
+            SaveBinds();
+            Destroy(_instance.gameObject);
             _instance = null;
+        }
     }
     #endregion
 
     protected Mouse mouse;
     protected Keyboard keyboard = Keyboard.current;
     protected int gamepadCount;
+
+    public bool bindHasUpdated = true;
+
+    [Header("Sprites")]
+    [SerializeField] protected Sprite m_north;
+    [SerializeField] protected Sprite m_south;
+    [SerializeField] protected Sprite m_east;
+    [SerializeField] protected Sprite m_west;
+
+    [SerializeField] protected Sprite m_dpadUp;
+    [SerializeField] protected Sprite m_dpadDown;
+    [SerializeField] protected Sprite m_dpadLeft;
+    [SerializeField] protected Sprite m_dpadRight;
+
+    [SerializeField] protected Sprite m_leftBumper;
+    [SerializeField] protected Sprite m_leftTrigger;
+    [SerializeField] protected Sprite m_leftStick;
+    [SerializeField] protected Sprite m_leftStickMove;
+
+    [SerializeField] protected Sprite m_rightBumper;
+    [SerializeField] protected Sprite m_rightTrigger;
+    [SerializeField] protected Sprite m_rightStick;
+    [SerializeField] protected Sprite m_rightStickMove;
+
+    [SerializeField] protected Sprite m_start;
+    [SerializeField] protected Sprite m_select;
+
+    public class Bind
+    {
+        public Bind(Type _type, int _value) { enumType = _type; value = _value; }
+        public Bind(int _type, int _value) { enumType = Bind.GetTypeFromID(_type); value = _value; }
+
+        public Type enumType;
+        public int value;
+
+        public static int GetTypeID(Type _type)
+        {
+            if (_type == typeof(KeyType)) { return 0; }
+            if (_type == typeof(MouseButton)) { return 1; }
+            if (_type == typeof(ButtonType)) { return 2; }
+            if (_type == typeof(StickType)) { return 3; }
+            return -1;
+        }
+
+        public static Type GetTypeFromID(int _type)
+        {
+            switch (_type)
+            {
+                default:
+                case 0: return typeof(KeyType);
+                case 1: return typeof(MouseButton);
+                case 2: return typeof(ButtonType);
+                case 3: return typeof(StickType);
+            }
+        }
+        public override bool Equals(object obj)
+        {
+            return (enumType == (obj as Bind).enumType) && (value == (obj as Bind).value);
+        }
+    }
+
+    private Dictionary<string, Bind[]> m_binds;
 
     public bool isInGamepadMode { get; private set; } = false;
     private void InitialFunc()
@@ -108,6 +177,17 @@ public class InputManager : MonoBehaviour
                 Debug.Log($"{Gamepad.all[i].displayName} has connected as a GAMEPAD (ID: {i}) to the InputManager.");
             }
         }
+
+        m_binds = new Dictionary<string, Bind[]>();
+        int keyCount = PlayerPrefs.GetInt("BindCount", 0);
+        if(keyCount == 0)
+        {
+            SetDefaultKeyBinds();
+        }
+        else
+        {
+            LoadBinds();
+        }
     }
 
     private void Update()
@@ -120,25 +200,367 @@ public class InputManager : MonoBehaviour
             }
             gamepadCount = Gamepad.all.Count;
         }
-        if (IsAnyKeyDown() ||IsAnyMouseButtonDown())
+        if (IsAnyKeyDown() != KeyType.NONE || IsAnyMouseButtonDown() != MouseButton.NONE)
         {
             isInGamepadMode = false;
         }
         else
         {
-            int gamepadID = InputManager.instance.GetAnyGamePad();
-            if (InputManager.instance.IsAnyGamePadInput(gamepadID))
+            int gamepadID = GetAnyGamePad();
+            if (gamepadID != -1)
             {
                 isInGamepadMode = true;
             }
         }
     }
 
+    private void LateUpdate()
+    {
+        if (!bindHasUpdated)
+            return;
+
+        for (int i = m_binds.Count - 1; i >= 0; i--)
+        {
+            string key = m_binds.Keys.ToList()[i];
+            Bind[] array = m_binds[key];
+
+            int newSize = (array != null) ? array.Length : 0;
+
+            if (newSize == 0)
+                continue;
+
+            foreach (var bind in array)
+            {
+                if (bind == null)
+                {
+                    newSize--;
+                }
+            }
+
+            if (newSize == array.Length)
+                continue;
+
+            if (newSize > 0)
+            {
+                Bind[] newArray = new Bind[newSize];
+                int k = 0;
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (array[j] != null)
+                        newArray[k++] = array[j];
+                }
+
+                m_binds[key] = newArray;
+            }
+            else
+            {
+                m_binds[key] = null;
+            }
+        }
+
+        bindHasUpdated = false;
+    }
+
+    #region Binds
+    public void SetDefaultKeyBinds()
+    {
+        m_binds.Clear();
+
+        //Movement
+        m_binds.Add("Move", new Bind[] { new Bind(typeof(StickType), (int)StickType.LEFT) });
+        m_binds.Add("Move_Forward", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.W) });
+        m_binds.Add("Move_Backward", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.S) });
+        m_binds.Add("Move_Left", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.A) }); ;
+        m_binds.Add("Move_Right", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.D) });
+        m_binds.Add("Roll", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.SPACE), new Bind(typeof(ButtonType), (int)ButtonType.EAST) });
+
+        //Attack
+        m_binds.Add("Aim", new Bind[] { new Bind(typeof(StickType), (int)StickType.RIGHT) });
+        m_binds.Add("Toggle_Aim", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_SHIFT), new Bind(typeof(KeyType), (int)KeyType.L_CTRL) });
+        m_binds.Add("Toggle_Lockon", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_ALT), new Bind(typeof(ButtonType), (int)ButtonType.RS) });
+        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.LB) });
+        m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });
+        m_binds.Add("Left_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Q), new Bind(typeof(ButtonType), (int)ButtonType.LT) });
+        m_binds.Add("Right_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.E), new Bind(typeof(ButtonType), (int)ButtonType.RT) });
+
+        //Other
+        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
+        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.R), new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
+        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.F), new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
+        m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
+        m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
+        m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
+        SaveBinds();
+    }
+
+    public void SaveBinds()
+    {
+        PlayerPrefs.SetInt("BindCount", m_binds.Count);
+
+        int i = 0;
+        foreach (var bind in m_binds)
+        {
+            PlayerPrefs.SetString($"Bind{i}Name", bind.Key);
+            PlayerPrefs.SetInt($"Bind{i}Count", (bind.Value != null) ? bind.Value.Length : 0);
+            for (int j = 0; j < bind.Value.Length; j++)
+            {
+                if(bind.Value[j] == null)
+                {
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", -1);
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.Value", -1);
+                }
+                else
+                {
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.TypeID", Bind.GetTypeID(bind.Value[j].enumType));
+                    PlayerPrefs.SetInt($"Bind{i}.{j}.Value", bind.Value[j].value);
+                }
+            }
+            i++;
+        }
+    }
+    public void LoadBinds()
+    {
+        int bindCount = PlayerPrefs.GetInt("BindCount");
+        for (int i = 0; i < bindCount; i++)
+        {
+            string name = PlayerPrefs.GetString($"Bind{i}Name");
+            int count = PlayerPrefs.GetInt($"Bind{i}Count");
+
+            List<Bind> list = new List<Bind>();
+            for (int j = 0; j < count; j++)
+            {
+                int type = PlayerPrefs.GetInt($"Bind{i}.{j}.TypeID");
+                int value = PlayerPrefs.GetInt($"Bind{i}.{j}.Value");
+
+                if(type == -1 || value == -1)
+                {
+                    list.Add(null);
+                }
+                else
+                {
+                    list.Add(new Bind(type, value));
+                }
+                
+            }
+            m_binds.Add(name, list.ToArray());
+        }
+    }
+    public Bind[] GetBinds(string _id)
+    {
+        if (m_binds.ContainsKey(_id))
+            return m_binds[_id];
+
+        return null;
+    }
+
+    public bool DoesBindContainNull(string _id)
+    {
+        Bind[] list;
+        if(m_binds.TryGetValue(_id, out list))
+        {
+            foreach (var bind in list)
+            {
+                if(bind == null)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void SetBinds(string _id, Bind[] _binds)
+    {
+        if (m_binds.ContainsKey(_id))
+            m_binds[_id] = _binds;
+
+        bindHasUpdated = true;
+
+        foreach (var item in m_binds)
+        {
+            if(item.Key != _id && item.Value != null)
+            {
+                for (int i = 0; i < item.Value.Length; i++)
+                {
+                    foreach (var newBinds in _binds)
+                    {
+                        if (newBinds.Equals(item.Value[i]))
+                        {
+                            //Found Dupe, clearing old dupe
+                            item.Value[i] = null;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public bool IsBindDown(string bindName, int gamepadID = 0)
+    {
+        Bind[] temp;
+        if(m_binds.TryGetValue(bindName, out temp))
+        {
+            bool isDown = false;
+            foreach (var item in temp)
+            {
+                switch (Bind.GetTypeID(item.enumType))
+                {
+                    
+                    case 0: 
+                        isDown = isDown || IsKeyDown((KeyType)item.value);
+                        break;
+                    case 1: 
+                        isDown = isDown || IsMouseButtonDown((MouseButton)item.value); 
+                        break;
+                    case 2: 
+                        isDown = isDown || IsGamepadButtonDown((ButtonType)item.value, gamepadID);
+                        break;
+
+                    case 3:
+                    default:
+                        continue;
+                }
+            }
+            return isDown;
+        }
+
+        Debug.LogWarning($"Bind of {bindName} does not exist.");
+        return false;
+    }
+    public bool IsBindUp(string bindName, int gamepadID = 0)
+    {
+        Bind[] temp;
+        if (m_binds.TryGetValue(bindName, out temp))
+        {
+            bool isDown = false;
+            foreach (var item in temp)
+            {
+                switch (Bind.GetTypeID(item.enumType))
+                {
+
+                    case 0:
+                        isDown = isDown || IsKeyUp((KeyType)item.value);
+                        break;
+                    case 1:
+                        isDown = isDown || IsMouseButtonUp((MouseButton)item.value);
+                        break;
+                    case 2:
+                        isDown = isDown || IsGamepadButtonUp((ButtonType)item.value, gamepadID);
+                        break;
+
+                    case 3:
+                    default:
+                        continue;
+                }
+            }
+            return isDown;
+        }
+
+        Debug.LogWarning($"Bind of {bindName} does not exist.");
+        return false;
+    }
+
+    public bool IsBindPressed(string bindName, int gamepadID = 0)
+    {
+        Bind[] temp;
+        if (m_binds.TryGetValue(bindName, out temp))
+        {
+            bool isDown = false;
+            foreach (var item in temp)
+            {
+                switch (Bind.GetTypeID(item.enumType))
+                {
+
+                    case 0:
+                        isDown = isDown || IsKeyPressed((KeyType)item.value);
+                        break;
+                    case 1:
+                        isDown = isDown || IsMouseButtonPressed((MouseButton)item.value);
+                        break;
+                    case 2:
+                        isDown = isDown || IsGamepadButtonPressed((ButtonType)item.value, gamepadID);
+                        break;
+
+                    case 3:
+                    default:
+                        continue;
+                }
+            }
+            return isDown;
+        }
+
+        Debug.LogWarning($"Bind of {bindName} does not exist.");
+        return false;
+    }
+
+    public bool IsBindReleased(string bindName, int gamepadID = 0)
+    {
+        Bind[] temp;
+        if (m_binds.TryGetValue(bindName, out temp))
+        {
+            bool isDown = false;
+            foreach (var item in temp)
+            {
+                switch (Bind.GetTypeID(item.enumType))
+                {
+
+                    case 0:
+                        isDown = isDown || IsKeyReleased((KeyType)item.value);
+                        break;
+                    case 1:
+                        isDown = isDown || IsMouseButtonReleased((MouseButton)item.value);
+                        break;
+                    case 2:
+                        isDown = isDown || IsGamepadButtonReleased((ButtonType)item.value, gamepadID);
+                        break;
+
+                    case 3:
+                    default:
+                        continue;
+                }
+            }
+            return isDown;
+        }
+
+        Debug.LogWarning($"Bind of {bindName} does not exist.");
+        return false;
+    }
+
+    public Vector2 GetBindStick(string bindName, int gamepadID = 0)
+    {
+        Bind[] temp;
+        if (m_binds.TryGetValue(bindName, out temp))
+        {
+            Vector2 stick = Vector2.zero;
+            foreach (var item in temp)
+            {
+                switch (Bind.GetTypeID(item.enumType))
+                {
+                    case 3:
+                        stick = GetGamepadStick((StickType)item.value, gamepadID);
+                        break;
+                    case 0:
+                    case 1:
+                    case 2:
+                    default:
+                        continue;
+                }
+            }
+            return stick;
+        }
+
+        Debug.LogWarning($"Bind of {bindName} does not exist.");
+        return Vector2.zero;
+    }
+    #endregion
+
+    #region GamePad
     public int GetAnyGamePad()
     {
         for (int i = 0; i < Gamepad.all.Count; i++)
         {
-            if(IsAnyGamePadInput(i))
+            if (IsAnyGamePadInput(i) != ButtonType.NONE || IsAnyGameStickInput(i) != StickType.NONE)
             {
                 return i;
             }
@@ -146,52 +568,56 @@ public class InputManager : MonoBehaviour
         return -1;
     }
 
-    public bool IsAnyGamePadInput(int padID)
+    public ButtonType IsAnyGamePadInput(int padID)
     {
         for (int i = 0; i < Enum.GetNames(typeof(ButtonType)).Length; i++)
         {
             if (IsGamepadButtonPressed((ButtonType)i, padID))
             {
-                return true;
+                return (ButtonType)i;
             }
         }
 
+        return ButtonType.NONE;
+    }
+
+    public StickType IsAnyGameStickInput(int padID)
+    {
         for (int j = 0; j < Enum.GetNames(typeof(StickType)).Length; j++)
         {
             if (GetGamepadStick((StickType)j, padID) != Vector2.zero)
             {
-                return true;
+                return (StickType)j;
             }
         }
-
-        return false;
+        return StickType.NONE;
     }
 
     public ButtonControl GetGamepadButton(ButtonType button, int padID)
     {
         Gamepad pad = (padID < 0 || padID >= Gamepad.all.Count) ? Gamepad.current : Gamepad.all[padID];
-        
+
         if (pad == null)
             return null;
 
         switch (button)
         {
-            case ButtonType.NORTH:     { return pad.buttonNorth; }
-            case ButtonType.SOUTH:     { return pad.buttonSouth; }
-            case ButtonType.EAST:      { return pad.buttonEast; }
-            case ButtonType.WEST:      { return pad.buttonWest; }
-            case ButtonType.START:     { return pad.startButton; }
-            case ButtonType.SELECT:    { return pad.selectButton; }
-            case ButtonType.LT:        { return pad.leftTrigger; }
-            case ButtonType.LB:        { return pad.leftShoulder; }
-            case ButtonType.LS:        { return pad.leftStickButton; }
-            case ButtonType.RT:        { return pad.rightTrigger; }
-            case ButtonType.RB:        { return pad.rightShoulder; }
-            case ButtonType.RS:        { return pad.rightStickButton; }
-            case ButtonType.UP:        { return pad.dpad.up; }
-            case ButtonType.DOWN:      { return pad.dpad.down; }
-            case ButtonType.LEFT:      { return pad.dpad.left; }
-            case ButtonType.RIGHT:     { return pad.dpad.right; }
+            case ButtonType.NORTH: { return pad.buttonNorth; }
+            case ButtonType.SOUTH: { return pad.buttonSouth; }
+            case ButtonType.EAST: { return pad.buttonEast; }
+            case ButtonType.WEST: { return pad.buttonWest; }
+            case ButtonType.START: { return pad.startButton; }
+            case ButtonType.SELECT: { return pad.selectButton; }
+            case ButtonType.LT: { return pad.leftTrigger; }
+            case ButtonType.LB: { return pad.leftShoulder; }
+            case ButtonType.LS: { return pad.leftStickButton; }
+            case ButtonType.RT: { return pad.rightTrigger; }
+            case ButtonType.RB: { return pad.rightShoulder; }
+            case ButtonType.RS: { return pad.rightStickButton; }
+            case ButtonType.UP: { return pad.dpad.up; }
+            case ButtonType.DOWN: { return pad.dpad.down; }
+            case ButtonType.LEFT: { return pad.dpad.left; }
+            case ButtonType.RIGHT: { return pad.dpad.right; }
 
             default:
                 return null;
@@ -214,7 +640,7 @@ public class InputManager : MonoBehaviour
                 return Vector2.zero;
         }
     }
-
+    
     public bool IsGamepadButtonDown(ButtonType button, int padID)
     {
         ButtonControl control = GetGamepadButton(button, padID);
@@ -255,32 +681,85 @@ public class InputManager : MonoBehaviour
         return !(control.isPressed);
     }
 
-    public bool IsAnyKeyPressed()
+    public Sprite GetGamepadSprite(ButtonType _button)
     {
-        return keyboard.anyKey.isPressed;
+        switch (_button)
+        {
+            case ButtonType.NORTH:  {return m_north; }
+            case ButtonType.SOUTH:  { return m_south; }
+            case ButtonType.EAST:   { return m_east; }
+            case ButtonType.WEST:   { return m_west; }
+                                      
+            case ButtonType.START:  { return m_start; }
+            case ButtonType.SELECT: { return m_select; }
+                                      
+            case ButtonType.LT:     { return m_leftTrigger; }
+            case ButtonType.LB:     { return m_leftBumper; }
+            case ButtonType.LS:     { return m_leftStick; }
+                                      
+            case ButtonType.RT:     { return m_rightTrigger; }
+            case ButtonType.RB:     { return m_rightBumper; }
+            case ButtonType.RS:     { return m_rightStick; }
+                                      
+            case ButtonType.UP:     { return m_dpadUp; }
+            case ButtonType.DOWN:   { return m_dpadDown; }
+            case ButtonType.LEFT:   { return m_dpadLeft; }
+            case ButtonType.RIGHT:  { return m_dpadRight; }
+
+            default:
+            case ButtonType.NONE:   { return null; }
+        }
     }
-    public bool IsAnyKeyDown()
+
+    public Sprite GetGameStickSprite(StickType _stick)
+    {
+        switch (_stick)
+        {
+            case StickType.LEFT: { return m_leftStickMove; }
+            case StickType.RIGHT: { return m_rightStickMove; }
+            
+            default:
+            case StickType.NONE: { return null; }
+        }
+    }
+    #endregion
+
+    #region Keyboard
+
+        public KeyType IsAnyKeyPressed()
+    {
+        foreach (var keyType in Enum.GetValues(typeof(KeyType)).Cast<KeyType>())
+        {
+            if (IsKeyPressed(keyType))
+            {
+                return keyType;
+            }
+        }
+        return KeyType.NONE;
+    }
+
+    public KeyType IsAnyKeyDown()
     {
         foreach (var keyType in Enum.GetValues(typeof(KeyType)).Cast<KeyType>())
         {
             if(IsKeyDown(keyType))
             {
-                return true;
+                return keyType;
             }
         }
-        return false;
+        return KeyType.NONE;
     }
 
-    public bool IsAnyMouseButtonDown()
+    public MouseButton IsAnyMouseButtonDown()
     {
         foreach (var mouseButton in Enum.GetValues(typeof(MouseButton)).Cast<MouseButton>())
         {
-            if (GetMouseButtonDown(mouseButton))
+            if (IsMouseButtonDown(mouseButton))
             {
-                return true;
+                return mouseButton;
             }
         }
-        return false;
+        return MouseButton.NONE;
     }
 
     public KeyControl GetKey(KeyType key)
@@ -316,15 +795,15 @@ public class InputManager : MonoBehaviour
             case KeyType.N: { return keyboard.nKey; }
             case KeyType.M: { return keyboard.mKey; }
 
-            case KeyType.NUM_ONE:     { return keyboard.numpad1Key; }
-            case KeyType.NUM_TWO:     { return keyboard.numpad2Key; }
-            case KeyType.NUM_THREE:   { return keyboard.numpad3Key; }
-            case KeyType.NUM_FOUR:    { return keyboard.numpad4Key; }
-            case KeyType.NUM_FIVE:    { return keyboard.numpad5Key; }
-            case KeyType.NUM_SIX:     { return keyboard.numpad6Key; }
-            case KeyType.NUM_SEVEN:   { return keyboard.numpad7Key; }
-            case KeyType.NUM_EIGHT:   { return keyboard.numpad8Key; }
-            case KeyType.NUM_NINE:    { return keyboard.numpad9Key; }
+            case KeyType.NUM_ONE: { return keyboard.numpad1Key; }
+            case KeyType.NUM_TWO: { return keyboard.numpad2Key; }
+            case KeyType.NUM_THREE: { return keyboard.numpad3Key; }
+            case KeyType.NUM_FOUR: { return keyboard.numpad4Key; }
+            case KeyType.NUM_FIVE: { return keyboard.numpad5Key; }
+            case KeyType.NUM_SIX: { return keyboard.numpad6Key; }
+            case KeyType.NUM_SEVEN: { return keyboard.numpad7Key; }
+            case KeyType.NUM_EIGHT: { return keyboard.numpad8Key; }
+            case KeyType.NUM_NINE: { return keyboard.numpad9Key; }
             case KeyType.NUM_ZERO: { return keyboard.numpad0Key; }
 
             case KeyType.ALP_ONE: { return keyboard.digit1Key; }
@@ -349,31 +828,122 @@ public class InputManager : MonoBehaviour
             case KeyType.R_CTRL: { return keyboard.rightCtrlKey; }
             case KeyType.R_ALT: { return keyboard.rightAltKey; }
             case KeyType.ENTER: { return keyboard.endKey; }
-
-            default:
+            case KeyType.TILDE: { return keyboard.backquoteKey; }
+                    default:
                 return null;
         }
     }
 
     public bool IsKeyDown(KeyType key)
     {
+        if(key == KeyType.NONE)
+            return false;
+
         return GetKey(key).wasPressedThisFrame;
     }
 
     public bool IsKeyUp(KeyType key)
     {
+        if (key == KeyType.NONE)
+            return false;
+
         return GetKey(key).wasReleasedThisFrame;
     }
 
     public bool IsKeyPressed(KeyType key)
     {
+        if (key == KeyType.NONE)
+            return false;
+
         return GetKey(key).isPressed;
     }
     public bool IsKeyReleased(KeyType key)
     {
+        if (key == KeyType.NONE)
+            return false;
+
         return !(GetKey(key).isPressed);
     }
 
+    public string GetKeyString(KeyType key)
+    {
+        switch (key)
+        {
+            case KeyType.Q: { return "Q"; }
+            case KeyType.W: { return "W"; }
+            case KeyType.E: { return "E"; }
+            case KeyType.R: { return "R"; }
+            case KeyType.T: { return "T"; }
+            case KeyType.Y: { return "Y"; }
+            case KeyType.U: { return "U"; }
+            case KeyType.I: { return "I"; }
+            case KeyType.O: { return "O"; }
+            case KeyType.P: { return "P"; }
+                              
+            case KeyType.A: { return "A"; }
+            case KeyType.S: { return "S"; }
+            case KeyType.D: { return "D"; }
+            case KeyType.F: { return "F"; }
+            case KeyType.G: { return "G"; }
+            case KeyType.H: { return "H"; }
+            case KeyType.J: { return "J"; }
+            case KeyType.K: { return "K"; }
+            case KeyType.L: { return "L"; }
+                              
+            case KeyType.Z: { return "Z"; }
+            case KeyType.X: { return "X"; }
+            case KeyType.C: { return "C"; }
+            case KeyType.V: { return "V"; }
+            case KeyType.B: { return "B"; }
+            case KeyType.N: { return "N"; }
+            case KeyType.M: { return "M"; }
+
+            case KeyType.ALP_ONE:   { return "1"; }
+            case KeyType.ALP_TWO:   { return "2"; }
+            case KeyType.ALP_THREE: { return "3"; }
+            case KeyType.ALP_FOUR:  { return "4"; }
+            case KeyType.ALP_FIVE:  { return "5"; }
+            case KeyType.ALP_SIX:   { return "6"; }
+            case KeyType.ALP_SEVEN: { return "7"; }
+            case KeyType.ALP_EIGHT: { return "8"; }
+            case KeyType.ALP_NINE:  { return "9"; }
+            case KeyType.ALP_ZERO:  { return "0"; }
+                                      
+            case KeyType.NUM_ONE:   { return "NUM_1"; }
+            case KeyType.NUM_TWO:   { return "NUM_2"; }
+            case KeyType.NUM_THREE: { return "NUM_3"; }
+            case KeyType.NUM_FOUR:  { return "NUM_4"; }
+            case KeyType.NUM_FIVE:  { return "NUM_5"; }
+            case KeyType.NUM_SIX:   { return "NUM_6"; }
+            case KeyType.NUM_SEVEN: { return "NUM_7"; }
+            case KeyType.NUM_EIGHT: { return "NUM_8"; }
+            case KeyType.NUM_NINE:  { return "NUM_9"; }
+            case KeyType.NUM_ZERO:  { return "NUM_0"; }
+                                      
+            case KeyType.L_SHIFT:   { return "L SHIFT"; }
+            case KeyType.L_CTRL:    { return "L CTRL";  }
+            case KeyType.L_ALT:     { return "L ALT"; }
+                                      
+            case KeyType.TAB:       { return "TAB";  }
+            case KeyType.ESC:       { return "ESC";  }
+            case KeyType.SPACE:     { return "SPACE"; }
+                                      
+            case KeyType.R_SHIFT:   { return "R SHIFT"; }
+            case KeyType.R_CTRL:    { return "R CTRL"; }
+            case KeyType.R_ALT:     { return "R ALT"; }
+                                      
+            case KeyType.ENTER:     { return "ENTER"; }
+
+            default:
+            
+            case KeyType.TILDE:{ return "Tilde"; }
+            case KeyType.NONE: { return ""; }
+        }
+    }
+    #endregion
+
+    #region Mouse
+    
     public bool IsAnyMousePressed()
     {
         return mouse.press.isPressed;
@@ -392,23 +962,35 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public bool GetMouseButtonDown(MouseButton button)
+    public bool IsMouseButtonDown(MouseButton button)
     {
+        if (button == MouseButton.NONE)
+            return false;
+
         return GetMouseButton(button).wasPressedThisFrame;
     }
 
-    public bool GetMouseButtonUp(MouseButton button)
+    public bool IsMouseButtonUp(MouseButton button)
     {
+        if (button == MouseButton.NONE)
+            return false;
+
         return GetMouseButton(button).wasReleasedThisFrame;
     }
 
-    public bool GetMouseButtonPressed(MouseButton button)
+    public bool IsMouseButtonPressed(MouseButton button)
     {
+        if (button == MouseButton.NONE)
+            return false;
+
         return GetMouseButton(button).isPressed;
     }
 
-    public bool GetMouseButtonReleased(MouseButton button)
+    public bool IsMouseButtonReleased(MouseButton button)
     {
+        if (button == MouseButton.NONE)
+            return false;
+
         return !(GetMouseButton(button).isPressed);
     }
 
@@ -466,7 +1048,6 @@ public class InputManager : MonoBehaviour
     /// <returns></returns>
     public bool GetMousePress(MouseButton button)
     {
-
         switch (button)
         {
             default:
@@ -479,4 +1060,18 @@ public class InputManager : MonoBehaviour
                 return mouse.rightButton.isPressed;
         }
     }
+
+    public string GetMouseButtonString(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.LEFT:      { return "L Click"; }
+            case MouseButton.MIDDLE:    { return "M Click"; }
+            case MouseButton.RIGHT:     { return "R Click"; }
+
+            default:
+            case MouseButton.NONE:{ return ""; }
+        }
+    }
+    #endregion
 }

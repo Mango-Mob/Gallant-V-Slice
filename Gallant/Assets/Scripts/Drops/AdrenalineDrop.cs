@@ -79,7 +79,7 @@ public class AdrenalineDrop : MonoBehaviour
             {
                 if (distance < m_pickupRange)
                 {
-                    m_targetPlayer.playerResources.ChangeAdrenaline(m_heldAdrenaline);
+                    m_targetPlayer.playerResources.ChangeAdrenaline(1);
                     Destroy(gameObject);
                     return;
                 }

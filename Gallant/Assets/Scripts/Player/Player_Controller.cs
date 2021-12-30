@@ -83,8 +83,8 @@ public class Player_Controller : MonoBehaviour
         animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
         animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
 
-        bool rightAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
-        bool leftAttackHeld = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+        bool rightAttackHeld = InputManager.instance.IsBindPressed("Right_Attack", gamepadID); 
+        bool leftAttackHeld = InputManager.instance.IsBindPressed("Left_Attack", gamepadID);
 
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
@@ -102,30 +102,33 @@ public class Player_Controller : MonoBehaviour
         if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.StopBlock(Hand.LEFT);
 
-        float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
-        float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
-        // Set avatar mask to be used
-        if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
-        {
-            armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-            standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-        }
-        else
-        {
-            armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-            standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-        }
+        //float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
+        //float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
+        //// Set avatar mask to be used
+        //if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
+        //{
+        //    armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //    standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //}
+        //else
+        //{
+        //    armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //    standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        //}
+
+        float armWeight = 0.0f;
+        float standArmWeight = 1.0f;
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));
 
         // Move player
-        playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsGamepadButtonDown(ButtonType.EAST, gamepadID) || InputManager.instance.IsKeyDown(KeyType.SPACE), Time.deltaTime);
+        playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.instance.IsBindDown("Roll", gamepadID), Time.deltaTime);
 
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID) || InputManager.instance.IsKeyPressed(KeyType.R))
+            if (InputManager.instance.IsBindPressed("Left_Pickup", gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -139,7 +142,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Right hand pickup
-            if (InputManager.instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID) || InputManager.instance.IsKeyPressed(KeyType.F))
+            if (InputManager.instance.IsBindPressed("Right_Pickup", gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -152,8 +155,8 @@ public class Player_Controller : MonoBehaviour
                 }
             }
 
-            bool rightWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.RB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.RIGHT);
-            bool leftWeaponAttack = InputManager.instance.IsGamepadButtonPressed(ButtonType.LB, gamepadID) || InputManager.instance.GetMouseButtonPressed(MouseButton.LEFT);
+            bool rightWeaponAttack = InputManager.instance.IsBindPressed("Right_Attack", gamepadID);
+            bool leftWeaponAttack = InputManager.instance.IsBindPressed("Left_Attack", gamepadID);
 
             if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
                 m_dualWieldBonus = m_dualWieldSpeed;
@@ -189,28 +192,28 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Ability attacks
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.RT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.E))
+            if (InputManager.instance.IsBindDown("Right_Ability", gamepadID))
             {
                 playerAbilities.StartUsing(Hand.RIGHT);
             }
-            if (InputManager.instance.IsGamepadButtonDown(ButtonType.LT, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Q))
+            if (InputManager.instance.IsBindDown("Left_Ability", gamepadID))
             {
                 playerAbilities.StartUsing(Hand.LEFT);
             }
         }
 
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RS, gamepadID) || InputManager.instance.IsKeyDown(KeyType.L_ALT))
+        if (InputManager.instance.IsBindDown("Toggle_Lockon", gamepadID))
         {
             playerMovement.LockOnTarget();
         }
 
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID) || InputManager.instance.IsKeyDown(KeyType.V))
+        if (InputManager.instance.IsBindDown("Consume", gamepadID))
         {
             // Heal from adrenaline
             playerResources.UseAdrenaline();
         }
 
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.UP, gamepadID) || InputManager.instance.IsKeyDown(KeyType.Y))
+        if (InputManager.instance.IsBindDown("Switch", gamepadID))
         {
             playerAttack.SwapWeapons();
         }
@@ -223,11 +226,11 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
-            playerResources.ChangeAdrenaline(-0.2f);
+            playerResources.ChangeAdrenaline(-1);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_THREE))
         {
-            playerResources.ChangeAdrenaline(0.2f);
+            playerResources.ChangeAdrenaline(1);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_FOUR))
         {
@@ -277,15 +280,15 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.isInGamepadMode) // If using gamepad
         {
             int gamepadID = InputManager.instance.GetAnyGamePad();
-            return InputManager.instance.GetGamepadStick(StickType.LEFT, gamepadID);
+            return InputManager.instance.GetBindStick("Move", gamepadID);
         }
         else // If using keyboard
         {
             Vector2 movement = Vector2.zero;
-            movement.x += (InputManager.instance.IsKeyPressed(KeyType.D) ? 1.0f : 0.0f);
-            movement.x -= (InputManager.instance.IsKeyPressed(KeyType.A) ? 1.0f : 0.0f);
-            movement.y += (InputManager.instance.IsKeyPressed(KeyType.W) ? 1.0f : 0.0f);
-            movement.y -= (InputManager.instance.IsKeyPressed(KeyType.S) ? 1.0f : 0.0f);
+            movement.x += (InputManager.instance.IsBindPressed("Move_Right") ? 1.0f : 0.0f);
+            movement.x -= (InputManager.instance.IsBindPressed("Move_Left") ? 1.0f : 0.0f);
+            movement.y += (InputManager.instance.IsBindPressed("Move_Forward") ? 1.0f : 0.0f);
+            movement.y -= (InputManager.instance.IsBindPressed("Move_Backward") ? 1.0f : 0.0f);
             movement.Normalize();
             m_currentVelocity = Vector3.SmoothDamp(m_currentVelocity, movement, ref m_movementVelocity, 0.1f);
             return m_currentVelocity;
@@ -298,11 +301,11 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.instance.isInGamepadMode) // If using gamepad
         {
             int gamepadID = InputManager.instance.GetAnyGamePad();
-            return InputManager.instance.GetGamepadStick(StickType.RIGHT, gamepadID);
+            return InputManager.instance.GetBindStick("Aim", gamepadID);
         }
         else // If using mouse
         {
-            if(InputManager.instance.IsKeyDown(KeyType.L_CTRL) || InputManager.instance.IsKeyDown(KeyType.L_SHIFT))
+            if(InputManager.instance.IsBindDown("Toggle_Aim"))
             {
                 m_isAiming = !m_isAiming;
             }

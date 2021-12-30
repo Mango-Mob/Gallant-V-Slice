@@ -290,6 +290,10 @@ public class Player_Movement : MonoBehaviour
                 }
             }
         }
+
+        if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
+            movement = Vector3.zero;
+
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
     }
@@ -361,7 +365,7 @@ public class Player_Movement : MonoBehaviour
     {
         //playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
 
-        playerController.playerResources.ChangeAdrenaline(_val);
+        //playerController.playerResources.ChangeAdrenaline(_val);
 
         //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 

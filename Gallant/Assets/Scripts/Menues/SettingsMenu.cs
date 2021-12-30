@@ -136,11 +136,13 @@ public class SettingsMenu : MonoBehaviour
     private void OnDestroy()
     {
         AudioManager.instance.SaveData();
+        InputManager.instance.SaveBinds();
     }
 
     private void OnDisable()
     {
         AudioManager.instance.SaveData();
+        InputManager.instance.SaveBinds();
     }
 
     private void AudioUpdate()
@@ -223,5 +225,14 @@ public class SettingsMenu : MonoBehaviour
             return;
 
         ApplicationManager.instance.SetFullScreen(select, true);
+    }
+
+    public void ResetControls()
+    {
+        InputManager.instance.SetDefaultKeyBinds();
+        foreach (var item in GetComponentsInChildren<KeyBindOption>())
+        {
+            item.ResetDisplay();
+        }
     }
 }

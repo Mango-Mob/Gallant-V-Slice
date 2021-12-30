@@ -9,8 +9,6 @@ public class Interactable : MonoBehaviour
     public UnityEvent m_interactFunction;
     public bool m_isReady = false;
     public float m_holdDuration = 1.0f;
-    public KeyType m_interactKey = KeyType.X;
-    public ButtonType m_interactButton = ButtonType.SOUTH;
 
     public Image m_timeDisplay;
     private float m_timer = 0.0f;
@@ -26,7 +24,7 @@ public class Interactable : MonoBehaviour
     {
         if(m_isReady && m_interactFunction != null)
         {
-            if(InputManager.instance.IsGamepadButtonPressed(m_interactButton, 0) || InputManager.instance.IsKeyPressed(m_interactKey))
+            if(InputManager.instance.IsBindPressed("Interact", InputManager.instance.GetAnyGamePad()))
             {
                 m_timer += Time.unscaledDeltaTime;
                 if(m_timer >= m_holdDuration)

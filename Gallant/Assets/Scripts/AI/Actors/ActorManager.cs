@@ -50,8 +50,30 @@ public class ActorManager
         m_subscribed.Add(user);
     }
 
+    public void Kill(Actor user)
+    {
+        for (int i = m_subscribed.Count - 1; i >= 0; i--)
+        {
+            if(m_subscribed[i] == user)
+            {
+                m_subscribed.RemoveAt(i);
+                break;
+            }
+        }
+        user.Kill();
+    }
+    public void KillAll()
+    {
+        for (int i = m_subscribed.Count - 1; i >= 0; i--)
+        {
+            m_subscribed[i].Kill();
+            m_subscribed.RemoveAt(i);
+        }
+    }
+
     public void UnSubscribe(Actor user)
     {
-        m_subscribed.Remove(user);
+        if(m_subscribed.Contains(user))
+            m_subscribed.Remove(user);
     }
 }

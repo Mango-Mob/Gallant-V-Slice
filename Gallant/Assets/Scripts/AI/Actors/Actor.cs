@@ -287,4 +287,25 @@ public class Actor : StateMachine
     {
         return m_isDead;
     }
+
+    public void Kill()
+    {
+        if (!m_isDead)
+        {
+            m_currentHealth = 0;
+
+            if (m_tracker != null && m_tracker.m_enableAutoHealing)
+                m_currentHealth = m_myData.health;
+
+            if (m_currentHealth <= 0 && !m_myData.invincible)
+            {
+                m_isDead = true;
+
+                if (m_myData.m_states.Contains(State.Type.DEAD))
+                {
+                    SetState(new State_Dead(this));
+                }
+            }
+        }
+    }
 }
