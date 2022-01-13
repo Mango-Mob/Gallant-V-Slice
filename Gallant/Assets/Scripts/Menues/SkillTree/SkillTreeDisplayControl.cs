@@ -9,9 +9,9 @@ public class SkillTreeDisplayControl : MonoBehaviour
 {
     public static SkillTreeDisplayControl _instance { get; private set; }
 
-    [SerializeField] private GameObject m_selectFrame;
     [SerializeField] private InkmanClass m_selectedTree;
     private List<GameObject> m_treeList = new List<GameObject>();
+    private List<SkillTreeTabButton> m_tabButtonList = new List<SkillTreeTabButton>();
 
     [Header("Upgrade Info Display")]
     [SerializeField] private GameObject m_upgradeInfoObject;
@@ -26,19 +26,19 @@ public class SkillTreeDisplayControl : MonoBehaviour
     private SkillButton m_currentlyDisplayedButton;
 
     [Header("General")]
-    [SerializeField] private Button m_generalTab;
+    [SerializeField] private SkillTreeTabButton m_generalTab;
     [SerializeField] private GameObject m_generalTree;
 
     [Header("Knight")]
-    [SerializeField] private Button m_knightTab;
+    [SerializeField] private SkillTreeTabButton m_knightTab;
     [SerializeField] private GameObject m_knightTree;
 
     [Header("Mage")]
-    [SerializeField] private Button m_mageTab;
+    [SerializeField] private SkillTreeTabButton m_mageTab;
     [SerializeField] private GameObject m_mageTree;
 
     [Header("Hunter")]
-    [SerializeField] private Button m_hunterTab;
+    [SerializeField] private SkillTreeTabButton m_hunterTab;
     [SerializeField] private GameObject m_hunterTree;
 
     private EventSystem eventSystem;
@@ -56,6 +56,11 @@ public class SkillTreeDisplayControl : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        m_tabButtonList.Add(m_generalTab);
+        m_tabButtonList.Add(m_knightTab);
+        m_tabButtonList.Add(m_mageTab);
+        m_tabButtonList.Add(m_hunterTab);
+
         m_treeList.Add(m_generalTree);
         m_treeList.Add(m_knightTree);
         m_treeList.Add(m_mageTree);
@@ -86,8 +91,8 @@ public class SkillTreeDisplayControl : MonoBehaviour
             m_selectedIndex = Mathf.Clamp(m_selectedIndex, 0, 3);
             m_selectedTree = (InkmanClass)m_selectedIndex;
 
+            SelectTab(m_selectedTree);
         }
-        SelectTab(m_selectedTree);
 
         if (eventSystem.currentSelectedGameObject != null)
         {
@@ -128,12 +133,16 @@ public class SkillTreeDisplayControl : MonoBehaviour
     }
     public void SelectTab(InkmanClass _class)
     {
-        Button thisTab = null;
+        SkillTreeTabButton thisTab = null;
         GameObject thisTree = null;
 
         foreach (var tree in m_treeList)
         {
             tree.SetActive(false);
+        }
+        foreach (var tabButton in m_tabButtonList)
+        {
+            tabButton.ToggleSelected(false);
         }
 
         switch (_class)
@@ -158,7 +167,12 @@ public class SkillTreeDisplayControl : MonoBehaviour
                 return;
         }
 
-        m_selectFrame.transform.position = thisTab.transform.position;
         thisTree.SetActive(true);
+        thisTab.ToggleSelected(true);
+
+        if (thisTree.GetComponent<SkillTreeManager>().m_rootSkill != null)
+        {
+            eventSystem.SetSelectedGameObject(thisTree.GetComponent<SkillTreeManager>().m_rootSkill.gameObject);
+        }
     }
 }

@@ -15,12 +15,15 @@ public class SkillButton : MonoBehaviour
     private SkillTreeManager m_manager;
 
     [Header("Unlock Information")]
-    [SerializeField] private SkillButton[] m_unlockDependencies;
+    [SerializeField] private List<SkillButton> m_unlockDependencies = new List<SkillButton>();
+    private List<SkillButtonLink> m_dependencyLink = new List<SkillButtonLink>();
+
     public int m_unlockCost = 1;
     public int m_upgradeMaximum = 1;
     public int m_upgradeAmount {get; private set; } = 0;
     [SerializeField] private TextMeshProUGUI m_upgradeNumberText;
-    
+    [SerializeField] private Image[] m_availabilityImages;
+
     [Header("Line Anchor Positions")]
     [SerializeField] private Transform m_lineEnterance;
     [SerializeField] private Transform m_lineExit;
@@ -34,6 +37,20 @@ public class SkillButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (IsUnlockable())
+        {
+            foreach (var image in m_availabilityImages)
+            {
+                image.color = new Color(1.0f, 1.0f, 1.0f);
+            }
+        }
+        else
+        {
+            foreach (var image in m_availabilityImages)
+            {
+                image.color = new Color(0.5f, 0.5f, 0.5f);
+            }
+        }
     }
 
     public void SelectSkill()
@@ -57,17 +74,37 @@ public class SkillButton : MonoBehaviour
             return false;
         }
 
-        if (m_unlockDependencies.Length == 0)
+        if (m_unlockDependencies.Count == 0)
             return true;
 
+        bool unlockable = false;
         foreach (var item in m_unlockDependencies)
         {
+            m_dependencyLink[m_unlockDependencies.IndexOf(item)].ToggleActive(item.m_upgradeAmount > 0);
             if (item.m_upgradeAmount > 0)
             {
-                return true;
+                unlockable = true;
             }
         }
 
-        return false;
+        return unlockable;
+    }
+
+    public void CreateDepencencyLinks()
+    {
+        foreach (var dependency in m_unlockDependencies)
+        {
+            GameObject newObject = Instantiate(SkillTreeManager.m_linePrefab, transform);
+            newObject.transform.parent = newObject.transform.parent.parent;
+            newObject.transform.SetAsFirstSibling();
+
+            newObject.transform.position = (m_lineEnterance.position + dependency.m_lineExit.position) / 2 ;
+            newObject.transform.localScale = new Vector3(1, 1.0f * (dependency.m_lineExit.position - m_lineEnterance.position).magnitude, 1);
+
+            Vector3 difference = m_lineEnterance.position - dependency.m_lineExit.position;
+            newObject.transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(difference.y / difference.x) + 90.0f);
+
+            m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
+        }
     }
 }
