@@ -66,6 +66,12 @@ public class SkillButton : MonoBehaviour
             PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_unlockCost);
         }
     }
+    public void RefundSkill()
+    {
+        PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_upgradeAmount * m_unlockCost);
+        m_upgradeAmount = 0;
+        m_upgradeNumberText.text = m_upgradeAmount.ToString();
+    }
 
     public bool IsUnlockable()
     {

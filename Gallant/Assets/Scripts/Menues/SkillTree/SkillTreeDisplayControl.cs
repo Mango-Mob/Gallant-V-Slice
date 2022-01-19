@@ -10,8 +10,10 @@ public class SkillTreeDisplayControl : MonoBehaviour
     public static SkillTreeDisplayControl _instance { get; private set; }
 
     [SerializeField] private InkmanClass m_selectedTree;
+    private SkillTreeManager m_selectedTreeManager;
     private List<GameObject> m_treeList = new List<GameObject>();
     private List<SkillTreeTabButton> m_tabButtonList = new List<SkillTreeTabButton>();
+    private SkillButton m_currentlyDisplayedButton;
 
     [Header("Upgrade Info Display")]
     [SerializeField] private GameObject m_upgradeInfoObject;
@@ -23,7 +25,6 @@ public class SkillTreeDisplayControl : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_skillCost;
     [SerializeField] private Image m_skillIcon;
     [SerializeField] private Image m_upgradeButtonSprite;
-    private SkillButton m_currentlyDisplayedButton;
 
     [Header("General")]
     [SerializeField] private SkillTreeTabButton m_generalTab;
@@ -103,6 +104,11 @@ public class SkillTreeDisplayControl : MonoBehaviour
             SelectSkillButton(null);
         }
 
+        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
+        {
+            m_selectedTreeManager.RefundTree();
+        }
+
         m_currencyText.text = $"${PlayerPrefs.GetInt("Player Balance")}";
     }
     public void SelectSkillButton(SkillButton _button)
@@ -131,6 +137,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             m_skillCost.enabled = false;
         }
     }
+
     public void SelectTab(InkmanClass _class)
     {
         SkillTreeTabButton thisTab = null;
@@ -170,7 +177,8 @@ public class SkillTreeDisplayControl : MonoBehaviour
         thisTree.SetActive(true);
         thisTab.ToggleSelected(true);
 
-        if (thisTree.GetComponent<SkillTreeManager>().m_rootSkill != null)
+        m_selectedTreeManager = thisTree.GetComponent<SkillTreeManager>();
+        if (m_selectedTreeManager.m_rootSkill != null)
         {
             eventSystem.SetSelectedGameObject(thisTree.GetComponent<SkillTreeManager>().m_rootSkill.gameObject);
         }

@@ -16,7 +16,7 @@ public class SkillTreeManager : MonoBehaviour
 
     [SerializeField] private InkmanClass m_treeClass;
     public SkillButton m_rootSkill;
-    private SkillButton[] m_buttons;
+    public SkillButton[] m_buttons { get; private set; }
 
     private void Awake()
     {
@@ -30,6 +30,13 @@ public class SkillTreeManager : MonoBehaviour
         foreach (var button in m_buttons)
         {
             button.CreateDepencencyLinks();
+        }
+    }
+    public void RefundTree()
+    {
+        foreach (var button in m_buttons)
+        {
+            button.RefundSkill();
         }
     }
 }
