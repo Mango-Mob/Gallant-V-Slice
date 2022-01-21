@@ -95,13 +95,16 @@ public class SkillTreeDisplayControl : MonoBehaviour
             SelectTab(m_selectedTree);
         }
 
-        if (eventSystem.currentSelectedGameObject != null)
+        if (InputManager.instance.isInGamepadMode)
         {
-            SelectSkillButton(eventSystem.currentSelectedGameObject.GetComponent<SkillButton>());
-        }
-        else
-        {
-            SelectSkillButton(null);
+            if (eventSystem.currentSelectedGameObject != null)
+            {
+                SelectSkillButton(eventSystem.currentSelectedGameObject.GetComponent<SkillButton>());
+            }
+            else
+            {
+                SelectSkillButton(null);
+            }
         }
 
         if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))

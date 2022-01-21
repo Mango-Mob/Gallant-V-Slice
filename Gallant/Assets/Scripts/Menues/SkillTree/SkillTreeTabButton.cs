@@ -7,6 +7,7 @@ public class SkillTreeTabButton : MonoBehaviour
 {
     private Button m_button;
     [SerializeField] private Image m_deselectedEffect;
+    [SerializeField] private InkmanClass m_class;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +20,10 @@ public class SkillTreeTabButton : MonoBehaviour
     {
         
     }
-
+    public void Activate()
+    {
+        SkillTreeDisplayControl._instance.SelectTab(m_class);
+    }
     public void ToggleSelected(bool _active)
     {
         m_deselectedEffect.enabled = !_active;

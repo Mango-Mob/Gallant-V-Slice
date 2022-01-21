@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class SkillButton : MonoBehaviour
+public class SkillButton : MonoBehaviour, IPointerEnterHandler
 {
     [Header("Skill Information")]
     public string m_skillName;
@@ -50,6 +51,14 @@ public class SkillButton : MonoBehaviour
             {
                 image.color = new Color(0.5f, 0.5f, 0.5f);
             }
+        }
+
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!InputManager.instance.isInGamepadMode)
+        {
+            SelectSkill();
         }
     }
 
