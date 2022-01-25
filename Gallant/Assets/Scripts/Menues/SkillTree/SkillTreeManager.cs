@@ -14,7 +14,7 @@ public class SkillTreeManager : MonoBehaviour
 {
     public static GameObject m_linePrefab { get; private set; }
 
-    [SerializeField] private InkmanClass m_treeClass;
+    public InkmanClass m_treeClass { get; private set; }
     public SkillButton m_rootSkill;
     public SkillButton[] m_buttons { get; private set; }
 
@@ -31,6 +31,11 @@ public class SkillTreeManager : MonoBehaviour
         {
             button.CreateDepencencyLinks();
         }
+        
+        foreach (var button in m_buttons)
+        {
+            button.SetUpgradeLevel(SkillTreeReader.instance.GetUpgradeLevel(m_treeClass, button.m_skillID));
+        }
     }
     public void RefundTree()
     {
@@ -38,5 +43,7 @@ public class SkillTreeManager : MonoBehaviour
         {
             button.RefundSkill();
         }
+
+        SkillTreeReader.instance.EmptySkillTree(m_treeClass);
     }
 }

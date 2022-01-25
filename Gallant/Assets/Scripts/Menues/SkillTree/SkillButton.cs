@@ -73,6 +73,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             m_upgradeAmount++;
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
             PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_unlockCost);
+            
+            SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillID);
         }
     }
     public void RefundSkill()
@@ -121,5 +123,16 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
             m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
         }
+    }
+    public void SetUpgradeLevel(int _level)
+    {
+        if (_level == -1)
+        {
+            Debug.Log("Skill ID not found in tree");
+            return;
+        }
+
+        m_upgradeAmount = _level;
+        m_upgradeNumberText.text = m_upgradeAmount.ToString();
     }
 }
