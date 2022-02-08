@@ -73,7 +73,7 @@ namespace SwampBoss_Attack
 
             GameObject projPrefab = LoadObjectData("SpitProjectile");
             user.GetComponent<MultiAudioAgent>().Play("BossSpit");
-            user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_damageModifier, 50f);
+            //user.m_projSource.CreateProjectile(projPrefab, hitCollider, m_baseDamage * user.m_damageModifier, 50f);
         }
 
         /*******************

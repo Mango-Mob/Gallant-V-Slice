@@ -5,13 +5,18 @@ using UnityEngine;
 
 public class State_Attack : State
 {
-    public State_Attack(StateMachine _user, Actor_Attack attack = null) : base(_user) 
+
+    private AttackData selectedAttack;
+    private bool hasAttacked = false;
+
+    public State_Attack(StateMachine _user, AttackData attack = null) : base(_user) 
     { 
         if(attack != null)
-            (m_myUser as Enemy).m_activeAttack = attack; 
+        {
+            selectedAttack = attack;
+        }   
     }
 
-    private bool hasAttacked = false;
     public override void Start()
     {
         Enemy userAsEnemy = (m_myUser as Enemy);
@@ -31,25 +36,18 @@ public class State_Attack : State
     public override void Update()
     {
         Enemy userAsEnemy = (m_myUser as Enemy);
-        if (!hasAttacked)
+
+        if(userAsEnemy.m_activeAttack == null)
         {
-            if(userAsEnemy.m_activeAttack != null)
+            //Search for target
+            if (!hasAttacked && selectedAttack.IsOverlaping(m_myUser.transform, LayerMask.NameToLayer("Player")))
             {
-                userAsEnemy.m_activeAttack.BeginAttack(userAsEnemy);
+                userAsEnemy.BeginAttack(selectedAttack);
                 hasAttacked = true;
             }
             else
             {
-                foreach (var attack in userAsEnemy.m_myAttacks)
-                {
-                    if (attack.IsWithinRange(userAsEnemy, LayerMask.NameToLayer("Player")))
-                    {
-                        userAsEnemy.m_activeAttack = attack;
-                        userAsEnemy.m_activeAttack.BeginAttack(userAsEnemy);
-                        hasAttacked = true;
-                        return;
-                    }
-                }
+                //user out of range, try again
                 if (userAsEnemy.m_myData.m_states.Contains(Type.MOVE_TO_TARGET) && userAsEnemy.m_target != null)
                 {
                     userAsEnemy.SetState(new State_MoveToTarget(m_myUser));
@@ -59,17 +57,21 @@ public class State_Attack : State
                     userAsEnemy.SetState(new State_Idle(m_myUser));
                 }
             }
+            
         }
-        
-        if((m_myUser as Enemy).m_activeAttack == null && hasAttacked)
+        else
         {
-            if((m_myUser as Enemy).m_myData.m_states.Contains(Type.IDLE))
+            if(hasAttacked)
             {
-                m_myUser.SetState(new State_Idle(m_myUser));
-            }
-            else
-            {
-                hasAttacked = false;
+                //Transition out;
+                if (userAsEnemy.m_myData.m_states.Contains(Type.MOVE_TO_TARGET) && userAsEnemy.m_target != null)
+                {
+                    userAsEnemy.SetState(new State_MoveToTarget(m_myUser));
+                }
+                else if (userAsEnemy.m_myData.m_states.Contains(Type.IDLE))
+                {
+                    userAsEnemy.SetState(new State_Idle(m_myUser));
+                }
             }
         }
     }

@@ -115,23 +115,5 @@ namespace Actor.AI.Components
         public abstract void OnGizmosDraw(Enemy user);
     }
 
-    /****************
-     * AttackPrioritySort : A class used to compare Actor_Attacks based on the priority stat.
-     * @author : Michael Jordan
-     * @file : Actor_Attack.cs
-     * @year : 2021
-     */
-    public class AttackPrioritySort : IComparer<Actor_Attack>
-    {
-        private Enemy m_user = null;
-        //Constructor
-        public AttackPrioritySort(Enemy user) { m_user = user; }
-        public int Compare(Actor_Attack a, Actor_Attack b)
-        {
-            int priorityA = (a != null) ? (int)a.GetPriority(m_user) : 0;
-            int priorityB = (b != null) ? (int)b.GetPriority(m_user) : 0;
-
-            return (priorityA - priorityB);
-        }
-    }
+    
 }

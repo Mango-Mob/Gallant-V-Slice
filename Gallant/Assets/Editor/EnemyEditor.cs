@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Actor.AI;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -11,7 +13,15 @@ public class EnemyEditor : Editor
     private bool m_showLegacy = false;
     private bool m_testCase = false;
 
+    private bool m_showAudio = false;
     private Dictionary<string, bool> m_attackFoldout;
+
+    private int testLevel = 0;
+
+    private float testPlayerPhyDamage;
+    private float testPlayerAttSped = 1.0f;
+    private float testPlayerAbilDamage;
+    private float testPlayerAbilPerSecond;
     public void Awake()
     {
         m_data = target as EnemyData;
@@ -31,6 +41,7 @@ public class EnemyEditor : Editor
 
         if (m_testCase)
         {
+            OnTestView();
             return;
         }
         DrawLineOnGUI();
@@ -53,6 +64,7 @@ public class EnemyEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Adrenaline Gain", EditorStyles.boldLabel);
         MinMaxSliderWithLabels(ref m_data.adrenalineGainMin, ref m_data.adrenalineGainMax, 0, 100, EditorStyles.label.CalcSize(new GUIContent("0")).x);
+        FloatFieldWithLabel("Delta Adrenaline:", ref m_data.deltaAdrenaline);
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("States Machine", EditorStyles.boldLabel);
@@ -60,17 +72,126 @@ public class EnemyEditor : Editor
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Attacks", EditorStyles.boldLabel);
-        AttackDictonaryField("Attack", ref m_data.m_attacks);
+
+        AttackListField("Attack", ref m_data.m_attacks);
 
         EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Sound Effects", EditorStyles.boldLabel);
+
+        m_showAudio = EditorGUILayout.Foldout(m_showAudio, "Sound Effects");
+        
+        if(m_showAudio)
+        {
+            TextFieldWithLabel("Hurt: ", ref m_data.hurtSoundName, 10);
+            TextFieldWithLabel("Death: ", ref m_data.deathSoundName, 10);
+        }
     }
 
-    private void TextFieldWithLabel(string label, ref string data)
+    private void OnTestView()
+    {
+        testLevel = EditorGUILayout.IntSlider("Level: ", testLevel, 0, 20);
+
+        EditorGUILayout.Space();
+        DrawLineOnGUI();
+
+        float health = m_data.health + m_data.deltaHealth * testLevel;
+        EditorGUILayout.LabelField($"Health: {health}", EditorStyles.label);
+        EditorGUILayout.LabelField($"Damage Modifer: {m_data.m_damageModifier + m_data.deltaDamageMod * testLevel}", EditorStyles.label);
+        EditorGUILayout.LabelField($"Speed: {m_data.baseSpeed + m_data.deltaSpeed * testLevel}", EditorStyles.label);
+
+        float PhyResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Physical, m_data.phyResist + m_data.deltaPhyResist * testLevel);
+        EditorGUILayout.LabelField($"Physical Resist: {m_data.phyResist + m_data.deltaPhyResist * testLevel} ({Mathf.FloorToInt((PhyResistPercent * 100)).ToString()}%)", EditorStyles.label);
+
+        float AbilResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Ability, m_data.abilResist + m_data.deltaAbilResist * testLevel);
+        EditorGUILayout.LabelField($"Ability Resist: {m_data.abilResist + m_data.deltaAbilResist * testLevel} ({Mathf.FloorToInt((AbilResistPercent * 100)).ToString()}%)", EditorStyles.label);
+
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField($"Min Adrenaline: {m_data.adrenalineGainMin + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
+        EditorGUILayout.LabelField($"Average Adrenaline: {(m_data.adrenalineGainMax + m_data.adrenalineGainMin)/2f + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
+        EditorGUILayout.LabelField($"Max Adrenaline: {m_data.adrenalineGainMax + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
+        EditorGUILayout.Space();
+        DrawLineOnGUI();
+
+        EditorGUILayout.LabelField("Player Input: ", EditorStyles.boldLabel);
+        DoubleFloatField("Physical Damage | Speed", ref testPlayerPhyDamage, ref testPlayerAttSped);
+        DoubleFloatField("Ability Damage(per Second) | Seconds", ref testPlayerAbilDamage, ref testPlayerAbilPerSecond);
+
+        EditorGUILayout.Space();
+        DrawLineOnGUI();
+
+        EditorGUILayout.LabelField("Physical Result: ", EditorStyles.boldLabel);
+        if(testPlayerPhyDamage > 0 && testPlayerAttSped > 0)
+        {
+            int hitsRequired = Mathf.CeilToInt(health / (testPlayerPhyDamage * (1.0f - PhyResistPercent)));
+            EditorGUILayout.LabelField($"   Maximum physical hits to kill: {hitsRequired}", EditorStyles.label);
+            EditorGUILayout.LabelField($"   Maximum seconds till death: {(float)(hitsRequired/testPlayerAttSped)} seconds", EditorStyles.label);
+        }
+        EditorGUILayout.Space();
+
+        EditorGUILayout.LabelField("Ability Result: ", EditorStyles.boldLabel);
+        if (testPlayerAbilDamage > 0 && testPlayerAbilPerSecond > 0)
+        {
+            int hitsRequired = Mathf.CeilToInt(health / (testPlayerAbilDamage * (1.0f - AbilResistPercent)));
+            EditorGUILayout.LabelField($"   Maximum casts hits to kill: {hitsRequired}", EditorStyles.label);
+            EditorGUILayout.LabelField($"   Maximum seconds till death: {(float)(hitsRequired / testPlayerAbilPerSecond)} seconds", EditorStyles.label);
+        }
+        EditorGUILayout.Space();
+    }
+
+    private void TextFieldWithLabel(string label, ref string data, float offset = 0)
     {
         EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
         EditorGUILayout.LabelField(label, EditorStyles.label);
         data = EditorGUILayout.TextField(data);
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void FloatFieldWithLabel(string label, ref float data, float offset = 0)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+        EditorGUILayout.LabelField(label, EditorStyles.label);
+        data = EditorGUILayout.FloatField(data);
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void Vector3FieldWithLabel(string label, ref Vector3 data, float offset = 0)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+        EditorGUILayout.LabelField(label, EditorStyles.label);
+        data = EditorGUILayout.Vector3Field("", data);
+        EditorGUILayout.EndHorizontal();
+    }
+    private void IntegerFieldWithLabel(string label, ref int data, float offset = 0)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+        EditorGUILayout.LabelField(label, EditorStyles.label);
+        data = EditorGUILayout.IntField(data);
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void UnsignedIntegerFieldWithLabel(string label, ref uint data, float offset = 0)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+        EditorGUILayout.LabelField(label, EditorStyles.label);
+        int newData = EditorGUILayout.IntField((int)data);
+
+        if (newData >= 0)
+            data = (uint)newData;
+
+        EditorGUILayout.EndHorizontal();
+    }
+
+    private void GameObjectFieldWithLabel(string label, ref GameObject data, float offset = 0)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+        EditorGUILayout.LabelField(label, EditorStyles.label);
+        data = EditorGUILayout.ObjectField(data, typeof(GameObject), false) as GameObject;
         EditorGUILayout.EndHorizontal();
     }
 
@@ -116,7 +237,7 @@ public class EnemyEditor : Editor
         EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
     }
 
-    private void AttackDictonaryField(string label, ref Dictionary<string, Attack> data)
+    private void AttackListField(string label, ref List<AttackData> data)
     {
         bool status = false;
         status = EditorGUILayout.Foldout(m_attackFoldout != null, label);
@@ -130,74 +251,112 @@ public class EnemyEditor : Editor
             m_attackFoldout = null;
         }
 
-        if(data.Count > 0)
+        if (status)
         {
-            string[] keys = data.Keys.ToArray();
-            for (int i = 0; i < data.Count; i++)
+            if (data != null && data.Count > 0)
             {
-                AttackField(keys[i], ref data);
+                for (int i = 0; i < data.Count; i++)
+                {
+                    if (!AttackField(i, ref m_data.m_attacks))
+                    {
+                        i--;
+                    }
+                }
             }
-        }
 
-        EditorGUILayout.BeginHorizontal();
-        if(GUILayout.Button("Add New", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Add New")).x)))
-        {
-            //TODO: CHECK IF NAME DOESN"T ALREADY EXIST
-            m_attackFoldout?.Add($"attack{data.Count}", false);
-            data.Add($"attack{data.Count}", new Attack());
-        }
-
-        EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
-
-        if(GUILayout.Button("Clear", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Clear")).x)))
-        {
-            m_attackFoldout?.Clear();
-            data.Clear();
-        }
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void AttackField(string key, ref Dictionary<string, Attack> data)
-    {
-        if (m_attackFoldout == null)
-            return;
-
-        if (!m_attackFoldout.ContainsKey(key))
-            m_attackFoldout.Add(key, false);
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(10);
-
-        m_attackFoldout[key] = EditorGUILayout.Foldout(m_attackFoldout[key], key);
-
-        GUILayout.EndHorizontal();
-
-        if (m_attackFoldout[key])
-        {
-            //render
-            Attack attack = data[key];
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(10);
-            if (GUILayout.Button("Update", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Update")).x)))
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Add New", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Add New")).x)))
             {
-                //remove data at key
-                m_attackFoldout.Remove(key);
-                data.Remove(key);
+                if (data == null)
+                    data = new List<AttackData>();
 
-                //Add it back
-                data.Add(key, attack);
-                m_attackFoldout.Add(key, true);
+                data.Add(new AttackData($"attack{ DateTime.Now.ToString()}"));
             }
 
             EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
 
+            if (GUILayout.Button("Clear", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Clear")).x)))
+            {
+                m_attackFoldout?.Clear();
+                data?.Clear();
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
+    private bool AttackField(int dataID, ref List<AttackData> data, float offset = 10)
+    {
+        if (m_attackFoldout == null)
+            return true;
+
+        if (!m_attackFoldout.ContainsKey(data[dataID].name))
+            m_attackFoldout.Add(data[dataID].name, false);
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(offset);
+
+        m_attackFoldout[data[dataID].name] = EditorGUILayout.Foldout(m_attackFoldout[data[dataID].name], data[dataID].name);
+        string key = data[dataID].name;
+        GUILayout.EndHorizontal();
+
+        if (m_attackFoldout[data[dataID].name])
+        {
+
+            TextFieldWithLabel("Name: ", ref data[dataID].name, offset);
+            if (key != data[dataID].name) //has name changed?
+            {
+                //remove data at key
+                m_attackFoldout.Remove(data[dataID].name);
+                m_attackFoldout.Add(data[dataID].name, true);
+            }
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(offset);
+            EditorGUILayout.LabelField("Type: ");
+            data[dataID].attackType = (AttackData.AttackType)EditorGUILayout.EnumPopup(data[dataID].attackType);
+            GUILayout.EndHorizontal();
+
+            UnsignedIntegerFieldWithLabel("Animation ID: ", ref data[dataID].animID, offset);
+            FloatFieldWithLabel("Base Damage: ", ref data[dataID].baseDamage, offset);
+            UnsignedIntegerFieldWithLabel("Instances: ", ref data[dataID].instancesPerAttack, offset);
+            FloatFieldWithLabel("Attack Range: ", ref data[dataID].attackRange, offset);
+            FloatFieldWithLabel("Cooldown: ", ref data[dataID].cooldown, offset);
+            UnsignedIntegerFieldWithLabel("Priority: ", ref data[dataID].priority, offset);
+
+
+            EditorGUILayout.Space();
+            switch (data[dataID].attackType)
+            {
+                default:
+                case AttackData.AttackType.Melee:
+                    Vector3FieldWithLabel("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
+                    break;
+                case AttackData.AttackType.Ranged:
+                    GameObjectFieldWithLabel("Projectile prefab: ", ref data[dataID].projectile, offset);
+                    FloatFieldWithLabel("Projectile Speed: ", ref data[dataID].projSpeed, offset);
+                    FloatFieldWithLabel("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
+                    break;
+                case AttackData.AttackType.Instant:
+                    GameObjectFieldWithLabel("Projectile prefab: ", ref data[dataID].projectile, offset);
+                    Vector3FieldWithLabel("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
+                    FloatFieldWithLabel("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
+                    break;
+            }
+            EditorGUILayout.Space();
+            GameObjectFieldWithLabel("VFX prefab: ", ref data[dataID].vfxSpawn, offset);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(offset);
+
             if (GUILayout.Button("Remove", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Remove")).x)))
             {
-                m_attackFoldout.Remove(key);
-                data.Remove(key);
+                m_attackFoldout.Remove(data[dataID].name);
+                m_data.m_attacks.Remove(data[dataID]);
+                GUILayout.EndHorizontal();
+                return false;
             }
             GUILayout.EndHorizontal();
         }
+        return true;
     }
 }

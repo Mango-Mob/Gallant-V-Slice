@@ -28,6 +28,12 @@ namespace Actor.AI.Components
             m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
         }
 
+        public void BeginAttack(uint animID)
+        {
+            //Play Anim
+            m_animator.SetTrigger("MeleeAttack");
+        }
+
         /*******************
          * SetFloat : Sets a single float value in the animator, with the float provided.
          * @author : Michael Jordan
@@ -152,6 +158,12 @@ namespace Actor.AI.Components
             yield return null;
         }
 
+        /*******************
+        * BlendFloatValue : Checks the animator params, for if a specific one exists.
+        * @author : Michael Jordan
+        * @param : (string) name of the parameter to test for, in the animator.
+        * @return : (bool) if the parameter exists.
+        */
         public bool HasParameter(string _name)
         {
             if (m_animator == null)

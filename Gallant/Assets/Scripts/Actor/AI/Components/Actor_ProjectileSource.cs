@@ -7,13 +7,13 @@ namespace Actor.AI.Components
 {
     public class Actor_ProjectileSource : MonoBehaviour
     {
-        public void CreateProjectile(GameObject prefab, Collider targetCollider, float damage, float force)
+        public void CreateProjectile(AttackData data, Collider targetCollider, float damageMod)
         {
-            GameObject prefabInWorld = GameObject.Instantiate(prefab, transform.position, Quaternion.LookRotation(transform.forward, Vector3.up));
+            GameObject prefabInWorld = GameObject.Instantiate(data.projectile, transform.position, Quaternion.LookRotation(transform.forward, Vector3.up));
             ProjectileObject projInWorld = prefabInWorld.GetComponent<ProjectileObject>();
-            projInWorld.m_velocity = ((targetCollider.transform.position + Vector3.up * 0.5f) - transform.position).normalized * force;
-            projInWorld.m_damage = damage;
-            projInWorld.m_duration = 5.0f;
+            projInWorld.m_velocity = ((targetCollider.transform.position + Vector3.up * 0.5f) - transform.position).normalized * data.projSpeed;
+            projInWorld.m_damage = damageMod * data.baseDamage;
+            projInWorld.m_duration = data.projLifeTime;
         }
     }
 }

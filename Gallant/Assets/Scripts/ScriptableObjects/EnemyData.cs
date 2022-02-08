@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
@@ -42,29 +44,11 @@ public class EnemyData : ScriptableObject
     public string deathSoundName;
     public string hurtSoundName;
 
-    public List<State.Type> m_states = new List<State.Type>();
-    public Dictionary<string, Attack> m_attacks = new Dictionary<string, Attack>();
+    public List<State.Type> m_states;
+    public List<AttackData> m_attacks;
 
     public static float CalculateDamage(float inTakeDamage, float resistance, float penetration = 0)
     {
         return inTakeDamage * (100f / (100f + resistance));
-    }
-}
-
-public class Attack
-{
-    public float baseDamage;
-    public string animationName;
-    public float cooldown;
-    public uint priority;
-
-    public GameObject projectile;
-    public GameObject vfxSpawn;
-
-    public enum AttackType
-    {
-        Melee,      //Effect after animation
-        Ranged,     //Spawn Proj after animation
-        Instant,    //Spawn proj at target after animation
     }
 }

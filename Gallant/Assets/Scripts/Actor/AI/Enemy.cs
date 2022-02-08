@@ -16,6 +16,7 @@ namespace Actor.AI
     {
         [Header("Actor Stats")]
         public EnemyData m_myData;
+        public int m_level;
         public string m_currentStateDisplay;
         public float m_idealDistance = 0.0f;
         public float m_damageModifier = 1.0f;
@@ -33,8 +34,8 @@ namespace Actor.AI
         public Actor_UI m_ui { get; private set; }
 
         public GameObject m_target { get; set; } //The current focus of the actor
-        public List<Actor_Attack> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
-        public Actor_Attack m_activeAttack { get; set; } = null; //Currently selected attack.
+        public List<AttackData> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
+        public AttackData m_activeAttack { get; set; } = null; //Currently selected attack.
 
         //Attack Data:
         private List<Collider> m_damagedColliders; //List of all colliders damaged since last clear
@@ -74,17 +75,9 @@ namespace Actor.AI
             m_resist = m_myData.phyResist + m_myData.deltaPhyResist * Mathf.FloorToInt(GameManager.currentLevel);
             m_tracker?.RecordResistance(m_resist);
 
-            if (m_myData.enemyName != "")
+            if(m_myData.m_attacks != null && m_myData.m_attacks.Count > 0)
             {
-                m_myAttacks = new List<Actor_Attack>();
-                //Search the system for all Actor_Attack classes under the namespace: "name_Attack"
-                foreach (System.Type type in Assembly.GetExecutingAssembly().GetTypes())
-                {
-                    if (type.Namespace != null && type.Namespace.ToString() == $"{m_myData.enemyName}_Attack")
-                    {
-                        m_myAttacks.Add(Activator.CreateInstance(type) as Actor_Attack);
-                    }
-                }
+                m_myAttacks = new List<AttackData>(m_myData.m_attacks);
             }
 
             m_damageModifier = m_myData.m_damageModifier + m_myData.deltaDamageMod * Mathf.FloorToInt(GameManager.currentLevel);
@@ -119,6 +112,12 @@ namespace Actor.AI
             m_healthBar?.SetValue((float)m_currentHealth / m_maxHp);
 
             m_tracker?.RecordResistance(m_resist);
+
+            if(m_myAttacks != null)
+                foreach (var attacks in m_myAttacks)
+                {
+                    attacks.Update(Time.deltaTime);
+                }
         }
 
         private void OnDestroy()
@@ -138,6 +137,16 @@ namespace Actor.AI
             m_IsWeaponLive = true;
         }
 
+        public void BeginAttack(AttackData _attack)
+        {
+            if (m_activeAttack != null)
+                return;
+
+            m_activeAttack = _attack;
+            m_activeAttack.Begin();
+            m_animator.BeginAttack(m_activeAttack.animID);
+        }
+
         /*******************
         * InvokeAttack : Start checking for collisions based on the current active attack.
         * @author : Michael Jordan
@@ -147,22 +156,44 @@ namespace Actor.AI
         {
             if (m_activeAttack != null)
             {
-                List<Collider> hits = new List<Collider>(m_activeAttack.GetOverlap(this, LayerMask.NameToLayer("Player")));
-                hits.AddRange(m_activeAttack.GetOverlap(this, LayerMask.NameToLayer("Shadow")));
+                uint instances = (m_activeAttack.instancesPerAttack > 0) ? m_activeAttack.instancesPerAttack : uint.MaxValue;
+                List<Collider> hits = new List<Collider>(m_activeAttack.GetOverlaping(transform, LayerMask.NameToLayer("Player")));
 
                 foreach (var hit in hits)
                 {
                     if (!m_damagedColliders.Contains(hit))
                     {
                         m_damagedColliders.Add(hit);
-                        //Damage player
-                        m_activeAttack.Invoke(this, hit);
+
+                        HandleAttack(hit);
+                        instances--;
+
+                        if (instances == 0)
+                            break;
                     }
                 }
             }
 
             if (_resetState)
                 CloseAttackWindow();
+        }
+
+        public void HandleAttack(Collider _target)
+        {
+            switch (m_activeAttack.attackType)
+            {
+                case AttackData.AttackType.Melee:
+                    m_activeAttack.InvokeDamage(this.gameObject, m_myData.m_damageModifier + m_myData.deltaDamageMod * m_level, _target);
+                    break;
+                case AttackData.AttackType.Ranged:
+                    m_projSource.CreateProjectile(m_activeAttack, _target, m_myData.m_damageModifier + m_myData.deltaDamageMod * m_level);
+                    break;
+                case AttackData.AttackType.Instant:
+                    m_activeAttack.SpawnProjectileInstantly(_target.gameObject, m_myData.m_damageModifier + m_myData.deltaDamageMod * m_level);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /*********************
@@ -261,11 +292,18 @@ namespace Actor.AI
                 Gizmos.DrawSphere(m_target.transform.position, 0.5f);
             }
 
-            if (m_myAttacks != null)
+            if (m_myAttacks != null && m_myAttacks.Count > 0)
             {
                 foreach (var attack in m_myAttacks)
                 {
-                    attack.OnGizmosDraw(this);
+                    attack.OnDrawGizmos(transform);
+                }
+            }
+            else if(m_myData.m_attacks != null)
+            {
+                foreach (var attack in m_myData.m_attacks)
+                {
+                    attack.OnDrawGizmos(transform);
                 }
             }
         }
