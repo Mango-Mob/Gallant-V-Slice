@@ -1,4 +1,6 @@
-﻿using SOHNE.Accessibility.Colorblindness;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using SOHNE.Accessibility.Colorblindness;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -129,7 +131,7 @@ public class DebugMenu : MonoBehaviour
         }
         m_timeSlider.interactable = m_timeCheck.isOn;
 
-        int count = ActorManager.instance.m_subscribed.Count;
+        int count = EnemyManager.instance.m_subscribed.Count;
         m_enemyCountTxt.text = count.ToString();
         m_killAllBtn.interactable = count > 0;
 
@@ -157,7 +159,7 @@ public class DebugMenu : MonoBehaviour
 
             m_toggleSelectedButtons[0].interactable = !m_selected.activeInHierarchy;
             m_toggleSelectedButtons[1].interactable = m_selected.activeInHierarchy;
-            m_killOneBtn.interactable = m_selected.GetComponentInParent<Actor>() != null;
+            m_killOneBtn.interactable = m_selected.GetComponentInParent<Enemy>() != null;
         }
     }
 
@@ -212,11 +214,11 @@ public class DebugMenu : MonoBehaviour
 
     public void KillAllEnemies()
     {
-        ActorManager.instance.KillAll();
+        EnemyManager.instance.KillAll();
     }
     public void KillSelected()
     {
-        ActorManager.instance.Kill(m_selected.GetComponentInParent<Actor>());
+        EnemyManager.instance.Kill(m_selected.GetComponentInParent<Enemy>());
         m_selected = null;
         m_toggleSelectedButtons[0].interactable = false;
         m_toggleSelectedButtons[1].interactable = false;

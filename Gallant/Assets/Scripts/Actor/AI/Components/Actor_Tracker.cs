@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/****************
- * Actor_Tracker : An actor component used to track and display the damage dealt to this actor.
- * @author : Michael Jordan
- * @file : Actor_Tracker.cs
- * @year : 2021
- */
-public class Actor_Tracker : MonoBehaviour
+namespace Actor.AI.Components
+{
+    /****************
+     * Actor_Tracker : An actor component used to track and display the damage dealt to this actor.
+     * @author : Michael Jordan
+     * @file : Actor_Tracker.cs
+     * @year : 2021
+     */
+    public class Actor_Tracker : MonoBehaviour
 {
     [Header("Settings")]
     public bool m_enableAutoHealing = false;
@@ -122,4 +124,5 @@ public class Actor_Tracker : MonoBehaviour
     {
         m_resistanceStat = resistance;
     }
+}
 }

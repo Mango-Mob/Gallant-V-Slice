@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Actor.AI;
+using System;
 using UnityEngine;
 
 /****************
@@ -24,7 +25,7 @@ public class BurnStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Enemy _actor)
     {
         //Show vfx
         m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _actor.m_selfTargetTransform);
@@ -35,7 +36,7 @@ public class BurnStatus : StatusEffect
         throw new NotImplementedException();
     }
 
-    public override void UpdateOnActor(Actor _actor, float dt)
+    public override void UpdateOnActor(Enemy _actor, float dt)
     {
         _actor.DealDamage(m_strength * dt);
         m_duration -= dt;
@@ -47,7 +48,7 @@ public class BurnStatus : StatusEffect
         throw new NotImplementedException();
     }
 
-    public override void EndActor(Actor _actor)
+    public override void EndActor(Enemy _actor)
     {
         
     }

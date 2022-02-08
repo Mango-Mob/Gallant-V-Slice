@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FirewaveProjectile : MonoBehaviour
 {
-    private List<Actor> m_hitList = new List<Actor>();
+    private List<Enemy> m_hitList = new List<Enemy>();
     public float m_speed = 25.0f;
     private float m_lifeTimer = 0.0f;
     public AbilityData m_data;
@@ -38,7 +39,7 @@ public class FirewaveProjectile : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Actor actor = other.GetComponentInParent<Actor>();
+            Enemy actor = other.GetComponentInParent<Enemy>();
             if (actor != null && !m_hitList.Contains(actor))
             {
                 Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);

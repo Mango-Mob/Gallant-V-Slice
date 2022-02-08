@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class ChainLightning : MonoBehaviour
     [SerializeField] private GameObject lightningPrefabVFX;
     [SerializeField] private GameObject lightningHitPrefabVFX;
 
-    private List<Actor> m_hitTargets = new List<Actor>();
+    private List<Enemy> m_hitTargets = new List<Enemy>();
     private int m_maxTargets = 3;
     public Transform m_handTransform;
 
@@ -27,11 +28,11 @@ public class ChainLightning : MonoBehaviour
         m_maxTargets = (int)m_data.effectiveness;
 
         Vector3 lastTargetPos = transform.position;
-        Actor[] actors = FindObjectsOfType<Actor>();
-        List<Actor> closeActors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
+        Enemy[] actors = FindObjectsOfType<Enemy>();
+        List<Enemy> closeActors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
 
         float closestDistance = Mathf.Infinity;
-        Actor closestTarget = null;
+        Enemy closestTarget = null;
 
         foreach (var actor in closeActors)
         {
@@ -62,14 +63,14 @@ public class ChainLightning : MonoBehaviour
         StartCoroutine(TargetSearch(lastTargetPos, actors));
     }
 
-    IEnumerator TargetSearch(Vector3 _lastPosition, Actor[] _enemies)
+    IEnumerator TargetSearch(Vector3 _lastPosition, Enemy[] _enemies)
     {
         float waitTime = 0.15f;
         yield return new WaitForSeconds(waitTime);
 
         for (int i = 1; i < m_maxTargets; i++)
         {
-            Actor bestTarget = null;
+            Enemy bestTarget = null;
             float closestDistance = Mathf.Infinity;
             foreach (var actor in _enemies)
             {

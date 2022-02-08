@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +27,7 @@ namespace SwampMeleeMinion_Attack
          * @param : (int) the layer filter for the overlap check.
          * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
          */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             return Physics.OverlapSphere(user.transform.position + (user.transform.forward * 0.8f) + user.transform.up, 0.8f, 1 << targetLayer);
         }
@@ -35,7 +37,7 @@ namespace SwampMeleeMinion_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("MeleeAttack");
             user.GetComponent<MultiAudioAgent>()?.PlayOnce("MinionAttack", false, UnityEngine.Random.Range(0.85f, 1.25f));
@@ -47,7 +49,7 @@ namespace SwampMeleeMinion_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(user.transform.position + (user.transform.forward * 0.8f) + user.transform.up, 0.8f);

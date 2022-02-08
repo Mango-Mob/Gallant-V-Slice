@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,7 +8,7 @@ using UnityEngine.SceneManagement;
 //Remove
 public class TargetFinder : MonoBehaviour
 {
-    public Actor testActor;
+    public Enemy testActor;
 
     public GameObject gate;
     private float m_time = 0;
@@ -19,7 +21,7 @@ public class TargetFinder : MonoBehaviour
         {
             gate.GetComponent<Animator>().enabled = false;
         }
-        ActorManager.instance.UnSubscribe(testActor);
+        EnemyManager.instance.UnSubscribe(testActor);
     }
 
     // Update is called once per frame
@@ -41,7 +43,7 @@ public class TargetFinder : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            ActorManager.instance.Subscribe(testActor);
+            EnemyManager.instance.Subscribe(testActor);
             testActor.m_target = other.gameObject;
             m_player = other.GetComponentInChildren<Player_Controller>();
             if (gate != null)

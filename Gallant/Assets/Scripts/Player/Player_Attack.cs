@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -395,7 +396,7 @@ public class Player_Attack : MonoBehaviour
                 continue;
 
             DamageTarget(collider.gameObject, _data.m_damage);
-            Actor actor = collider.GetComponentInParent<Actor>();
+            Enemy actor = collider.GetComponentInParent<Enemy>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
@@ -417,7 +418,7 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Actor actor = _target.GetComponentInParent<Actor>();
+        Enemy actor = _target.GetComponentInParent<Enemy>();
         if (actor != null)
         {
             actor.DealDamage(_damage, transform.position);

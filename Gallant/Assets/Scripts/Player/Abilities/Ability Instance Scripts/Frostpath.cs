@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -95,7 +96,7 @@ public class Frostpath : MonoBehaviour
         {
             Debug.Log("Slowing " + other.name + ".");
 
-            Actor actor = other.GetComponentInParent<Actor>();
+            Enemy actor = other.GetComponentInParent<Enemy>();
             if (actor != null)
             {
 

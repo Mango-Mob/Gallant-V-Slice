@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,13 +47,13 @@ public abstract class StatusEffect
         LoadDisplayVFX();
     }
 
-    public abstract void StartActor(Actor _actor);
+    public abstract void StartActor(Enemy _actor);
     public abstract void StartPlayer(Player_Controller _player);
 
-    public abstract void UpdateOnActor(Actor _actor, float dt);
+    public abstract void UpdateOnActor(Enemy _actor, float dt);
     public abstract void UpdateOnPlayer(Player_Controller _player, float dt);
 
-    public abstract void EndActor(Actor _actor);
+    public abstract void EndActor(Enemy _actor);
     public abstract void EndPlayer(Player_Controller _player);
 
     public abstract bool ReactTo(StatusEffect other);

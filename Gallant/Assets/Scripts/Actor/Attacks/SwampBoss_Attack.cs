@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +24,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("SpitWater");
             base.BeginAttack(user);
@@ -35,7 +37,7 @@ namespace SwampBoss_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             List<Collider> results = new List<Collider>(Physics.OverlapSphere(user.transform.position, 15f, 1 << targetLayer));
 
@@ -62,7 +64,7 @@ namespace SwampBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             if (Math.Abs(user.m_legs.GetAngleTowards(user.m_target)) > 45)
             {
@@ -79,7 +81,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.DrawWireSphere(user.transform.position, 15);
         }
@@ -99,7 +101,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("RaiseWater");
             base.BeginAttack(user);
@@ -112,7 +114,7 @@ namespace SwampBoss_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             return Physics.OverlapSphere(user.transform.position, 15f, 1 << targetLayer);
         }
@@ -123,7 +125,7 @@ namespace SwampBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             if(hitCollider.tag == "Player")
             {
@@ -141,7 +143,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.DrawWireSphere(user.transform.position, 15);
         }
@@ -165,7 +167,7 @@ namespace SwampBoss_Attack
          * @param : (int) the layer filter for the overlap check.
          * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
          */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             return Physics.OverlapSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f, 1 << targetLayer);
         }
@@ -175,13 +177,13 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("MeleeAttack");
             base.BeginAttack(user);
         }
 
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             base.Invoke(user, hitCollider);
             user.GetComponent<MultiAudioAgent>().Play("BossAttack");
@@ -192,7 +194,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f);
@@ -215,7 +217,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("KickAttack");
             
@@ -229,7 +231,7 @@ namespace SwampBoss_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             Vector3 center = user.transform.TransformPoint(Vector3.forward * 1.8f + Vector3.up);
             return Physics.OverlapBox(center, new Vector3(1.5f, 1.4f, 3f) / 2.0f, user.transform.rotation, 1 << targetLayer);
@@ -241,7 +243,7 @@ namespace SwampBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
@@ -257,7 +259,7 @@ namespace SwampBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.color = Color.white;
             Gizmos.matrix = user.transform.localToWorldMatrix;

@@ -4,18 +4,16 @@ using System.Collections.Generic;
 public abstract class State
 {
     public enum Type {IDLE, ROAM, MOVE_TO_TARGET, ATTACK, KEEP_AWAY_FROM_TARGET, DEAD };
-    protected Actor m_myActor = null;
+    protected StateMachine m_myUser = null;
 
-    public State(Actor _user)
+    public State(StateMachine _user)
     {
-        m_myActor = _user;
+        m_myUser = _user;
     }
 
     public abstract void Start();
 
     public abstract void Update();
-
-    //public abstract bool TransitionCondition();
 
     public abstract void End();
 }

@@ -1,4 +1,5 @@
-﻿using GEN.Nodes;
+﻿using Actor.AI;
+using GEN.Nodes;
 using GEN.Users;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
     private Coroutine m_isSpawning = null;
 
     private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
-    private List<Actor> m_enemies = new List<Actor>();
+    private List<Enemy> m_enemies = new List<Enemy>();
 
     private void Awake()
     {
@@ -101,7 +102,7 @@ public class EnemySpawner : MonoBehaviour
         yield return null;
     }
 
-    public void AddEnemy(Actor actor)
+    public void AddEnemy(Enemy actor)
     {
         m_enemies.Add(actor);
     }

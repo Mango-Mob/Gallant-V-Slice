@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Actor.AI;
+using System;
 using UnityEngine;
-
 /****************
  * SlowStatus : A status effect that slows the victim and slowly speeds them up while the duration ends. 
  *              Strength = percentage of slow.
@@ -32,7 +32,7 @@ public class SlowStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Enemy _actor)
     {
         if(_actor.m_legs != null)
             _actor.m_legs.m_speedModifier = 1.0f - m_strength;
@@ -45,7 +45,7 @@ public class SlowStatus : StatusEffect
         
     }
 
-    public override void UpdateOnActor(Actor _actor, float dt)
+    public override void UpdateOnActor(Enemy _actor, float dt)
     {
         if (_actor.m_legs != null)
         {
@@ -65,7 +65,7 @@ public class SlowStatus : StatusEffect
         throw new NotImplementedException();
     }
 
-    public override void EndActor(Actor _actor)
+    public override void EndActor(Enemy _actor)
     {
         if (_actor.m_legs != null)
             _actor.m_legs.m_speedModifier = 1.0f;

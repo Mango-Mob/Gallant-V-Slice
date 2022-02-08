@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -116,11 +117,11 @@ public class SandmissileProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable") && other.GetComponentInParent<Actor>() != null)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable") && other.GetComponentInParent<Enemy>() != null)
         {
             Debug.Log("Hit " + other.name + " with sand for " + m_data.damage);
 
-            Actor actor = other.GetComponentInParent<Actor>();
+            Enemy actor = other.GetComponentInParent<Enemy>();
             if (actor != null)
             {
                 if (actor.CheckIsDead())

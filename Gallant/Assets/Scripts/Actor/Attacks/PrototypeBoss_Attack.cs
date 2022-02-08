@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using UnityEngine;
 
 namespace PrototypeBoss_Attack
 {
@@ -20,7 +22,7 @@ namespace PrototypeBoss_Attack
          * @param : (int) the layer filter for the overlap check.
          * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
          */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             return Physics.OverlapSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f, 1 << targetLayer);
         }
@@ -30,7 +32,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user) 
+        public override void BeginAttack(Enemy user) 
         {
             user.m_animator.SetTrigger("MeleeAttack");
             base.BeginAttack(user);
@@ -41,7 +43,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user) 
+        public override void OnGizmosDraw(Enemy user) 
         {
             Gizmos.color = Color.white;
             Gizmos.DrawWireSphere(user.transform.position + (user.transform.forward * 1.8f) + user.transform.up, 1.0f);
@@ -64,7 +66,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("KickAttack");
             base.BeginAttack(user);
@@ -77,7 +79,7 @@ namespace PrototypeBoss_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             Vector3 center = user.transform.TransformPoint(Vector3.forward * 1.8f + Vector3.up);
             return Physics.OverlapBox(center, new Vector3(1.5f, 1.4f, 3f) / 2.0f, user.transform.rotation, 1 << targetLayer);
@@ -89,7 +91,7 @@ namespace PrototypeBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             if (hitCollider.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
@@ -105,7 +107,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.color = Color.white;
             Gizmos.matrix = user.transform.localToWorldMatrix;
@@ -130,7 +132,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("AOEAttack");
             GameObject vfxPrefab = LoadObjectData("OldBoss_AOE");
@@ -148,7 +150,7 @@ namespace PrototypeBoss_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             return Physics.OverlapSphere(user.transform.position, 6.8f);
         }
@@ -159,7 +161,7 @@ namespace PrototypeBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             base.Invoke(user, hitCollider);
         }
@@ -170,7 +172,7 @@ namespace PrototypeBoss_Attack
          * @param : (Actor) the actor who is using this attack.
          * @return : (uint) priority of the attack.
          */
-        public override uint GetPriority(Actor user)
+        public override uint GetPriority(Enemy user)
         {
             float angle = user.m_legs.GetAngleTowards(user.m_target);
 
@@ -182,7 +184,7 @@ namespace PrototypeBoss_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.color = Color.white;
             Gizmos.matrix = user.transform.localToWorldMatrix;

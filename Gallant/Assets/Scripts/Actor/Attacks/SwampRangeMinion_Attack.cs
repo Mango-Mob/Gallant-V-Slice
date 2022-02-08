@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Actor.AI;
+using Actor.AI.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +20,7 @@ namespace SwampRangeMinion_Attack
         //Constructor
         public Throw() : base() { m_baseDamage = 10.0f; m_cooldown = 1.5f; m_priority = 8; }
 
-        public override void BeginAttack(Actor user)
+        public override void BeginAttack(Enemy user)
         {
             user.m_animator.SetTrigger("RangeAttack");
             base.BeginAttack(user);
@@ -31,7 +33,7 @@ namespace SwampRangeMinion_Attack
         * @param : (int) the layer filter for the overlap check.
         * @return : (Collider[]) an array of all colliders that overlap with the attack collider.
         */
-        public override Collider[] GetOverlap(Actor user, int targetLayer)
+        public override Collider[] GetOverlap(Enemy user, int targetLayer)
         {
             List<Collider> results = new List<Collider>(Physics.OverlapSphere(user.transform.position, 15f, 1 << targetLayer));
 
@@ -58,7 +60,7 @@ namespace SwampRangeMinion_Attack
          * @param : (Actor) the actor who is using this attack.
          * @param : (Collider) the collider which is being damaged.
          */
-        public override void Invoke(Actor user, Collider hitCollider)
+        public override void Invoke(Enemy user, Collider hitCollider)
         {
             if(Math.Abs(user.m_legs.GetAngleTowards(user.m_target)) > 45)
             {
@@ -74,7 +76,7 @@ namespace SwampRangeMinion_Attack
          * @author : Michael Jordan
          * @param : (Actor) the actor who is using this attack.
          */
-        public override void OnGizmosDraw(Actor user)
+        public override void OnGizmosDraw(Enemy user)
         {
             Gizmos.DrawWireSphere(user.transform.position, 15);
         }

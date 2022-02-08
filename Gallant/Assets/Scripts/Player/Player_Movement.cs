@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Actor.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,7 +43,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollCD = 1.0f;
 
     [Header("Targeting")]
-    public Actor m_currentTarget;
+    public Enemy m_currentTarget;
     [SerializeField] private float m_maxAngle = 60.0f;
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
@@ -326,10 +327,10 @@ public class Player_Movement : MonoBehaviour
             return;
         }
 
-        List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
+        List<Enemy> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
 
         float closestDistance = Mathf.Infinity;
-        Actor closestTarget = null;
+        Enemy closestTarget = null;
 
         foreach (var actor in actors)
         {

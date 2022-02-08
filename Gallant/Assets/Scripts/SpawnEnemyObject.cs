@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Actor.AI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -59,8 +60,8 @@ public class SpawnEnemyObject : MonoBehaviour
         if(other.gameObject.layer == LayerMask.NameToLayer("Default") && m_ObjectToSpawn != null)
         {
             GameObject enemy = GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
-            enemy.GetComponent<Actor>().m_target = m_presetTarget;
-            m_owner.AddEnemy(enemy.GetComponent<Actor>());
+            enemy.GetComponent<Enemy>().m_target = m_presetTarget;
+            m_owner.AddEnemy(enemy.GetComponent<Enemy>());
             m_ObjectToSpawn = null;
             Destroy(gameObject);
         }
