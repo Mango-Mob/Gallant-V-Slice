@@ -6,13 +6,11 @@ using UnityEngine;
 namespace Actor.AI
 {
     [Serializable]
-    public class AttackData
+    public class AttackData : ScriptableObject
     {
-        public string name;
-
         public float baseDamage;
         public float attackRange;
-        public uint animID;
+        public string animID;
         public float cooldown;
         public uint priority;
 
@@ -43,9 +41,8 @@ namespace Actor.AI
 
         public AttackType attackType;
 
-        public AttackData(string _name)
+        public void Awake()
         {
-            name = _name;
             attackOriginOffset = Vector3.forward;
             attackRange = 1.0f;
         }
@@ -55,9 +52,9 @@ namespace Actor.AI
             m_timer = cooldown;
         }
 
-        public void Update(float deltaTime)
+        public void Update()
         {
-            m_timer = Mathf.Clamp(m_timer - deltaTime, 0.0f, cooldown);
+            m_timer = Mathf.Clamp(m_timer - Time.deltaTime, 0.0f, cooldown);
         }
 
         public void InvokeDamage(GameObject source, float mod, Collider hit)
@@ -87,7 +84,7 @@ namespace Actor.AI
             return Physics.OverlapSphere(position, attackRange, 1 << targetLayer);
         }
 
-        public void OnDrawGizmos(Transform user)
+        public void DrawGizmos(Transform user)
         {
             Vector3 position = user.position + user.TransformVector(attackOriginOffset);
 

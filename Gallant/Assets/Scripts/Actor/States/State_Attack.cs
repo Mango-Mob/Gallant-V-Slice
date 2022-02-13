@@ -1,5 +1,6 @@
 ﻿using Actor.AI;
 using Actor.AI.Components;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,6 +16,26 @@ public class State_Attack : State
         {
             selectedAttack = attack;
         }   
+    }
+
+    public static void AttemptTransition(StateMachine _user)
+    {
+        Enemy userAsEnemy = (_user as Enemy);
+        List<AttackData> currentAttacks = new List<AttackData>(userAsEnemy.m_myAttacks);
+
+        currentAttacks.Sort(new AttackPrioritySort());
+        for (int i = currentAttacks.Count - 1; i >= 0; i--)
+        {
+            if (!currentAttacks[i].IsReady || !currentAttacks[i].IsOverlaping(_user.transform, LayerMask.NameToLayer("Player")))
+            {
+                currentAttacks.RemoveAt(i);
+            }
+        }
+
+        if (currentAttacks.Count > 0)
+        {
+            _user.SetState(new State_Attack(_user, currentAttacks[0]));
+        }
     }
 
     public override void Start()
@@ -52,27 +73,16 @@ public class State_Attack : State
                 {
                     userAsEnemy.SetState(new State_MoveToTarget(m_myUser));
                 }
+                else if(userAsEnemy.m_myData.m_states.Contains(Type.MOVE_TO_TARGET) && userAsEnemy.m_target != null)
+                {
+                    userAsEnemy.SetState(new State_KeepAwayFromTarget(m_myUser));
+                }
                 else if (userAsEnemy.m_myData.m_states.Contains(Type.IDLE))
                 {
                     userAsEnemy.SetState(new State_Idle(m_myUser));
                 }
             }
             
-        }
-        else
-        {
-            if(hasAttacked)
-            {
-                //Transition out;
-                if (userAsEnemy.m_myData.m_states.Contains(Type.MOVE_TO_TARGET) && userAsEnemy.m_target != null)
-                {
-                    userAsEnemy.SetState(new State_MoveToTarget(m_myUser));
-                }
-                else if (userAsEnemy.m_myData.m_states.Contains(Type.IDLE))
-                {
-                    userAsEnemy.SetState(new State_Idle(m_myUser));
-                }
-            }
         }
     }
 

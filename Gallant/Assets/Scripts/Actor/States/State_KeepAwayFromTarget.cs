@@ -57,17 +57,7 @@ public class State_KeepAwayFromTarget : State
             userAsEnemy.m_legs.SetTargetRotation(Quaternion.LookRotation(userAsEnemy.m_target.transform.position - userAsEnemy.transform.position, Vector3.up));
             if (userAsEnemy.m_myData.m_states.Contains(Type.ATTACK))
             {
-                //List<Actor_Attack> currentAttacks = new List<Actor_Attack>(userAsEnemy.m_myAttacks);
-                //currentAttacks.Sort(new AttackPrioritySort(userAsEnemy));
-                //
-                //foreach (var attack in currentAttacks)
-                //{
-                //    if (attack.IsWithinRange(userAsEnemy, LayerMask.NameToLayer("Player")) && attack.IsAvailable())
-                //    {
-                //        userAsEnemy.SetState(new State_Attack(m_myUser, attack));
-                //        return;
-                //    }
-                //}
+                State_Attack.AttemptTransition(m_myUser);
             }
             else
             {

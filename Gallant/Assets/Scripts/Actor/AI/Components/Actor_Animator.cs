@@ -28,10 +28,10 @@ namespace Actor.AI.Components
             m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
         }
 
-        public void BeginAttack(uint animID)
+        public void PlayAnimation(string animID)
         {
             //Play Anim
-            m_animator.SetTrigger("MeleeAttack");
+            m_animator.Play(animID);
         }
 
         /*******************

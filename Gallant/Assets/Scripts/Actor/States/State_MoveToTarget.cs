@@ -47,21 +47,7 @@ public class State_MoveToTarget : State
         
         if(userAsEnemy.m_myData.m_states.Contains(Type.ATTACK))
         {
-            List<AttackData> currentAttacks = new List<AttackData>(userAsEnemy.m_myAttacks);
-            
-            currentAttacks.Sort(new AttackPrioritySort());
-            for (int i = currentAttacks.Count - 1; i >= 0; i--)
-            {
-                if (!currentAttacks[i].IsReady || !currentAttacks[i].IsOverlaping(m_myUser.transform, LayerMask.NameToLayer("Player")))
-                {
-                    currentAttacks.RemoveAt(i);
-                }
-            }
-
-            if (currentAttacks.Count > 0)
-            {
-                m_myUser.SetState(new State_Attack(m_myUser, currentAttacks[0]));
-            }
+            State_Attack.AttemptTransition(m_myUser);
         }
     }
 

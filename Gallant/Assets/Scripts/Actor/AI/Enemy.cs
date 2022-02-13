@@ -35,11 +35,11 @@ namespace Actor.AI
 
         public GameObject m_target { get; set; } //The current focus of the actor
         public List<AttackData> m_myAttacks { get; private set; } //A List of all attacks possible by the actor
+
         public AttackData m_activeAttack { get; set; } = null; //Currently selected attack.
 
         //Attack Data:
         private List<Collider> m_damagedColliders; //List of all colliders damaged since last clear
-        private bool m_IsWeaponLive = false;
 
         //Status:
         private bool m_isDead = false;
@@ -116,7 +116,7 @@ namespace Actor.AI
             if(m_myAttacks != null)
                 foreach (var attacks in m_myAttacks)
                 {
-                    attacks.Update(Time.deltaTime);
+                    attacks.Update();
                 }
         }
 
@@ -128,15 +128,6 @@ namespace Actor.AI
             }
         }
 
-        /*********************
-         * OpenAttackWindow : Starts the vfx to indicate the actor is priming an attack.
-         * @author: Michael Jordan
-         */
-        public void OpenAttackWindow()
-        {
-            m_IsWeaponLive = true;
-        }
-
         public void BeginAttack(AttackData _attack)
         {
             if (m_activeAttack != null)
@@ -144,7 +135,7 @@ namespace Actor.AI
 
             m_activeAttack = _attack;
             m_activeAttack.Begin();
-            m_animator.BeginAttack(m_activeAttack.animID);
+            m_animator.PlayAnimation(m_activeAttack.animID);
         }
 
         /*******************
@@ -202,7 +193,6 @@ namespace Actor.AI
          */
         public void CloseAttackWindow()
         {
-            m_IsWeaponLive = false;
             m_damagedColliders.Clear();
             m_activeAttack = null;
         }
@@ -296,14 +286,14 @@ namespace Actor.AI
             {
                 foreach (var attack in m_myAttacks)
                 {
-                    attack.OnDrawGizmos(transform);
+                    attack.DrawGizmos(transform);
                 }
             }
             else if(m_myData.m_attacks != null)
             {
                 foreach (var attack in m_myData.m_attacks)
                 {
-                    attack.OnDrawGizmos(transform);
+                    attack.DrawGizmos(transform);
                 }
             }
         }

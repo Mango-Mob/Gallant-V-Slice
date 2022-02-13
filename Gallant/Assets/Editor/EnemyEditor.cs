@@ -1,6 +1,7 @@
 ﻿using Actor.AI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class EnemyEditor : Editor
     private bool m_testCase = false;
 
     private bool m_showAudio = false;
-    private Dictionary<string, bool> m_attackFoldout;
+    private List<bool> m_attackFoldout;
 
     private int testLevel = 0;
 
@@ -22,6 +23,7 @@ public class EnemyEditor : Editor
     private float testPlayerAttSped = 1.0f;
     private float testPlayerAbilDamage;
     private float testPlayerAbilPerSecond;
+
     public void Awake()
     {
         m_data = target as EnemyData;
@@ -30,7 +32,7 @@ public class EnemyEditor : Editor
     public override void OnInspectorGUI()
     {
         m_showLegacy = EditorGUILayout.Toggle("Legacy View:", m_showLegacy);
-        
+       
         if (m_showLegacy)
         {
             base.OnInspectorGUI();
@@ -44,27 +46,27 @@ public class EnemyEditor : Editor
             OnTestView();
             return;
         }
-        DrawLineOnGUI();
-                
-        TextFieldWithLabel("Enemy Name:", ref m_data.enemyName);
-        DrawLineOnGUI();
+        EditorExtentions.DrawLineOnGUI();
+
+        EditorExtentions.TextField("Enemy Name:", ref m_data.enemyName);
+        EditorExtentions.DrawLineOnGUI();
 
         EditorGUILayout.LabelField("Base Stats", EditorStyles.boldLabel);
 
         GUI.enabled = !m_data.invincible;
-        DoubleFloatField("Health: ", ref m_data.health, ref m_data.deltaHealth);
+        EditorExtentions.DoubleFloatField("Health: ", ref m_data.health, ref m_data.deltaHealth);
         GUI.enabled = true;
 
-        DoubleFloatField("Damage Modifier: ", ref m_data.m_damageModifier, ref m_data.deltaDamageMod);
-        DoubleFloatField("Speed: ", ref m_data.baseSpeed, ref m_data.deltaSpeed);
-        DoubleFloatField("Physical Resist: ", ref m_data.phyResist, ref m_data.deltaPhyResist);
-        DoubleFloatField("Ability Resist: ", ref m_data.abilResist, ref m_data.deltaAbilResist);
+        EditorExtentions.DoubleFloatField("Damage Modifier: ", ref m_data.m_damageModifier, ref m_data.deltaDamageMod);
+        EditorExtentions.DoubleFloatField("Speed: ", ref m_data.baseSpeed, ref m_data.deltaSpeed);
+        EditorExtentions.DoubleFloatField("Physical Resist: ", ref m_data.phyResist, ref m_data.deltaPhyResist);
+        EditorExtentions.DoubleFloatField("Ability Resist: ", ref m_data.abilResist, ref m_data.deltaAbilResist);
         ToggleField("Invincible:", ref m_data.invincible);
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Adrenaline Gain", EditorStyles.boldLabel);
-        MinMaxSliderWithLabels(ref m_data.adrenalineGainMin, ref m_data.adrenalineGainMax, 0, 100, EditorStyles.label.CalcSize(new GUIContent("0")).x);
-        FloatFieldWithLabel("Delta Adrenaline:", ref m_data.deltaAdrenaline);
+        EditorExtentions.MinMaxSlider(ref m_data.adrenalineGainMin, ref m_data.adrenalineGainMax, 0, 100, EditorStyles.label.CalcSize(new GUIContent("0")).x);
+        EditorExtentions.FloatField("Delta Adrenaline:", ref m_data.deltaAdrenaline);
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("States Machine", EditorStyles.boldLabel);
@@ -73,7 +75,7 @@ public class EnemyEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Attacks", EditorStyles.boldLabel);
 
-        AttackListField("Attack", ref m_data.m_attacks);
+        AttackListField($"Attack ({m_data.m_attacks.Count})", ref m_data.m_attacks);
 
         EditorGUILayout.Space();
 
@@ -81,8 +83,8 @@ public class EnemyEditor : Editor
         
         if(m_showAudio)
         {
-            TextFieldWithLabel("Hurt: ", ref m_data.hurtSoundName, 10);
-            TextFieldWithLabel("Death: ", ref m_data.deathSoundName, 10);
+            EditorExtentions.TextField("Hurt: ", ref m_data.hurtSoundName, 10);
+            EditorExtentions.TextField("Death: ", ref m_data.deathSoundName, 10);
         }
     }
 
@@ -91,7 +93,7 @@ public class EnemyEditor : Editor
         testLevel = EditorGUILayout.IntSlider("Level: ", testLevel, 0, 20);
 
         EditorGUILayout.Space();
-        DrawLineOnGUI();
+        EditorExtentions.DrawLineOnGUI();
 
         float health = m_data.health + m_data.deltaHealth * testLevel;
         EditorGUILayout.LabelField($"Health: {health}", EditorStyles.label);
@@ -110,14 +112,14 @@ public class EnemyEditor : Editor
         EditorGUILayout.LabelField($"Average Adrenaline: {(m_data.adrenalineGainMax + m_data.adrenalineGainMin)/2f + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
         EditorGUILayout.LabelField($"Max Adrenaline: {m_data.adrenalineGainMax + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
         EditorGUILayout.Space();
-        DrawLineOnGUI();
+        EditorExtentions.DrawLineOnGUI();
 
         EditorGUILayout.LabelField("Player Input: ", EditorStyles.boldLabel);
-        DoubleFloatField("Physical Damage | Speed", ref testPlayerPhyDamage, ref testPlayerAttSped);
-        DoubleFloatField("Ability Damage(per Second) | Seconds", ref testPlayerAbilDamage, ref testPlayerAbilPerSecond);
+        EditorExtentions.DoubleFloatField("Physical Damage | Speed", ref testPlayerPhyDamage, ref testPlayerAttSped);
+        EditorExtentions.DoubleFloatField("Ability Damage(per Second) | Seconds", ref testPlayerAbilDamage, ref testPlayerAbilPerSecond);
 
         EditorGUILayout.Space();
-        DrawLineOnGUI();
+        EditorExtentions.DrawLineOnGUI();
 
         EditorGUILayout.LabelField("Physical Result: ", EditorStyles.boldLabel);
         if(testPlayerPhyDamage > 0 && testPlayerAttSped > 0)
@@ -138,61 +140,16 @@ public class EnemyEditor : Editor
         EditorGUILayout.Space();
     }
 
-    private void TextFieldWithLabel(string label, ref string data, float offset = 0)
+    private void UpdateList()
     {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.TextField(data);
-        EditorGUILayout.EndHorizontal();
-    }
+        if (m_attackFoldout != null)
+        {
+            while (m_attackFoldout.Count < m_data.m_attacks.Count)
+                m_attackFoldout.Add(false);
 
-    private void FloatFieldWithLabel(string label, ref float data, float offset = 0)
-    {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.FloatField(data);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void Vector3FieldWithLabel(string label, ref Vector3 data, float offset = 0)
-    {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.Vector3Field("", data);
-        EditorGUILayout.EndHorizontal();
-    }
-    private void IntegerFieldWithLabel(string label, ref int data, float offset = 0)
-    {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.IntField(data);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void UnsignedIntegerFieldWithLabel(string label, ref uint data, float offset = 0)
-    {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        int newData = EditorGUILayout.IntField((int)data);
-
-        if (newData >= 0)
-            data = (uint)newData;
-
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void GameObjectFieldWithLabel(string label, ref GameObject data, float offset = 0)
-    {
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.ObjectField(data, typeof(GameObject), false) as GameObject;
-        EditorGUILayout.EndHorizontal();
+            while (m_attackFoldout.Count > m_data.m_attacks.Count)
+                m_attackFoldout.RemoveAt(m_attackFoldout.Count - 1);
+        }
     }
 
     private void ToggleField(string label, ref bool data)
@@ -203,40 +160,6 @@ public class EnemyEditor : Editor
         EditorGUILayout.EndHorizontal();
     }
 
-    private void DoubleFloatField(string label, ref float data, ref float delta)
-    {
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField(label, EditorStyles.label);
-        data = EditorGUILayout.FloatField(data);
-        delta = EditorGUILayout.FloatField(delta);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void MinMaxSliderWithLabels(ref float min, ref float max, float limitMin, float limitMax, float labelSizePerChar = 25f)
-    {
-        string limitMaxAsString = limitMax.ToString();
-        float labelSize = EditorStyles.label.CalcSize(new GUIContent(".")).x + labelSizePerChar * limitMaxAsString.Length;
-
-        EditorGUILayout.BeginHorizontal();
-
-        min = EditorGUILayout.FloatField(min, EditorStyles.label, GUILayout.Width(labelSize));
-        EditorGUILayout.MinMaxSlider(ref min, ref max, limitMin, limitMax);
-        max = EditorGUILayout.FloatField(max, EditorStyles.label, GUILayout.Width(labelSize));
-
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField($"   Average:", EditorStyles.boldLabel, GUILayout.Width(EditorStyles.boldLabel.CalcSize(new GUIContent("   Average:")).x));
-        EditorGUILayout.LabelField(((max + min) / 2f).ToString(), EditorStyles.label);
-        EditorGUILayout.EndHorizontal();
-    }
-
-    private void DrawLineOnGUI()
-    {
-        Rect rect = EditorGUILayout.GetControlRect(false, 1);
-        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
-    }
-
     private void AttackListField(string label, ref List<AttackData> data)
     {
         bool status = false;
@@ -244,7 +167,8 @@ public class EnemyEditor : Editor
 
         if(status && m_attackFoldout == null)
         {
-            m_attackFoldout = new Dictionary<string, bool>();
+            m_attackFoldout = new List<bool>();
+            UpdateList();
         }
         else if(!status && m_attackFoldout != null)
         {
@@ -270,7 +194,29 @@ public class EnemyEditor : Editor
                 if (data == null)
                     data = new List<AttackData>();
 
-                data.Add(new AttackData($"attack{ DateTime.Now.ToString()}"));
+                string path = AssetDatabase.GetAssetPath(target);
+                string name = $"newAttack_{target.name}";
+                path = path.Substring(0, path.LastIndexOf("/")+1) + "Attacks";
+
+                if (!AssetDatabase.IsValidFolder(path))
+                    Directory.CreateDirectory(path);
+
+                AttackData createdData = ScriptableObject.CreateInstance<AttackData>();
+                createdData.name = name;
+                AssetDatabase.CreateAsset(createdData, path+$"/{name}.asset");
+                data.Add(createdData);
+                UpdateList();
+            }
+
+            EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
+
+            if (GUILayout.Button("Add Exist", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Add New")).x)))
+            {
+                if (data == null)
+                    data = new List<AttackData>();
+
+                data.Add(null);
+                UpdateList();
             }
 
             EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
@@ -279,6 +225,7 @@ public class EnemyEditor : Editor
             {
                 m_attackFoldout?.Clear();
                 data?.Clear();
+                UpdateList();
             }
             EditorGUILayout.EndHorizontal();
         }
@@ -289,26 +236,29 @@ public class EnemyEditor : Editor
         if (m_attackFoldout == null)
             return true;
 
-        if (!m_attackFoldout.ContainsKey(data[dataID].name))
-            m_attackFoldout.Add(data[dataID].name, false);
-
+        string name = "Empty";
+        
         GUILayout.BeginHorizontal();
         GUILayout.Space(offset);
 
-        m_attackFoldout[data[dataID].name] = EditorGUILayout.Foldout(m_attackFoldout[data[dataID].name], data[dataID].name);
-        string key = data[dataID].name;
+        if (data[dataID] != null)
+        {
+            name = data[dataID].name;
+        }
+
+        
+        m_attackFoldout[dataID] = EditorGUILayout.Foldout(m_attackFoldout[dataID], name);
+
         GUILayout.EndHorizontal();
 
-        if (m_attackFoldout[data[dataID].name])
+        if (m_attackFoldout[dataID])
         {
+            data[dataID] = EditorExtentions.ScriptableObjectField("Data: ", data[dataID], offset);
+            
+            if (data[dataID] == null)
+                return true;
 
-            TextFieldWithLabel("Name: ", ref data[dataID].name, offset);
-            if (key != data[dataID].name) //has name changed?
-            {
-                //remove data at key
-                m_attackFoldout.Remove(data[dataID].name);
-                m_attackFoldout.Add(data[dataID].name, true);
-            }
+            data[dataID] = EditorExtentions.SaveField<AttackData>("Name: ", data[dataID], offset);
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(offset);
@@ -316,41 +266,39 @@ public class EnemyEditor : Editor
             data[dataID].attackType = (AttackData.AttackType)EditorGUILayout.EnumPopup(data[dataID].attackType);
             GUILayout.EndHorizontal();
 
-            UnsignedIntegerFieldWithLabel("Animation ID: ", ref data[dataID].animID, offset);
-            FloatFieldWithLabel("Base Damage: ", ref data[dataID].baseDamage, offset);
-            UnsignedIntegerFieldWithLabel("Instances: ", ref data[dataID].instancesPerAttack, offset);
-            FloatFieldWithLabel("Attack Range: ", ref data[dataID].attackRange, offset);
-            FloatFieldWithLabel("Cooldown: ", ref data[dataID].cooldown, offset);
-            UnsignedIntegerFieldWithLabel("Priority: ", ref data[dataID].priority, offset);
-
+            EditorExtentions.TextField("Animation ID: ", ref data[dataID].animID, offset);
+            EditorExtentions.FloatField("Base Damage: ", ref data[dataID].baseDamage, offset);
+            EditorExtentions.UnsignedIntegerField("Instances: ", ref data[dataID].instancesPerAttack, offset);
+            EditorExtentions.FloatField("Attack Range: ", ref data[dataID].attackRange, offset);
+            EditorExtentions.FloatField("Cooldown: ", ref data[dataID].cooldown, offset);
+            EditorExtentions.UnsignedIntegerField("Priority: ", ref data[dataID].priority, offset);
 
             EditorGUILayout.Space();
             switch (data[dataID].attackType)
             {
                 default:
                 case AttackData.AttackType.Melee:
-                    Vector3FieldWithLabel("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
+                    EditorExtentions.Vector3Field("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
                     break;
                 case AttackData.AttackType.Ranged:
-                    GameObjectFieldWithLabel("Projectile prefab: ", ref data[dataID].projectile, offset);
-                    FloatFieldWithLabel("Projectile Speed: ", ref data[dataID].projSpeed, offset);
-                    FloatFieldWithLabel("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
+                    EditorExtentions.GameObjectField("Projectile prefab: ", ref data[dataID].projectile, offset);
+                    EditorExtentions.FloatField("Projectile Speed: ", ref data[dataID].projSpeed, offset);
+                    EditorExtentions.FloatField("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
                     break;
                 case AttackData.AttackType.Instant:
-                    GameObjectFieldWithLabel("Projectile prefab: ", ref data[dataID].projectile, offset);
-                    Vector3FieldWithLabel("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
-                    FloatFieldWithLabel("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
+                    EditorExtentions.GameObjectField("Projectile prefab: ", ref data[dataID].projectile, offset);
+                    EditorExtentions.Vector3Field("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
+                    EditorExtentions.FloatField("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
                     break;
             }
             EditorGUILayout.Space();
-            GameObjectFieldWithLabel("VFX prefab: ", ref data[dataID].vfxSpawn, offset);
+            EditorExtentions.GameObjectField("VFX prefab: ", ref data[dataID].vfxSpawn, offset);
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(offset);
 
             if (GUILayout.Button("Remove", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Remove")).x)))
             {
-                m_attackFoldout.Remove(data[dataID].name);
                 m_data.m_attacks.Remove(data[dataID]);
                 GUILayout.EndHorizontal();
                 return false;
