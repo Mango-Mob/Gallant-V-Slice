@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -103,7 +103,7 @@ public class BoomerangProjectile : MonoBehaviour
 
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
 
-            Enemy actor = other.GetComponentInParent<Enemy>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
                 //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);

@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -396,7 +396,7 @@ public class Player_Attack : MonoBehaviour
                 continue;
 
             DamageTarget(collider.gameObject, _data.m_damage);
-            Enemy actor = collider.GetComponentInParent<Enemy>();
+            Actor actor = collider.GetComponentInParent<Actor>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
@@ -409,7 +409,7 @@ public class Player_Attack : MonoBehaviour
     }
 
     /*******************
-     * DamageTarget : Apply damage effects to enemy.
+     * DamageTarget : Apply damage effects to Actor.
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
@@ -418,10 +418,10 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Enemy actor = _target.GetComponentInParent<Enemy>();
+        Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
         {
-            actor.DealDamage(_damage, transform.position);
+            actor.DealDamage(_damage, CombatSystem.DamageType.Physical, CombatSystem.Faction.Player, transform.position);
         }
     }
 

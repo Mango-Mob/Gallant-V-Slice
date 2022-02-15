@@ -1,4 +1,5 @@
-﻿using Actor.AI;
+﻿
+using ActorSystem.AI;
 using System;
 using UnityEngine;
 
@@ -28,9 +29,9 @@ public class WeakenStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Enemy _actor)
+    public override void StartActor(Actor _actor)
     {
-        m_maxResistance = _actor.m_myData.phyResist;
+        //m_maxResistance = _actor.m_myData.phyResist;
         m_currResistance = m_maxResistance * m_strength;
         //Show vfx
     }
@@ -40,10 +41,10 @@ public class WeakenStatus : StatusEffect
         throw new NotImplementedException();
     }
 
-    public override void UpdateOnActor(Enemy _actor, float dt)
+    public override void UpdateOnActor(Actor _actor, float dt)
     {
         float resist = Mathf.Lerp(m_maxResistance, m_currResistance, m_duration / m_startDuration);
-        _actor.SetResistance(resist);
+        _actor.m_myBrain.m_currPhyResist = resist;
         m_duration -= dt;
     }
 
@@ -53,10 +54,11 @@ public class WeakenStatus : StatusEffect
         throw new NotImplementedException();
     }
 
-    public override void EndActor(Enemy _actor)
+    public override void EndActor(Actor _actor)
     {
         //Delete vfx
-        _actor.SetResistance(m_maxResistance);
+        //_actor.m_myBrain
+        //_actor.SetResistance(m_maxResistance);
     }
 
     public override void EndPlayer(Player_Controller _player)

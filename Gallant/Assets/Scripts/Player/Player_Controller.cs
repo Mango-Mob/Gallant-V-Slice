@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -223,7 +223,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            DamagePlayer(20.0f, FindObjectOfType<Enemy>().gameObject, false);
+            DamagePlayer(20.0f, FindObjectOfType<Actor>().gameObject, false);
         }
         if (InputManager.instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -335,14 +335,14 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
-    public List<Enemy> GetActorsInfrontOfPlayer(float _angle, float _distance)
+    public List<Actor> GetActorsInfrontOfPlayer(float _angle, float _distance)
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
-        List<Enemy> targets = new List<Enemy>();
+        List<Actor> targets = new List<Actor>();
 
         foreach (var collider in colliders)
         {
-            Enemy actor = collider.GetComponentInParent<Enemy>();
+            Actor actor = collider.GetComponentInParent<Actor>();
             if (actor == null)
                 continue;
 

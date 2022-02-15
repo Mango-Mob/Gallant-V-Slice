@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +42,7 @@ public class SandArea : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            Enemy actor = other.GetComponentInParent<Enemy>();
+            Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
 

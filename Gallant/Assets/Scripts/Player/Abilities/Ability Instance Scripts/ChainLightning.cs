@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,13 +6,13 @@ using UnityEngine;
 public class ChainLightning : MonoBehaviour
 {
     public Player_Controller m_user;
-    public LayerMask m_enemyDetectionMask;
+    public LayerMask m_ActorDetectionMask;
     public AbilityData m_data;
 
     [SerializeField] private GameObject lightningPrefabVFX;
     [SerializeField] private GameObject lightningHitPrefabVFX;
 
-    private List<Enemy> m_hitTargets = new List<Enemy>();
+    private List<Actor> m_hitTargets = new List<Actor>();
     private int m_maxTargets = 3;
     public Transform m_handTransform;
 
@@ -28,11 +28,11 @@ public class ChainLightning : MonoBehaviour
         m_maxTargets = (int)m_data.effectiveness;
 
         Vector3 lastTargetPos = transform.position;
-        Enemy[] actors = FindObjectsOfType<Enemy>();
-        List<Enemy> closeActors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
+        Actor[] actors = FindObjectsOfType<Actor>();
+        List<Actor> closeActors = m_user.GetActorsInfrontOfPlayer(m_hitAngle, m_hitRange);
 
         float closestDistance = Mathf.Infinity;
-        Enemy closestTarget = null;
+        Actor closestTarget = null;
 
         foreach (var actor in closeActors)
         {
@@ -48,7 +48,7 @@ public class ChainLightning : MonoBehaviour
         if (closestTarget != null)
         {
             m_hitTargets.Add(closestTarget);
-            closestTarget.DealDamage(m_data.damage);
+            closestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
 
             CreateVFX(transform.position, closestTarget.m_selfTargetTransform.transform.position);
 
@@ -63,14 +63,14 @@ public class ChainLightning : MonoBehaviour
         StartCoroutine(TargetSearch(lastTargetPos, actors));
     }
 
-    IEnumerator TargetSearch(Vector3 _lastPosition, Enemy[] _enemies)
+    IEnumerator TargetSearch(Vector3 _lastPosition, Actor[] _enemies)
     {
         float waitTime = 0.15f;
         yield return new WaitForSeconds(waitTime);
 
         for (int i = 1; i < m_maxTargets; i++)
         {
-            Enemy bestTarget = null;
+            Actor bestTarget = null;
             float closestDistance = Mathf.Infinity;
             foreach (var actor in _enemies)
             {
@@ -92,7 +92,7 @@ public class ChainLightning : MonoBehaviour
             if (bestTarget != null)
             {
                 m_hitTargets.Add(bestTarget);
-                bestTarget.DealDamage(m_data.damage);
+                bestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
 
                 // Chain VFX
                 CreateVFX(_lastPosition, bestTarget.m_selfTargetTransform.transform.position);

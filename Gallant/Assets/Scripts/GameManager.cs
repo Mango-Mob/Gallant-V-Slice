@@ -1,4 +1,4 @@
-﻿using Actor.AI.Components;
+﻿using ActorSystem.AI.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,9 +54,6 @@ public class GameManager : MonoBehaviour
     {
         if (_instance == this)
             _instance = null;
-
-        if (EnemyManager.HasInstance())
-            EnemyManager.Destroy();
     }
 
     #endregion 

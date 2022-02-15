@@ -7,21 +7,21 @@ using System;
 public class RoomData : ScriptableObject
 {
     [Serializable]
-    public struct Enemy
+    public struct Actor
     {
         public GameObject spawnPrefab;
         public int count;
     }
 
     [Header("Wave Information")]
-    public List<Enemy> m_waveInformation;
+    public List<Actor> m_waveInformation;
 
     public float CalculateCost()
     {
         float cost = 0;
         foreach (var wave in m_waveInformation)
         {
-            cost += wave.spawnPrefab.GetComponent<SpawnEnemyObject>().m_spawnCost * wave.count;
+            cost += wave.spawnPrefab.GetComponent<SpawnActorObject>().m_spawnCost * wave.count;
         }
         return cost;
     }

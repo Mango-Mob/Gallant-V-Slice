@@ -1,10 +1,10 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnEnemyObject : MonoBehaviour
+public class SpawnActorObject : MonoBehaviour
 {
     public GameObject m_ObjectToSpawn;
     public Vector3 m_start;
@@ -19,7 +19,7 @@ public class SpawnEnemyObject : MonoBehaviour
 
     private GameObject m_presetTarget = null;
     private Collider m_triggerBox = null;
-    private EnemySpawner m_owner = null;
+    private ActorSpawner m_owner = null;
 
     public AudioClip m_spawnSound;
     // Start is called before the first frame update
@@ -59,9 +59,9 @@ public class SpawnEnemyObject : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Default") && m_ObjectToSpawn != null)
         {
-            GameObject enemy = GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
-            enemy.GetComponent<Enemy>().m_target = m_presetTarget;
-            m_owner.AddEnemy(enemy.GetComponent<Enemy>());
+            GameObject Actor = GameObject.Instantiate(m_ObjectToSpawn, gameObject.transform.position, gameObject.transform.rotation);
+            //Actor.GetComponent<Actor>().m_target = m_presetTarget;
+            m_owner.AddActor(Actor.GetComponent<Actor>());
             m_ObjectToSpawn = null;
             Destroy(gameObject);
         }
@@ -71,8 +71,8 @@ public class SpawnEnemyObject : MonoBehaviour
         m_presetTarget = target;
     }
 
-    public void SetOwner(EnemySpawner enemySpawner)
+    public void SetOwner(ActorSpawner ActorSpawner)
     {
-        m_owner = enemySpawner;
+        m_owner = ActorSpawner;
     }
 }

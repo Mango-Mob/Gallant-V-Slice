@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +43,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollCD = 1.0f;
 
     [Header("Targeting")]
-    public Enemy m_currentTarget;
+    public Actor m_currentTarget;
     [SerializeField] private float m_maxAngle = 60.0f;
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
@@ -67,11 +67,9 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
-        if (m_currentTarget != null && (m_currentTarget.CheckIsDead() || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
+        if (m_currentTarget != null && (m_currentTarget.m_myBrain.IsDead || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
         {
-            if (m_currentTarget.m_myOutline != null)
-                m_currentTarget.m_myOutline.enabled = false;
-
+            m_currentTarget.m_myBrain.SetOutlineEnabled(false);
             m_currentTarget = null;
         }
 
@@ -319,18 +317,17 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_currentTarget != null)
         {
-            if(m_currentTarget.m_myOutline != null)
-                m_currentTarget.m_myOutline.enabled = false;
+            m_currentTarget.m_myBrain.SetOutlineEnabled(false);
 
             m_currentTarget = null;
             Debug.Log("Stopped targeting");
             return;
         }
 
-        List<Enemy> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
+        List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
 
         float closestDistance = Mathf.Infinity;
-        Enemy closestTarget = null;
+        Actor closestTarget = null;
 
         foreach (var actor in actors)
         {
@@ -353,8 +350,7 @@ public class Player_Movement : MonoBehaviour
         if (!m_currentTarget)
             return;
 
-        if (m_currentTarget.m_myOutline != null)
-            m_currentTarget.m_myOutline.enabled = true;
+        m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
     /*******************

@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,10 +6,10 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(EnemyData))]
-public class EnemyEditor : Editor
+[CustomEditor(typeof(ActorData))]
+public class ActorEditor : Editor
 {
-    private EnemyData m_data;
+    private ActorData m_data;
 
     private bool m_showLegacy = false;
     private bool m_testCase = false;
@@ -26,7 +26,7 @@ public class EnemyEditor : Editor
 
     public void Awake()
     {
-        m_data = target as EnemyData;
+        m_data = target as ActorData;
     }
 
     public override void OnInspectorGUI()
@@ -48,7 +48,7 @@ public class EnemyEditor : Editor
         }
         EditorExtentions.DrawLineOnGUI();
 
-        EditorExtentions.TextField("Enemy Name:", ref m_data.enemyName);
+        EditorExtentions.TextField("Actor Name:", ref m_data.ActorName);
         EditorExtentions.DrawLineOnGUI();
 
         EditorGUILayout.LabelField("Base Stats", EditorStyles.boldLabel);

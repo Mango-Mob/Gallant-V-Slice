@@ -1,4 +1,4 @@
-﻿using Actor.AI;
+﻿using ActorSystem.AI;
 using GEN.Nodes;
 using GEN.Users;
 using System.Collections;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemySpawner : MonoBehaviour
+public class ActorSpawner : MonoBehaviour
 {
     public const float budgetPerDepth = 100f;
     public bool IsRoom = true;
@@ -16,7 +16,7 @@ public class EnemySpawner : MonoBehaviour
     public float m_distOffEdge = 1.0f;
     public float m_spawnDelay = 1.0f;
 
-    public GameObject m_EnemyToSpawn;
+    public GameObject m_ActorToSpawn;
 
     private Player_Controller m_player = null;
     public GameObject m_gatePrefab;
@@ -44,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
     private Coroutine m_isSpawning = null;
 
     private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
-    private List<Enemy> m_enemies = new List<Enemy>();
+    private List<Actor> m_enemies = new List<Actor>();
 
     private void Awake()
     {
@@ -89,7 +89,7 @@ public class EnemySpawner : MonoBehaviour
 
                 int selected = UnityEngine.Random.Range(0, m_spawnLocations.Count);
                 Quaternion rotation = Quaternion.LookRotation(-m_spawnLocations[selected].m_forward, Vector3.up);
-                SpawnEnemyObject spawn = GameObject.Instantiate(wave.spawnPrefab, m_spawnLocations[selected].m_start, rotation).GetComponent<SpawnEnemyObject>();
+                SpawnActorObject spawn = GameObject.Instantiate(wave.spawnPrefab, m_spawnLocations[selected].m_start, rotation).GetComponent<SpawnActorObject>();
                 spawn.m_start = m_spawnLocations[selected].m_start;
                 spawn.m_end = m_spawnLocations[selected].m_end;
                 spawn.m_height = m_spawnArcHeight;
@@ -102,7 +102,7 @@ public class EnemySpawner : MonoBehaviour
         yield return null;
     }
 
-    public void AddEnemy(Enemy actor)
+    public void AddActor(Actor actor)
     {
         m_enemies.Add(actor);
     }
@@ -243,7 +243,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 for (int i = m_enemies.Count - 1; i >= 0; i--)
                 {
-                    if(m_enemies[i].m_currentStateDisplay == "DEAD")
+                    if(m_enemies[i].m_myBrain.IsDead)
                     {
                         m_enemies.RemoveAt(i);
                     }

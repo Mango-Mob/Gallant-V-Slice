@@ -1,4 +1,5 @@
-﻿using Actor.AI;
+﻿
+using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class StatusEffectContainer : MonoBehaviour
 {
     public GameObject m_statusPrefab;
 
-    private Enemy m_actor = null;
+    private Actor m_actor = null;
     private Player_Controller m_player = null;
 
     private struct StatusDisplay
@@ -23,7 +24,7 @@ public class StatusEffectContainer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_actor = this.GetComponent<Enemy>();
+        m_actor = this.GetComponent<Actor>();
         m_player = this.GetComponent<Player_Controller>();
     }
 
@@ -73,9 +74,9 @@ public class StatusEffectContainer : MonoBehaviour
         UI_StatusEffectBar bar = null;
         if (m_actor != null)
         {
-            if(m_actor.m_ui != null)
+            if(m_actor.m_myBrain.m_ui != null)
             {
-                bar = m_actor.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
+                bar = m_actor.m_myBrain.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
                 bar.SetImage(effect.m_displayImage);
                 bar.SetColor(effect.m_displayColor);
             }
@@ -93,9 +94,9 @@ public class StatusEffectContainer : MonoBehaviour
         m_currentEffects.Remove(display);
         if (m_actor != null)
         {
-            if (m_actor.m_ui != null)
+            if (m_actor.m_myBrain.m_ui != null)
             {
-                m_actor.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
+                m_actor.m_myBrain.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
                 Destroy(display.element.gameObject);
             }
             //Remove vfx
