@@ -60,7 +60,7 @@ namespace ActorSystem.AI.Components
         {
             if (moveVector.magnitude == 0)
             {
-                //Halt();
+                Halt();
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace ActorSystem.AI.Components
          */
         public void Halt()
         {
-            //m_agent.isStopped = true;
+            m_agent.isStopped = true;
         }
 
         /*******************

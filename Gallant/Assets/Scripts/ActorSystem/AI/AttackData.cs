@@ -26,6 +26,7 @@ namespace ActorSystem.AI
         private bool canAttackMove = false;
         private bool hasExitTime;
         private bool canBeCanceled;
+        public bool isAwaysFacingTarget = false;
         //Has effect
 
         public enum AttackType

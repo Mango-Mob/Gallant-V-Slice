@@ -75,6 +75,7 @@ namespace ActorSystem.AI
 
         public void SetTargetVelocity(Vector3 moveVector){m_myBrain.m_legs.SetTargetVelocity(moveVector);}
         public void SetTargetVelocity(Quaternion rotatVector) { m_myBrain.m_legs.SetTargetRotation(rotatVector); }
+        public void SetTargetOrientaion(Vector3 targetLook) { SetTargetVelocity(Quaternion.LookRotation((targetLook - transform.position).normalized, Vector3.up)); }
         public void SetTargetVelocity(Vector3 moveVector, Quaternion rotatVector)
         {
             m_myBrain.m_legs.SetTargetVelocity(moveVector);
@@ -119,6 +120,18 @@ namespace ActorSystem.AI
                 case CombatSystem.DamageType.True:
                     break;
             }
+        }
+
+        public AttackData GetAttack(int id)
+        {
+            if(id >= 0 && m_myBrain.m_arms != null)
+            {
+                if(id < m_myBrain.m_arms.m_myData.Count)
+                {
+                    return m_myBrain.m_arms.m_myData[id];
+                }
+            }
+            return null;
         }
 
         public void Kill()
