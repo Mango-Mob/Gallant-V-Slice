@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -408,7 +409,7 @@ public class Player_Attack : MonoBehaviour
     }
 
     /*******************
-     * DamageTarget : Apply damage effects to enemy.
+     * DamageTarget : Apply damage effects to Actor.
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
@@ -420,7 +421,7 @@ public class Player_Attack : MonoBehaviour
         Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
         {
-            actor.DealDamage(_damage, transform.position);
+            actor.DealDamage(_damage, CombatSystem.DamageType.Physical, CombatSystem.Faction.Player, transform.position);
         }
     }
 

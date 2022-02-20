@@ -15,6 +15,7 @@ public class CharacterEditor : Editor
     {
         m_data = target as CharacterData;        
     }
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();

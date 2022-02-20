@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI.Components;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,11 +16,11 @@ public class AtmosphereScript : MonoBehaviour
 
     private void Update()
     {
-        if(m_combatAgent.IsPlaying() && ActorManager.instance.m_subscribed.Count == 0)
+        if(m_combatAgent.IsPlaying() && ActorManager.Instance.m_subscribed.Count == 0)
         {
             EndCombat();
         }
-        if (m_normalAgent.IsPlaying() && ActorManager.instance.m_subscribed.Count > 0)
+        if (m_normalAgent.IsPlaying() && ActorManager.Instance.m_subscribed.Count > 0)
         {
             StartCombat();
         }

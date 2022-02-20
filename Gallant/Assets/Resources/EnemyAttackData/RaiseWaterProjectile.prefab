@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6199397459271998949}
-  - component: {fileID: 5201874374949994601}
   - component: {fileID: 9222424116571403736}
   m_Layer: 0
   m_Name: RaiseWaterProjectile
@@ -25,21 +24,69 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112836106941330074}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children:
-  - {fileID: 5840211925478558148}
+  - {fileID: 865302824119026052}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!212 &5201874374949994601
-SpriteRenderer:
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9222424116571403736
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 112836106941330074}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44f3dff121d260a48a2af10ad8c5d4b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_knockUpVFX: {fileID: 852513663739718292, guid: 9174285531e8f554caf760f90c3e3aab,
+    type: 3}
+  m_previewRadius: 2.5
+  m_clip: {fileID: 8300000, guid: c6b6be2518e6a17419e16f0843ea29f7, type: 3}
+--- !u!1 &2023101744079118582
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 865302824119026052}
+  - component: {fileID: 9138040061611278521}
+  m_Layer: 0
+  m_Name: Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &865302824119026052
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023101744079118582}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6658197249019425887}
+  m_Father: {fileID: 6199397459271998949}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!212 &9138040061611278521
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2023101744079118582}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -83,25 +130,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9222424116571403736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 112836106941330074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44f3dff121d260a48a2af10ad8c5d4b3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_knockUpVFX: {fileID: 852513663739718292, guid: 9174285531e8f554caf760f90c3e3aab,
-    type: 3}
-  m_previewRadius: 2.5
-  m_clip: {fileID: 8300000, guid: c6b6be2518e6a17419e16f0843ea29f7, type: 3}
-  m_audioVFX: {fileID: 1149520788562405729, guid: 00b39fa1e422cbb48878cd30139e7ce6,
-    type: 3}
---- !u!1 &902141331982831664
+--- !u!1 &2314718301500435314
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,8 +138,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5840211925478558148}
-  - component: {fileID: 856145716363422690}
+  - component: {fileID: 6658197249019425887}
+  - component: {fileID: 5533412761883189126}
   m_Layer: 0
   m_Name: RaiseWaterProjectile
   m_TagString: Untagged
@@ -118,27 +147,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5840211925478558148
+--- !u!4 &6658197249019425887
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 902141331982831664}
+  m_GameObject: {fileID: 2314718301500435314}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children: []
-  m_Father: {fileID: 6199397459271998949}
+  m_Father: {fileID: 865302824119026052}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!212 &856145716363422690
+--- !u!212 &5533412761883189126
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 902141331982831664}
+  m_GameObject: {fileID: 2314718301500435314}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0

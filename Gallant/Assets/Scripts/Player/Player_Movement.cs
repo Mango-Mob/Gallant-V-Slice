@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,11 +67,9 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
-        if (m_currentTarget != null && (m_currentTarget.CheckIsDead() || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
+        if (m_currentTarget != null && (m_currentTarget.m_myBrain.IsDead || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
         {
-            if (m_currentTarget.m_myOutline != null)
-                m_currentTarget.m_myOutline.enabled = false;
-
+            m_currentTarget.m_myBrain.SetOutlineEnabled(false);
             m_currentTarget = null;
         }
 
@@ -318,8 +317,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_currentTarget != null)
         {
-            if(m_currentTarget.m_myOutline != null)
-                m_currentTarget.m_myOutline.enabled = false;
+            m_currentTarget.m_myBrain.SetOutlineEnabled(false);
 
             m_currentTarget = null;
             Debug.Log("Stopped targeting");
@@ -352,8 +350,7 @@ public class Player_Movement : MonoBehaviour
         if (!m_currentTarget)
             return;
 
-        if (m_currentTarget.m_myOutline != null)
-            m_currentTarget.m_myOutline.enabled = true;
+        m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
     /*******************
