@@ -414,4 +414,14 @@ public class Player_Controller : MonoBehaviour
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects);
     }
+
+    public void RespawnPlayerTo(Vector3 position, bool isFullHP = false)
+    {
+
+    }
+
+    public void RespawnPlayerToGround(bool isFullHP = false)
+    {
+        
+    }
 }
