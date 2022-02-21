@@ -142,55 +142,55 @@ public class Player_Attack : MonoBehaviour
 
         m_attackedThisFrame = true;
 
-        if (_left)
-        {
-            m_leftWeapon.TriggerWeapon();
-        }
-        else
-        {
-            m_rightWeapon.TriggerWeapon();
-        }
-
-        //WeaponData thisData;
-        //Vector3 thisHandPosition;
-
         //if (_left)
         //{
-        //    if (m_leftWeaponInUse)
-        //        return;
-        //    // Set weapon information
-        //    thisData = m_leftWeaponData;
-        //    thisHandPosition = m_leftHandTransform.position;
+        //    m_leftWeapon.TriggerWeapon();
         //}
         //else
         //{
-        //    if (m_rightWeaponInUse)
-        //        return;
-        //    // Set weapon information
-        //    thisData = m_rightWeaponData;
-        //    thisHandPosition = m_rightHandTransform.position;
+        //    m_rightWeapon.TriggerWeapon();
         //}
 
-        //// If weapon is not in hand
-        //if (thisData == null)
-        //    return;
+        WeaponData thisData;
+        Vector3 thisHandPosition;
 
-        //switch (thisData.weaponType)
-        //{
-        //    case Weapon.SWORD: // Use sword
-        //        WeaponAttack(thisData, transform.position);
-        //        break;
-        //    case Weapon.SHIELD: // Use shield
-        //        WeaponAttack(thisData, transform.position);
-        //        BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
-        //        break;
-        //    case Weapon.BOOMERANG: // Use boomerang
-        //        ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
-        //        break;
-        //    default:
-        //        Debug.Log("Weapon not implemented:" + thisData.weaponType);
-        //        break;
-        //}
+        if (_left)
+        {
+            if (m_leftWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_leftWeaponData;
+            thisHandPosition = m_leftHandTransform.position;
+        }
+        else
+        {
+            if (m_rightWeaponInUse)
+                return;
+            // Set weapon information
+            thisData = m_rightWeaponData;
+            thisHandPosition = m_rightHandTransform.position;
+        }
+
+        // If weapon is not in hand
+        if (thisData == null)
+            return;
+
+        switch (thisData.weaponType)
+        {
+            case Weapon.SWORD: // Use sword
+                WeaponAttack(thisData, transform.position);
+                break;
+            case Weapon.SHIELD: // Use shield
+                WeaponAttack(thisData, transform.position);
+                BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
+                break;
+            case Weapon.BOOMERANG: // Use boomerang
+                ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
+                break;
+            default:
+                Debug.Log("Weapon not implemented:" + thisData.weaponType);
+                break;
+        }
 
 
         //playerController.animator.SetBool("LeftShield", false);

@@ -144,5 +144,10 @@ namespace ActorSystem.AI
         {
             Destroy(gameObject);
         }
+
+        public void Respawn()
+        {
+
+        }
     }
 }
