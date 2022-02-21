@@ -29,13 +29,15 @@ public class Player_Attack : MonoBehaviour
     private bool m_attackedThisFrame = false;
 
     [Header("Hand Transforms")]
+    public WeaponBase m_leftWeapon;
     public Transform m_leftHandTransform;
-    public WeaponData m_leftWeapon;
+    public WeaponData m_leftWeaponData;
     private GameObject m_leftWeaponObject;
     private bool m_leftWeaponInUse = false;
 
+    public WeaponBase m_rightWeapon;
     public Transform m_rightHandTransform;
-    public WeaponData m_rightWeapon;
+    public WeaponData m_rightWeaponData;
     private GameObject m_rightWeaponObject;
     private bool m_rightWeaponInUse = false;
 
@@ -89,14 +91,14 @@ public class Player_Attack : MonoBehaviour
                 if (m_leftWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_leftWeapon;
+                thisData = m_leftWeaponData;
                 animatorTriggerName += "Left";
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_rightWeapon;
+                thisData = m_rightWeaponData;
                 animatorTriggerName += "Right";
                 break;
             default:
@@ -124,7 +126,6 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
 
-        //playerController.playerAudioAgent.PlayWeaponSwing(); // Audio
         playerController.playerAudioAgent.PlayWeaponSwing();
         playerController.animator.SetBool(animatorTriggerName, true);
     }
@@ -141,46 +142,55 @@ public class Player_Attack : MonoBehaviour
 
         m_attackedThisFrame = true;
 
-        WeaponData thisData;
-        Vector3 thisHandPosition;
-
         if (_left)
         {
-            if (m_leftWeaponInUse)
-                return;
-            // Set weapon information
-            thisData = m_leftWeapon;
-            thisHandPosition = m_leftHandTransform.position;
+            m_leftWeapon.TriggerWeapon();
         }
         else
         {
-            if (m_rightWeaponInUse)
-                return;
-            // Set weapon information
-            thisData = m_rightWeapon;
-            thisHandPosition = m_rightHandTransform.position;
+            m_rightWeapon.TriggerWeapon();
         }
 
-        // If weapon is not in hand
-        if (thisData == null)
-            return;
+        //WeaponData thisData;
+        //Vector3 thisHandPosition;
 
-        switch (thisData.weaponType)
-        {
-            case Weapon.SWORD: // Use sword
-                WeaponAttack(thisData, transform.position);
-                break;
-            case Weapon.SHIELD: // Use shield
-                WeaponAttack(thisData, transform.position);
-                BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
-                break;
-            case Weapon.BOOMERANG: // Use boomerang
-                ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
-                break;
-            default:
-                Debug.Log("Weapon not implemented:" + thisData.weaponType);
-                break;
-        }
+        //if (_left)
+        //{
+        //    if (m_leftWeaponInUse)
+        //        return;
+        //    // Set weapon information
+        //    thisData = m_leftWeaponData;
+        //    thisHandPosition = m_leftHandTransform.position;
+        //}
+        //else
+        //{
+        //    if (m_rightWeaponInUse)
+        //        return;
+        //    // Set weapon information
+        //    thisData = m_rightWeaponData;
+        //    thisHandPosition = m_rightHandTransform.position;
+        //}
+
+        //// If weapon is not in hand
+        //if (thisData == null)
+        //    return;
+
+        //switch (thisData.weaponType)
+        //{
+        //    case Weapon.SWORD: // Use sword
+        //        WeaponAttack(thisData, transform.position);
+        //        break;
+        //    case Weapon.SHIELD: // Use shield
+        //        WeaponAttack(thisData, transform.position);
+        //        BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
+        //        break;
+        //    case Weapon.BOOMERANG: // Use boomerang
+        //        ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
+        //        break;
+        //    default:
+        //        Debug.Log("Weapon not implemented:" + thisData.weaponType);
+        //        break;
+        //}
 
 
         //playerController.animator.SetBool("LeftShield", false);
@@ -192,8 +202,8 @@ public class Player_Attack : MonoBehaviour
     }
     public bool IsDuelWielding()
     {
-        if (m_leftWeapon != null && m_rightWeapon != null)
-            return m_leftWeapon.weaponType == m_rightWeapon.weaponType;
+        if (m_leftWeaponData != null && m_rightWeaponData != null)
+            return m_leftWeaponData.weaponType == m_rightWeaponData.weaponType;
         else
             return false;
     }
@@ -267,29 +277,29 @@ public class Player_Attack : MonoBehaviour
         {
             case Hand.LEFT:
                 // Drop old weapon
-                if (m_leftWeapon != null)
+                if (m_leftWeaponData != null)
                 {
-                    if (m_leftWeapon.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
-                        m_leftWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
-                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_leftWeapon);
-                    playerController.playerStats.RemoveEffect(m_leftWeapon.itemEffect); // Remove any passive effect the weapon had
+                    if (m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
+                        m_leftWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
+                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_leftWeaponData);
+                    playerController.playerStats.RemoveEffect(m_leftWeaponData.itemEffect); // Remove any passive effect the weapon had
                 }
                 // Set new weapon
-                m_leftWeapon = _weapon.m_weaponData;
+                m_leftWeaponData = _weapon.m_weaponData;
                 ApplyWeaponData(Hand.LEFT);
 
                 break;
             case Hand.RIGHT:
                 // Drop old weapon
-                if (m_rightWeapon != null)
+                if (m_rightWeaponData != null)
                 {
-                    if (m_rightWeapon.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
-                        m_rightWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
-                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_rightWeapon);
-                    playerController.playerStats.RemoveEffect(m_rightWeapon.itemEffect); // Remove any passive effect the weapon had
+                    if (m_rightWeaponData.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
+                        m_rightWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
+                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_rightWeaponData);
+                    playerController.playerStats.RemoveEffect(m_rightWeaponData.itemEffect); // Remove any passive effect the weapon had
                 }
                 // Set new weapon
-                m_rightWeapon = _weapon.m_weaponData;
+                m_rightWeaponData = _weapon.m_weaponData;
                 ApplyWeaponData(Hand.RIGHT);
 
                 break;
@@ -308,16 +318,16 @@ public class Player_Attack : MonoBehaviour
             case Hand.LEFT:
                 // Delete old weapon from player
                 Destroy(m_leftWeaponObject);
-                if (m_leftWeapon != null)
+                if (m_leftWeaponData != null)
                 {
-                    m_leftWeaponObject = Instantiate(m_leftWeapon.weaponModelPrefab, m_leftHandTransform);
+                    m_leftWeaponObject = Instantiate(m_leftWeaponData.weaponModelPrefab, m_leftHandTransform);
 
                     if (m_leftWeaponIcon != null)
-                        m_leftWeaponIcon.SetIconSprite(m_leftWeapon.weaponIcon);
+                        m_leftWeaponIcon.SetIconSprite(m_leftWeaponData.weaponIcon);
                     else
                         Debug.LogWarning("Weapon icon not set");
 
-                    playerController.playerAbilities.SetAbility(m_leftWeapon.abilityData, Hand.LEFT);
+                    playerController.playerAbilities.SetAbility(m_leftWeaponData.abilityData, Hand.LEFT);
                 }
                 else
                 {
@@ -329,16 +339,16 @@ public class Player_Attack : MonoBehaviour
             case Hand.RIGHT:
                 // Delete old weapon from player
                 Destroy(m_rightWeaponObject);
-                if (m_rightWeapon != null)
+                if (m_rightWeaponData != null)
                 {
-                    m_rightWeaponObject = Instantiate(m_rightWeapon.weaponModelPrefab, m_rightHandTransform);
+                    m_rightWeaponObject = Instantiate(m_rightWeaponData.weaponModelPrefab, m_rightHandTransform);
 
                     if (m_rightWeaponIcon != null)
-                        m_rightWeaponIcon.SetIconSprite(m_rightWeapon.weaponIcon);
+                        m_rightWeaponIcon.SetIconSprite(m_rightWeaponData.weaponIcon);
                     else
                         Debug.LogWarning("Weapon icon not set");
 
-                    playerController.playerAbilities.SetAbility(m_rightWeapon.abilityData, Hand.RIGHT);
+                    playerController.playerAbilities.SetAbility(m_rightWeaponData.abilityData, Hand.RIGHT);
                 }
                 else
                 {
@@ -360,23 +370,23 @@ public class Player_Attack : MonoBehaviour
         if (m_leftWeaponInUse || m_rightWeaponInUse)
             return;
 
-        if (m_leftWeapon != null && m_leftWeapon.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
-            m_leftWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
+        if (m_leftWeaponData != null && m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
+            m_leftWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
 
-        if (m_rightWeapon != null && m_rightWeapon.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
-            m_rightWeapon.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
+        if (m_rightWeaponData != null && m_rightWeaponData.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
+            m_rightWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
 
         // Store old left hand weapon for future use
-        WeaponData _leftHandStore = m_leftWeapon;
+        WeaponData _leftHandStore = m_leftWeaponData;
 
         // Left hand weapon
         // Set new weapon
-        m_leftWeapon = m_rightWeapon;
+        m_leftWeaponData = m_rightWeaponData;
         ApplyWeaponData(Hand.LEFT);
 
         // Right hand weapon
         // Set new weapon
-        m_rightWeapon = _leftHandStore;
+        m_rightWeaponData = _leftHandStore;
         ApplyWeaponData(Hand.RIGHT);
     }
 
@@ -438,15 +448,15 @@ public class Player_Attack : MonoBehaviour
     {
         if (playerController != null)
         {
-            if (m_rightWeapon != null)
+            if (m_rightWeaponData != null)
             {
                 Gizmos.color = Color.magenta;
-                Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_rightWeapon.hitCenterOffset, m_rightWeapon.hitSize);
+                Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_rightWeaponData.hitCenterOffset, m_rightWeaponData.hitSize);
             }
-            if (m_leftWeapon != null)
+            if (m_leftWeaponData != null)
             {
                 Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_leftWeapon.hitCenterOffset, m_leftWeapon.hitSize);
+                Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_leftWeaponData.hitCenterOffset, m_leftWeaponData.hitSize);
             }
         }
     }
