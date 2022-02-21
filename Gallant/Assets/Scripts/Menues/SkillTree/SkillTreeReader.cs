@@ -130,7 +130,7 @@ public class SkillTreeReader : MonoBehaviour
         {
             File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class]));
 
-            Debug.LogError("Created new skill tree file!");
+            Debug.Log("Created new skill tree file!");
 
             if (m_skills[(int)_class].skills == null)
             {
