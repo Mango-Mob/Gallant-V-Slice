@@ -1,6 +1,6 @@
 ﻿using ActorSystem.AI;
 using ActorSystem.AI.Components;
-using SOHNE.Accessibility.Colorblindness;
+//using SOHNE.Accessibility.Colorblindness;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -209,7 +209,7 @@ public class DebugMenu : MonoBehaviour
 
     public void ColorBlindChange()
     {
-        GetComponent<Colorblindness>().Change(m_colorBlindList.value);
+        //GetComponent<Colorblindness>().Change(m_colorBlindList.value);
     }
 
     public void KillAllEnemies()

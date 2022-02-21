@@ -10,18 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a8148f02e1e1c049aeb218548e571bc, type: 3}
-  m_Name: RaiseWater
+  m_Name: SpitAttack
   m_EditorClassIdentifier: 
-  baseDamage: 10
+  baseDamage: 15
   attackRange: 15
-  animID: RaiseWaterTorrent
-  cooldown: 8
-  priority: 13
-  projectile: {fileID: 112836106941330074, guid: 31f73d7741c70f64898d843340d2c4c1,
+  animID: RangedSpitWaterSwampBoss
+  cooldown: 7.5
+  priority: 15
+  projectile: {fileID: 112836106941330074, guid: 47fc1d0f54be42046ab0c3741dbd4fc9,
     type: 3}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0, y: 0, z: 0}
-  projSpeed: 0
+  attackOriginOffset: {x: 0, y: 0, z: 1}
+  projSpeed: 22
   projLifeTime: 5
   instancesPerAttack: 1
-  attackType: 2
+  damageType: 0
+  isAwaysFacingTarget: 1
+  attackType: 1

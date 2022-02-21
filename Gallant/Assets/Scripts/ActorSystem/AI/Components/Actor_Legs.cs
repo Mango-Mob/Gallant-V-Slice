@@ -13,6 +13,7 @@ using UnityEngine.AI;
 namespace ActorSystem.AI.Components
 {
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(Rigidbody))]
     public class Actor_Legs : MonoBehaviour
     {
         [HideInInspector]
@@ -147,29 +148,17 @@ namespace ActorSystem.AI.Components
 
         public void KnockBack(Vector3 force)
         {
-            force.y = 0;
-            m_agent.updatePosition = false;
-            m_body.isKinematic = false;
-            m_body.AddForce(force, ForceMode.Impulse);
+            SetTargetVelocity(force);
 
-            if (m_body != null && !m_isKnocked)
-                StartCoroutine(KnockbackRoutine());
-
-            m_isKnocked = true;
-        }
-
-        private IEnumerator KnockbackRoutine()
-        {
-            do
+            NavMeshHit hit;
+            if(NavMesh.FindClosestEdge(transform.position, out hit, NavMesh.AllAreas))
             {
-                yield return new WaitForFixedUpdate();
-            } while (m_body.velocity.magnitude > 3.5f);
-
-            m_agent.Warp(transform.position);
-            m_agent.updatePosition = true;
-            m_body.isKinematic = true;
-            m_isKnocked = false;
-            yield return false;
+                if(hit.distance < 0.25f)
+                {
+                    m_agent.updatePosition = false;
+                    m_body.AddForce(force * 5f, ForceMode.Impulse);
+                }
+            }
         }
     }
 }

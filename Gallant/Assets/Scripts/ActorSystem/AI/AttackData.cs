@@ -5,6 +5,7 @@ using UnityEngine;
 namespace ActorSystem.AI
 {
     [System.Serializable]
+    [CreateAssetMenu(fileName = "Attack_Data", menuName = "Game Data/Attack Data", order = 1)]
     public class AttackData : ScriptableObject
     {
         public float baseDamage;
@@ -22,6 +23,7 @@ namespace ActorSystem.AI
 
         public uint instancesPerAttack = 1;
         public CombatSystem.DamageType damageType;
+
         //TODO:
         private bool canAttackMove = false;
         private bool hasExitTime;
@@ -36,7 +38,16 @@ namespace ActorSystem.AI
             Instant,    //Spawn proj at target after animation
         }
 
+        public enum Effect
+        {
+            NULL,
+            KNOCK_BACK,
+            KNOCK_UP,
+        }
+
         public AttackType attackType;
+        public Effect effectAfterwards;
+        public float effectPower;
 
         public bool IsOverlaping(Transform user, int targetLayer)
         {
@@ -58,6 +69,23 @@ namespace ActorSystem.AI
 
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(position, 0.05f);
+        }
+
+        public static void ApplyEffect(Player_Controller target, Transform source, AttackData.Effect effect, float power)
+        {
+            switch (effect)
+            {
+                case AttackData.Effect.NULL:
+                    break;
+                case AttackData.Effect.KNOCK_BACK:
+                    target.StunPlayer(0.2f, source.position.DirectionTo(target.transform.position) * power);
+                    break;
+                case AttackData.Effect.KNOCK_UP:
+                    target.StunPlayer(0.2f, Vector3.up * power);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

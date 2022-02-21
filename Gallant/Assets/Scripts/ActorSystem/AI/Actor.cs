@@ -60,7 +60,7 @@ namespace ActorSystem.AI
 
         public void KnockbackActor(Vector3 force)
         {
-            SetTargetVelocity(force);
+            m_myBrain.m_legs?.KnockBack(force);
         }
 
         public void SetTarget(GameObject _target)
