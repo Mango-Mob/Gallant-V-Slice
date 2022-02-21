@@ -48,6 +48,11 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
 
+
+    //Respawn Code
+    private Vector3 m_lastGroundedPosition;
+    private Vector3 m_lastGroundedVelocity;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -82,7 +87,11 @@ public class Player_Movement : MonoBehaviour
         // Gravity physics
         m_grounded = characterController.isGrounded;
         if (m_grounded)
+        {
             m_yVelocity = -1.0f;
+            m_lastGroundedPosition = transform.position;
+            m_lastGroundedVelocity = characterController.velocity;
+        }
         else
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
@@ -369,6 +378,14 @@ public class Player_Movement : MonoBehaviour
         //Slow motion
         GameManager.instance.SlowTime(0.4f, _val);
     }
+
+    public void RespawnPlayer()
+    {
+
+    }
+
+
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);

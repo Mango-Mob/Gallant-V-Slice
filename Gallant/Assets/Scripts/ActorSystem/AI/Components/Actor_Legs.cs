@@ -38,23 +38,34 @@ namespace ActorSystem.AI.Components
         protected Vector3 m_targetPosition;
         protected Quaternion m_targetRotation;
 
+        private float m_delayTimer = 0f;
 
         // Start is called before the first frame update
         void Awake()
         {
             m_agent = GetComponent<NavMeshAgent>();
             m_body = GetComponent<Rigidbody>();
+            m_body.isKinematic = true;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (m_isKnocked)
-                return;
+            m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
+            if(m_delayTimer <= 0)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+                m_agent.destination = m_targetPosition;
+                m_agent.speed = m_baseSpeed * m_speedModifier;
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
-            m_agent.destination = m_targetPosition;
-            m_agent.speed = m_baseSpeed * m_speedModifier;
+                NavMeshHit hit;
+                if(!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+                {
+                    m_agent.Warp(hit.position);
+                    m_agent.updatePosition = true;
+                    m_body.isKinematic = true;
+                }
+            }
         }
 
         public void SetTargetVelocity(Vector3 moveVector)
@@ -65,7 +76,7 @@ namespace ActorSystem.AI.Components
                 return;
             }
 
-            //m_agent.isStopped = false;
+            m_agent.isStopped = false;
             m_agent.velocity = moveVector;
         }
 
@@ -156,6 +167,8 @@ namespace ActorSystem.AI.Components
                 if(hit.distance < 0.25f)
                 {
                     m_agent.updatePosition = false;
+                    m_delayTimer += 0.5f;
+                    m_body.isKinematic = false;
                     m_body.AddForce(force * 5f, ForceMode.Impulse);
                 }
             }
