@@ -415,13 +415,21 @@ public class Player_Controller : MonoBehaviour
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects);
     }
 
-    public void RespawnPlayerTo(Vector3 position, bool isFullHP = false)
+    public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
     {
+        playerMovement.characterController.enabled = false;
+        transform.position = _position;
+        playerMovement.characterController.enabled = true;
 
+        if (_isFullHP)
+        {
+            playerResources.FullHeal();
+        }
     }
 
-    public void RespawnPlayerToGround(bool isFullHP = false)
+    public void RespawnPlayerToGround(bool _isFullHP = false)
     {
-        
+        Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized;
+        RespawnPlayerTo(targetPosition, _isFullHP);
     }
 }

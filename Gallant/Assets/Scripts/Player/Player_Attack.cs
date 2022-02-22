@@ -8,6 +8,7 @@ public enum Weapon
     SWORD,
     SHIELD,
     BOOMERANG,
+    CROSSBOW,
 }
 public enum Hand
 {
