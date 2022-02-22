@@ -158,4 +158,9 @@ public class Player_Resources : MonoBehaviour
                 Instantiate(healVFXPrefab, transform);
         }
     }
+
+    public void FullHeal()
+    {
+        m_health = m_maxHealth;
+    }
 }
