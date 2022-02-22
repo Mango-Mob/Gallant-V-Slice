@@ -13,7 +13,7 @@ public class State_MoveToTarget : State
     {
         m_myUser.m_activeStateText = "MOVING TO TARGET";
 
-        m_myActor.SetTargetLocation(m_myActor.m_target.transform.position);
+        m_myActor.SetTargetLocation(m_myActor.m_target.transform.position, true);
     }
 
     public override void Update()

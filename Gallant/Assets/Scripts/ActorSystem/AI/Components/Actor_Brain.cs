@@ -59,9 +59,10 @@ namespace ActorSystem.AI.Components
             SetOutlineEnabled(false);
         }
 
-        public void Start()
+        public void StartSpawnAnimation()
         {
-            
+            m_animator.enabled = true;
+            m_animator.PlayAnimation("Spawn");
         }
 
         public void Update()
@@ -148,8 +149,14 @@ namespace ActorSystem.AI.Components
             //projScource
 
             //Material
-
+            m_material.RefreshColor();
             //UI
+
+            //Colliders
+            foreach (var item in GetComponentsInChildren<Collider>())
+            {
+                item.enabled = true;
+            }
 
             //Start
             m_currHealth = m_startHealth;
@@ -176,8 +183,10 @@ namespace ActorSystem.AI.Components
             if (m_arms.m_activeAttack != null)
                 return;
 
-            AttackData data = m_arms.Begin(id);
-            m_animator.PlayAnimation(data.animID);
+            if(m_animator.PlayAnimation(m_arms.m_myData[id].animID))
+            {
+                m_arms.Begin(id);
+            }
         }
 
         public void InvokeAttack()
@@ -217,6 +226,7 @@ namespace ActorSystem.AI.Components
             //Internal
             m_currHealth -= damage;
 
+            m_ui.enabled = !IsDead;
             return IsDead;
         }
 

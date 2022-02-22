@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI;
+using ActorSystem.AI.Components;
 using GEN.Nodes;
 using GEN.Users;
 using System;
@@ -26,6 +27,7 @@ namespace ActorSystem
         //public GameObject m_gatePrefab;
         //public GameObject[] m_gatesLoc;
         //
+        public bool m_spawnOnAwake = false;
         public bool m_isSphere = true;
         public float m_innerRadius = 10.0f;
         public float m_innerHeight = 0;
@@ -36,10 +38,13 @@ namespace ActorSystem
         //
         //public int m_spawnSpots = 12;
         //
-        //public bool m_generateWavesOnAwake = false;
-        //public List<RoomData> m_waves = new List<RoomData>();
-        //public List<RoomData> m_allWaves = new List<RoomData>();
-        private struct SpawnLocation
+        [Header("Wave Information")]
+        public bool m_generateWavesOnAwake = false;
+        public List<RoomData> m_waves = new List<RoomData>();
+        public List<RoomData> m_allWaves = new List<RoomData>();
+
+        public List<Actor> m_myActors { get; private set; }
+        public struct SpawnLocation
         {
             public Vector3 m_start;
             public Vector3 m_end;
@@ -49,6 +54,8 @@ namespace ActorSystem
         //private bool m_hasCombatStarted = false;
         //private Coroutine m_isSpawning = null;
         //
+        private bool m_hasStarted = false;
+
         public uint m_spawnLocationCount;
         private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
         //private List<Actor> m_enemies = new List<Actor>();
@@ -59,12 +66,15 @@ namespace ActorSystem
             {
                 CreateSpawn();
             }
-            //m_reward = FindObjectOfType<RewardWindow>();
-            //
-            //if (m_generateWavesOnAwake && m_allWaves.Count > 0)
-            //{
-            //    GenerateWaves();
-            //}
+            m_myActors = new List<Actor>();
+            if (m_spawnOnAwake && m_waves.Count > 0)
+            {
+                var wave = m_waves[0];
+                m_waves.RemoveAt(0);
+
+                SpawnWave(wave);
+            }
+            
         }
 
         private void CreateSpawn()
@@ -96,6 +106,75 @@ namespace ActorSystem
             loc.m_forward = loc.m_start.DirectionTo(loc.m_end);
 
             m_spawnLocations.Add(loc);
+        }
+
+        public SpawnLocation CreateSpawn(Vector3 start)
+        {
+            var loc = new SpawnLocation();
+            int safety = 5;
+            NavMeshHit sample;
+            Vector2 direct;
+            do
+            {
+                safety--;
+                direct = transform.position.DirectionTo(start);
+                if (m_isSphere)
+                {
+                    loc.m_start = transform.position + new Vector3(direct.x, transform.position.y, direct.y).normalized * m_outerRadius;
+                }
+                else
+                {
+                    Vector2 onSquare = Extentions.OnUnitSquare(direct);
+                    loc.m_start = transform.position + new Vector3(onSquare.x, transform.position.y, onSquare.y) * m_outerRadius;
+                }
+
+                loc.m_end = transform.position + new Vector3(direct.x, transform.position.y, direct.y).normalized * UnityEngine.Random.Range(0, m_innerRadius);
+
+                if (NavMesh.SamplePosition(transform.position + new Vector3(direct.x * m_innerRadius, m_innerHeight, direct.y * m_innerRadius), out sample, 0.5f, NavMesh.AllAreas))
+                {
+                    loc.m_end = sample.position;
+                }
+
+            } while (!sample.hit && safety > 0);
+
+            loc.m_forward = loc.m_start.DirectionTo(loc.m_end);
+
+            return loc;
+        }
+
+        public void SpawnWave(RoomData wave)
+        {
+            m_hasStarted = true;
+            RoomData data = ScriptableObject.CreateInstance<RoomData>();
+            data.m_waveInformation = new List<RoomData.Actor>(wave.m_waveInformation);
+            int count = data.Count();
+
+            while (count > 0)
+            {
+                //For each select type of unit
+                int selectUnit = UnityEngine.Random.Range(0, data.m_waveInformation.Count);
+                for (int i = 0; i < wave.m_waveInformation[selectUnit].count; i++)
+                {
+                    int selectSpawn = UnityEngine.Random.Range(0, m_spawnLocations.Count);
+                    
+                    //Get/Create actor in the reserves
+                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
+                    m_myActors.Add(spawn);
+                    spawn.SetTarget(GameManager.instance.m_player);
+                    spawn.m_lastSpawner = this;
+
+                    //Start Spawn animation
+                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), m_spawnLocations[selectSpawn].m_start, m_spawnLocations[selectSpawn].m_end, m_spawnLocations[selectSpawn].m_forward);
+
+                    //Create new spawn location
+                    m_spawnLocations.RemoveAt(selectSpawn);
+                    CreateSpawn();
+                    count--;
+                }
+
+                //Remove option
+                data.m_waveInformation.RemoveAt(selectUnit);
+            }
         }
 
         // Start is called before the first frame update
@@ -255,42 +334,18 @@ namespace ActorSystem
         // Update is called once per frame
         void Update()
         {
-            //if (m_player != null)
-            //{
-            //    StartCombat();
-            //    if (m_enemies.Count == 0 && m_isSpawning == null)
-            //    {
-            //        if (m_waves.Count > 0)
-            //        {
-            //            m_isSpawning = StartCoroutine(SpawnWave());
-            //            return;
-            //        }
-            //
-            //        if (IsRoom)
-            //        {
-            //            foreach (var gate in m_gatesLoc)
-            //            {
-            //                gate.GetComponentInChildren<Animator>()?.SetBool("Open", true);
-            //            }
-            //
-            //            GameManager.Advance();
-            //            EndScreenMenu.roomsCleared++;
-            //            m_reward.Show(Mathf.FloorToInt(GameManager.currentLevel));
-            //            GetComponent<MultiAudioAgent>().PlayOnce("GateOpen");
-            //        }
-            //        Destroy(this);
-            //    }
-            //    else
-            //    {
-            //        for (int i = m_enemies.Count - 1; i >= 0; i--)
-            //        {
-            //            if (m_enemies[i].m_myBrain.IsDead)
-            //            {
-            //                m_enemies.RemoveAt(i);
-            //            }
-            //        }
-            //    }
-            //}
+            if(m_hasStarted && m_myActors.Count == 0)
+            {
+                 if (m_waves.Count == 0)
+                 {
+                     Destroy(gameObject);
+                 }
+                 else
+                 {
+                     SpawnWave(m_waves[0]);
+                     m_waves.RemoveAt(0);
+                 }
+            }
         }
 
         //public void GenerateWaves()

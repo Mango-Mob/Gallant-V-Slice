@@ -19,7 +19,7 @@ namespace ActorSystem.AI.Components
         public bool m_hasVelocity { get; private set; }
         public bool m_hasHit { get; private set; }
 
-
+        public float m_setDelay = 0.0f;
         // Start is called before the first frame update
         void Awake()
         {
@@ -29,12 +29,22 @@ namespace ActorSystem.AI.Components
             m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
         }
 
-        public void PlayAnimation(string animID)
+        public bool PlayAnimation(string animID)
         {
             //Play Anim
-            m_animator.Play(animID);
+            if(m_setDelay <= 0f)
+            {
+                m_animator.Play(animID);
+                return true;
+            }
+            return false;
         }
 
+        public void Update()
+        {
+            if (m_setDelay > 0)
+                m_setDelay -= Time.deltaTime;
+        }
         private void OnEnable()
         {
             m_animator.enabled = true;

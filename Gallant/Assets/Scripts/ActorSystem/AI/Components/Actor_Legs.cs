@@ -54,9 +54,12 @@ namespace ActorSystem.AI.Components
             m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
             if(m_delayTimer <= 0)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
-                m_agent.destination = m_targetPosition;
-                m_agent.speed = m_baseSpeed * m_speedModifier;
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+                    m_agent.destination = m_targetPosition;
+                    m_agent.speed = m_baseSpeed * m_speedModifier;
+                }
 
                 NavMeshHit hit;
                 if(!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
@@ -68,7 +71,8 @@ namespace ActorSystem.AI.Components
             }
             else
             {
-                m_agent.Warp(transform.position);
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                    m_agent.Warp(transform.position);
             }
 
             NavMeshHit hit2;
@@ -96,7 +100,6 @@ namespace ActorSystem.AI.Components
         public void OnEnable()
         {
             m_agent.enabled = true;
-
             NavMeshHit hit;
             if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
             {
@@ -104,7 +107,7 @@ namespace ActorSystem.AI.Components
                 m_agent.updatePosition = true;
                 m_body.isKinematic = true;
             }
-            else
+            else if(!m_agent.updatePosition)
             {
                 m_body.isKinematic = false;
             }
@@ -132,7 +135,8 @@ namespace ActorSystem.AI.Components
          */
         public void Halt()
         {
-            m_agent.isStopped = true;
+            if (m_agent.enabled && m_agent.isOnNavMesh)
+                m_agent.isStopped = true;
         }
 
         /*******************
@@ -143,6 +147,9 @@ namespace ActorSystem.AI.Components
         */
         public void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
         {
+            if (!m_agent.enabled || !m_agent.isOnNavMesh)
+                return;
+
             m_agent.isStopped = false;
             m_targetPosition = target;
 
