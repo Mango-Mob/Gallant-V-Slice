@@ -10,13 +10,26 @@ namespace ActorSystem.AI.Components
      * @file : Actor_UI.cs
      * @year : 2021
      */
+    [RequireComponent(typeof(Canvas))]
     public class Actor_UI : MonoBehaviour
     {
         protected UI_Element[] m_UIElements;
+        private Canvas m_myCanvas;
 
         public void Awake()
         {
             m_UIElements = GetComponentsInChildren<UI_Element>();
+            m_myCanvas = GetComponent<Canvas>();
+        }
+
+        public void OnEnable()
+        {
+            m_myCanvas.enabled = true;
+        }
+
+        public void OnDisable()
+        {
+            m_myCanvas.enabled = false;
         }
 
         /*******************

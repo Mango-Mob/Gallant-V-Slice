@@ -93,6 +93,29 @@ namespace ActorSystem.AI.Components
             m_agent.velocity = moveVector;
         }
 
+        public void OnEnable()
+        {
+            m_agent.enabled = true;
+
+            NavMeshHit hit;
+            if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+            {
+                m_agent.Warp(hit.position);
+                m_agent.updatePosition = true;
+                m_body.isKinematic = true;
+            }
+            else
+            {
+                m_body.isKinematic = false;
+            }
+        }
+
+        public void OnDisable()
+        {
+            m_agent.enabled = false;
+            m_body.isKinematic = true;
+        }
+
         /*********************
          * IsResting : Is the actor's legs currently resting?
          * @author : Michael Jordan

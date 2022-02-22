@@ -44,7 +44,9 @@ namespace ActorSystem.AI
         public void Update()
         {
             m_myBrain.Update();
-            m_currentState.Update();
+
+            if(m_myBrain.enabled)
+                m_currentState.Update();
         }
 
         public void DisableFunction()
@@ -150,9 +152,9 @@ namespace ActorSystem.AI
             Destroy(gameObject);
         }
 
-        public void Respawn()
+        public void Respawn(bool fullRefresh = false)
         {
-
+            
         }
     }
 }

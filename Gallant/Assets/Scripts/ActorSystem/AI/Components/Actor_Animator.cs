@@ -35,6 +35,16 @@ namespace ActorSystem.AI.Components
             m_animator.Play(animID);
         }
 
+        private void OnEnable()
+        {
+            m_animator.enabled = true;
+        }
+
+        private void OnDisable()
+        {
+            m_animator.enabled = false;
+        }
+
         /*******************
          * SetFloat : Sets a single float value in the animator, with the float provided.
          * @author : Michael Jordan

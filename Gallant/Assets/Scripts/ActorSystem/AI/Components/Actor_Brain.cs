@@ -71,17 +71,44 @@ namespace ActorSystem.AI.Components
 
         }
 
+        public void OnEnable()
+        {
+            SetEnabled(true);
+        }
+
         public void OnDisable()
         {
-            m_arms.enabled = false;
-            m_legs.enabled = false;      
-            m_animator.enabled = false;  
-            m_tracker.enabled = false;   
-            m_projSource.enabled = false;
-            m_material.enabled = false;  
-            m_ui.enabled = false;        
-            m_audioAgent.enabled = false;
-            m_myOutline.enabled = false; 
+            SetEnabled(false);
+        }
+
+        private void SetEnabled(bool status)
+        {
+            if (m_arms != null)
+                m_arms.enabled = status;
+
+            if (m_legs != null)
+                m_legs.enabled = status;
+
+            if (m_animator != null)
+                m_animator.enabled = status;
+
+            if (m_tracker != null)
+                m_tracker.enabled = status;
+
+            if (m_projSource != null)
+                m_projSource.enabled = status;
+
+            if (m_material != null)
+                m_material.enabled = status;
+
+            if (m_ui != null)
+                m_ui.enabled = status;
+
+            if (m_audioAgent != null)
+                m_audioAgent.enabled = status;
+
+            if (m_myOutline != null)
+                m_myOutline.enabled = status;
         }
 
         private void UpdateExternals()
