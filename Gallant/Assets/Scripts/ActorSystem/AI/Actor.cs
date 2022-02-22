@@ -47,6 +47,11 @@ namespace ActorSystem.AI
             m_currentState.Update();
         }
 
+        public void DisableFunction()
+        {
+            m_myBrain.enabled = false;
+        }
+
         public void OnDestroy()
         {
             if (ActorManager.HasInstance())

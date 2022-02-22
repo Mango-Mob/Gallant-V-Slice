@@ -66,6 +66,19 @@ namespace ActorSystem.AI.Components
                     m_body.isKinematic = true;
                 }
             }
+            else
+            {
+                m_agent.Warp(transform.position);
+            }
+
+            NavMeshHit hit2;
+            if (NavMesh.FindClosestEdge(transform.position, out hit2, NavMesh.AllAreas) && hit2.distance < 0.15f)
+            {
+                m_agent.updatePosition = false;
+                m_delayTimer = 0.5f;
+                m_body.isKinematic = false;
+                m_body.velocity = m_agent.velocity;
+            }
         }
 
         public void SetTargetVelocity(Vector3 moveVector)

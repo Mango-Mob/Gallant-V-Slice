@@ -71,6 +71,19 @@ namespace ActorSystem.AI.Components
 
         }
 
+        public void OnDisable()
+        {
+            m_arms.enabled = false;
+            m_legs.enabled = false;      
+            m_animator.enabled = false;  
+            m_tracker.enabled = false;   
+            m_projSource.enabled = false;
+            m_material.enabled = false;  
+            m_ui.enabled = false;        
+            m_audioAgent.enabled = false;
+            m_myOutline.enabled = false; 
+        }
+
         private void UpdateExternals()
         {
             m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
