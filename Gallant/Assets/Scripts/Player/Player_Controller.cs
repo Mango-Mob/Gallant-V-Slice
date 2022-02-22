@@ -99,9 +99,9 @@ public class Player_Controller : MonoBehaviour
         animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.StopBlock(Hand.RIGHT);
+            playerAttack.ToggleBlock(false);
         if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.StopBlock(Hand.LEFT);
+            playerAttack.ToggleBlock(false);
 
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));

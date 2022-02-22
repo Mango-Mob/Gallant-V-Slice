@@ -80,7 +80,7 @@ public class BoomerangProjectile : MonoBehaviour
                 new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < 0.2f) 
             {
                 // "Catch" the projectile when close enough to player.
-                m_projectileUser.CatchBoomerang(m_hand);
+                m_projectileUser.CatchProjectile(m_hand);
 
                 foreach (var effect in m_effects)
                 {
