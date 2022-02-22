@@ -48,7 +48,7 @@ public class BoomerangProjectile : MonoBehaviour
                 m_weaponModel.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
 
-            m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
+            m_boomerangSpeed = m_boomerangSpeed * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
             m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
             m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
@@ -106,7 +106,7 @@ public class BoomerangProjectile : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
         }
     }

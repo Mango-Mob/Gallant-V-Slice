@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Boomerang : WeaponBase
+public class Weapon_Crossbow : WeaponBase
 {
     new private void Awake()
     {
-        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangProjectile");
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
         base.Awake();
     }
 
@@ -23,6 +23,6 @@ public class Weapon_Boomerang : WeaponBase
     }
     public override void WeaponFunctionality()
     {
-        ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData);
     }
 }

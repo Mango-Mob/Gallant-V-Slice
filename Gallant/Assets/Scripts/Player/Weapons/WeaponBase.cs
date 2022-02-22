@@ -92,4 +92,10 @@ public abstract class WeaponBase : MonoBehaviour
         m_weaponObject.SetActive(false);
         m_isInUse = true;
     }
+
+    protected void ShootProjectile(Vector3 _pos, WeaponData _data)
+    {
+        GameObject projectile = Instantiate(m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
+        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data);
+    }
 }

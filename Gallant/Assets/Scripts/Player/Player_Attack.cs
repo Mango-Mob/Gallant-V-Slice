@@ -117,6 +117,9 @@ public class Player_Attack : MonoBehaviour
             case Weapon.BOOMERANG: // Use boomerang
                 animatorTriggerName += "Boomerang";
                 break;
+            case Weapon.CROSSBOW: // Use boomerang
+                animatorTriggerName += "Crossbow";
+                break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
                 break;
@@ -249,11 +252,13 @@ public class Player_Attack : MonoBehaviour
 
         if (playerController.animator.GetBool("RightShield")
             || playerController.animator.GetBool("RightSword")
-            || playerController.animator.GetBool("RightBoomerang"))
+            || playerController.animator.GetBool("RightBoomerang")
+            || playerController.animator.GetBool("RightCrossbow"))
             usingRight = true;
         if (playerController.animator.GetBool("LeftShield")
             || playerController.animator.GetBool("LeftSword") 
-            || playerController.animator.GetBool("LeftBoomerang"))
+            || playerController.animator.GetBool("LeftBoomerang")
+            || playerController.animator.GetBool("LeftCrossbow"))
             usingLeft = true;
 
         if (usingRight == usingLeft)
@@ -377,6 +382,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Shield>();
             case Weapon.BOOMERANG:
                 return gameObject.AddComponent<Weapon_Boomerang>();
+            case Weapon.CROSSBOW:
+                return gameObject.AddComponent<Weapon_Crossbow>();
             default:
                 return null;
         }
