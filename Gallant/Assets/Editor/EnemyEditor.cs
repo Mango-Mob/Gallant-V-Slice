@@ -15,7 +15,6 @@ public class ActorEditor : Editor
     private bool m_testCase = false;
 
     private bool m_showAudio = false;
-    private List<bool> m_attackFoldout;
 
     private int testLevel = 0;
 
@@ -71,11 +70,6 @@ public class ActorEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("States Machine", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("m_states"));
-
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField("Attacks", EditorStyles.boldLabel);
-
-        AttackListField($"Attack ({m_data.m_attacks.Count})", ref m_data.m_attacks);
 
         EditorGUILayout.Space();
 
@@ -140,171 +134,11 @@ public class ActorEditor : Editor
         EditorGUILayout.Space();
     }
 
-    private void UpdateList()
-    {
-        if (m_attackFoldout != null)
-        {
-            while (m_attackFoldout.Count < m_data.m_attacks.Count)
-                m_attackFoldout.Add(false);
-
-            while (m_attackFoldout.Count > m_data.m_attacks.Count)
-                m_attackFoldout.RemoveAt(m_attackFoldout.Count - 1);
-        }
-    }
-
     private void ToggleField(string label, ref bool data)
     {
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField(label, EditorStyles.label);
         data = EditorGUILayout.ToggleLeft("", data);
         EditorGUILayout.EndHorizontal();
-    }
-
-    private void AttackListField(string label, ref List<AttackData> data)
-    {
-        bool status = false;
-        status = EditorGUILayout.Foldout(m_attackFoldout != null, label);
-
-        if(status && m_attackFoldout == null)
-        {
-            m_attackFoldout = new List<bool>();
-            UpdateList();
-        }
-        else if(!status && m_attackFoldout != null)
-        {
-            m_attackFoldout = null;
-        }
-
-        if (status)
-        {
-            if (data != null && data.Count > 0)
-            {
-                for (int i = 0; i < data.Count; i++)
-                {
-                    if (!AttackField(i, ref m_data.m_attacks))
-                    {
-                        i--;
-                    }
-                }
-            }
-
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Add New", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Add New")).x)))
-            {
-                if (data == null)
-                    data = new List<AttackData>();
-
-                string path = AssetDatabase.GetAssetPath(target);
-                string name = $"newAttack_{target.name}";
-                path = path.Substring(0, path.LastIndexOf("/")+1) + "Attacks";
-
-                if (!AssetDatabase.IsValidFolder(path))
-                    Directory.CreateDirectory(path);
-
-                AttackData createdData = ScriptableObject.CreateInstance<AttackData>();
-                createdData.name = name;
-                AssetDatabase.CreateAsset(createdData, path+$"/{name}.asset");
-                data.Add(createdData);
-                UpdateList();
-            }
-
-            EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
-
-            if (GUILayout.Button("Add Exist", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Add New")).x)))
-            {
-                if (data == null)
-                    data = new List<AttackData>();
-
-                data.Add(null);
-                UpdateList();
-            }
-
-            EditorGUILayout.LabelField("   |   ", EditorStyles.label, GUILayout.Width(EditorStyles.label.CalcSize(new GUIContent("  |   ")).x));
-
-            if (GUILayout.Button("Clear", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Clear")).x)))
-            {
-                m_attackFoldout?.Clear();
-                data?.Clear();
-                UpdateList();
-            }
-            EditorGUILayout.EndHorizontal();
-        }
-    }
-
-    private bool AttackField(int dataID, ref List<AttackData> data, float offset = 10)
-    {
-        if (m_attackFoldout == null)
-            return true;
-
-        string name = "Empty";
-        
-        GUILayout.BeginHorizontal();
-        GUILayout.Space(offset);
-
-        if (data[dataID] != null)
-        {
-            name = data[dataID].name;
-        }
-
-        
-        m_attackFoldout[dataID] = EditorGUILayout.Foldout(m_attackFoldout[dataID], name);
-
-        GUILayout.EndHorizontal();
-
-        if (m_attackFoldout[dataID])
-        {
-            data[dataID] = EditorExtentions.ScriptableObjectField("Data: ", data[dataID], offset);
-            
-            if (data[dataID] == null)
-                return true;
-
-            data[dataID] = EditorExtentions.SaveField<AttackData>("Name: ", data[dataID], offset);
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(offset);
-            EditorGUILayout.LabelField("Type: ");
-            data[dataID].attackType = (AttackData.AttackType)EditorGUILayout.EnumPopup(data[dataID].attackType);
-            GUILayout.EndHorizontal();
-
-            EditorExtentions.TextField("Animation ID: ", ref data[dataID].animID, offset);
-            EditorExtentions.FloatField("Base Damage: ", ref data[dataID].baseDamage, offset);
-            EditorExtentions.UnsignedIntegerField("Instances: ", ref data[dataID].instancesPerAttack, offset);
-            EditorExtentions.FloatField("Attack Range: ", ref data[dataID].attackRange, offset);
-            EditorExtentions.FloatField("Cooldown: ", ref data[dataID].cooldown, offset);
-            EditorExtentions.UnsignedIntegerField("Priority: ", ref data[dataID].priority, offset);
-
-            EditorGUILayout.Space();
-            switch (data[dataID].attackType)
-            {
-                default:
-                case AttackData.AttackType.Melee:
-                    EditorExtentions.Vector3Field("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
-                    break;
-                case AttackData.AttackType.Ranged:
-                    EditorExtentions.GameObjectField("Projectile prefab: ", ref data[dataID].projectile, offset);
-                    EditorExtentions.FloatField("Projectile Speed: ", ref data[dataID].projSpeed, offset);
-                    EditorExtentions.FloatField("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
-                    break;
-                case AttackData.AttackType.Instant:
-                    EditorExtentions.GameObjectField("Projectile prefab: ", ref data[dataID].projectile, offset);
-                    EditorExtentions.Vector3Field("AttackOriginOffset: ", ref data[dataID].attackOriginOffset, offset);
-                    EditorExtentions.FloatField("Projectile LifeTime: ", ref data[dataID].projLifeTime, offset);
-                    break;
-            }
-            EditorGUILayout.Space();
-            EditorExtentions.GameObjectField("VFX prefab: ", ref data[dataID].vfxSpawn, offset);
-
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(offset);
-
-            if (GUILayout.Button("Remove", EditorStyles.linkLabel, GUILayout.Width(EditorStyles.linkLabel.CalcSize(new GUIContent("Remove")).x)))
-            {
-                m_data.m_attacks.Remove(data[dataID]);
-                GUILayout.EndHorizontal();
-                return false;
-            }
-            GUILayout.EndHorizontal();
-        }
-        return true;
     }
 }

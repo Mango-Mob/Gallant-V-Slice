@@ -13,6 +13,7 @@ using UnityEngine.AI;
 namespace ActorSystem.AI.Components
 {
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(Rigidbody))]
     public class Actor_Legs : MonoBehaviour
     {
         [HideInInspector]
@@ -37,23 +38,51 @@ namespace ActorSystem.AI.Components
         protected Vector3 m_targetPosition;
         protected Quaternion m_targetRotation;
 
+        private float m_delayTimer = 0f;
 
         // Start is called before the first frame update
         void Awake()
         {
             m_agent = GetComponent<NavMeshAgent>();
             m_body = GetComponent<Rigidbody>();
+            m_body.isKinematic = true;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (m_isKnocked)
-                return;
+            m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
+            if(m_delayTimer <= 0)
+            {
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+                    m_agent.destination = m_targetPosition;
+                    m_agent.speed = m_baseSpeed * m_speedModifier;
+                }
 
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
-            m_agent.destination = m_targetPosition;
-            m_agent.speed = m_baseSpeed * m_speedModifier;
+                NavMeshHit hit;
+                if(!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+                {
+                    m_agent.Warp(hit.position);
+                    m_agent.updatePosition = true;
+                    m_body.isKinematic = true;
+                }
+            }
+            else
+            {
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                    m_agent.Warp(transform.position);
+            }
+
+            NavMeshHit hit2;
+            if (NavMesh.FindClosestEdge(transform.position, out hit2, NavMesh.AllAreas) && hit2.distance < 0.15f)
+            {
+                m_agent.updatePosition = false;
+                m_delayTimer = 0.5f;
+                m_body.isKinematic = false;
+                m_body.velocity = m_agent.velocity;
+            }
         }
 
         public void SetTargetVelocity(Vector3 moveVector)
@@ -64,8 +93,30 @@ namespace ActorSystem.AI.Components
                 return;
             }
 
-            //m_agent.isStopped = false;
+            m_agent.isStopped = false;
             m_agent.velocity = moveVector;
+        }
+
+        public void OnEnable()
+        {
+            m_agent.enabled = true;
+            NavMeshHit hit;
+            if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+            {
+                m_agent.Warp(hit.position);
+                m_agent.updatePosition = true;
+                m_body.isKinematic = true;
+            }
+            else if(!m_agent.updatePosition)
+            {
+                m_body.isKinematic = false;
+            }
+        }
+
+        public void OnDisable()
+        {
+            m_agent.enabled = false;
+            m_body.isKinematic = true;
         }
 
         /*********************
@@ -84,7 +135,8 @@ namespace ActorSystem.AI.Components
          */
         public void Halt()
         {
-            m_agent.isStopped = true;
+            if (m_agent.enabled && m_agent.isOnNavMesh)
+                m_agent.isStopped = true;
         }
 
         /*******************
@@ -95,6 +147,9 @@ namespace ActorSystem.AI.Components
         */
         public void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
         {
+            if (!m_agent.enabled || !m_agent.isOnNavMesh)
+                return;
+
             m_agent.isStopped = false;
             m_targetPosition = target;
 
@@ -147,29 +202,19 @@ namespace ActorSystem.AI.Components
 
         public void KnockBack(Vector3 force)
         {
-            force.y = 0;
-            m_agent.updatePosition = false;
-            m_body.isKinematic = false;
-            m_body.AddForce(force, ForceMode.Impulse);
+            SetTargetVelocity(force);
 
-            if (m_body != null && !m_isKnocked)
-                StartCoroutine(KnockbackRoutine());
-
-            m_isKnocked = true;
-        }
-
-        private IEnumerator KnockbackRoutine()
-        {
-            do
+            NavMeshHit hit;
+            if(NavMesh.FindClosestEdge(transform.position, out hit, NavMesh.AllAreas))
             {
-                yield return new WaitForFixedUpdate();
-            } while (m_body.velocity.magnitude > 3.5f);
-
-            m_agent.Warp(transform.position);
-            m_agent.updatePosition = true;
-            m_body.isKinematic = true;
-            m_isKnocked = false;
-            yield return false;
+                if(hit.distance < 0.25f)
+                {
+                    m_agent.updatePosition = false;
+                    m_delayTimer += 0.5f;
+                    m_body.isKinematic = false;
+                    m_body.AddForce(force * 5f, ForceMode.Impulse);
+                }
+            }
         }
     }
 }

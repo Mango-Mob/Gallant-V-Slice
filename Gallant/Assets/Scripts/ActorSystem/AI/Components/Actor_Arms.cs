@@ -10,7 +10,7 @@ namespace ActorSystem.AI.Components
         [Header("Preview")]
         public float m_baseDamageMod;
         public int? m_activeAttack = null;
-
+        public string m_lastAttackName = "";
         public List<AttackData> m_myData = new List<AttackData>();
 
         private float[] m_cooldowns;
@@ -39,6 +39,7 @@ namespace ActorSystem.AI.Components
         {
             m_activeAttack = id;
             m_cooldowns[id] = m_myData[id].cooldown;
+            m_lastAttackName = m_myData[id].animID;
             return m_myData[id];
         }
 
@@ -61,6 +62,7 @@ namespace ActorSystem.AI.Components
                     {
                         case AttackData.AttackType.Melee:
                             DealDamage(target, m_myData[m_activeAttack.Value].damageType);
+                            AttackData.ApplyEffect(target.GetComponent<Player_Controller>(), transform, m_myData[m_activeAttack.Value].effectAfterwards, m_myData[m_activeAttack.Value].effectPower);
                             break;
                         case AttackData.AttackType.Ranged:
                             _source?.CreateProjectile(m_myData[m_activeAttack.Value], target, m_baseDamageMod);

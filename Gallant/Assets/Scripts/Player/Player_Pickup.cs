@@ -58,7 +58,7 @@ public class Player_Pickup : MonoBehaviour
         {
             // Toggle on weapon information panel
             weapon.ToggleDisplay(true);
-            weapon.m_pickupDisplay.InitDisplayValues(playerController.playerAttack.m_rightWeapon, Hand.RIGHT);
+            weapon.m_pickupDisplay.InitDisplayValues(playerController.playerAttack.m_rightWeaponData, Hand.RIGHT);
 
             // Add to list
             weaponsInRange.Add(weapon);

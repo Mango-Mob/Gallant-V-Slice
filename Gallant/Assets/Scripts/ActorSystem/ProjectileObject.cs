@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ActorSystem.AI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class ProjectileObject : MonoBehaviour
 
     public GameObject m_hitVfX;
     public AudioClip m_hitSound;
+    public AttackData m_damageDetails;
 
     private float m_timer = 0;
 
@@ -42,6 +44,7 @@ public class ProjectileObject : MonoBehaviour
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
             player.DamagePlayer(m_damage, gameObject);
+            AttackData.ApplyEffect(player, transform, m_damageDetails.effectAfterwards, m_damageDetails.effectPower);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
 
             AudioManager.instance.PlayAudioTemporary(transform.position, m_hitSound);

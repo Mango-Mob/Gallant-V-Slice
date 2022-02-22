@@ -127,6 +127,9 @@ public class WeaponData : ScriptableObject
             case Weapon.BOOMERANG:
                 data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
                 break;
+            case Weapon.CROSSBOW:
+                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/crossbowData"));
+                break;
             default:
                 Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
                 return null;

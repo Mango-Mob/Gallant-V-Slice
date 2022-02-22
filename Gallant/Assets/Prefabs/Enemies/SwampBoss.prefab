@@ -1205,9 +1205,9 @@ MonoBehaviour:
   eventOne:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7380378061790784060}
+      - m_Target: {fileID: 2044797131649419286}
         m_MethodName: InvokeAttack
-        m_Mode: 6
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1219,8 +1219,8 @@ MonoBehaviour:
   eventTwo:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7380378061790784060}
-        m_MethodName: CloseAttackWindow
+      - m_Target: {fileID: 2044797131649419286}
+        m_MethodName: EndAttack
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2157,7 +2157,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7380378061790784061}
-  - component: {fileID: 7380378061790784060}
+  - component: {fileID: 7990010501482095001}
+  - component: {fileID: 2044797131649419286}
+  - component: {fileID: 2930150230781470128}
   - component: {fileID: 2844510379285810090}
   - component: {fileID: 7380378061790784049}
   - component: {fileID: 51733229}
@@ -2188,7 +2190,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7380378061790784060
+--- !u!114 &7990010501482095001
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2197,15 +2199,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 7380378061790784048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e60d6cb828b1cb34ba3f57104416b5bf, type: 3}
+  m_Script: {fileID: 11500000, guid: 31603780c2f731c4288cf295ec46068d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_myData: {fileID: 11400000, guid: 7307b2357589ca6408b14513a025aecc, type: 2}
-  m_currentStateDisplay: 
-  m_idealDistance: 2.5
-  m_damageModifier: 1
+  m_activeStateText: 
+  m_myFaction: 3
+  m_myLevel: 0
   m_selfTargetTransform: {fileID: 8792136351278260756}
-  m_myColliders: []
+  m_myData: {fileID: 11400000, guid: 7307b2357589ca6408b14513a025aecc, type: 2}
+--- !u!114 &2044797131649419286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7380378061790784048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_currHealth: 0
+  m_currPhyResist: 0
+  m_currAbilResist: 0
+  m_target: {fileID: 0}
+  m_idealDistance: 1.5
+--- !u!114 &2930150230781470128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7380378061790784048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ba88271ad89ef43ab5daa42968e60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetMask:
+    serializedVersion: 2
+    m_Bits: 4352
+  m_baseDamageMod: 0
+  m_myData:
+  - {fileID: 11400000, guid: d2655be30c928e7498f7df0feb7ce6c0, type: 2}
+  - {fileID: 11400000, guid: 7939c15b04440c3498d16be682d7b197, type: 2}
+  - {fileID: 11400000, guid: 48938be49b21dbc41982b86467bafc39, type: 2}
+  - {fileID: 11400000, guid: c66c0946311fd844d952c3ca76f96cc1, type: 2}
 --- !u!114 &2844510379285810090
 MonoBehaviour:
   m_ObjectHideFlags: 0

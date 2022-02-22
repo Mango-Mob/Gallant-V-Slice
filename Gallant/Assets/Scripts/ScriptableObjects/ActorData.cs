@@ -42,7 +42,6 @@ public class ActorData : ScriptableObject
 
     public List<State.Type> m_states;
     public State.Type m_initialState;
-    [SerializeField] public List<AttackData> m_attacks;
 
     public static float CalculateDamage(float inTakeDamage, float resistance, float penetration = 0)
     {

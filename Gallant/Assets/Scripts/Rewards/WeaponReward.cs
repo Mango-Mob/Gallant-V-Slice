@@ -67,8 +67,8 @@ public class WeaponReward : Reward
 
         m_weaponImageLoc.sprite = data.weaponIcon;
 
-        CompareTo(data, player.playerAttack.m_leftWeapon, true);
-        CompareTo(data, player.playerAttack.m_rightWeapon, false);
+        CompareTo(data, player.playerAttack.m_leftWeaponData, true);
+        CompareTo(data, player.playerAttack.m_rightWeaponData, false);
     }
 
     public void CompareTo(WeaponData rewardWeapon, WeaponData playerWeapon, bool isLeft = true)
