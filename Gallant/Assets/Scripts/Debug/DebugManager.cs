@@ -119,7 +119,7 @@ public class DebugManager : SingletonPersistent<DebugManager>
         m_ActorCountTxt.text = count.ToString();
         m_killAllBtn.interactable = count > 0;
 
-        HUDManager.instance.gameObject.SetActive(!m_HudCheck.isOn);
+        HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
     }
 
     private void SelectedUpdate()

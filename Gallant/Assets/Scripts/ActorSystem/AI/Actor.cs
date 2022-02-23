@@ -9,8 +9,8 @@ namespace ActorSystem.AI
     {
         public CombatSystem.Faction m_myFaction;
         public bool m_toReserveOnLoad = false;
-        public Actor_Brain m_myBrain { get; private set; }
-        public Actor_SpawnMethod m_mySpawn { get; private set; }
+        public Actor_Brain m_myBrain { get; protected set; }
+        public Actor_SpawnMethod m_mySpawn { get; protected set; }
         public ActorSpawner m_lastSpawner { get; set; }
 
         public uint m_myLevel = 0;

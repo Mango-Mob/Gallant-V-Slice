@@ -56,7 +56,7 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_lockonTarget = HUDManager.instance.GetElement<UI_LockonTarget>("LockonTarget");
+        m_lockonTarget = HUDManager.Instance.GetElement<UI_LockonTarget>("LockonTarget");
 
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();

@@ -34,10 +34,10 @@ public class Player_Resources : MonoBehaviour
 
     private void Awake()
     {
-        healthBar = HUDManager.instance.GetElement<UI_Bar>("HP");
-        barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
-        portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
-        adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbCount>("Adrenaline");
+        healthBar = HUDManager.Instance.GetElement<UI_Bar>("HP");
+        barrierBar = HUDManager.Instance.GetElement<UI_Bar>("Barrier");
+        portrait = HUDManager.Instance.GetElement<UI_PortraitHP>("Portrait");
+        adrenalineOrbs = HUDManager.Instance.GetElement<UI_OrbCount>("Adrenaline");
     }
     // Start is called before the first frame update
     void Start()
