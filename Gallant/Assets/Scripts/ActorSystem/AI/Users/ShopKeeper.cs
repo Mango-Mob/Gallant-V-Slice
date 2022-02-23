@@ -16,7 +16,9 @@ namespace ActorSystem.AI.Users
 
         private bool m_hasGivenReward = false;
 
-        private UI_Image m_keyboardInput;
+        private Interactable m_myInteractLogic;
+
+        private UI_Text m_keyboardInput;
         private UI_Image m_gamepadInput;
         private GameObject m_player;
         private bool m_showUI { 
@@ -31,14 +33,22 @@ namespace ActorSystem.AI.Users
         protected override void Awake()
         {
             base.Awake();
+            m_myInteractLogic = GetComponentInChildren<Interactable>();
+        }
+
+        protected override void Start()
+        {
+            base.Start();
             m_player = GameManager.Instance.m_player;
-            m_keyboardInput = m_myBrain.m_ui.GetElement<UI_Image>("Keyboard");
-            m_gamepadInput = m_myBrain.m_ui.GetElement<UI_Image>("Keyboard");
+            m_keyboardInput = m_myBrain.m_ui.GetElement<UI_Text>("Keyboard");
+            m_gamepadInput = m_myBrain.m_ui.GetElement<UI_Image>("Gamepad");
+
+            m_myBrain.m_ui.GetElement<UI_Bar>("Health").gameObject.SetActive(false);
         }
 
         protected override void Update()
         {
-            m_keyboardInput.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
+            m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
 
             if(m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
@@ -49,6 +59,13 @@ namespace ActorSystem.AI.Users
             {
                 m_myBrain.enabled = true;
             }
+
+            if (m_showUI)
+            {
+                UpdateDisplay();
+                m_myInteractLogic.m_isReady = m_showUI;
+            }
+                
         }
 
         public void Interact()
@@ -65,6 +82,7 @@ namespace ActorSystem.AI.Users
 
         private void Reward()
         {
+            DialogManager.Instance.Hide();
             RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
             DialogManager.Instance.m_interact = null;
             m_hasGivenReward = true;

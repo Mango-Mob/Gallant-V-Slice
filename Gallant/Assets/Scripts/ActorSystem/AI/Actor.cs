@@ -47,7 +47,7 @@ namespace ActorSystem.AI
             m_states = new List<State.Type>(m_myData.m_states);
         }
 
-        public void Start()
+        protected virtual void Start()
         {
             //Start Statemachine
             SetState(m_myData.m_initialState);

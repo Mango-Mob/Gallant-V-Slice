@@ -82,6 +82,7 @@ namespace ActorSystem.AI.Components
             SetEnabled(false);
         }
 
+
         private void SetEnabled(bool status)
         {
             if (m_arms != null)

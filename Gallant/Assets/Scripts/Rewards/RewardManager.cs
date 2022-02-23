@@ -36,11 +36,12 @@ public class RewardManager : Singleton<RewardManager>
     private int m_select = -1;
     private float m_timer = 0.0f;
     private List<Reward> m_rewards = new List<Reward>();
-    private void Start()
+
+    protected void Start()
     {
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
         m_pressDurationImage.fillAmount = 0.0f;
-
+        m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
         Hide();
     }
 

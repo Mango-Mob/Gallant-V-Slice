@@ -35,8 +35,9 @@ public class DialogManager : Singleton<DialogManager>
     private int m_currentScene = 0;
 
     // Start is called before the first frame update
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         m_optionResult = new DialogResult[m_options.Length];
         m_player = FindObjectOfType<Player_Controller>();
         Hide();
