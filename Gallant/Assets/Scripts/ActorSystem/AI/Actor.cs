@@ -23,7 +23,7 @@ namespace ActorSystem.AI
 
         public List<State.Type> m_states { get; private set; }
 
-        public void Awake()
+        protected virtual void Awake()
         {
             m_myBrain = GetComponent<Actor_Brain>();
             m_mySpawn = GetComponent<Actor_SpawnMethod>();
@@ -60,7 +60,7 @@ namespace ActorSystem.AI
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
-        public void Update()
+        protected virtual void Update()
         {
             m_myBrain.Update();
 

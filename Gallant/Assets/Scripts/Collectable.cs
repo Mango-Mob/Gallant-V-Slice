@@ -28,12 +28,12 @@ public class Collectable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_keyboardInput.SetActive(m_ShowUI && !InputManager.instance.isInGamepadMode);
-        m_gamePadInput.gameObject.SetActive(m_ShowUI && InputManager.instance.isInGamepadMode);
+        m_keyboardInput.SetActive(m_ShowUI && !InputManager.Instance.isInGamepadMode);
+        m_gamePadInput.gameObject.SetActive(m_ShowUI && InputManager.Instance.isInGamepadMode);
 
         if(m_ShowUI)
         {
-            InputManager.Bind[] binds = InputManager.instance.GetBinds("Interact");
+            InputManager.Bind[] binds = InputManager.Instance.GetBinds("Interact");
             bool foundKey = false;
             bool foundButton = false;
             for (int i = 0; i < binds.Length; i++)
@@ -45,7 +45,7 @@ public class Collectable : MonoBehaviour
                             if(!foundKey)
                             {
                                 foundKey = true;
-                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.instance.GetKeyString((KeyType)binds[i].value);
+                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.Instance.GetKeyString((KeyType)binds[i].value);
                             }
                             break;
                         }
@@ -54,7 +54,7 @@ public class Collectable : MonoBehaviour
                             if (!foundKey)
                             {
                                 foundKey = true;
-                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.instance.GetMouseButtonString((MouseButton)binds[i].value);
+                                m_keyboardInput.GetComponentInChildren<Text>().text = InputManager.Instance.GetMouseButtonString((MouseButton)binds[i].value);
                             }
                             break;
                         }
@@ -63,7 +63,7 @@ public class Collectable : MonoBehaviour
                             if (!foundButton)
                             {
                                 foundButton = true;
-                                m_gamePadInput.sprite = InputManager.instance.GetGamepadSprite((ButtonType)binds[i].value);
+                                m_gamePadInput.sprite = InputManager.Instance.GetGamepadSprite((ButtonType)binds[i].value);
                             }
                             break;
                         }
@@ -80,7 +80,7 @@ public class Collectable : MonoBehaviour
     public void Collect()
     {
         PlayerPrefs.SetInt(m_data.collectableID, 1);
-        AudioManager.instance.PlayAudioTemporary(transform.position, m_pickupSound);
+        AudioManager.Instance.PlayAudioTemporary(transform.position, m_pickupSound);
         Destroy(gameObject);
     }
 

@@ -57,6 +57,7 @@ namespace ActorSystem.AI.Components
                         return subItem;
                 }
             }
+            Debug.LogError($"This actor does not contain an element required. (named: {name})");
             return null;
         }
 

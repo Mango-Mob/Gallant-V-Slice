@@ -41,8 +41,8 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 mousePos = InputManager.instance.GetMousePositionInScreen();
-        if (InputManager.instance.IsMouseButtonDown(MouseButton.LEFT))
+        Vector2 mousePos = InputManager.Instance.GetMousePositionInScreen();
+        if (InputManager.Instance.IsMouseButtonDown(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {
@@ -53,7 +53,7 @@ public class HUDManager : MonoBehaviour
                 }
             }
         }
-        else if(InputManager.instance.IsMouseButtonUp(MouseButton.LEFT))
+        else if(InputManager.Instance.IsMouseButtonUp(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {
@@ -64,7 +64,7 @@ public class HUDManager : MonoBehaviour
 
     public UI_Element GetElementUnderMouse()
     {
-        Vector2 mousePos = InputManager.instance.GetMousePositionInScreen();
+        Vector2 mousePos = InputManager.Instance.GetMousePositionInScreen();
         foreach (var elements in m_UIElements)
         {
             if (elements.GetComponent<UI_Element>() != null

@@ -14,37 +14,13 @@ using UnityEngine;
 /// Note: Agents/Listeners are incharge of being added/removed when they are awake/destroyed. 
 /// </summary>
 /// 
-public class AudioManager
+public class AudioManager : SingletonPersistent<AudioManager>
 {
-    #region Singleton
-    private static AudioManager _instance;
-
-    public static AudioManager instance 
-    { 
-        get 
-        {
-            if (_instance == null)
-            {
-                _instance = new AudioManager();
-            }
-
-            return _instance;
-        } 
-    }
-
-    public static void DestroyInstance()
-    {
-        _instance.OnDestroy();
-        _instance = null;
-    }
-
     private AudioManager()
     {
         agents = new List<AudioAgent>();
         listeners = new List<ListenerAgent>();
-        Awake();
     }
-    #endregion
 
     //Agent and listener lists:
     public List<AudioAgent> agents { get; private set; }

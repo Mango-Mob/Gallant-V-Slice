@@ -33,7 +33,7 @@ namespace ActorSystem
             m_triggerBox = GetComponent<Collider>();
             m_triggerBox.enabled = false;
 
-            AudioManager.instance.PlayAudioTemporary(transform.position, m_spawnSound);
+            AudioManager.Instance.PlayAudioTemporary(transform.position, m_spawnSound);
         }
 
         // Update is called once per frame
