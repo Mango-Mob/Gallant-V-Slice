@@ -8,10 +8,13 @@ namespace ActorSystem.AI
     public class Actor : StateMachine
     {
         public CombatSystem.Faction m_myFaction;
+        public bool m_toReserveOnLoad = false;
+        public Actor_Brain m_myBrain { get; protected set; }
+        public Actor_SpawnMethod m_mySpawn { get; protected set; }
+        public ActorSpawner m_lastSpawner { get; set; }
 
-        public Actor_Brain m_myBrain { get; private set; }
-        
         public uint m_myLevel = 0;
+        public string m_name = "";
         public Transform m_selfTargetTransform;
 
         [SerializeField] protected ActorData m_myData;
@@ -20,31 +23,54 @@ namespace ActorSystem.AI
 
         public List<State.Type> m_states { get; private set; }
 
-        public void Awake()
+        protected virtual void Awake()
         {
             m_myBrain = GetComponent<Actor_Brain>();
-            
+            m_mySpawn = GetComponent<Actor_SpawnMethod>();
 
             if (m_myData == null)
                 Debug.LogWarning("Actor does not contain data.");
+            else
+                m_name = m_myData.ActorName;
 
-            ActorManager.Instance.Subscribe(this);
+            if (m_toReserveOnLoad)
+            {
+                ActorManager.Instance.ReserveMe(this);
+                m_myBrain.enabled = false;
+            }
+            else
+            {
+                ActorManager.Instance.Subscribe(this);
+                m_myBrain.enabled = true;
+            }
+                
             m_states = new List<State.Type>(m_myData.m_states);
         }
 
-        public void Start()
+        protected virtual void Start()
         {
-            if (m_myData != null)
-                m_myBrain.LoadData(m_myData, m_myLevel);
-
             //Start Statemachine
             SetState(m_myData.m_initialState);
         }
 
-        public void Update()
+        public void Spawn(uint level, Vector3 start, Vector3 end, Vector3 forward)
+        {
+            m_myLevel = level;
+            m_myBrain.LoadData(m_myData, level);
+            m_mySpawn.StartSpawn(start, end, forward);
+        }
+
+        protected virtual void Update()
         {
             m_myBrain.Update();
-            m_currentState.Update();
+
+            if(m_myBrain.enabled)
+                m_currentState.Update();
+        }
+
+        public void DisableFunction()
+        {
+            m_myBrain.enabled = false;
         }
 
         public void OnDestroy()
@@ -60,7 +86,7 @@ namespace ActorSystem.AI
 
         public void KnockbackActor(Vector3 force)
         {
-            SetTargetVelocity(force);
+            m_myBrain.m_legs?.KnockBack(force);
         }
 
         public void SetTarget(GameObject _target)
@@ -142,7 +168,25 @@ namespace ActorSystem.AI
 
         public void DestroySelf()
         {
-            Destroy(gameObject);
+            ActorManager.Instance.ReserveMe(this);
+            if(m_lastSpawner != null)
+            {
+                m_lastSpawner.m_myActors.Remove(this);
+            }
+            //Restart Statemachine
+            SetState(m_myData.m_initialState);
+            m_myBrain.enabled = false;
+        }
+
+        public void Respawn(bool fullRefresh = false)
+        {
+            if(m_lastSpawner != null)
+            {
+                m_myBrain.enabled = false;
+                ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawn(transform.position);
+                SetState(m_myData.m_initialState);
+                m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
+            }
         }
     }
 }

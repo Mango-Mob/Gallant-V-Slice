@@ -67,8 +67,8 @@ public class WeaponReward : Reward
 
         m_weaponImageLoc.sprite = data.weaponIcon;
 
-        CompareTo(data, player.playerAttack.m_leftWeapon, true);
-        CompareTo(data, player.playerAttack.m_rightWeapon, false);
+        CompareTo(data, player.playerAttack.m_leftWeaponData, true);
+        CompareTo(data, player.playerAttack.m_rightWeaponData, false);
     }
 
     public void CompareTo(WeaponData rewardWeapon, WeaponData playerWeapon, bool isLeft = true)
@@ -142,10 +142,10 @@ public class WeaponReward : Reward
         pos.y = 0;
 
         DroppedWeapon.CreateDroppedWeapon(m_activePlayer.transform.position + pos.normalized, m_activeWeapon);
-        GetComponentInParent<RewardWindow>().Hide();
+        RewardManager.Instance.Hide();
 
         if (m_activePlayer != null)
-            AudioManager.instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
+            AudioManager.Instance?.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
     }
     public override void Select()
     {

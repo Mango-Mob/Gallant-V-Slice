@@ -24,7 +24,7 @@ public class Interactable : MonoBehaviour
     {
         if(m_isReady && m_interactFunction != null)
         {
-            if(InputManager.instance.IsBindPressed("Interact", InputManager.instance.GetAnyGamePad()))
+            if(InputManager.Instance.IsBindPressed("Interact", InputManager.Instance.GetAnyGamePad()))
             {
                 m_timer += Time.unscaledDeltaTime;
                 if(m_timer >= m_holdDuration)

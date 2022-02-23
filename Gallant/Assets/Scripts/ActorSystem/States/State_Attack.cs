@@ -19,7 +19,6 @@ public class State_Attack : State
             attackData = m_myActor.GetAttack(attackID);
         }   
     }
-
     public override void Start()
     {
         m_myUser.m_activeStateText = "ATTACK";

@@ -20,6 +20,7 @@ public class Player_Movement : MonoBehaviour
     public float m_gravityMult = 9.81f;
     public float m_moveSpeed = 5.0f;
     public float m_rollSpeed = 12.0f;
+    public float m_attackMoveSpeed = 0.4f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
@@ -48,10 +49,14 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
 
+    //Respawn Code
+    public Vector3 m_lastGroundedPosition { get; private set; }
+    public Vector3 m_lastGroundedVelocity { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
-        m_lockonTarget = HUDManager.instance.GetElement<UI_LockonTarget>("LockonTarget");
+        m_lockonTarget = HUDManager.Instance.GetElement<UI_LockonTarget>("LockonTarget");
 
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
@@ -82,7 +87,11 @@ public class Player_Movement : MonoBehaviour
         // Gravity physics
         m_grounded = characterController.isGrounded;
         if (m_grounded)
+        {
             m_yVelocity = -1.0f;
+            m_lastGroundedPosition = transform.position;
+            m_lastGroundedVelocity = characterController.velocity;
+        }
         else
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
@@ -219,25 +228,32 @@ public class Player_Movement : MonoBehaviour
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
 
+                if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
+                    movement *= m_attackMoveSpeed;
+
                 // If player is not trying to aim, aim in direction of movement.
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                     RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
 
-                // Movement Animation control
-                Vector3 rotationVector = new Vector3(0, 0, 0);
-
-                rotationVector += normalizedMove.z * playerModel.transform.right;
-                rotationVector += normalizedMove.x * playerModel.transform.forward;
-
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                 {
                     playerController.animator.SetFloat("Horizontal", 0.0f);
-                    playerController.animator.SetFloat("Vertical", _move.magnitude);
+                    playerController.animator.SetFloat("Vertical", _move.magnitude
+                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
                 }
                 else
                 {
-                    playerController.animator.SetFloat("Horizontal", rotationVector.z);
-                    playerController.animator.SetFloat("Vertical", rotationVector.x);
+                    // Movement Animation control
+                    Vector3 rotationVector = new Vector3(0, 0, 0);
+
+                    rotationVector += normalizedMove.z * playerModel.transform.right;
+                    rotationVector += normalizedMove.x * playerModel.transform.forward;
+
+                    playerController.animator.SetFloat("Horizontal", rotationVector.z
+                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+
+                    playerController.animator.SetFloat("Vertical", rotationVector.x
+                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
                 }
             }
             else
@@ -289,9 +305,6 @@ public class Player_Movement : MonoBehaviour
                 }
             }
         }
-
-        if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
-            movement = Vector3.zero;
 
         // Move
         characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
@@ -367,8 +380,9 @@ public class Player_Movement : MonoBehaviour
         //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 
         //Slow motion
-        GameManager.instance.SlowTime(0.4f, _val);
+        GameManager.Instance.SlowTime(0.4f, _val);
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);

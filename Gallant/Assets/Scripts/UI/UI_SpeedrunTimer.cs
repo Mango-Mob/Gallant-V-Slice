@@ -47,7 +47,7 @@ public class UI_SpeedrunTimer : UI_Element
 
         if(m_display != null)
         {
-            m_display.enabled = GameManager.instance.enableTimer && show;
+            m_display.enabled = GameManager.Instance.enableTimer && show;
             string text = timeElapsed.ToString("g");
 
             if (text.Length >= 11)
@@ -58,7 +58,7 @@ public class UI_SpeedrunTimer : UI_Element
             else
                 m_display.faceColor = Color.white;
 
-            if(m_display.enabled && InputManager.instance.IsKeyDown(KeyType.R))
+            if(m_display.enabled && InputManager.Instance.IsKeyDown(KeyType.R))
             {
                 SceneManager.LoadScene(0);
             }
