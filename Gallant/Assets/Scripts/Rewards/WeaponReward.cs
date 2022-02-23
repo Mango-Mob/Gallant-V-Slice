@@ -145,7 +145,7 @@ public class WeaponReward : Reward
         RewardManager.Instance.Hide();
 
         if (m_activePlayer != null)
-            AudioManager.Instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
+            AudioManager.Instance?.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
     }
     public override void Select()
     {
