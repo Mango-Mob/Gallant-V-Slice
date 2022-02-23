@@ -94,7 +94,7 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            LevelLoader.instance.LoadNewLevel("EndScreen", LevelLoader.Transition.YOUDIED);
+            LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
@@ -125,7 +125,7 @@ public class Player_Resources : MonoBehaviour
     IEnumerator BackToMenu()
     {
         yield return new WaitForSecondsRealtime(3);
-        LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
+        LevelManager.Instance.LoadNewLevel("MainMenu", LevelManager.Transition.YOUDIED);
     }
 
     /*******************

@@ -380,7 +380,7 @@ public class Player_Movement : MonoBehaviour
         //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
 
         //Slow motion
-        GameManager.instance.SlowTime(0.4f, _val);
+        GameManager.Instance.SlowTime(0.4f, _val);
     }
 
     private void OnDrawGizmos()

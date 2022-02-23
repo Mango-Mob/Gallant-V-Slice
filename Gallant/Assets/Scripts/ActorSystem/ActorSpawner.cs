@@ -160,7 +160,7 @@ namespace ActorSystem
                     //Get/Create actor in the reserves
                     Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
                     m_myActors.Add(spawn);
-                    spawn.SetTarget(GameManager.instance.m_player);
+                    spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;
 
                     //Start Spawn animation

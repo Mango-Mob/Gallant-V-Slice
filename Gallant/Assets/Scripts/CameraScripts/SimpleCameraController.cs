@@ -80,27 +80,27 @@ public class SimpleCameraController : MonoBehaviour
     {
         Vector3 direction = new Vector3();
 
-        if (InputManager.instance.IsKeyPressed(KeyType.W))
+        if (InputManager.Instance.IsKeyPressed(KeyType.W))
         {
             direction += Vector3.forward;
         }
-        if (InputManager.instance.IsKeyPressed(KeyType.S))
+        if (InputManager.Instance.IsKeyPressed(KeyType.S))
         {
             direction += Vector3.back;
         }
-        if (InputManager.instance.IsKeyPressed(KeyType.A))
+        if (InputManager.Instance.IsKeyPressed(KeyType.A))
         {
             direction += Vector3.left;
         }
-        if (InputManager.instance.IsKeyPressed(KeyType.D))
+        if (InputManager.Instance.IsKeyPressed(KeyType.D))
         {
             direction += Vector3.right;
         }
-        if (InputManager.instance.IsKeyPressed(KeyType.Q))
+        if (InputManager.Instance.IsKeyPressed(KeyType.Q))
         {
             direction += Vector3.down;
         }
-        if (InputManager.instance.IsKeyPressed(KeyType.E))
+        if (InputManager.Instance.IsKeyPressed(KeyType.E))
         {
             direction += Vector3.up;
         }
@@ -112,7 +112,7 @@ public class SimpleCameraController : MonoBehaviour
         Vector3 translation = Vector3.zero;
 
         // Exit Sample  
-        if (InputManager.instance.IsKeyDown(KeyType.ESC) && canQuitWithEsc)
+        if (InputManager.Instance.IsKeyDown(KeyType.ESC) && canQuitWithEsc)
         {
             Application.Quit();
 			#if UNITY_EDITOR
@@ -122,7 +122,7 @@ public class SimpleCameraController : MonoBehaviour
         // Hide and lock cursor when right mouse button pressed
 
         // Rotation
-        Vector2 delta = InputManager.instance.GetMouseDelta();
+        Vector2 delta = InputManager.Instance.GetMouseDelta();
         var mouseMovement = new Vector2(delta.x, delta.y * (invertY ? 1 : -1));
         
         var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude * 0.5f);
@@ -134,7 +134,7 @@ public class SimpleCameraController : MonoBehaviour
         translation = GetInputTranslationDirection();
 
         // Speed up movement when shift key held
-        if (InputManager.instance.IsKeyPressed(KeyType.L_SHIFT))
+        if (InputManager.Instance.IsKeyPressed(KeyType.L_SHIFT))
         {
             translation *= 10.0f;
         }
