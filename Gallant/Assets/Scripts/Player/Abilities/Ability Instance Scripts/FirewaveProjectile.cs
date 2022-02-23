@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,7 +43,7 @@ public class FirewaveProjectile : MonoBehaviour
             if (actor != null && !m_hitList.Contains(actor))
             {
                 Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
-                actor.DealDamage(m_data.damage);
+                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
                 m_hitList.Add(actor);
             }
 

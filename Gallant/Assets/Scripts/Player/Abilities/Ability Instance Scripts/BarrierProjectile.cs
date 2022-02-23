@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -56,10 +57,10 @@ public class BarrierProjectile : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                if (actor.CheckIsDead())
+                if (actor.m_myBrain.IsDead)
                     return;
 
-                actor.DealDamage(m_data.damage * m_barrierValue / 50.0f);
+                actor.DealDamage(m_data.damage * m_barrierValue / 50.0f, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
                 Detonate();
             }
         }

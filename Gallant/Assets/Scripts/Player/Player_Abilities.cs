@@ -36,8 +36,8 @@ public class Player_Abilities : MonoBehaviour
 
     private void Awake()
     {
-        m_leftAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityL");
-        m_rightAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityR");
+        m_leftAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityL");
+        m_rightAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityR");
     }
     private void Start()
     {

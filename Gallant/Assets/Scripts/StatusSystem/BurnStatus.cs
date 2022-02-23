@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ActorSystem.AI;
+using System;
 using UnityEngine;
 
 /****************
@@ -37,7 +38,7 @@ public class BurnStatus : StatusEffect
 
     public override void UpdateOnActor(Actor _actor, float dt)
     {
-        _actor.DealDamage(m_strength * dt);
+        _actor.DealDamage(m_strength * dt, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
         m_duration -= dt;
     }
 

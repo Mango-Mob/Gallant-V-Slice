@@ -50,11 +50,11 @@ public class EndScreenMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
         {
             EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
         }
-        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
@@ -62,7 +62,7 @@ public class EndScreenMenu : MonoBehaviour
 
     public void BackToMenu()
     {
-        LevelLoader.instance.LoadNewLevel(m_menuSceneName);
+        LevelManager.Instance.LoadNewLevel(m_menuSceneName);
     }
 
     private string CalculateDamage()
