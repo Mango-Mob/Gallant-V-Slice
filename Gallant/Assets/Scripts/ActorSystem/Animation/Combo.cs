@@ -14,6 +14,9 @@ public class Combo : StateMachineBehaviour
     {
         foreach (string name in System.Enum.GetNames(typeof(Weapon)))
         {
+            if (name == "BRICK")
+                continue;
+
             animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
             animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
         }

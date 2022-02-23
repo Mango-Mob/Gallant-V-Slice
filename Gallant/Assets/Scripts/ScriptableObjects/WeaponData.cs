@@ -126,6 +126,9 @@ public class WeaponData : ScriptableObject
             case Weapon.SPEAR:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/spearData"));
                 break;
+            case Weapon.BRICK:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/brickData"));
+                break;
         }
     }
     private static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)

@@ -6,10 +6,11 @@ using UnityEngine;
 public enum Weapon
 {
     SWORD,
-    SHIELD,
-    BOOMERANG,
-    CROSSBOW,
     SPEAR,
+    BOOMERANG,
+    SHIELD,
+    CROSSBOW,
+    BRICK,
 }
 public enum Hand
 {
@@ -79,7 +80,7 @@ public class Player_Attack : MonoBehaviour
      */
     public void StartUsing(Hand _hand)
     {
-        WeaponData thisData;
+        WeaponBase thisWeapon;
         string animatorTriggerName = "";
 
         switch (_hand)
@@ -88,14 +89,14 @@ public class Player_Attack : MonoBehaviour
                 if (m_leftWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_leftWeaponData;
+                thisWeapon = m_leftWeapon;
                 animatorTriggerName += "Left";
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_rightWeaponData;
+                thisWeapon = m_rightWeapon;
                 animatorTriggerName += "Right";
                 break;
             default:
@@ -104,10 +105,10 @@ public class Player_Attack : MonoBehaviour
         }
 
         // If weapon is not in hand
-        if (thisData == null)
+        if (thisWeapon == null)
             return;
 
-        animatorTriggerName += thisData.weaponType.ToString()[0] + thisData.weaponType.ToString().Substring(1).ToLower();
+        animatorTriggerName += thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();
         playerController.animator.SetBool(animatorTriggerName, true);
@@ -237,6 +238,9 @@ public class Player_Attack : MonoBehaviour
         
         foreach (string name in System.Enum.GetNames(typeof(Weapon)))
         {
+            if (name == "BRICK")
+                continue;
+
             if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
             {
                 usingRight = true;
@@ -429,6 +433,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Crossbow>();
             case Weapon.SPEAR:
                 return gameObject.AddComponent<Weapon_Spear>();
+            case Weapon.BRICK:
+                return gameObject.AddComponent<Weapon_Brick>();
             default:
                 return null;
         }
