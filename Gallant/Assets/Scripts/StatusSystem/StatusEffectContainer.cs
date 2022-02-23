@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿
+using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -72,9 +74,9 @@ public class StatusEffectContainer : MonoBehaviour
         UI_StatusEffectBar bar = null;
         if (m_actor != null)
         {
-            if(m_actor.m_ui != null)
+            if(m_actor.m_myBrain.m_ui != null)
             {
-                bar = m_actor.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
+                bar = m_actor.m_myBrain.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
                 bar.SetImage(effect.m_displayImage);
                 bar.SetColor(effect.m_displayColor);
             }
@@ -92,9 +94,9 @@ public class StatusEffectContainer : MonoBehaviour
         m_currentEffects.Remove(display);
         if (m_actor != null)
         {
-            if (m_actor.m_ui != null)
+            if (m_actor.m_myBrain.m_ui != null)
             {
-                m_actor.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
+                m_actor.m_myBrain.m_ui.GetElement<UI_List>()?.RemoveElement(display.element);
                 Destroy(display.element.gameObject);
             }
             //Remove vfx

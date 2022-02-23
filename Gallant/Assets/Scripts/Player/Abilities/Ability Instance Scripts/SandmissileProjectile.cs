@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -123,10 +124,10 @@ public class SandmissileProjectile : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                if (actor.CheckIsDead())
+                if (actor.m_myBrain.IsDead)
                     return;
 
-                actor.DealDamage(m_data.damage);
+                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
                 DetonateProjectile();
             }
         }

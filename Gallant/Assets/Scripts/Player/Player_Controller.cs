@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -57,8 +58,8 @@ public class Player_Controller : MonoBehaviour
 
         if (GameManager.m_containsPlayerInfo)
         {
-            playerAttack.m_leftWeapon = GameManager.RetrieveWeaponData(Hand.LEFT);
-            playerAttack.m_rightWeapon = GameManager.RetrieveWeaponData(Hand.RIGHT);
+            playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
+            playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             playerStats.EvaluateEffects();
@@ -80,8 +81,8 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeapon == null ? 1.0f : playerAttack.m_leftWeapon.m_speed));
-        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeapon == null ? 1.0f : playerAttack.m_rightWeapon.m_speed));
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed));
+        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
         bool rightAttackHeld = InputManager.instance.IsBindPressed("Right_Attack", gamepadID); 
         bool leftAttackHeld = InputManager.instance.IsBindPressed("Left_Attack", gamepadID);
@@ -90,34 +91,34 @@ public class Player_Controller : MonoBehaviour
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
         float swordRunWeight = 0.0f;
-        if (playerAttack.m_leftWeapon != null)
-            swordRunWeight += playerAttack.m_leftWeapon.weaponType == Weapon.SWORD ? -1.0f : 0.0f;
-        if (playerAttack.m_rightWeapon != null)
-            swordRunWeight += playerAttack.m_rightWeapon.weaponType == Weapon.SWORD ? 1.0f : 0.0f;
+        if (playerAttack.m_leftWeaponData != null)
+            swordRunWeight += playerAttack.m_leftWeaponData.weaponType == Weapon.SWORD ? -1.0f : 0.0f;
+        if (playerAttack.m_rightWeaponData != null)
+            swordRunWeight += playerAttack.m_rightWeaponData.weaponType == Weapon.SWORD ? 1.0f : 0.0f;
 
         animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.StopBlock(Hand.RIGHT);
+            playerAttack.ToggleBlock(false);
         if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.StopBlock(Hand.LEFT);
+            playerAttack.ToggleBlock(false);
 
-        //float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
-        //float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
-        //// Set avatar mask to be used
-        //if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
-        //{
-        //    armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-        //    standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-        //}
-        //else
-        //{
-        //    armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-        //    standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-        //}
+        float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
+        float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
+        // Set avatar mask to be used
+        if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
+        {
+            armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
+        else
+        {
+            armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
 
-        float armWeight = 0.0f;
-        float standArmWeight = 1.0f;
+        //float armWeight = 0.0f;
+        //float standArmWeight = 1.0f;
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));
@@ -133,7 +134,7 @@ public class Player_Controller : MonoBehaviour
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
                 {
-                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeapon, Hand.LEFT))
+                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeaponData, Hand.LEFT))
                     {
                         playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
                         playerPickup.RemoveDropFromList(droppedWeapon);
@@ -147,7 +148,7 @@ public class Player_Controller : MonoBehaviour
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
                 {
-                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeapon, Hand.RIGHT))
+                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeaponData, Hand.RIGHT))
                     {
                         playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
                         playerPickup.RemoveDropFromList(droppedWeapon);
@@ -411,6 +412,24 @@ public class Player_Controller : MonoBehaviour
 
     public void StorePlayerInfo()
     {
-        GameManager.StorePlayerInfo(playerAttack.m_leftWeapon, playerAttack.m_rightWeapon, playerStats.m_effects);
+        GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects);
+    }
+
+    public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
+    {
+        playerMovement.characterController.enabled = false;
+        transform.position = _position;
+        playerMovement.characterController.enabled = true;
+
+        if (_isFullHP)
+        {
+            playerResources.FullHeal();
+        }
+    }
+
+    public void RespawnPlayerToGround(bool _isFullHP = false)
+    {
+        Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized;
+        RespawnPlayerTo(targetPosition, _isFullHP);
     }
 }

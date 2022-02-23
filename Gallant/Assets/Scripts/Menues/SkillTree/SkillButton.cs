@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
-public class SkillButton : MonoBehaviour
+public class SkillButton : MonoBehaviour, IPointerEnterHandler
 {
     [Header("Skill Information")]
     public string m_skillName;
@@ -51,6 +52,14 @@ public class SkillButton : MonoBehaviour
                 image.color = new Color(0.5f, 0.5f, 0.5f);
             }
         }
+
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (!InputManager.instance.isInGamepadMode)
+        {
+            SelectSkill();
+        }
     }
 
     public void SelectSkill()
@@ -64,7 +73,15 @@ public class SkillButton : MonoBehaviour
             m_upgradeAmount++;
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
             PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_unlockCost);
+            
+            SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillID);
         }
+    }
+    public void RefundSkill()
+    {
+        PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_upgradeAmount * m_unlockCost);
+        m_upgradeAmount = 0;
+        m_upgradeNumberText.text = m_upgradeAmount.ToString();
     }
 
     public bool IsUnlockable()
@@ -106,5 +123,16 @@ public class SkillButton : MonoBehaviour
 
             m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
         }
+    }
+    public void SetUpgradeLevel(int _level)
+    {
+        if (_level == -1)
+        {
+            Debug.Log("Skill ID not found in tree");
+            return;
+        }
+
+        m_upgradeAmount = _level;
+        m_upgradeNumberText.text = m_upgradeAmount.ToString();
     }
 }

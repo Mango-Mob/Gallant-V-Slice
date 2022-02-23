@@ -1,4 +1,6 @@
-﻿using SOHNE.Accessibility.Colorblindness;
+﻿using ActorSystem.AI;
+using ActorSystem.AI.Components;
+//using SOHNE.Accessibility.Colorblindness;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -17,8 +19,8 @@ public class DebugMenu : MonoBehaviour
     [SerializeField] private GameObject[] m_panelArray;
     [SerializeField] private Button[] m_buttonArray;
 
-    [Header("Enemy Content")]
-    [SerializeField] private Text m_enemyCountTxt;
+    [Header("Actor Content")]
+    [SerializeField] private Text m_ActorCountTxt;
     [SerializeField] private Button m_killAllBtn;
     [SerializeField] private Text m_selelectedName;
     [SerializeField] private Button[] m_toggleSelectedButtons;
@@ -129,8 +131,8 @@ public class DebugMenu : MonoBehaviour
         }
         m_timeSlider.interactable = m_timeCheck.isOn;
 
-        int count = ActorManager.instance.m_subscribed.Count;
-        m_enemyCountTxt.text = count.ToString();
+        int count = ActorManager.Instance.m_subscribed.Count;
+        m_ActorCountTxt.text = count.ToString();
         m_killAllBtn.interactable = count > 0;
 
         HUDManager.instance.gameObject.SetActive(!m_HudCheck.isOn);
@@ -207,16 +209,16 @@ public class DebugMenu : MonoBehaviour
 
     public void ColorBlindChange()
     {
-        GetComponent<Colorblindness>().Change(m_colorBlindList.value);
+        //GetComponent<Colorblindness>().Change(m_colorBlindList.value);
     }
 
     public void KillAllEnemies()
     {
-        ActorManager.instance.KillAll();
+        ActorManager.Instance.KillAll();
     }
     public void KillSelected()
     {
-        ActorManager.instance.Kill(m_selected.GetComponentInParent<Actor>());
+        ActorManager.Instance.Kill(m_selected.GetComponentInParent<ActorSystem.AI.Actor>());
         m_selected = null;
         m_toggleSelectedButtons[0].interactable = false;
         m_toggleSelectedButtons[1].interactable = false;
