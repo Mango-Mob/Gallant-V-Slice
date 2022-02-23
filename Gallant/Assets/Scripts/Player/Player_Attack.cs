@@ -59,8 +59,8 @@ public class Player_Attack : MonoBehaviour
         playerController = GetComponent<Player_Controller>();
         //m_boomerangeProjectilePrefab = Resources.Load<GameObject>("Abilities/BoomerangProjectile");
 
-        m_leftWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponL");
-        m_rightWeaponIcon = HUDManager.instance.GetElement<UI_WeaponIcon>("WeaponR");
+        m_leftWeaponIcon = HUDManager.Instance.GetElement<UI_WeaponIcon>("WeaponL");
+        m_rightWeaponIcon = HUDManager.Instance.GetElement<UI_WeaponIcon>("WeaponR");
     }
 
     private void Start()

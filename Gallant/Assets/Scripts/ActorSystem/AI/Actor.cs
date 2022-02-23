@@ -9,8 +9,8 @@ namespace ActorSystem.AI
     {
         public CombatSystem.Faction m_myFaction;
         public bool m_toReserveOnLoad = false;
-        public Actor_Brain m_myBrain { get; private set; }
-        public Actor_SpawnMethod m_mySpawn { get; private set; }
+        public Actor_Brain m_myBrain { get; protected set; }
+        public Actor_SpawnMethod m_mySpawn { get; protected set; }
         public ActorSpawner m_lastSpawner { get; set; }
 
         public uint m_myLevel = 0;
@@ -23,7 +23,7 @@ namespace ActorSystem.AI
 
         public List<State.Type> m_states { get; private set; }
 
-        public void Awake()
+        protected virtual void Awake()
         {
             m_myBrain = GetComponent<Actor_Brain>();
             m_mySpawn = GetComponent<Actor_SpawnMethod>();
@@ -47,7 +47,7 @@ namespace ActorSystem.AI
             m_states = new List<State.Type>(m_myData.m_states);
         }
 
-        public void Start()
+        protected virtual void Start()
         {
             //Start Statemachine
             SetState(m_myData.m_initialState);
@@ -60,7 +60,7 @@ namespace ActorSystem.AI
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
-        public void Update()
+        protected virtual void Update()
         {
             m_myBrain.Update();
 

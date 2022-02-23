@@ -14,41 +14,11 @@ using UnityEngine;
 /// Note: Agents/Listeners are incharge of being added/removed when they are awake/destroyed. 
 /// </summary>
 /// 
-public class AudioManager
+public class AudioManager : SingletonPersistent<AudioManager>
 {
-    #region Singleton
-    private static AudioManager _instance;
-
-    public static AudioManager instance 
-    { 
-        get 
-        {
-            if (_instance == null)
-            {
-                _instance = new AudioManager();
-            }
-
-            return _instance;
-        } 
-    }
-
-    public static void DestroyInstance()
-    {
-        _instance.OnDestroy();
-        _instance = null;
-    }
-
-    private AudioManager()
-    {
-        agents = new List<AudioAgent>();
-        listeners = new List<ListenerAgent>();
-        Awake();
-    }
-    #endregion
-
     //Agent and listener lists:
-    public List<AudioAgent> agents { get; private set; }
-    public List<ListenerAgent> listeners { get; private set; }
+    public List<AudioAgent> agents { get; private set; } = new List<AudioAgent>();
+    public List<ListenerAgent> listeners { get; private set; } = new List<ListenerAgent>();
 
     //private array of volumes
     public float[] volumes;
@@ -66,8 +36,9 @@ public class AudioManager
     /// <summary>
     /// Called imediately after creation in the constructor
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         volumes = new float[Enum.GetNames(typeof(AudioManager.VolumeChannel)).Length];
         for (int i = 0; i < volumes.Length; i++)
         {

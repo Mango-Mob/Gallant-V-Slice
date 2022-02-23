@@ -34,10 +34,10 @@ public class Player_Resources : MonoBehaviour
 
     private void Awake()
     {
-        healthBar = HUDManager.instance.GetElement<UI_Bar>("HP");
-        barrierBar = HUDManager.instance.GetElement<UI_Bar>("Barrier");
-        portrait = HUDManager.instance.GetElement<UI_PortraitHP>("Portrait");
-        adrenalineOrbs = HUDManager.instance.GetElement<UI_OrbCount>("Adrenaline");
+        healthBar = HUDManager.Instance.GetElement<UI_Bar>("HP");
+        barrierBar = HUDManager.Instance.GetElement<UI_Bar>("Barrier");
+        portrait = HUDManager.Instance.GetElement<UI_PortraitHP>("Portrait");
+        adrenalineOrbs = HUDManager.Instance.GetElement<UI_OrbCount>("Adrenaline");
     }
     // Start is called before the first frame update
     void Start()
@@ -94,7 +94,7 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            LevelLoader.instance.LoadNewLevel("EndScreen", LevelLoader.Transition.YOUDIED);
+            LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
@@ -125,7 +125,7 @@ public class Player_Resources : MonoBehaviour
     IEnumerator BackToMenu()
     {
         yield return new WaitForSecondsRealtime(3);
-        LevelLoader.instance.LoadNewLevel("MainMenu", LevelLoader.Transition.YOUDIED);
+        LevelManager.Instance.LoadNewLevel("MainMenu", LevelManager.Transition.YOUDIED);
     }
 
     /*******************

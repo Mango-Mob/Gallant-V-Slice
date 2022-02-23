@@ -56,7 +56,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!InputManager.instance.isInGamepadMode)
+        if (!InputManager.Instance.isInGamepadMode)
         {
             SelectSkill();
         }

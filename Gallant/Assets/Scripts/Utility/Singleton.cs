@@ -7,6 +7,7 @@
  *		An abstract class representation of a singleton class, which would be used as a class parent.
  *		This code was adopted from the video: https://www.youtube.com/watch?v=tE1qH8OxO2Y
  */
+
 public abstract class Singleton<T> : MonoBehaviour where T :  MonoBehaviour
 {
     public static T Instance { get; set; }
@@ -42,8 +43,11 @@ public abstract class SingletonPersistent<T> : Singleton<T> where T : MonoBehavi
             Destroy(gameObject);
             return;
         }
-        
-        DontDestroyOnLoad(gameObject);
+
+        if(transform.parent != null)
+            DontDestroyOnLoad(transform.parent.gameObject);
+        else
+            DontDestroyOnLoad(gameObject);
 
         base.Awake();
     }

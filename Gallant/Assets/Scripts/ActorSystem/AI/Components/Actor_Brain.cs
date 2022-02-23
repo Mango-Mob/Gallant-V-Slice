@@ -24,6 +24,9 @@ namespace ActorSystem.AI.Components
         public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
         public Actor_Material m_material { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
+
+        public Actor_PatrolData m_patrol {get; private set;}
+
         public MultiAudioAgent m_audioAgent { get; private set; }
         public Outline m_myOutline { get; private set; }
         #endregion
@@ -55,6 +58,7 @@ namespace ActorSystem.AI.Components
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponentInChildren<MultiAudioAgent>();
             m_myOutline = GetComponentInChildren<Outline>();
+            m_patrol = GetComponentInChildren<Actor_PatrolData>();
 
             SetOutlineEnabled(false);
         }
@@ -81,6 +85,7 @@ namespace ActorSystem.AI.Components
         {
             SetEnabled(false);
         }
+
 
         private void SetEnabled(bool status)
         {
@@ -251,6 +256,7 @@ namespace ActorSystem.AI.Components
 
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();
+            GetComponentInChildren<Actor_PatrolData>()?.DrawGizmos();
         }
     }
 }

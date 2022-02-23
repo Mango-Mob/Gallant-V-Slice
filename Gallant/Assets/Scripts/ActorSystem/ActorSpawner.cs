@@ -13,31 +13,12 @@ namespace ActorSystem
 {
     public class ActorSpawner : MonoBehaviour
     {
-        //public const float budgetPerDepth = 100f;
-        //public bool IsRoom = true;
-        //
-        //public float m_spawnWidth = 0.25f;
-        //public float m_spawnArcHeight = 5.0f;
-        //public float m_distOffEdge = 1.0f;
-        //public float m_spawnDelay = 1.0f;
-        //
-        //public GameObject m_ActorToSpawn;
-        //
-        //private Player_Controller m_player = null;
-        //public GameObject m_gatePrefab;
-        //public GameObject[] m_gatesLoc;
-        //
         public bool m_spawnOnAwake = false;
         public bool m_isSphere = true;
         public float m_innerRadius = 10.0f;
         public float m_innerHeight = 0;
         public float m_outerRadius = 10.0f;
-        //public Vector3 m_size = new Vector3(1f, 1f, 1f);
-        //
-        //public RewardWindow m_reward;
-        //
-        //public int m_spawnSpots = 12;
-        //
+
         [Header("Wave Information")]
         public bool m_generateWavesOnAwake = false;
         public List<RoomData> m_waves = new List<RoomData>();
@@ -51,15 +32,12 @@ namespace ActorSystem
         
             public Vector3 m_forward;
         }
-        //private bool m_hasCombatStarted = false;
-        //private Coroutine m_isSpawning = null;
-        //
+
         private bool m_hasStarted = false;
 
         public uint m_spawnLocationCount;
         private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
-        //private List<Actor> m_enemies = new List<Actor>();
-
+        
         private void Awake()
         {
             for (int i = 0; i < m_spawnLocationCount; i++)
@@ -69,12 +47,16 @@ namespace ActorSystem
             m_myActors = new List<Actor>();
             if (m_spawnOnAwake && m_waves.Count > 0)
             {
-                var wave = m_waves[0];
-                m_waves.RemoveAt(0);
-
-                SpawnWave(wave);
+                StartCombat();
             }
             
+        }
+        public void StartCombat()
+        {
+            var wave = m_waves[0];
+            m_waves.RemoveAt(0);
+
+            SpawnWave(wave);
         }
 
         private void CreateSpawn()
@@ -160,7 +142,7 @@ namespace ActorSystem
                     //Get/Create actor in the reserves
                     Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
                     m_myActors.Add(spawn);
-                    spawn.SetTarget(GameManager.instance.m_player);
+                    spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;
 
                     //Start Spawn animation
