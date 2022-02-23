@@ -41,6 +41,7 @@ namespace ActorSystem.AI
             else
             {
                 ActorManager.Instance.Subscribe(this);
+                m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
                 m_myBrain.enabled = true;
             }
                 
@@ -112,7 +113,7 @@ namespace ActorSystem.AI
         {
             if(!m_myBrain.IsDead)
             {
-                if(m_myBrain.HandleDamage(_damage, _type))
+                if(m_myBrain.HandleDamage(_damage, _type, _damageLoc))
                 {
                     //Fatal Damage
                     m_myBrain.PlaySoundEffect(m_myData.deathSoundName);

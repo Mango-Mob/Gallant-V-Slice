@@ -119,8 +119,12 @@ namespace ActorSystem.AI.Components
 
         private void UpdateExternals()
         {
-            m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
-            m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
+            if(m_animator != null && m_animator.m_hasVelocity)
+            {
+                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
+                m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
+            }
+
             m_ui?.SetBar("Health", (float) m_currHealth / m_startHealth);
             m_tracker?.RecordResistance(m_currPhyResist, m_currAbilResist);
         }
@@ -154,7 +158,8 @@ namespace ActorSystem.AI.Components
             //projScource
 
             //Material
-            m_material.RefreshColor();
+            m_material?.RefreshColor();
+            
             //UI
 
             //Colliders
@@ -208,7 +213,7 @@ namespace ActorSystem.AI.Components
             m_arms.m_activeAttack = null;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type)
+        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null)
         {
             switch (_type)
             {
@@ -228,6 +233,13 @@ namespace ActorSystem.AI.Components
             m_tracker?.RecordDamage(damage);
             m_material?.ShowHit();
 
+            //Hit animation
+            if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
+            {
+                m_animator.SetTrigger("Hit");
+                m_animator.SetVector3("HitHorizontal", "", "HitVertical", (transform.position.DirectionTo(_damageLoc.Value)).normalized);
+            }
+
             //Internal
             m_currHealth -= damage;
 
@@ -242,6 +254,8 @@ namespace ActorSystem.AI.Components
 
         public bool PlaySoundEffect(string soundName)
         {
+            if (m_audioAgent == null)
+                return false;
             return m_audioAgent.Play(soundName, false, UnityEngine.Random.Range(0.75f, 1.25f));
         }
 
