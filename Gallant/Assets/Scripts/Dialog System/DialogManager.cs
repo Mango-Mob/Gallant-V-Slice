@@ -17,7 +17,8 @@ public class DialogManager : Singleton<DialogManager>
 {
     public UnityEvent m_interact;
     public GameObject m_defaultSelected;
-    public Player_Controller m_player; 
+
+    private Player_Controller m_player; 
 
     [SerializeField] private GameObject m_window;
     [SerializeField] private Text m_characterName;
@@ -37,6 +38,7 @@ public class DialogManager : Singleton<DialogManager>
     void Awake()
     {
         m_optionResult = new DialogResult[m_options.Length];
+        m_player = FindObjectOfType<Player_Controller>();
         Hide();
     }
 

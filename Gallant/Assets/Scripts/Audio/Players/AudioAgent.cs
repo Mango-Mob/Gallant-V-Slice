@@ -32,6 +32,6 @@ public abstract class AudioAgent : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        AudioManager.Instance.agents.Remove(this);
+        AudioManager.Instance?.agents.Remove(this);
     }
 }

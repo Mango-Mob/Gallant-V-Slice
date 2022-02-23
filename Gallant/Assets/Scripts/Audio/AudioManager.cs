@@ -16,15 +16,9 @@ using UnityEngine;
 /// 
 public class AudioManager : SingletonPersistent<AudioManager>
 {
-    private AudioManager()
-    {
-        agents = new List<AudioAgent>();
-        listeners = new List<ListenerAgent>();
-    }
-
     //Agent and listener lists:
-    public List<AudioAgent> agents { get; private set; }
-    public List<ListenerAgent> listeners { get; private set; }
+    public List<AudioAgent> agents { get; private set; } = new List<AudioAgent>();
+    public List<ListenerAgent> listeners { get; private set; } = new List<ListenerAgent>();
 
     //private array of volumes
     public float[] volumes;
@@ -42,8 +36,9 @@ public class AudioManager : SingletonPersistent<AudioManager>
     /// <summary>
     /// Called imediately after creation in the constructor
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         volumes = new float[Enum.GetNames(typeof(AudioManager.VolumeChannel)).Length];
         for (int i = 0; i < volumes.Length; i++)
         {
