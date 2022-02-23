@@ -5890,101 +5890,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!1 &266998167
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 266998169}
-  - component: {fileID: 266998168}
-  - component: {fileID: 266998171}
-  - component: {fileID: 266998170}
-  m_Layer: 0
-  m_Name: JukeBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &266998168
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266998167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f54dbe7d254596446a83150b0efc484e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: e6b4900435640264eb332842089ce45f, type: 3}
-  - {fileID: 8300000, guid: f91044f853090db4d875fa588b2b41b4, type: 3}
-  - {fileID: 8300000, guid: ace26fea508c827438cfdd337f525cd4, type: 3}
-  isShuffled: 1
-  isPlayingOnAwake: 1
-  isLoopingQueue: 1
-  hasFadeTransitions: 1
-  fadeTime: 2
-  currentlyPlaying: {fileID: 0}
---- !u!4 &266998169
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266998167}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -74.40073, y: 14.670295, z: -17.014906}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &266998170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266998167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 370b26308fce24240b09c5c125353ca8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_normalAgent: {fileID: 266998168}
-  m_combatAgent: {fileID: 266998171}
---- !u!114 &266998171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 266998167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f54dbe7d254596446a83150b0efc484e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1620fe5d5c48ef0449f43fad4449d205, type: 3}
-  - {fileID: 8300000, guid: 8a2ef0d57bceda0409f4f8d7935901ee, type: 3}
-  - {fileID: 8300000, guid: 8a2ef0d57bceda0409f4f8d7935901ee, type: 3}
-  isShuffled: 0
-  isPlayingOnAwake: 0
-  isLoopingQueue: 1
-  hasFadeTransitions: 1
-  fadeTime: 1
-  currentlyPlaying: {fileID: 0}
 --- !u!1 &278388765
 GameObject:
   m_ObjectHideFlags: 0
@@ -12609,23 +12514,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 1
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 7
-  m_distOffEdge: 6
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc:
-  - {fileID: 189773868}
-  - {fileID: 1928078133}
+  m_spawnOnAwake: 0
   m_isSphere: 1
-  m_radius: 10
-  m_size: {x: 1, y: 1, z: 1}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 12
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: 93af370db860a58409aeb83127f2e9f9, type: 2}
@@ -12643,6 +12536,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+  m_spawnLocationCount: 0
 --- !u!114 &609650515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12655,13 +12549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
-  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
-  audioPlayersCount: 5
-  channel: 1
 --- !u!1 &611624729
 GameObject:
   m_ObjectHideFlags: 0
@@ -14856,23 +14743,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 1
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 7
-  m_distOffEdge: 6
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc:
-  - {fileID: 884879560}
-  - {fileID: 1632662769}
+  m_spawnOnAwake: 0
   m_isSphere: 1
-  m_radius: 10
-  m_size: {x: 1, y: 1, z: 1}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 12
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
@@ -14891,6 +14766,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+  m_spawnLocationCount: 0
 --- !u!114 &709587191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14903,13 +14779,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
-  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
-  audioPlayersCount: 5
-  channel: 1
 --- !u!1001 &711645421
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18310,25 +18179,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 0
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 5
-  m_distOffEdge: 7
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc: []
+  m_spawnOnAwake: 0
   m_isSphere: 0
-  m_radius: 10.49
-  m_size: {x: 3, y: 12, z: 10.32}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 6
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   m_allWaves: []
+  m_spawnLocationCount: 0
 --- !u!1 &902849963
 GameObject:
   m_ObjectHideFlags: 0
@@ -18522,7 +18382,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &913245016
 GameObject:
@@ -19113,7 +18973,7 @@ PrefabInstance:
     - target: {fileID: 3122777058140226026, guid: 966bbe4cc42877b4eaee1a85c8c220c8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3122777058140226026, guid: 966bbe4cc42877b4eaee1a85c8c220c8,
         type: 3}
@@ -19601,7 +19461,7 @@ PrefabInstance:
     - target: {fileID: 5204776554062361180, guid: ec56284fc0c7885499c5be96df41bf75,
         type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5204776554062361180, guid: ec56284fc0c7885499c5be96df41bf75,
         type: 3}
@@ -22347,7 +22207,7 @@ PrefabInstance:
     - target: {fileID: 784156540860714275, guid: fed0e52f9a45495449aa88ad8f390e36,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 784156540860714275, guid: fed0e52f9a45495449aa88ad8f390e36,
         type: 3}
@@ -24169,28 +24029,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 1
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 6
-  m_distOffEdge: 7
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc:
-  - {fileID: 520676495}
-  - {fileID: 916144673}
+  m_spawnOnAwake: 0
   m_isSphere: 0
-  m_radius: 10.49
-  m_size: {x: 17, y: 12, z: 17}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 12
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: a215ef52fd9951b41b7fe85e2ae65a4b, type: 2}
   - {fileID: 11400000, guid: d7a1392e8c174e045ad5d2c4e8099267, type: 2}
   m_allWaves: []
+  m_spawnLocationCount: 0
 --- !u!114 &1175759033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24203,13 +24052,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
-  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
-  audioPlayersCount: 5
-  channel: 1
 --- !u!1001 &1176753528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26765,7 +26607,7 @@ PrefabInstance:
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
@@ -26970,23 +26812,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 1
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 7
-  m_distOffEdge: 6
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc:
-  - {fileID: 613600956}
-  - {fileID: 99481706}
+  m_spawnOnAwake: 0
   m_isSphere: 1
-  m_radius: 10
-  m_size: {x: 1, y: 1, z: 1}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 12
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: 678af0f355d65a6478122fab3b91d78a, type: 2}
@@ -27005,6 +26835,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 0a20a80d2da459c4bacc120d57b3ba1a, type: 2}
   - {fileID: 11400000, guid: d41c514559f12cb49be796231cb664b6, type: 2}
+  m_spawnLocationCount: 0
 --- !u!114 &1261976689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27017,13 +26848,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
-  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
-  audioPlayersCount: 5
-  channel: 1
 --- !u!1 &1264295226
 GameObject:
   m_ObjectHideFlags: 0
@@ -30717,7 +30541,7 @@ PrefabInstance:
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
@@ -34298,23 +34122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 1
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 7
-  m_distOffEdge: 6.5
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc:
-  - {fileID: 1004746077}
-  - {fileID: 1634048822}
+  m_spawnOnAwake: 0
   m_isSphere: 0
-  m_radius: 10.49
-  m_size: {x: 17, y: 12, z: 17}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 12
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: 93af370db860a58409aeb83127f2e9f9, type: 2}
@@ -34322,6 +34134,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd041b1c19738745b5dc2b93c40f2ce, type: 2}
   - {fileID: 11400000, guid: 3f18590cc01f5fc4bafcba00b4015820, type: 2}
   m_allWaves: []
+  m_spawnLocationCount: 0
 --- !u!114 &1664141007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34334,13 +34147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20c936e73eec43a43969c7948e51a2a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localVolume: 1
-  isMuted: 0
-  audioClips:
-  - {fileID: 8300000, guid: 1d013dc70ee080b41bffb39500eac3ef, type: 3}
-  - {fileID: 8300000, guid: 4e2ccbe127cd26c42a7f840c6d93777a, type: 3}
-  audioPlayersCount: 5
-  channel: 1
 --- !u!1 &1684535717
 GameObject:
   m_ObjectHideFlags: 0
@@ -35253,7 +35059,7 @@ PrefabInstance:
     - target: {fileID: 3138227222214540014, guid: 976291119e1ad794ea9ff19bedd01b52,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3138227222214540014, guid: 976291119e1ad794ea9ff19bedd01b52,
         type: 3}
@@ -36373,7 +36179,7 @@ Transform:
   m_LocalScale: {x: 315.67, y: 31.567001, z: 315.67}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1749734626
 Mesh:
@@ -37796,7 +37602,7 @@ Transform:
   - {fileID: 47671052}
   - {fileID: 1182695970}
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1806901362
 GameObject:
@@ -38747,7 +38553,7 @@ PrefabInstance:
     - target: {fileID: 5451947888403104000, guid: 1547ab1580f227845a678ee6d41eb512,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10.599991
+      value: -10.599976
       objectReference: {fileID: 0}
     - target: {fileID: 8708556840322106731, guid: 1547ab1580f227845a678ee6d41eb512,
         type: 3}
@@ -38762,7 +38568,7 @@ PrefabInstance:
     - target: {fileID: 8708556840322106731, guid: 1547ab1580f227845a678ee6d41eb512,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8708556840322106731, guid: 1547ab1580f227845a678ee6d41eb512,
         type: 3}
@@ -39126,6 +38932,80 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.1543884, y: 4.3574157, z: 1}
   m_Center: {x: 0.032903194, y: 1.6787078, z: 0}
+--- !u!1001 &1860173617
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3669931664670741379, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459603, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_Name
+      value: '[Persistent]'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.086838
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.7711792
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.931701
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3669931665668459604, guid: fadfe93328323f84fb64e4aa1fe2de39,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: fadfe93328323f84fb64e4aa1fe2de39, type: 3}
 --- !u!1 &1864799761
 GameObject:
   m_ObjectHideFlags: 0
@@ -39276,25 +39156,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsRoom: 0
-  m_spawnWidth: 0.25
-  m_spawnArcHeight: 5
-  m_distOffEdge: 7
-  m_spawnDelay: 1
-  m_EnemyToSpawn: {fileID: 5595821131953300022, guid: 39fd45ee7479be94c9ac25963b5f53e9,
-    type: 3}
-  m_gatePrefab: {fileID: 6107947655587794568, guid: ee35e46cd0c976247a77b637a7c88ed1,
-    type: 3}
-  m_gatesLoc: []
+  m_spawnOnAwake: 0
   m_isSphere: 0
-  m_radius: 10.49
-  m_size: {x: 3, y: 12, z: 10.32}
-  m_reward: {fileID: 0}
-  m_spawnSpots: 6
+  m_innerRadius: 10
+  m_innerHeight: 0
+  m_outerRadius: 10
   m_generateWavesOnAwake: 0
   m_waves:
   - {fileID: 11400000, guid: 84ad4e8940fd6a24f8d66bd3d8f43c12, type: 2}
   m_allWaves: []
+  m_spawnLocationCount: 0
 --- !u!1 &1877528609
 GameObject:
   m_ObjectHideFlags: 0
@@ -41554,7 +41425,7 @@ PrefabInstance:
     - target: {fileID: 1028010017793307940, guid: 7fcd1ffa0f2563e40acae93882e01333,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1028010017793307940, guid: 7fcd1ffa0f2563e40acae93882e01333,
         type: 3}
@@ -43852,7 +43723,7 @@ PrefabInstance:
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5621392534781662893, guid: ef6a238437c52d64c838d053462c1e4a,
         type: 3}
@@ -43936,7 +43807,7 @@ PrefabInstance:
     - target: {fileID: 413747602781867472, guid: d7005e73eaa741c4c9201744ff6e8c1d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 413747602781867472, guid: d7005e73eaa741c4c9201744ff6e8c1d,
         type: 3}
@@ -44086,7 +43957,7 @@ PrefabInstance:
     - target: {fileID: 5439820900890325189, guid: e26eedfa2fbf57247bd737bfad18ff6f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 5439820900890325189, guid: e26eedfa2fbf57247bd737bfad18ff6f,
         type: 3}
@@ -44150,7 +44021,7 @@ PrefabInstance:
     - target: {fileID: 2532539526850058407, guid: 50466ce95cac31747b6e966e484e6d96,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2532539526850058407, guid: 50466ce95cac31747b6e966e484e6d96,
         type: 3}
