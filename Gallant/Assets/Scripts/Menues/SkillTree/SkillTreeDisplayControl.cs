@@ -76,15 +76,15 @@ public class SkillTreeDisplayControl : MonoBehaviour
         // Debug Thing
 
 #if UNITY_EDITOR
-        if (InputManager.instance.IsKeyDown(KeyType.NUM_ONE))
+        if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
             PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + 1);
         }
 #endif
 
-        int gamepadID = InputManager.instance.GetAnyGamePad();
+        int gamepadID = InputManager.Instance.GetAnyGamePad();
 
-        int tabChange = (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) ? 1 : 0) - (InputManager.instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) ? 1 : 0);
+        int tabChange = (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) ? 1 : 0) - (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) ? 1 : 0);
 
         if (tabChange != 0)
         {
@@ -95,7 +95,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             SelectTab(m_selectedTree);
         }
 
-        if (InputManager.instance.isInGamepadMode)
+        if (InputManager.Instance.isInGamepadMode)
         {
             if (eventSystem.currentSelectedGameObject != null)
             {
@@ -107,7 +107,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             }
         }
 
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
+        if (InputManager.Instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
         {
             m_selectedTreeManager.RefundTree();
         }

@@ -35,9 +35,9 @@ public class ItemReward : Reward
     public override void GiveReward()
     {
         m_activePlayer?.playerStats.AddEffect(m_currentlyLoaded.itemEffect);
-        GetComponentInParent<RewardWindow>().Hide();
+        RewardManager.Instance.Hide();
         if(m_activePlayer != null)
-            AudioManager.instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
+            AudioManager.Instance.PlayAudioTemporary(m_activePlayer.transform.position, m_collectAudio);
     }
 
     public override void Select()

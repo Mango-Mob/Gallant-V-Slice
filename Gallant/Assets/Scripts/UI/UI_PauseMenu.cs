@@ -17,7 +17,7 @@ public class UI_PauseMenu : MonoBehaviour
         Time.timeScale = state ? 0.0f : 1.0f;
         m_window.SetActive(state);
 
-        if(state && InputManager.instance.isInGamepadMode)
+        if(state && InputManager.Instance.isInGamepadMode)
             EventSystem.current.SetSelectedGameObject(m_defaultButton);
 
         m_tomeList.UpdateTomes();
@@ -32,7 +32,7 @@ public class UI_PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.instance.IsKeyDown(KeyType.ESC) || InputManager.instance.IsGamepadButtonDown(ButtonType.START, 0))
+        if(InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsGamepadButtonDown(ButtonType.START, 0))
         {
             SetPause(!m_window.activeInHierarchy);
         }
@@ -40,11 +40,11 @@ public class UI_PauseMenu : MonoBehaviour
 
         if(!m_settingsPannel.activeInHierarchy && isPaused)
         {
-            if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
             {
                 EventSystem.current.SetSelectedGameObject(m_defaultButton);
             }
-            else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
             {
                 EventSystem.current.SetSelectedGameObject(null);
             }

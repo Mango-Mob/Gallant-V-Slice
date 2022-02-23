@@ -38,7 +38,6 @@ Transform:
   - {fileID: 5955961712723218781}
   - {fileID: 3574868707034163188}
   - {fileID: 4420697682845702503}
-  - {fileID: 4854740160002718583}
   - {fileID: 4569781735253942649}
   m_Father: {fileID: 5302256944339937360}
   m_RootOrder: 0
@@ -326,7 +325,7 @@ Transform:
   m_LocalScale: {x: 0.33333334, y: 0.33333328, z: 0.33333334}
   m_Children: []
   m_Father: {fileID: 636058690149074615}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &7228832789584330799
 SpriteRenderer:
@@ -523,6 +522,7 @@ GameObject:
   - component: {fileID: 8225608181132625627}
   - component: {fileID: 1861749315134274770}
   - component: {fileID: 525051355736049913}
+  - component: {fileID: 1229772486208324457}
   m_Layer: 9
   m_Name: SwampRangeMinion
   m_TagString: Boss
@@ -542,6 +542,7 @@ Transform:
   m_LocalScale: {x: 1.05, y: 1.05, z: 1.05}
   m_Children:
   - {fileID: 5302256944339937360}
+  - {fileID: 4854740160002718583}
   - {fileID: 8002090133842338867}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -701,6 +702,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7f1e4e353cb9a4b4abf161c31b7d69fd, type: 3}
   audioPlayersCount: 5
   channel: 1
+--- !u!114 &1229772486208324457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237379620533641641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64f2ea71c47602f4588f1e1cf03770d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_height: 5
 --- !u!1 &1290070057181141865
 GameObject:
   m_ObjectHideFlags: 0
@@ -2364,7 +2378,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1237379620533641653}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8435913095978226251
 GameObject:
@@ -2463,7 +2477,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 636058690149074615}
+    m_TransformParent: {fileID: 1237379620533641653}
     m_Modifications:
     - target: {fileID: 5016897514871456098, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
@@ -2483,7 +2497,7 @@ PrefabInstance:
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
@@ -2574,6 +2588,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016897514871456111, guid: d387efa772994064986990a62bdc8bcd,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016897514968805802, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}

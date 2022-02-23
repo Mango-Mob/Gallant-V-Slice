@@ -27,7 +27,7 @@ public class KeyBindOption : MonoBehaviour
             m_slots[1].gameObject.SetActive(false);
         }
 
-        InputManager.Bind[] array = InputManager.instance.GetBinds(m_bindID);
+        InputManager.Bind[] array = InputManager.Instance.GetBinds(m_bindID);
         m_myBinds = (array != null) ? new List<InputManager.Bind>(array) : new List<InputManager.Bind>();
         for (int i = 0; i < m_slots.Length; i++)
         {
@@ -75,13 +75,13 @@ public class KeyBindOption : MonoBehaviour
             int listener = m_isListening;
             if (m_stickOnly)
             {
-                StickType stickResult = InputManager.instance.IsAnyGameStickInput(InputManager.instance.GetAnyGamePad());
+                StickType stickResult = InputManager.Instance.IsAnyGameStickInput(InputManager.Instance.GetAnyGamePad());
                 if (stickResult != StickType.NONE)
                 {
                     m_isListening = -1;
                     UpdateStickDisplay(stickResult, listener);
                 }
-                MouseButton buttonResult = InputManager.instance.IsAnyMouseButtonDown();
+                MouseButton buttonResult = InputManager.Instance.IsAnyMouseButtonDown();
                 if (buttonResult != MouseButton.NONE)
                 {
                     m_isListening = -1;
@@ -92,9 +92,9 @@ public class KeyBindOption : MonoBehaviour
             }
             else
             {
-                KeyType keyResult = InputManager.instance.IsAnyKeyDown();
-                ButtonType padResult = InputManager.instance.IsAnyGamePadInput(InputManager.instance.GetAnyGamePad());
-                MouseButton buttonResult = InputManager.instance.IsAnyMouseButtonDown();
+                KeyType keyResult = InputManager.Instance.IsAnyKeyDown();
+                ButtonType padResult = InputManager.Instance.IsAnyGamePadInput(InputManager.Instance.GetAnyGamePad());
+                MouseButton buttonResult = InputManager.Instance.IsAnyMouseButtonDown();
                 if (keyResult != KeyType.NONE && !m_controllerOnly)
                 {
                     m_isListening = -1;
@@ -121,12 +121,12 @@ public class KeyBindOption : MonoBehaviour
                 UpdateInputManager();
             }
         }
-        else if(InputManager.instance.bindHasUpdated)
+        else if(InputManager.Instance.bindHasUpdated)
         {
             hasQueuedRefresh = true;
         }
 
-        if(hasQueuedRefresh && !InputManager.instance.bindHasUpdated)
+        if(hasQueuedRefresh && !InputManager.Instance.bindHasUpdated)
         {
             Start();
         }
@@ -134,14 +134,14 @@ public class KeyBindOption : MonoBehaviour
 
     private void UpdateInputManager()
     {
-        InputManager.instance.SetBinds(m_bindID, m_myBinds.ToArray());
+        InputManager.Instance.SetBinds(m_bindID, m_myBinds.ToArray());
     }
 
     private void UpdateKeyboardDisplay(KeyType keyResult, int listener)
     {
 
         if (keyResult != KeyType.NONE && keyResult != KeyType.TILDE)
-            m_textSlot[listener].text = InputManager.instance.GetKeyString(keyResult);
+            m_textSlot[listener].text = InputManager.Instance.GetKeyString(keyResult);
         else
         {
             m_isListening = listener;
@@ -158,7 +158,7 @@ public class KeyBindOption : MonoBehaviour
     private void UpdateGamepadDisplay(ButtonType padResult, int listener)
     {
         if (padResult != ButtonType.NONE)
-            m_imageSlot[listener].sprite = InputManager.instance.GetGamepadSprite(padResult);
+            m_imageSlot[listener].sprite = InputManager.Instance.GetGamepadSprite(padResult);
         else
         {
             m_isListening = listener;
@@ -177,7 +177,7 @@ public class KeyBindOption : MonoBehaviour
     private void UpdateMouseDisplay(MouseButton buttonResult, int listener)
     {
         if (buttonResult != MouseButton.NONE)
-            m_textSlot[listener].text = InputManager.instance.GetMouseButtonString(buttonResult);
+            m_textSlot[listener].text = InputManager.Instance.GetMouseButtonString(buttonResult);
         else
         {
             m_isListening = listener;
@@ -194,7 +194,7 @@ public class KeyBindOption : MonoBehaviour
     private void UpdateStickDisplay(StickType stickResult, int listener)
     {
         if (stickResult != StickType.NONE)
-            m_imageSlot[listener].sprite = InputManager.instance.GetGameStickSprite(stickResult);
+            m_imageSlot[listener].sprite = InputManager.Instance.GetGameStickSprite(stickResult);
         else
         {
             m_isListening = listener;

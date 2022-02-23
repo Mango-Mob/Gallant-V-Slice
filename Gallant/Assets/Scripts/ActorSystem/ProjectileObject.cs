@@ -47,7 +47,7 @@ public class ProjectileObject : MonoBehaviour
             AttackData.ApplyEffect(player, transform, m_damageDetails.effectAfterwards, m_damageDetails.effectPower);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
 
-            AudioManager.instance.PlayAudioTemporary(transform.position, m_hitSound);
+            AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);
             Destroy(gameObject);
         }
     }

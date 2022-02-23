@@ -17,7 +17,7 @@ public class KillPlane : MonoBehaviour
             if(canRespawnColliders)
             {
                 other.GetComponent<Actor>().DealDamage(damageOnHit, CombatSystem.DamageType.True, CombatSystem.Faction.Passive);
-                other.GetComponent<Actor>().Respawn();
+                other.GetComponent<Actor>().Respawn(false);
             }
             else
             {

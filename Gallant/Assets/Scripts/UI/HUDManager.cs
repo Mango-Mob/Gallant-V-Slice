@@ -3,33 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUDManager : MonoBehaviour
+public class HUDManager : Singleton<HUDManager>
 {
-    #region Singleton
-
-    public static HUDManager instance = null;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Debug.LogError("Second Instance of HUDManager was created, this instance was destroyed.");
-            Destroy(this);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        if (instance == this)
-            instance = null;
-    }
-
-    #endregion
-
     [Header("UI Objects")]
     public UI_Element[] m_UIElements;
 
@@ -41,8 +16,8 @@ public class HUDManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 mousePos = InputManager.instance.GetMousePositionInScreen();
-        if (InputManager.instance.IsMouseButtonDown(MouseButton.LEFT))
+        Vector2 mousePos = InputManager.Instance.GetMousePositionInScreen();
+        if (InputManager.Instance.IsMouseButtonDown(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {
@@ -53,7 +28,7 @@ public class HUDManager : MonoBehaviour
                 }
             }
         }
-        else if(InputManager.instance.IsMouseButtonUp(MouseButton.LEFT))
+        else if(InputManager.Instance.IsMouseButtonUp(MouseButton.LEFT))
         {
             foreach (var elements in m_UIElements)
             {
@@ -64,7 +39,7 @@ public class HUDManager : MonoBehaviour
 
     public UI_Element GetElementUnderMouse()
     {
-        Vector2 mousePos = InputManager.instance.GetMousePositionInScreen();
+        Vector2 mousePos = InputManager.Instance.GetMousePositionInScreen();
         foreach (var elements in m_UIElements)
         {
             if (elements.GetComponent<UI_Element>() != null

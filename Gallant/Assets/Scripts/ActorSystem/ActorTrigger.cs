@@ -31,7 +31,7 @@ public class ActorTrigger : MonoBehaviour
         //    {
         //        //m_player.StorePlayerInfo();
         //        //EndScreenMenu.levelReached++;
-        //        //LevelLoader.instance.LoadNewLevel("MainLevel_2");
+        //        //LevelManager.Instance.LoadNewLevel("MainLevel_2");
         //    }
         //}
     }
