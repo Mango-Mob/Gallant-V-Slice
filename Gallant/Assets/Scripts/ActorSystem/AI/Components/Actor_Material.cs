@@ -75,11 +75,15 @@ namespace ActorSystem.AI.Components
             m_current = _col;
             m_myMaterial.color = m_current;
         }
+
         public void RefreshColor()
         {
             m_current = m_default;
             m_myMaterial.color = m_current;
+            m_isDisolving = false;
+            m_myMaterial.SetFloat("Fade", 1.0f);
         }
+
         public void ShowHit()
         {
             if (m_isDisolving)

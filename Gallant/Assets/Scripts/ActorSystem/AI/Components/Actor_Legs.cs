@@ -54,9 +54,12 @@ namespace ActorSystem.AI.Components
             m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
             if(m_delayTimer <= 0)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
-                m_agent.destination = m_targetPosition;
-                m_agent.speed = m_baseSpeed * m_speedModifier;
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
+                    m_agent.destination = m_targetPosition;
+                    m_agent.speed = m_baseSpeed * m_speedModifier;
+                }
 
                 NavMeshHit hit;
                 if(!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
@@ -65,6 +68,20 @@ namespace ActorSystem.AI.Components
                     m_agent.updatePosition = true;
                     m_body.isKinematic = true;
                 }
+            }
+            else
+            {
+                if (m_agent.enabled && m_agent.isOnNavMesh)
+                    m_agent.Warp(transform.position);
+            }
+
+            NavMeshHit hit2;
+            if (NavMesh.FindClosestEdge(transform.position, out hit2, NavMesh.AllAreas) && hit2.distance < 0.15f)
+            {
+                m_agent.updatePosition = false;
+                m_delayTimer = 0.5f;
+                m_body.isKinematic = false;
+                m_body.velocity = m_agent.velocity;
             }
         }
 
@@ -78,6 +95,28 @@ namespace ActorSystem.AI.Components
 
             m_agent.isStopped = false;
             m_agent.velocity = moveVector;
+        }
+
+        public void OnEnable()
+        {
+            m_agent.enabled = true;
+            NavMeshHit hit;
+            if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+            {
+                m_agent.Warp(hit.position);
+                m_agent.updatePosition = true;
+                m_body.isKinematic = true;
+            }
+            else if(!m_agent.updatePosition)
+            {
+                m_body.isKinematic = false;
+            }
+        }
+
+        public void OnDisable()
+        {
+            m_agent.enabled = false;
+            m_body.isKinematic = true;
         }
 
         /*********************
@@ -96,7 +135,8 @@ namespace ActorSystem.AI.Components
          */
         public void Halt()
         {
-            m_agent.isStopped = true;
+            if (m_agent.enabled && m_agent.isOnNavMesh)
+                m_agent.isStopped = true;
         }
 
         /*******************
@@ -107,6 +147,9 @@ namespace ActorSystem.AI.Components
         */
         public void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
         {
+            if (!m_agent.enabled || !m_agent.isOnNavMesh)
+                return;
+
             m_agent.isStopped = false;
             m_targetPosition = target;
 

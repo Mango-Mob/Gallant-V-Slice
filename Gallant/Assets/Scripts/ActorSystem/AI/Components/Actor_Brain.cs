@@ -59,9 +59,10 @@ namespace ActorSystem.AI.Components
             SetOutlineEnabled(false);
         }
 
-        public void Start()
+        public void StartSpawnAnimation()
         {
-            
+            m_animator.enabled = true;
+            m_animator.PlayAnimation("Spawn");
         }
 
         public void Update()
@@ -69,6 +70,46 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
 
+        }
+
+        public void OnEnable()
+        {
+            SetEnabled(true);
+        }
+
+        public void OnDisable()
+        {
+            SetEnabled(false);
+        }
+
+        private void SetEnabled(bool status)
+        {
+            if (m_arms != null)
+                m_arms.enabled = status;
+
+            if (m_legs != null)
+                m_legs.enabled = status;
+
+            if (m_animator != null)
+                m_animator.enabled = status;
+
+            if (m_tracker != null)
+                m_tracker.enabled = status;
+
+            if (m_projSource != null)
+                m_projSource.enabled = status;
+
+            if (m_material != null)
+                m_material.enabled = status;
+
+            if (m_ui != null)
+                m_ui.enabled = status;
+
+            if (m_audioAgent != null)
+                m_audioAgent.enabled = status;
+
+            if (m_myOutline != null)
+                m_myOutline.enabled = status;
         }
 
         private void UpdateExternals()
@@ -108,8 +149,14 @@ namespace ActorSystem.AI.Components
             //projScource
 
             //Material
-
+            m_material.RefreshColor();
             //UI
+
+            //Colliders
+            foreach (var item in GetComponentsInChildren<Collider>())
+            {
+                item.enabled = true;
+            }
 
             //Start
             m_currHealth = m_startHealth;
@@ -136,8 +183,10 @@ namespace ActorSystem.AI.Components
             if (m_arms.m_activeAttack != null)
                 return;
 
-            AttackData data = m_arms.Begin(id);
-            m_animator.PlayAnimation(data.animID);
+            if(m_animator.PlayAnimation(m_arms.m_myData[id].animID))
+            {
+                m_arms.Begin(id);
+            }
         }
 
         public void InvokeAttack()
@@ -177,6 +226,7 @@ namespace ActorSystem.AI.Components
             //Internal
             m_currHealth -= damage;
 
+            m_ui.enabled = !IsDead;
             return IsDead;
         }
 

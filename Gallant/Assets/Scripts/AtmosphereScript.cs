@@ -1,4 +1,4 @@
-﻿using ActorSystem.AI.Components;
+﻿using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
