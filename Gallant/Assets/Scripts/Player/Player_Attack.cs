@@ -9,6 +9,7 @@ public enum Weapon
     SHIELD,
     BOOMERANG,
     CROSSBOW,
+    SPEAR,
 }
 public enum Hand
 {
@@ -119,6 +120,9 @@ public class Player_Attack : MonoBehaviour
                 break;
             case Weapon.CROSSBOW: // Use boomerang
                 animatorTriggerName += "Crossbow";
+                break;
+            case Weapon.SPEAR: // Use spear
+                animatorTriggerName += "Spear";
                 break;
             default:
                 Debug.Log("Weapon not implemented:" + thisData.weaponType);
@@ -253,12 +257,14 @@ public class Player_Attack : MonoBehaviour
         if (playerController.animator.GetBool("RightShield")
             || playerController.animator.GetBool("RightSword")
             || playerController.animator.GetBool("RightBoomerang")
-            || playerController.animator.GetBool("RightCrossbow"))
+            || playerController.animator.GetBool("RightCrossbow")
+            || playerController.animator.GetBool("RightSpear"))
             usingRight = true;
         if (playerController.animator.GetBool("LeftShield")
             || playerController.animator.GetBool("LeftSword") 
             || playerController.animator.GetBool("LeftBoomerang")
-            || playerController.animator.GetBool("LeftCrossbow"))
+            || playerController.animator.GetBool("LeftCrossbow")
+            || playerController.animator.GetBool("LeftSpear"))
             usingLeft = true;
 
         if (usingRight == usingLeft)
@@ -276,42 +282,82 @@ public class Player_Attack : MonoBehaviour
      */
     public void PickUpWeapon(DroppedWeapon _weapon, Hand _hand)
     {
+        if ((m_leftWeaponData && m_leftWeaponData.isTwoHanded) || (m_rightWeaponData && m_rightWeaponData.isTwoHanded))
+        {
+            DropWeapon(Hand.LEFT, _weapon.transform.position);
+            ApplyWeaponData(Hand.LEFT);
+
+            DropWeapon(Hand.RIGHT, _weapon.transform.position);
+            ApplyWeaponData(Hand.RIGHT);
+        }
+        else
+        {
+            // Drop old weapon
+            DropWeapon(_hand, _weapon.transform.position);
+            ApplyWeaponData(_hand);
+        }
+
         switch (_hand)
         {
             case Hand.LEFT:
-                // Drop old weapon
-                if (m_leftWeaponData != null)
+                if (_weapon.m_weaponData.isTwoHanded)
                 {
-                    if (m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
-                        m_leftWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
-                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_leftWeaponData);
-                    playerController.playerStats.RemoveEffect(m_leftWeaponData.itemEffect); // Remove any passive effect the weapon had
+                    DropWeapon(Hand.RIGHT, transform.position);
                 }
+
                 // Set new weapon
                 m_leftWeaponData = _weapon.m_weaponData;
-                ApplyWeaponData(Hand.LEFT);
 
                 break;
             case Hand.RIGHT:
-                // Drop old weapon
-                if (m_rightWeaponData != null)
+                if (_weapon.m_weaponData.isTwoHanded)
                 {
-                    if (m_rightWeaponData.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
-                        m_rightWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
-                    DroppedWeapon.CreateDroppedWeapon(_weapon.transform.position, m_rightWeaponData);
-                    playerController.playerStats.RemoveEffect(m_rightWeaponData.itemEffect); // Remove any passive effect the weapon had
+                    DropWeapon(Hand.LEFT, transform.position);
                 }
+
                 // Set new weapon
                 m_rightWeaponData = _weapon.m_weaponData;
-                ApplyWeaponData(Hand.RIGHT);
 
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
                 return;
         }
+        ApplyWeaponData(Hand.LEFT);
+        ApplyWeaponData(Hand.RIGHT);
 
         Destroy(_weapon.gameObject);
+    }
+
+    public void DropWeapon(Hand _hand, Vector3 _pos)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_leftWeaponData != null)
+                {
+                    if (m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
+                        m_leftWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_leftAbility.m_cooldownTimer;
+                    DroppedWeapon.CreateDroppedWeapon(_pos, m_leftWeaponData);
+                    playerController.playerStats.RemoveEffect(m_leftWeaponData.itemEffect); // Remove any passive effect the weapon had
+
+                    m_leftWeaponData = null;
+                }
+                break;
+            case Hand.RIGHT:
+                if (m_rightWeaponData != null)
+                {
+                    if (m_rightWeaponData.abilityData != null && playerController.playerAbilities.m_rightAbility != null)
+                        m_rightWeaponData.abilityData.lastCooldown = playerController.playerAbilities.m_rightAbility.m_cooldownTimer;
+                    DroppedWeapon.CreateDroppedWeapon(_pos, m_rightWeaponData);
+                    playerController.playerStats.RemoveEffect(m_rightWeaponData.itemEffect); // Remove any passive effect the weapon had
+
+                    m_rightWeaponData = null;
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     public void ApplyWeaponData(Hand _hand)
@@ -384,6 +430,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Boomerang>();
             case Weapon.CROSSBOW:
                 return gameObject.AddComponent<Weapon_Crossbow>();
+            case Weapon.SPEAR:
+                return gameObject.AddComponent<Weapon_Spear>();
             default:
                 return null;
         }

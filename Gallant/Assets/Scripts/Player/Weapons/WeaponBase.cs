@@ -73,6 +73,33 @@ public abstract class WeaponBase : MonoBehaviour
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
     }
+
+    protected void LongMeleeAttack(WeaponData _data, Vector3 _source)
+    {
+        List<GameObject> hitList = new List<GameObject>();
+
+        Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset;
+        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize, 
+            _data.hitSize, playerController.playerAttack.m_attackTargets);
+
+        foreach (var collider in colliders)
+        {
+            if (hitList.Contains(collider.gameObject))
+                continue;
+
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage);
+            Actor actor = collider.GetComponentInParent<Actor>();
+            if (actor != null && !hitList.Contains(collider.gameObject))
+            {
+                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
+                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
+            }
+            hitList.Add(collider.gameObject);
+        }
+        if (hitList.Count != 0)
+            playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
+    }
+
     protected void BeginBlock()
     {
         playerController.playerAttack.ToggleBlock(true);

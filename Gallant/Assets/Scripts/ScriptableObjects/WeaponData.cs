@@ -15,6 +15,7 @@ public class WeaponData : ScriptableObject
     public Weapon weaponType; // The type of weapon the object is.
     public GameObject weaponModelPrefab; // Prefab of weapon model to be used when player is holding it
 
+    public bool isTwoHanded = false;
     public Sprite weaponIcon;
     public float hitCenterOffset = 0.75f;
     public float hitSize = 1.0f;
@@ -35,22 +36,8 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)Random.Range(0, 3);
-        switch (newWeaponType)
-        {
-            case Weapon.SWORD:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
-                break;
-            case Weapon.SHIELD:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
-                break;
-            case Weapon.BOOMERANG:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
-                break;
-            default:
-                Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
-                return null;
-        }
+        Weapon newWeaponType = (Weapon)Random.Range(0, 5);
+        ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;
 
@@ -75,33 +62,10 @@ public class WeaponData : ScriptableObject
             powerLevel = 3;
 
         // Ability
-        switch (newAbilityType)
-        {
-            case Ability.FIREWAVE:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + powerLevel.ToString());
-                break;
-            case Ability.SAND_MISSILE:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + powerLevel.ToString());
-                break;
-            case Ability.LIGHTNING_BOLT:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + powerLevel.ToString());
-                break;
-            case Ability.ICE_ROLL:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + powerLevel.ToString());
-                break;
-            case Ability.HP_BUFF:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + powerLevel.ToString());
-                break;
-            case Ability.THORNS:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + powerLevel.ToString());
-                break;
-            default:
-                Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
-                break;
-        }
+        ApplyAbilityData(data, newAbilityType, powerLevel);
 
         // Create weapon name
-        if(data.abilityData != null)
+        if (data.abilityData != null)
         { 
             data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
             data.abilityData.lastCooldown = 0.0f;
@@ -115,24 +79,11 @@ public class WeaponData : ScriptableObject
     {
         WeaponData data = CreateInstance<WeaponData>();
 
-        // Weapon type.
-        switch (_weaponType)
+        ApplyWeaponData(data, _weaponType);
+        if (data == null)
         {
-            case Weapon.SWORD:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
-                break;
-            case Weapon.SHIELD:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
-                break;
-            case Weapon.BOOMERANG:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
-                break;
-            case Weapon.CROSSBOW:
-                data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/crossbowData"));
-                break;
-            default:
-                Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
-                return null;
+            Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
+            return null;
         }
 
         data.abilityData = null;
@@ -143,31 +94,7 @@ public class WeaponData : ScriptableObject
 
         data.m_level = _powerLevel;
 
-        // Ability
-        switch (_abilityType)
-        {
-            case Ability.FIREWAVE:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
-                break;
-            case Ability.SAND_MISSILE:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
-                break;
-            case Ability.LIGHTNING_BOLT:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
-                break;
-            case Ability.ICE_ROLL:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
-                break;
-            case Ability.HP_BUFF:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
-                break;
-            case Ability.THORNS:
-                data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
-                break;
-            default:
-                Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
-                break;
-        }
+        ApplyAbilityData(data, _abilityType, _powerLevel);
 
         // Create weapon name
         if (data.abilityData != null)
@@ -179,6 +106,56 @@ public class WeaponData : ScriptableObject
         //Return new weapon.
         return data;
     }
+    private static void ApplyWeaponData(WeaponData _data, Weapon _weaponType)
+    {
+        // Weapon type.
+        switch (_weaponType)
+        {
+            case Weapon.SWORD:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                break;
+            case Weapon.SHIELD:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
+                break;
+            case Weapon.BOOMERANG:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
+                break;
+            case Weapon.CROSSBOW:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/crossbowData"));
+                break;
+            case Weapon.SPEAR:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/spearData"));
+                break;
+        }
+    }
+    private static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
+    {
+        // Ability
+        switch (_abilityType)
+        {
+            case Ability.FIREWAVE:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
+                break;
+            case Ability.SAND_MISSILE:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
+                break;
+            case Ability.LIGHTNING_BOLT:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
+                break;
+            case Ability.ICE_ROLL:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
+                break;
+            case Ability.HP_BUFF:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
+                break;
+            case Ability.THORNS:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
+                break;
+            default:
+                Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
+                break;
+        }
+    }
 
     public void Clone(WeaponData other)
     {
@@ -186,6 +163,7 @@ public class WeaponData : ScriptableObject
          this.weaponType = other.weaponType;
          this.weaponModelPrefab = other.weaponModelPrefab;
 
+         this.isTwoHanded = other.isTwoHanded;
          this.weaponIcon = other.weaponIcon;
          this.hitCenterOffset = other.hitCenterOffset;
          this.hitSize = other.hitSize;
