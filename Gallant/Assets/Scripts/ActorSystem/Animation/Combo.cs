@@ -14,14 +14,20 @@ public class Combo : StateMachineBehaviour
     {
         animator.SetBool("LeftShield", false);
         animator.SetBool("RightShield", false);
+
         animator.SetBool("LeftSword", false);
         animator.SetBool("RightSword", false);
+
         animator.SetBool("LeftBoomerang", false);
         animator.SetBool("RightBoomerang", false);
+
         animator.SetBool("LeftCrossbow", false);
         animator.SetBool("RightCrossbow", false);
+
+        animator.SetBool("LeftSpear", false);
+        animator.SetBool("RightSpear", false);
+
         animator.SetBool("LeftCast", false);
         animator.SetBool("RightCast", false);
     }
-
 }
