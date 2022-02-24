@@ -12,14 +12,20 @@ public class Combo : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        foreach (string name in System.Enum.GetNames(typeof(Weapon)))
-        {
-            if (name == "BRICK")
-                continue;
+        //foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        //{
+        //    if (name == "BRICK")
+        //        continue;
 
-            animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
-            animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
-        }
+        //    animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
+        //    animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
+        //}
+
+        animator.SetBool("UsingLeft", false);
+        animator.SetBool("UsingRight", false);
+
+        animator.SetBool("LeftCast", false);
+        animator.SetBool("RightCast", false);
 
         //animator.SetBool("LeftShield", false);
         //animator.SetBool("RightShield", false);
@@ -36,7 +42,5 @@ public class Combo : StateMachineBehaviour
         //animator.SetBool("LeftSpear", false);
         //animator.SetBool("RightSpear", false);
 
-        //animator.SetBool("LeftCast", false);
-        //animator.SetBool("RightCast", false);
     }
 }

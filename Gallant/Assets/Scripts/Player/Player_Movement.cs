@@ -16,11 +16,14 @@ public class Player_Movement : MonoBehaviour
 
     public GameObject playerModel;
 
+    private float m_currentMoveSpeedLerp = 1.0f;
+
     [Header("Movement Attributes")]
     public float m_gravityMult = 9.81f;
     public float m_moveSpeed = 5.0f;
     public float m_rollSpeed = 12.0f;
     public float m_attackMoveSpeed = 0.4f;
+    public float m_attackMoveSpeedLerpSpeed = 5.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
@@ -226,10 +229,11 @@ public class Player_Movement : MonoBehaviour
                 normalizedMove += _move.x * transform.right;
 
                 // Apply movement
-                movement = normalizedMove * speed * _deltaTime;
+                m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
+                movement = normalizedMove * Mathf.Lerp(m_moveSpeed * m_attackMoveSpeed, m_moveSpeed, m_currentMoveSpeedLerp) * _deltaTime;
 
-                if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
-                    movement *= m_attackMoveSpeed;
+                //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
+                //    movement *= m_attackMoveSpeed;
 
                 // If player is not trying to aim, aim in direction of movement.
                 if (_aim.magnitude == 0 && m_currentTarget == null)

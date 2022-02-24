@@ -11,6 +11,7 @@ public enum Weapon
     SHIELD,
     CROSSBOW,
     BRICK,
+    AXE,
 }
 public enum Hand
 {
@@ -108,10 +109,12 @@ public class Player_Attack : MonoBehaviour
         if (thisWeapon == null)
             return;
 
-        animatorTriggerName += thisWeapon.GetWeaponName();
+        animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();
-        playerController.animator.SetBool(animatorTriggerName, true);
+        //playerController.animator.SetBool(animatorTriggerName, true);
+        playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
+        //playerController.animator.CrossFade(animatorTriggerName, 0.1f);
     }
 
     /*******************
@@ -236,20 +239,29 @@ public class Player_Attack : MonoBehaviour
         bool usingLeft = false;
         // thisData.weaponType.ToString()[0] + thisData.weaponType.ToString().Substring(1)
         
-        foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        if (playerController.animator.GetBool("UsingRight"))
         {
-            if (name == "BRICK")
-                continue;
-
-            if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
-            {
-                usingRight = true;
-            }
-            if (playerController.animator.GetBool("Left" + name[0] + name.Substring(1).ToLower()))
-            {
-                usingLeft = true;
-            }
+            usingRight = true;
         }
+        if (playerController.animator.GetBool("UsingLeft"))
+        {
+            usingLeft = true;
+        }
+
+        //foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        //{
+        //    if (name == "BRICK")
+        //        continue;
+
+        //    if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
+        //    {
+        //        usingRight = true;
+        //    }
+        //    if (playerController.animator.GetBool("Left" + name[0] + name.Substring(1).ToLower()))
+        //    {
+        //        usingLeft = true;
+        //    }
+        //}
 
         //if (playerController.animator.GetBool("RightShield")
         //    || playerController.animator.GetBool("RightSword")
@@ -435,6 +447,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Spear>();
             case Weapon.BRICK:
                 return gameObject.AddComponent<Weapon_Brick>();
+            case Weapon.AXE:
+                return gameObject.AddComponent<Weapon_Sword>();
             default:
                 return null;
         }
@@ -488,8 +502,8 @@ public class Player_Attack : MonoBehaviour
         if (m_leftWeapon)
             m_leftWeapon.m_weaponObject.SetActive(_show);
 
-        if (m_leftWeapon)
-            m_leftWeapon.m_weaponObject.SetActive(_show);
+        if (m_rightWeapon)
+            m_rightWeapon.m_weaponObject.SetActive(_show);
 
         //if (m_leftWeaponObject != null)
         //    m_leftWeaponObject.SetActive(_show);
