@@ -6,10 +6,11 @@ using UnityEngine;
 public enum Weapon
 {
     SWORD,
-    SHIELD,
-    BOOMERANG,
-    CROSSBOW,
     SPEAR,
+    BOOMERANG,
+    SHIELD,
+    CROSSBOW,
+    BRICK,
 }
 public enum Hand
 {
@@ -79,7 +80,7 @@ public class Player_Attack : MonoBehaviour
      */
     public void StartUsing(Hand _hand)
     {
-        WeaponData thisData;
+        WeaponBase thisWeapon;
         string animatorTriggerName = "";
 
         switch (_hand)
@@ -88,14 +89,14 @@ public class Player_Attack : MonoBehaviour
                 if (m_leftWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_leftWeaponData;
+                thisWeapon = m_leftWeapon;
                 animatorTriggerName += "Left";
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_rightWeaponData;
+                thisWeapon = m_rightWeapon;
                 animatorTriggerName += "Right";
                 break;
             default:
@@ -104,30 +105,10 @@ public class Player_Attack : MonoBehaviour
         }
 
         // If weapon is not in hand
-        if (thisData == null)
+        if (thisWeapon == null)
             return;
 
-        switch (thisData.weaponType)
-        {
-            case Weapon.SWORD: // Use sword
-                animatorTriggerName += "Sword";
-                break;
-            case Weapon.SHIELD: // Use shield
-                animatorTriggerName += "Shield";
-                break;
-            case Weapon.BOOMERANG: // Use boomerang
-                animatorTriggerName += "Boomerang";
-                break;
-            case Weapon.CROSSBOW: // Use boomerang
-                animatorTriggerName += "Crossbow";
-                break;
-            case Weapon.SPEAR: // Use spear
-                animatorTriggerName += "Spear";
-                break;
-            default:
-                Debug.Log("Weapon not implemented:" + thisData.weaponType);
-                break;
-        }
+        animatorTriggerName += thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();
         playerController.animator.SetBool(animatorTriggerName, true);
@@ -253,19 +234,35 @@ public class Player_Attack : MonoBehaviour
     {
         bool usingRight = false;
         bool usingLeft = false;
+        // thisData.weaponType.ToString()[0] + thisData.weaponType.ToString().Substring(1)
+        
+        foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        {
+            if (name == "BRICK")
+                continue;
 
-        if (playerController.animator.GetBool("RightShield")
-            || playerController.animator.GetBool("RightSword")
-            || playerController.animator.GetBool("RightBoomerang")
-            || playerController.animator.GetBool("RightCrossbow")
-            || playerController.animator.GetBool("RightSpear"))
-            usingRight = true;
-        if (playerController.animator.GetBool("LeftShield")
-            || playerController.animator.GetBool("LeftSword") 
-            || playerController.animator.GetBool("LeftBoomerang")
-            || playerController.animator.GetBool("LeftCrossbow")
-            || playerController.animator.GetBool("LeftSpear"))
-            usingLeft = true;
+            if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
+            {
+                usingRight = true;
+            }
+            if (playerController.animator.GetBool("Left" + name[0] + name.Substring(1).ToLower()))
+            {
+                usingLeft = true;
+            }
+        }
+
+        //if (playerController.animator.GetBool("RightShield")
+        //    || playerController.animator.GetBool("RightSword")
+        //    || playerController.animator.GetBool("RightBoomerang")
+        //    || playerController.animator.GetBool("RightCrossbow")
+        //    || playerController.animator.GetBool("RightSpear"))
+        //    usingRight = true;
+        //if (playerController.animator.GetBool("LeftShield")
+        //    || playerController.animator.GetBool("LeftSword") 
+        //    || playerController.animator.GetBool("LeftBoomerang")
+        //    || playerController.animator.GetBool("LeftCrossbow")
+        //    || playerController.animator.GetBool("LeftSpear"))
+        //    usingLeft = true;
 
         if (usingRight == usingLeft)
             return Hand.NONE;
@@ -415,6 +412,10 @@ public class Player_Attack : MonoBehaviour
                 }
                 break;
         }
+
+        m_leftWeaponIcon.SetDisabledState(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
+        m_rightWeaponIcon.SetDisabledState(m_leftWeaponData && m_leftWeaponData.isTwoHanded);
+
         playerController.playerAudioAgent.EquipWeapon();
     }
 
@@ -432,6 +433,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Crossbow>();
             case Weapon.SPEAR:
                 return gameObject.AddComponent<Weapon_Spear>();
+            case Weapon.BRICK:
+                return gameObject.AddComponent<Weapon_Brick>();
             default:
                 return null;
         }
@@ -455,14 +458,11 @@ public class Player_Attack : MonoBehaviour
         // Store old left hand weapon for future use
         WeaponData _leftHandStore = m_leftWeaponData;
 
-        // Left hand weapon
-        // Set new weapon
+        // Set new weapons
         m_leftWeaponData = m_rightWeaponData;
-        ApplyWeaponData(Hand.LEFT);
-
-        // Right hand weapon
-        // Set new weapon
         m_rightWeaponData = _leftHandStore;
+
+        ApplyWeaponData(Hand.LEFT);
         ApplyWeaponData(Hand.RIGHT);
     }
 
