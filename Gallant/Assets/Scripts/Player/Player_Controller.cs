@@ -28,6 +28,7 @@ public class Player_Controller : MonoBehaviour
     public Player_Pickup playerPickup { private set; get; }
     public Player_Stats playerStats { private set; get; }
     public Player_AudioAgent playerAudioAgent { private set; get; }
+    public Player_CombatAnimator playerCombatAnimator { private set; get; }
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
@@ -55,6 +56,7 @@ public class Player_Controller : MonoBehaviour
         playerPickup = GetComponentInChildren<Player_Pickup>();
         playerStats = GetComponentInChildren<Player_Stats>();
         playerAudioAgent = GetComponent<Player_AudioAgent>();
+        playerCombatAnimator = GetComponent<Player_CombatAnimator>();
 
         if (GameManager.m_containsPlayerInfo)
         {
