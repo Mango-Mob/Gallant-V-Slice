@@ -60,6 +60,7 @@ namespace ActorSystem.AI.Components
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
 
+            m_myOutline.enabled = false;
             SetOutlineEnabled(false);
         }
 
