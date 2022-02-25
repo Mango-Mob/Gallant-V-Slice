@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,20 +37,20 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)Random.Range(0, 5);
+        Weapon newWeaponType = (Weapon)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Weapon)).Length);
         ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.m_damage += (int)(data.m_damage * Random.Range(0.1f, 0.2f) * (_level - 1.0f));
-        data.m_speed += (data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
+        data.m_damage += (int)(data.m_damage * UnityEngine.Random.Range(0.1f, 0.2f) * (_level - 1.0f));
+        data.m_speed += (data.m_speed * UnityEngine.Random.Range(0.05f, 0.1f) * (_level - 1.0f));
 
         data.m_level = _level;
 
         // Random ability and power level is assigned.
-        Ability newAbilityType = (Ability)Random.Range(0, 6);
-        int curve = Random.Range(0, 3) + Random.Range(0, 3) - 2;
+        Ability newAbilityType = (Ability)UnityEngine.Random.Range(0, 6);
+        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
         int result = Mathf.Max(_level + curve, 0);
 
         // Power level
@@ -89,8 +90,8 @@ public class WeaponData : ScriptableObject
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
-        data.m_speed += (int)(data.m_speed * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+        data.m_damage += (int)(data.m_damage * UnityEngine.Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+        data.m_speed += (int)(data.m_speed * UnityEngine.Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
 
         data.m_level = _powerLevel;
 
