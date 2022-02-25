@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /****************
- * Ability_FrostEvade: Frost evade ability
+ * Ability_FlameEvade: Flame evade ability
  * @author : William de Beer
  * @file : Ability_FrostEvade.cs
  * @year : 2021
  */
-public class Ability_FrostEvade : AbilityBase
+public class Ability_FlameEvade : AbilityBase
 {
     public GameObject m_pathPrefab;
     private GameObject m_lastProjectile;
@@ -24,7 +24,7 @@ public class Ability_FrostEvade : AbilityBase
         base.Start();
         m_isPassive = true;
 
-        m_pathPrefab = Resources.Load<GameObject>("Abilities/Frostpath");
+        m_pathPrefab = Resources.Load<GameObject>("Abilities/Flamepath");
         playerController = GetComponent<Player_Controller>();
     }
     public override void AbilityFunctionality()
@@ -47,27 +47,27 @@ public class Ability_FrostEvade : AbilityBase
     {
         if (m_pathPrefab != null)
         {
-            playerController.playerAudioAgent.FirewaveLaunch();
+            playerController.playerAudioAgent.Iceroll();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_pathPrefab,
                 modelTransform.position + 0.5f * modelTransform.forward,
                 modelTransform.rotation);
 
-            if (m_lastProjectile.GetComponent<Frostpath>() != null)
+            if (m_lastProjectile.GetComponent<Flamepath>() != null)
             {
-                m_lastProjectile.GetComponent<Frostpath>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
-                m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(transform.position);
+                m_lastProjectile.GetComponent<Flamepath>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
+                m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(transform.position);
             }
         }
     }
     public override void AbilityWhileRolling()
     {
-        m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(transform.position);
+        m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(transform.position);
     }
     public override void AbilityOnEndRoll()
     {
-        m_lastProjectile.GetComponent<Frostpath>().StartLife();
+        m_lastProjectile.GetComponent<Flamepath>().StartLife();
     }
 }
 

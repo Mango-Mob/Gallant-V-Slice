@@ -12,6 +12,7 @@ public enum Weapon
     CROSSBOW,
     BRICK,
     AXE,
+    STAFF,
 }
 public enum Hand
 {
@@ -448,6 +449,8 @@ public class Player_Attack : MonoBehaviour
             case Weapon.BRICK:
                 return gameObject.AddComponent<Weapon_Brick>();
             case Weapon.AXE:
+                return gameObject.AddComponent<Weapon_Sword>();
+            case Weapon.STAFF:
                 return gameObject.AddComponent<Weapon_Sword>();
             default:
                 return null;
