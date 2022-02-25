@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ActorSystem.AI.Components
 {
-    public class Actor_Arms : MonoBehaviour
+    public class Actor_Arms : Actor_Component
     {
         public LayerMask m_targetMask;
 
@@ -33,6 +33,11 @@ namespace ActorSystem.AI.Components
                 if (m_cooldowns[i] > 0)
                     m_cooldowns[i] -= Time.deltaTime;
             }
+        }
+
+        public override void SetEnabled(bool status)
+        {
+            this.enabled = status;
         }
 
         public AttackData Begin(int id)

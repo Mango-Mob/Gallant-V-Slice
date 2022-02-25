@@ -12,7 +12,7 @@ using UnityEngine;
 namespace ActorSystem.AI.Components
 {
     [RequireComponent(typeof(Animator))]
-    public class Actor_Animator : MonoBehaviour
+    public class Actor_Animator : Actor_Component
     {
         //Accessables:
         protected Animator m_animator;
@@ -45,14 +45,11 @@ namespace ActorSystem.AI.Components
             if (m_setDelay > 0)
                 m_setDelay -= Time.deltaTime;
         }
-        private void OnEnable()
-        {
-            m_animator.enabled = true;
-        }
 
-        private void OnDisable()
+        public override void SetEnabled(bool status)
         {
-            m_animator.enabled = false;
+            m_animator.enabled = status;
+            this.enabled = status;
         }
 
         /*******************

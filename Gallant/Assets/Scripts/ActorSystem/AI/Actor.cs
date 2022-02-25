@@ -36,13 +36,13 @@ namespace ActorSystem.AI
             if (m_toReserveOnLoad)
             {
                 ActorManager.Instance.ReserveMe(this);
-                m_myBrain.enabled = false;
+                m_myBrain.SetEnabled(false);
             }
             else
             {
                 ActorManager.Instance.Subscribe(this);
                 m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
-                m_myBrain.enabled = true;
+                m_myBrain.SetEnabled(true);
             }
                 
             m_states = new List<State.Type>(m_myData.m_states);
@@ -58,6 +58,7 @@ namespace ActorSystem.AI
         {
             m_myLevel = level;
             m_myBrain.LoadData(m_myData, level);
+            m_mySpawn.SetEnabled(true);
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
@@ -71,7 +72,7 @@ namespace ActorSystem.AI
 
         public void DisableFunction()
         {
-            m_myBrain.enabled = false;
+            m_myBrain.SetEnabled(false);
         }
 
         public void OnDestroy()
@@ -176,15 +177,15 @@ namespace ActorSystem.AI
             }
             //Restart Statemachine
             SetState(m_myData.m_initialState);
-            m_myBrain.enabled = false;
+            m_myBrain.SetEnabled(false);
         }
 
         public void Respawn(bool fullRefresh = false)
         {
             if(m_lastSpawner != null)
             {
-                m_myBrain.enabled = false;
-                ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawn(transform.position);
+                m_myBrain.SetEnabled(false);
+                ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawnFromStart(transform.position);
                 SetState(m_myData.m_initialState);
                 m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
             }

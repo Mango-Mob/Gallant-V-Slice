@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ActorSystem.AI.Components
 {
-    public class Actor_ProjectileSource : MonoBehaviour
+    public class Actor_ProjectileSource : Actor_Component
     {
         public void CreateProjectile(AttackData data, Collider targetCollider, float damageMod)
         {
@@ -20,6 +20,10 @@ namespace ActorSystem.AI.Components
         {
             GameObject proj = GameObject.Instantiate(data.projectile, target.transform.position + target.transform.TransformVector(data.attackOriginOffset), Quaternion.identity);
             proj.GetComponent<AreaEffect>().m_data = data;
+        }
+        public override void SetEnabled(bool status)
+        {
+            this.enabled = status;
         }
     }
 }

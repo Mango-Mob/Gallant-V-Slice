@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ActorSystem.AI.Components
 {
-    public class Actor_PatrolData : MonoBehaviour
+    public class Actor_PatrolData : Actor_Component
     {
         public List<Transform> m_targetOrientations = new List<Transform>();
         public void Awake()
@@ -34,6 +34,11 @@ namespace ActorSystem.AI.Components
                 else if(m_targetOrientations.Count > 1)
                     Gizmos.DrawLine(m_targetOrientations[i].position, m_targetOrientations[i+1].position);
             }
+        }
+
+        public override void SetEnabled(bool status)
+        {
+            this.enabled = status;
         }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using ActorSystem.AI;
-using ActorSystem.AI.Components;
-using GEN.Nodes;
-using GEN.Users;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +12,9 @@ namespace ActorSystem
         public float m_innerRadius = 10.0f;
         public float m_innerHeight = 0;
         public float m_outerRadius = 10.0f;
+
+        [Header("Predefined points")]
+        public List<Vector3> m_positions = new List<Vector3>();
 
         [Header("Wave Information")]
         public bool m_generateWavesOnAwake = false;
@@ -61,6 +58,12 @@ namespace ActorSystem
 
         private void CreateSpawn()
         {
+            if(m_positions.Count > 0)
+            {
+                m_spawnLocations.Add(CreateSpawnFromEnd(m_positions[Random.Range(0, m_positions.Count)]));
+                return;
+            }
+
             var loc = new SpawnLocation();
             int safety = 5;
             NavMeshHit sample;
@@ -75,7 +78,7 @@ namespace ActorSystem
                 }
                 else
                 {
-                    direct = new Vector2(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
+                    direct = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                     Vector2 onSquare = Extentions.OnUnitSquare(direct);
                     loc.m_start = transform.position + new Vector3(onSquare.x, transform.position.y, onSquare.y) * m_outerRadius;
                 }
@@ -90,7 +93,7 @@ namespace ActorSystem
             m_spawnLocations.Add(loc);
         }
 
-        public SpawnLocation CreateSpawn(Vector3 start)
+        public SpawnLocation CreateSpawnFromStart(Vector3 start)
         {
             var loc = new SpawnLocation();
             int safety = 5;
@@ -124,6 +127,26 @@ namespace ActorSystem
             return loc;
         }
 
+        public SpawnLocation CreateSpawnFromEnd(Vector3 end)
+        {
+            var loc = new SpawnLocation();
+            Vector2 direct = new Vector2(end.x, end.z);
+            direct = (m_isSphere) ? direct : Extentions.OnUnitSquare(direct);
+
+            loc.m_start = transform.position + new Vector3(direct.x, 0, direct.y) * m_outerRadius;
+            NavMeshHit sample;
+            if (NavMesh.SamplePosition(transform.position + end + new Vector3(0, m_innerHeight, 0), out sample, 0.5f, NavMesh.AllAreas))
+            {
+                loc.m_end = sample.position;
+            }
+            else
+                loc.m_end = end;
+
+            loc.m_forward = loc.m_start.DirectionTo(loc.m_end);
+
+            return loc;
+        }
+
         public void SpawnWave(RoomData wave)
         {
             m_hasStarted = true;
@@ -134,10 +157,10 @@ namespace ActorSystem
             while (count > 0)
             {
                 //For each select type of unit
-                int selectUnit = UnityEngine.Random.Range(0, data.m_waveInformation.Count);
+                int selectUnit = Random.Range(0, data.m_waveInformation.Count);
                 for (int i = 0; i < wave.m_waveInformation[selectUnit].count; i++)
                 {
-                    int selectSpawn = UnityEngine.Random.Range(0, m_spawnLocations.Count);
+                    int selectSpawn = Random.Range(0, m_spawnLocations.Count);
                     
                     //Get/Create actor in the reserves
                     Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
@@ -157,27 +180,6 @@ namespace ActorSystem
                 //Remove option
                 data.m_waveInformation.RemoveAt(selectUnit);
             }
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            //foreach (var gate in m_gatesLoc)
-            //{
-            //    if (gate.GetComponentInChildren<ExitNode>())
-            //        continue;
-            //
-            //    Instantiate(m_gatePrefab, gate.transform);
-            //    gate.SetActive(false);
-            //}
-            //
-            //for (int i = 0; i < m_spawnSpots; i++)
-            //{
-            //    if (!m_isSphere)
-            //        GenerateASpawnPointInBox(m_size);
-            //    else
-            //        GenerateASpawnPointInSphere(m_radius);
-            //}
         }
 
         //private IEnumerator SpawnWave()
@@ -321,6 +323,8 @@ namespace ActorSystem
                  if (m_waves.Count == 0)
                  {
                      Destroy(gameObject);
+                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                    GameManager.Advance();
                  }
                  else
                  {
@@ -363,29 +367,6 @@ namespace ActorSystem
         //    m_waves.Sort(RoomData.SortAlgorithm);
         //}
 
-        //public void StartCombat()
-        //{
-        //    if (m_hasCombatStarted)
-        //        return;
-        //
-        //    m_hasCombatStarted = true;
-        //    if (IsRoom)
-        //    {
-        //        GetComponent<MultiAudioAgent>().PlayOnce("GateClose");
-        //        foreach (var gate in m_gatesLoc)
-        //        {
-        //            gate.SetActive(true);
-        //        }
-        //    }
-        //}
-
-        //private Vector3 CalculateStartPoint(Vector3 endPoint)
-        //{
-        //    Vector3 direct = (endPoint - transform.position).normalized;
-        //
-        //    return transform.position + direct * (m_radius + m_distOffEdge);
-        //}
-
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.white;
@@ -405,7 +386,11 @@ namespace ActorSystem
                 Gizmos.DrawWireCube(transform.position + new Vector3(0, m_innerHeight, 0), new Vector3(m_innerRadius * 2, 0, m_innerRadius * 2));
                 Gizmos.DrawWireCube(transform.position, new Vector3(m_outerRadius * 2, 0, m_outerRadius * 2));
             }
-
+            foreach (var item in m_positions)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawSphere(transform.position + item + new Vector3(0, m_innerHeight, 0), 0.25f);
+            }
 
             foreach (var item in m_spawnLocations)
             {
