@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,7 +48,7 @@ public class BoomerangProjectile : MonoBehaviour
                 m_weaponModel.transform.localRotation = Quaternion.Euler(0, 0, 0);
             }
 
-            m_boomerangSpeed = 10.0f * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
+            m_boomerangSpeed = m_boomerangSpeed * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
             m_boomerangRotateSpeed = 100.0f * m_boomerangSpeed;
             m_throwDuration = 10.0f / (m_boomerangSpeed);
         }
@@ -79,7 +80,7 @@ public class BoomerangProjectile : MonoBehaviour
                 new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < 0.2f) 
             {
                 // "Catch" the projectile when close enough to player.
-                m_projectileUser.CatchBoomerang(m_hand);
+                m_projectileUser.CatchProjectile(m_hand);
 
                 foreach (var effect in m_effects)
                 {
@@ -100,10 +101,12 @@ public class BoomerangProjectile : MonoBehaviour
 
             m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
 
+            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
+
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
         }
     }

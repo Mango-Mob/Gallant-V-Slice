@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ChainLightning : MonoBehaviour
 {
     public Player_Controller m_user;
-    public LayerMask m_enemyDetectionMask;
+    public LayerMask m_ActorDetectionMask;
     public AbilityData m_data;
 
     [SerializeField] private GameObject lightningPrefabVFX;
@@ -47,7 +48,7 @@ public class ChainLightning : MonoBehaviour
         if (closestTarget != null)
         {
             m_hitTargets.Add(closestTarget);
-            closestTarget.DealDamage(m_data.damage);
+            closestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
 
             CreateVFX(transform.position, closestTarget.m_selfTargetTransform.transform.position);
 
@@ -91,7 +92,7 @@ public class ChainLightning : MonoBehaviour
             if (bestTarget != null)
             {
                 m_hitTargets.Add(bestTarget);
-                bestTarget.DealDamage(m_data.damage);
+                bestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
 
                 // Chain VFX
                 CreateVFX(_lastPosition, bestTarget.m_selfTargetTransform.transform.position);

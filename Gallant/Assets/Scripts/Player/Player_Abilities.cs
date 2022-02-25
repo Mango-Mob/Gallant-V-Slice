@@ -36,8 +36,8 @@ public class Player_Abilities : MonoBehaviour
 
     private void Awake()
     {
-        m_leftAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityL");
-        m_rightAbilityIcon = HUDManager.instance.GetElement<UI_AbilityIcon>("AbilityR");
+        m_leftAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityL");
+        m_rightAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityR");
     }
     private void Start()
     {
@@ -72,14 +72,14 @@ public class Player_Abilities : MonoBehaviour
             case Hand.LEFT:
                 if (m_leftHandGlobalTimer <= 0.0f && m_leftAbility != null && m_leftAbility.m_canUse && !m_leftAbility.m_isPassive)
                 {
-                    playerController.animator.SetTrigger("LeftCast");
+                    playerController.animator.SetBool("LeftCast", true);
                     m_leftHandGlobalTimer = m_globalCooldown;
                 }
                 break;
             case Hand.RIGHT:
                 if (m_rightHandGlobalTimer <= 0.0f && m_rightAbility != null && m_rightAbility.m_canUse && !m_rightAbility.m_isPassive)
                 {
-                    playerController.animator.SetTrigger("RightCast");
+                    playerController.animator.SetBool("RightCast", true);
                     m_rightHandGlobalTimer = m_globalCooldown;
                 }
                 break;
@@ -101,7 +101,7 @@ public class Player_Abilities : MonoBehaviour
             if (m_leftAbility != null)
             {
                 m_leftAbility.TriggerAbility();
-                playerController.playerAudioAgent.PlayCast(); // Audio
+                //playerController.playerAudioAgent.PlayCast(); // Audio
                 m_leftAbility.StartCooldown();
             }
         }
@@ -110,7 +110,7 @@ public class Player_Abilities : MonoBehaviour
             if (m_rightAbility != null)
             {
                 m_rightAbility.TriggerAbility();
-                playerController.playerAudioAgent.PlayCast(); // Audio
+                //playerController.playerAudioAgent.PlayCast(); // Audio
                 m_rightAbility.StartCooldown();
             }
         }

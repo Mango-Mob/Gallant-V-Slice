@@ -7,6 +7,7 @@ namespace GEN.Nodes
      * A component used to idenify the gameObject as the exit to the section/cap.
      * @author : Michael Jordan
      */
+    [ExecuteInEditMode]
     public class ExitNode : MonoBehaviour
     {
         /** a private variable. 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class SandmissileProjectile : MonoBehaviour
     [SerializeField] private GameObject m_sandAreaPrefab;
     [SerializeField] private GameObject m_sandPoofPrefab;
 
+    public Player_Controller playerController;
     public ParticleSystem[] m_particleSystems { get; private set; }
 
     public AbilityData m_data;
@@ -82,6 +84,9 @@ public class SandmissileProjectile : MonoBehaviour
     }
     private void DetonateProjectile()
     {
+        if (playerController)
+            playerController.playerAudioAgent.SandmissileImpact();
+
         foreach (var system in m_particleSystems)
         {
             system.Stop();
@@ -116,8 +121,15 @@ public class SandmissileProjectile : MonoBehaviour
         {
             Debug.Log("Hit " + other.name + " with sand for " + m_data.damage);
 
-            other.GetComponentInParent<Actor>().DealDamage(m_data.damage);
-            DetonateProjectile();
+            Actor actor = other.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                if (actor.m_myBrain.IsDead)
+                    return;
+
+                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
+                DetonateProjectile();
+            }
         }
     }
 }

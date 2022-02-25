@@ -27,6 +27,9 @@ public class SettingsMenu : MonoBehaviour
     [Header("Control Components")]
     public Button m_controlsBtn;
     public GameObject m_controlsMenu;
+    public Image m_keyboard;
+    public Image m_controller;
+
 
     private Resolution[] m_localResolutions;
     private int m_currentMenuID = 0;
@@ -36,7 +39,7 @@ public class SettingsMenu : MonoBehaviour
     {
         for (int i = 0; i < m_sliders.Count; i++)
         {
-            m_sliders[i].value = AudioManager.instance.volumes[i];
+            m_sliders[i].value = AudioManager.Instance.volumes[i];
         }
         ApplicationManager.instance.Wake();
         m_localResolutions = Screen.resolutions;
@@ -77,31 +80,35 @@ public class SettingsMenu : MonoBehaviour
         AudioUpdate();
         foreach (var item in m_controllerDisplay)
         {
-            item.SetActive(InputManager.instance.isInGamepadMode);
+            item.SetActive(InputManager.Instance.isInGamepadMode);
         }
 
-        if(InputManager.instance.IsGamepadButtonDown(ButtonType.LB, 0) &&  m_currentMenuID > 0)
+        if(InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0) &&  m_currentMenuID > 0)
         {
             m_currentMenuID--;
             UpdateMenu();
         }
-        if (InputManager.instance.IsGamepadButtonDown(ButtonType.RB, 0) && m_currentMenuID < m_maxID)
+        if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0) && m_currentMenuID < m_maxID)
         {
             m_currentMenuID++;
             UpdateMenu();
         }
 
-        if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
         {
             if(m_displayMenu.activeInHierarchy)
                 EventSystem.current.SetSelectedGameObject(m_displayDefaultSelected);
             else
                 EventSystem.current.SetSelectedGameObject(m_audioDefaultSelected);
+
         }
-        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
+
+        m_keyboard.enabled = !InputManager.Instance.isInGamepadMode;
+        m_controller.enabled = InputManager.Instance.isInGamepadMode;
     }
 
     private void UpdateMenu()
@@ -128,19 +135,21 @@ public class SettingsMenu : MonoBehaviour
     }
     private void OnDestroy()
     {
-        AudioManager.instance.SaveData();
+        AudioManager.Instance.SaveData();
+        InputManager.Instance.SaveBinds();
     }
 
     private void OnDisable()
     {
-        AudioManager.instance.SaveData();
+        AudioManager.Instance.SaveData();
+        InputManager.Instance.SaveBinds();
     }
 
     private void AudioUpdate()
     {
         for (int i = 0; i < m_sliders.Count; i++)
         {
-            AudioManager.instance.volumes[i] = m_sliders[i].value;
+            AudioManager.Instance.volumes[i] = m_sliders[i].value;
         }
     }
 
@@ -166,11 +175,11 @@ public class SettingsMenu : MonoBehaviour
         m_displayBtn.interactable = false;
         m_displayMenu.SetActive(true);
 
-        if (InputManager.instance.isInGamepadMode)
+        if (InputManager.Instance.isInGamepadMode)
         {
             EventSystem.current.SetSelectedGameObject(m_displayDefaultSelected);
         }
-        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
@@ -183,11 +192,11 @@ public class SettingsMenu : MonoBehaviour
         m_audioBtn.interactable = false;
         m_audioMenu.SetActive(true);
 
-        if (InputManager.instance.isInGamepadMode)
+        if (InputManager.Instance.isInGamepadMode)
         {
             EventSystem.current.SetSelectedGameObject(m_audioDefaultSelected);
         }
-        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
@@ -216,5 +225,14 @@ public class SettingsMenu : MonoBehaviour
             return;
 
         ApplicationManager.instance.SetFullScreen(select, true);
+    }
+
+    public void ResetControls()
+    {
+        InputManager.Instance.SetDefaultKeyBinds();
+        foreach (var item in GetComponentsInChildren<KeyBindOption>())
+        {
+            item.ResetDisplay();
+        }
     }
 }

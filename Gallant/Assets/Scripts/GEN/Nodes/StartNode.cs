@@ -503,10 +503,10 @@ namespace GEN.Nodes
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            Handles.color = Color.yellow;
             Gizmos.DrawSphere(transform.position, 0.25f);
             Gizmos.DrawLine(transform.position, transform.position + transform.forward * 0.5f);
-            Handles.ConeHandleCap(0, transform.position + transform.forward * 0.5f, Quaternion.LookRotation(transform.forward, Vector3.up), 0.20f, EventType.Repaint);
+
+            Gizmos.DrawSphere(transform.position + transform.forward * 0.5f, 0.05f);
         }
     }
 

@@ -12,10 +12,10 @@ public class EndScreenMenu : MonoBehaviour
 
     public static bool m_victory = false;
 
-    public static float m_time = 0.0f;
-    public static int m_levelReached = 1;
-    public static int m_roomsCleared = 0;
-    public static int m_damageDealt = 0;
+    public static float elapsedTimeInSeconds = 0;
+    public static int roomsCleared = 0;
+    public static float damageDealt = 0;
+    public static int levelReached = 1;
 
     [SerializeField] private GameObject m_victoryText;
     [SerializeField] private GameObject m_defeatText;
@@ -30,10 +30,10 @@ public class EndScreenMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_timeText.text = m_time.ToString();
-        m_levelReachedText.text = m_levelReached.ToString();
-        m_roomsClearedText.text = m_roomsCleared.ToString();
-        m_damageDealtText.text = m_damageDealt.ToString();
+        m_timeText.text = CaluclateTime();
+        m_levelReachedText.text = (levelReached).ToString();
+        m_roomsClearedText.text = (roomsCleared).ToString();
+        m_damageDealtText.text = CalculateDamage();
 
         if (m_victory)
         {
@@ -44,19 +44,17 @@ public class EndScreenMenu : MonoBehaviour
             m_victoryText.SetActive(false);
         }
 
-        m_time = 0.0f;
-        m_levelReached = 1;
-        m_roomsCleared = 0;
+        Restart();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
         {
             EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
         }
-        else if (!InputManager.instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
@@ -64,6 +62,57 @@ public class EndScreenMenu : MonoBehaviour
 
     public void BackToMenu()
     {
-        LevelLoader.instance.LoadNewLevel(m_menuSceneName);
+        LevelManager.Instance.LoadNewLevel(m_menuSceneName);
+    }
+
+    private string CalculateDamage()
+    {
+        int multiples = 0;
+        float tempVal = damageDealt;
+
+        while (tempVal > 1000f)
+        {
+            tempVal /= 1000f;
+            multiples++;
+        }
+
+        switch (multiples)
+        {
+            default:
+            case 0:
+                return $"{damageDealt.ToString()}";
+            case 1:
+                return $"{damageDealt.ToString()}k";
+            case 2:
+                return $"{damageDealt.ToString()}M";
+            case 3:
+                return $"{damageDealt.ToString()}B";
+        }
+    }
+
+    private string CaluclateTime()
+    {
+        float minutes;
+        float hours;
+
+        if (elapsedTimeInSeconds > 60)
+        {
+            if (elapsedTimeInSeconds > 60 * 60)
+            {
+                hours = elapsedTimeInSeconds / (60 * 60);
+                return $"{hours.ToString().Substring(0, 4)} hours";
+            }
+            minutes = elapsedTimeInSeconds / 60;
+            return $"{minutes.ToString().Substring(0, 4)} minutes";
+        }
+        return $"{elapsedTimeInSeconds.ToString().Substring(0, 4)} seconds";
+    }
+
+    public static void Restart()
+    {
+        elapsedTimeInSeconds = 0;
+        roomsCleared = 0;
+        damageDealt = 0;
+        levelReached = 1;
     }
 }

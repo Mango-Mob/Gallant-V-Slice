@@ -40,6 +40,7 @@ public class Ability_Barrier : AbilityBase
     {
         if (playerController.playerResources.m_barrier > 0.0f && m_projectilePrefab != null)
         {
+            playerController.playerAudioAgent.BarrierLaunch();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_projectilePrefab,
