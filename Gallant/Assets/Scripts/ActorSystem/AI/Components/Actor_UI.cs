@@ -24,7 +24,9 @@ namespace ActorSystem.AI.Components
         public override void SetEnabled(bool status)
         {
             this.enabled = status;
-            m_myCanvas.enabled = status;
+
+            if(m_myCanvas != null)
+                m_myCanvas.enabled = status;
         }
         /*******************
          * GetElement : A Generic function used to find a UI_Element within this container.
