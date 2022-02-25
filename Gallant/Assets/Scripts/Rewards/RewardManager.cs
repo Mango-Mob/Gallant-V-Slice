@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class RewardManager : Singleton<RewardManager>
 {
+    public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
+
     public GameObject m_window;
     public GameObject[] m_rewardSlots;
     public GameObject m_weaponRewardOption;

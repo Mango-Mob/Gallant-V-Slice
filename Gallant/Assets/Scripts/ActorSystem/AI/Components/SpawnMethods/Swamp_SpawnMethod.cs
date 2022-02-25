@@ -27,7 +27,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_end = end;
             m_endDirection = (finalForward - new Vector3(0, finalForward.y, 0)).normalized;
 
-            GetComponent<Actor_Brain>().m_animator.enabled = true;
+            GetComponent<Actor_Brain>().m_animator.SetEnabled(true);
             GetComponent<Actor_Brain>().m_animator.PlayAnimation("Swimming");
             transform.position = m_start;
             transform.forward = m_endDirection;

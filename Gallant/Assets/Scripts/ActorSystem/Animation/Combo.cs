@@ -12,22 +12,35 @@ public class Combo : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool("LeftShield", false);
-        animator.SetBool("RightShield", false);
+        //foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        //{
+        //    if (name == "BRICK")
+        //        continue;
 
-        animator.SetBool("LeftSword", false);
-        animator.SetBool("RightSword", false);
+        //    animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
+        //    animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
+        //}
 
-        animator.SetBool("LeftBoomerang", false);
-        animator.SetBool("RightBoomerang", false);
-
-        animator.SetBool("LeftCrossbow", false);
-        animator.SetBool("RightCrossbow", false);
-
-        animator.SetBool("LeftSpear", false);
-        animator.SetBool("RightSpear", false);
+        animator.SetBool("UsingLeft", false);
+        animator.SetBool("UsingRight", false);
 
         animator.SetBool("LeftCast", false);
         animator.SetBool("RightCast", false);
+
+        //animator.SetBool("LeftShield", false);
+        //animator.SetBool("RightShield", false);
+
+        //animator.SetBool("LeftSword", false);
+        //animator.SetBool("RightSword", false);
+
+        //animator.SetBool("LeftBoomerang", false);
+        //animator.SetBool("RightBoomerang", false);
+
+        //animator.SetBool("LeftCrossbow", false);
+        //animator.SetBool("RightCrossbow", false);
+
+        //animator.SetBool("LeftSpear", false);
+        //animator.SetBool("RightSpear", false);
+
     }
 }

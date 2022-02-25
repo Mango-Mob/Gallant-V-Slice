@@ -126,6 +126,15 @@ public class WeaponData : ScriptableObject
             case Weapon.SPEAR:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/spearData"));
                 break;
+            case Weapon.BRICK:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/brickData"));
+                break;
+            case Weapon.AXE:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/axeData"));
+                break;
+            case Weapon.STAFF:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/staffData"));
+                break;
         }
     }
     private static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
@@ -150,6 +159,12 @@ public class WeaponData : ScriptableObject
                 break;
             case Ability.THORNS:
                 _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
+                break;
+            case Ability.ARCANE_BOLT:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/arcanebolt" + _powerLevel.ToString());
+                break;
+            case Ability.FLAME_ROLL:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
                 break;
             default:
                 Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");

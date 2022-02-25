@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace ActorSystem.AI.Components
 {
-    public abstract class Actor_SpawnMethod : MonoBehaviour
+    public abstract class Actor_SpawnMethod : Actor_Component
     {
         public abstract void StartSpawn(Vector3 start, Vector3 end, Vector3 finalForward);
 
@@ -15,7 +15,11 @@ namespace ActorSystem.AI.Components
 
         protected void EndSpawn()
         {
-            GetComponent<Actor_Brain>().enabled = true;
+            GetComponent<Actor_Brain>().SetEnabled(true);
+        }
+        public override void SetEnabled(bool status)
+        {
+            this.enabled = status;
         }
     }
 }

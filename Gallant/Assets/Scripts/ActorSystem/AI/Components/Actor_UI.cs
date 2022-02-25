@@ -11,7 +11,7 @@ namespace ActorSystem.AI.Components
      * @year : 2021
      */
     [RequireComponent(typeof(Canvas))]
-    public class Actor_UI : MonoBehaviour
+    public class Actor_UI : Actor_Component
     {
         protected UI_Element[] m_UIElements;
         private Canvas m_myCanvas;
@@ -21,17 +21,11 @@ namespace ActorSystem.AI.Components
             m_UIElements = GetComponentsInChildren<UI_Element>();
             m_myCanvas = GetComponent<Canvas>();
         }
-
-        public void OnEnable()
+        public override void SetEnabled(bool status)
         {
-            m_myCanvas.enabled = true;
+            this.enabled = status;
+            m_myCanvas.enabled = status;
         }
-
-        public void OnDisable()
-        {
-            m_myCanvas.enabled = false;
-        }
-
         /*******************
          * GetElement : A Generic function used to find a UI_Element within this container.
          * @author : Michael Jordan
