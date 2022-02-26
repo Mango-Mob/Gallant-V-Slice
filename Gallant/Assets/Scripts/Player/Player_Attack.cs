@@ -559,6 +559,23 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
     }
+
+    public void SetWeaponData(Hand _hand, WeaponData _data)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftWeaponData = _data;
+                ApplyWeaponData(Hand.LEFT);
+                break;
+            case Hand.RIGHT:
+                m_rightWeaponData = _data;
+                ApplyWeaponData(Hand.RIGHT);
+                break;
+            default:
+                return;
+        }
+    }
 }
 
 ///*******************

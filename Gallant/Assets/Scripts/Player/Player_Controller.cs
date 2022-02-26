@@ -19,6 +19,7 @@ public class Player_Controller : MonoBehaviour
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     private Hand m_lastAttackHand = Hand.NONE;
+    private InkmanClass m_inkmanClass;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -69,7 +70,6 @@ public class Player_Controller : MonoBehaviour
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
-
     }
 
     // Update is called once per frame
@@ -434,4 +434,11 @@ public class Player_Controller : MonoBehaviour
         Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized;
         RespawnPlayerTo(targetPosition, _isFullHP);
     }
+    public void SelectClass(ClassData _class)
+    {
+        m_inkmanClass = _class.inkmanClass;
+
+        playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
+        playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
+    }    
 }
