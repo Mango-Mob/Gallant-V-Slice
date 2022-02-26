@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AdrenalineProvider : MonoBehaviour
+public class CurrencyProvider : MonoBehaviour
 {
     public float m_durationInSeconds = 5;
     public Player_Movement m_playerRef;
@@ -25,14 +25,14 @@ public class AdrenalineProvider : MonoBehaviour
         }
     }
 
-    public void GiveAdrenaline()
-    {
-        if(m_playerRef != null)
-        {
-            m_playerRef.GiveAdrenaline(m_durationInSeconds / m_maxDuration);
-            Destroy(gameObject);
-            return;
-        }
-        Debug.LogError($"Provider didn't have reference to player.");
-    }
+    //public void GiveAdrenaline()
+    //{
+    //    if(m_playerRef != null)
+    //    {
+    //        m_playerRef.GiveAdrenaline(m_durationInSeconds / m_maxDuration);
+    //        Destroy(gameObject);
+    //        return;
+    //    }
+    //    Debug.LogError($"Provider didn't have reference to player.");
+    //}
 }
