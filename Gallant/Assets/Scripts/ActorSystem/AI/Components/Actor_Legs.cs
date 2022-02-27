@@ -105,6 +105,8 @@ namespace ActorSystem.AI.Components
             this.enabled = status;
             if(status)
             {
+                m_agent.enabled = true;
+
                 NavMeshHit hit;
                 if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
                 {

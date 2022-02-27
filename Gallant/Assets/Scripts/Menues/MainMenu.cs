@@ -46,7 +46,7 @@ public class MainMenu : MonoBehaviour
         GameManager.currentLevel = 0;
         GameManager.ResetPlayerInfo();
         EndScreenMenu.Restart();
-        LevelManager.Instance.LoadNewLevel("MainLevel_1");
+        LevelManager.Instance.LoadNewLevel("HubWorld");
     }
     public void MainDisplay()
     {

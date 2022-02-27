@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ActorSystem.AI;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,8 +30,9 @@ public class LevelManager : SingletonPersistent<LevelManager>
     public bool isTransitioning = false;
     public float transitionTime = 1.0f;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         //SceneManager.sceneLoaded += OnSceneLoaded;
         transitionPrefab = Resources.Load<GameObject>("Transitions/TransitionCanvas");
         youdiedPrefab = Resources.Load<GameObject>("Transitions/YouDiedCanvas");
@@ -39,7 +41,6 @@ public class LevelManager : SingletonPersistent<LevelManager>
 
     private void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         loadingNextArea = false;
     }
 
@@ -94,6 +95,8 @@ public class LevelManager : SingletonPersistent<LevelManager>
     {
         float timeMult = 1.0f;
         isTransitioning = true;
+
+        ActorManager.Instance.ClearActors();
 
         switch (_transition)
         {
