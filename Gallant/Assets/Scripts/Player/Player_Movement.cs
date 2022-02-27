@@ -54,7 +54,8 @@ public class Player_Movement : MonoBehaviour
 
     [Header("Ice")]
     [SerializeField] private float m_slip = 1.0f;
-    [SerializeField] private bool m_onIce = false;
+    public bool m_onIce = false;
+    private bool m_wasOnIce = false;
     private Vector3 m_slideVelocity = Vector3.zero;
 
     //Respawn Code
@@ -235,7 +236,7 @@ public class Player_Movement : MonoBehaviour
 
                 // Apply movement
                 m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
-                movement = normalizedMove * Mathf.Lerp(m_moveSpeed * m_attackMoveSpeed, m_moveSpeed, m_currentMoveSpeedLerp) * _deltaTime;
+                movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
                 //    movement *= m_attackMoveSpeed;
@@ -320,6 +321,8 @@ public class Player_Movement : MonoBehaviour
 
         if (m_onIce)
         {
+            if (!m_wasOnIce)
+                m_slideVelocity = horizLastMove * _deltaTime;
             if (!m_isRolling)
             {
                 m_slideVelocity -= m_slideVelocity * _deltaTime;
@@ -335,12 +338,14 @@ public class Player_Movement : MonoBehaviour
             {
                 m_slideVelocity = horizLastMove * _deltaTime;
             }
-            
+            m_wasOnIce = true;
         }
         else
         {
             m_slideVelocity = Vector3.zero;
             characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+
+            m_wasOnIce = false;
         }
 
         //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
