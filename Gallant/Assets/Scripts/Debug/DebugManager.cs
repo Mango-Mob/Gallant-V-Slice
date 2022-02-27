@@ -133,7 +133,8 @@ public class DebugManager : SingletonPersistent<DebugManager>
         m_ActorCountTxt.text = count.ToString();
         m_killAllBtn.interactable = count > 0;
 
-        HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
+        if(HUDManager.Instance != null)
+            HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
 
         DebugManager.showRoomLocations = m_showRooms.isOn;
     }

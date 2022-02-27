@@ -56,6 +56,9 @@ namespace ActorSystem
         }
         public void StartCombat()
         {
+            if (m_waves.Count == 0)
+                return;
+
             var wave = m_waves[0];
             m_waves.RemoveAt(0);
 
