@@ -52,6 +52,12 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
 
+    [Header("Ice")]
+    [SerializeField] private float m_slip = 1.0f;
+    public bool m_onIce = false;
+    private bool m_wasOnIce = false;
+    private Vector3 m_slideVelocity = Vector3.zero;
+
     //Respawn Code
     public Vector3 m_lastGroundedPosition { get; private set; }
     public Vector3 m_lastGroundedVelocity { get; private set; }
@@ -230,7 +236,7 @@ public class Player_Movement : MonoBehaviour
 
                 // Apply movement
                 m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
-                movement = normalizedMove * Mathf.Lerp(m_moveSpeed * m_attackMoveSpeed, m_moveSpeed, m_currentMoveSpeedLerp) * _deltaTime;
+                movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
                 //    movement *= m_attackMoveSpeed;
@@ -310,8 +316,42 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
+        Vector3 horizLastMove = characterController.velocity;
+        horizLastMove.y = 0;
+
+        if (m_onIce)
+        {
+            if (!m_wasOnIce)
+                m_slideVelocity = horizLastMove * _deltaTime;
+            if (!m_isRolling)
+            {
+                m_slideVelocity -= m_slideVelocity * _deltaTime;
+                m_slideVelocity += movement * m_slip * _deltaTime;
+
+                if (m_slideVelocity.magnitude > m_moveSpeed)
+                {
+                    m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
+                }
+                characterController.Move(m_slideVelocity + transform.up * m_yVelocity * Time.fixedDeltaTime);
+            }
+            else
+            {
+                m_slideVelocity = horizLastMove * _deltaTime;
+            }
+            m_wasOnIce = true;
+        }
+        else
+        {
+            m_slideVelocity = Vector3.zero;
+            characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+
+            m_wasOnIce = false;
+        }
+
+        //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move
-        characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+        //characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
+
     }
 
     /*******************

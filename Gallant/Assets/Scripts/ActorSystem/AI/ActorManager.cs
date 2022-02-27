@@ -10,7 +10,7 @@ namespace ActorSystem.AI
 
         public Dictionary<string, List<Actor>> m_reserved = new Dictionary<string, List<Actor>>();
 
-        private void OnLevelWasLoaded(int level)
+        public void ClearActors()
         {
             foreach (var item in m_reserved.Values)
             {

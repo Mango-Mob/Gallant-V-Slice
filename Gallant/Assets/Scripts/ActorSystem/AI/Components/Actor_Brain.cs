@@ -233,7 +233,7 @@ namespace ActorSystem.AI.Components
 
         public void DropOrbs(int amount)
         {
-            AdrenalineDrop.CreateAdrenalineDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
+            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
         }
 
         public bool PlaySoundEffect(string soundName)

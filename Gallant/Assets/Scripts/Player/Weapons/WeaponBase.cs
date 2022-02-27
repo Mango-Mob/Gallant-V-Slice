@@ -47,7 +47,12 @@ public abstract class WeaponBase : MonoBehaviour
 
     public virtual string GetWeaponName()
     {
-        return m_weaponData.weaponType.ToString()[0] + m_weaponData.weaponType.ToString().Substring(1).ToLower();
+        if (m_weaponData.overrideAnimation =="")
+            return m_weaponData.weaponType.ToString()[0] + m_weaponData.weaponType.ToString().Substring(1).ToLower();
+        else
+        {
+            return m_weaponData.overrideAnimation;
+        }
     }
 
     /*******************

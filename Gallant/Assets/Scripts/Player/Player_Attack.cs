@@ -13,6 +13,8 @@ public enum Weapon
     BRICK,
     AXE,
     STAFF,
+    GREATSWORD,
+    BOW,
 }
 public enum Hand
 {
@@ -449,8 +451,12 @@ public class Player_Attack : MonoBehaviour
             case Weapon.BRICK:
                 return gameObject.AddComponent<Weapon_Brick>();
             case Weapon.AXE:
-                return gameObject.AddComponent<Weapon_Sword>();
+                return gameObject.AddComponent<Weapon_Axe>();
             case Weapon.STAFF:
+                return gameObject.AddComponent<Weapon_Staff>();
+            case Weapon.BOW:
+                return gameObject.AddComponent<Weapon_Bow>();
+            case Weapon.GREATSWORD:
                 return gameObject.AddComponent<Weapon_Sword>();
             default:
                 return null;
@@ -557,6 +563,23 @@ public class Player_Attack : MonoBehaviour
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
                 break;
+        }
+    }
+
+    public void SetWeaponData(Hand _hand, WeaponData _data)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftWeaponData = _data;
+                ApplyWeaponData(Hand.LEFT);
+                break;
+            case Hand.RIGHT:
+                m_rightWeaponData = _data;
+                ApplyWeaponData(Hand.RIGHT);
+                break;
+            default:
+                return;
         }
     }
 }

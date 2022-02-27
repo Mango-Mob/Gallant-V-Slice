@@ -13,6 +13,7 @@ namespace ActorSystem.AI.Users
         [Header("~ ShopKeeper ~")]
         public TextAsset m_dialog;
         public float m_disableDistance;
+        public RewardManager.RewardType m_myShopType;
 
         private bool m_hasGivenReward = false;
 
@@ -83,7 +84,7 @@ namespace ActorSystem.AI.Users
         private void Reward()
         {
             DialogManager.Instance.Hide();
-            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), m_myShopType);
             DialogManager.Instance.m_interact = null;
             m_hasGivenReward = true;
         }
