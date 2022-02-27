@@ -19,6 +19,7 @@ public class Player_Controller : MonoBehaviour
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     private Hand m_lastAttackHand = Hand.NONE;
+    private InkmanClass m_inkmanClass;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -69,7 +70,6 @@ public class Player_Controller : MonoBehaviour
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
-
     }
 
     // Update is called once per frame
@@ -94,9 +94,9 @@ public class Player_Controller : MonoBehaviour
 
         float swordRunWeight = 0.0f;
         if (playerAttack.m_leftWeaponData != null)
-            swordRunWeight += playerAttack.m_leftWeaponData.weaponType == Weapon.SWORD ? -1.0f : 0.0f;
+            swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
         if (playerAttack.m_rightWeaponData != null)
-            swordRunWeight += playerAttack.m_rightWeaponData.weaponType == Weapon.SWORD ? 1.0f : 0.0f;
+            swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
 
         animator.SetFloat("SwordRunWeight", swordRunWeight);
 
@@ -241,7 +241,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
-            AdrenalineDrop.CreateAdrenalineDropGroup(5, new Vector3(0, transform.position.y + 0.5f, 0));
+            CurrencyDrop.CreateCurrencyDropGroup(5, new Vector3(0, transform.position.y + 0.5f, 0));
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ZERO))
         {
@@ -253,7 +253,11 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_SIX))
         {
             //playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
-            StorePlayerInfo();
+            //StorePlayerInfo();
+
+            if (playerAttack.m_rightWeaponData)
+                playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
+            playerAttack.ApplyWeaponData(Hand.RIGHT);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_SEVEN))
         {
@@ -434,4 +438,16 @@ public class Player_Controller : MonoBehaviour
         Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized;
         RespawnPlayerTo(targetPosition, _isFullHP);
     }
+    public void SelectClass(ClassData _class)
+    {
+        m_inkmanClass = _class.inkmanClass;
+
+        //WeaponData data = null;
+
+        //_class.leftWeapon.Clone(data);
+        playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
+
+        //_class.rightWeapon.Clone(data);
+        playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
+    }    
 }

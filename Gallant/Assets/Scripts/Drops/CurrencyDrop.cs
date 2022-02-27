@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AdrenalineDrop : MonoBehaviour
+public class CurrencyDrop : MonoBehaviour
 {
-    [SerializeField] private float m_heldAdrenaline = 0.3f;
+    [SerializeField] private int m_heldValue = 1;
     [SerializeField] private float m_pickupRange = 0.75f;
     [SerializeField] private float m_pullRange = 2.0f;
     [SerializeField] private float m_forceMultiplier = 2.0f;
@@ -17,11 +17,11 @@ public class AdrenalineDrop : MonoBehaviour
 
     static bool m_isLayerCollisionConfigured = false;
 
-    static public void CreateAdrenalineDropGroup(uint _count, Vector3 _position, float _valuePerOrb = 0.3f)
+    static public void CreateCurrencyDropGroup(uint _count, Vector3 _position, float _valuePerOrb = 0.3f)
     {
-        GameObject orbPrefab = Resources.Load<GameObject>("AdrenalineDrop");
+        GameObject orbPrefab = Resources.Load<GameObject>("CurrencyDrop");
         if (orbPrefab == null)
-            Debug.LogError("Could not find adrenaline orb prefab");
+            Debug.LogError("Could not find currency orb prefab");
 
         for (int i = 0; i < _count; i++)
         {
@@ -79,7 +79,8 @@ public class AdrenalineDrop : MonoBehaviour
             {
                 if (distance < m_pickupRange)
                 {
-                    m_targetPlayer.playerResources.ChangeAdrenaline(1);
+                    //m_targetPlayer.playerResources.ChangeAdrenaline(1);
+                    PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_heldValue);
                     Destroy(gameObject);
                     return;
                 }

@@ -10,6 +10,7 @@ using UnityEngine;
  * @year : 2021
  */
 [CreateAssetMenu(fileName = "weaponData", menuName = "Game Data/Weapon Data", order = 1)]
+[System.Serializable]
 public class WeaponData : ScriptableObject
 {
     public string weaponName;
@@ -136,6 +137,12 @@ public class WeaponData : ScriptableObject
             case Weapon.STAFF:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/staffData"));
                 break;
+            case Weapon.GREATSWORD:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/greatswordData"));
+                break;
+            case Weapon.BOW:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/bowData"));
+                break;
         }
     }
     private static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
@@ -171,6 +178,13 @@ public class WeaponData : ScriptableObject
                 Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
                 break;
         }
+    }
+
+    public static WeaponData UpgradeWeaponLevel(WeaponData _data)
+    {
+        WeaponData data = CreateInstance<WeaponData>();
+        data.Clone(_data);
+        return GenerateSpecificWeapon(data.m_level + 1, data.weaponType, data.abilityData != null ? data.abilityData.abilityPower : Ability.NONE, data.abilityData != null ? data.abilityData.starPowerLevel : 1);
     }
 
     public void Clone(WeaponData other)
