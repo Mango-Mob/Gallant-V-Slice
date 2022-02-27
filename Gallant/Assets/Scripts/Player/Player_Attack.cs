@@ -6,10 +6,15 @@ using UnityEngine;
 public enum Weapon
 {
     SWORD,
-    SHIELD,
-    BOOMERANG,
-    CROSSBOW,
     SPEAR,
+    BOOMERANG,
+    SHIELD,
+    CROSSBOW,
+    BRICK,
+    AXE,
+    STAFF,
+    GREATSWORD,
+    BOW,
 }
 public enum Hand
 {
@@ -79,7 +84,7 @@ public class Player_Attack : MonoBehaviour
      */
     public void StartUsing(Hand _hand)
     {
-        WeaponData thisData;
+        WeaponBase thisWeapon;
         string animatorTriggerName = "";
 
         switch (_hand)
@@ -88,14 +93,14 @@ public class Player_Attack : MonoBehaviour
                 if (m_leftWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_leftWeaponData;
+                thisWeapon = m_leftWeapon;
                 animatorTriggerName += "Left";
                 break;
             case Hand.RIGHT: // Right hand weapon
                 if (m_rightWeaponInUse)
                     return;
                 // Set weapon information
-                thisData = m_rightWeaponData;
+                thisWeapon = m_rightWeapon;
                 animatorTriggerName += "Right";
                 break;
             default:
@@ -104,13 +109,15 @@ public class Player_Attack : MonoBehaviour
         }
 
         // If weapon is not in hand
-        if (thisData == null)
+        if (thisWeapon == null)
             return;
 
-        animatorTriggerName += thisData.weaponType.ToString()[0] + thisData.weaponType.ToString().Substring(1).ToLower();
+        animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();
-        playerController.animator.SetBool(animatorTriggerName, true);
+        //playerController.animator.SetBool(animatorTriggerName, true);
+        playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
+        //playerController.animator.CrossFade(animatorTriggerName, 0.1f);
     }
 
     /*******************
@@ -235,17 +242,29 @@ public class Player_Attack : MonoBehaviour
         bool usingLeft = false;
         // thisData.weaponType.ToString()[0] + thisData.weaponType.ToString().Substring(1)
         
-        foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        if (playerController.animator.GetBool("UsingRight"))
         {
-            if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
-            {
-                usingRight = true;
-            }
-            if (playerController.animator.GetBool("Left" + name[0] + name.Substring(1).ToLower()))
-            {
-                usingLeft = true;
-            }
+            usingRight = true;
         }
+        if (playerController.animator.GetBool("UsingLeft"))
+        {
+            usingLeft = true;
+        }
+
+        //foreach (string name in System.Enum.GetNames(typeof(Weapon)))
+        //{
+        //    if (name == "BRICK")
+        //        continue;
+
+        //    if (playerController.animator.GetBool("Right" + name[0] + name.Substring(1).ToLower()))
+        //    {
+        //        usingRight = true;
+        //    }
+        //    if (playerController.animator.GetBool("Left" + name[0] + name.Substring(1).ToLower()))
+        //    {
+        //        usingLeft = true;
+        //    }
+        //}
 
         //if (playerController.animator.GetBool("RightShield")
         //    || playerController.animator.GetBool("RightSword")
@@ -429,6 +448,16 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Crossbow>();
             case Weapon.SPEAR:
                 return gameObject.AddComponent<Weapon_Spear>();
+            case Weapon.BRICK:
+                return gameObject.AddComponent<Weapon_Brick>();
+            case Weapon.AXE:
+                return gameObject.AddComponent<Weapon_Axe>();
+            case Weapon.STAFF:
+                return gameObject.AddComponent<Weapon_Staff>();
+            case Weapon.BOW:
+                return gameObject.AddComponent<Weapon_Bow>();
+            case Weapon.GREATSWORD:
+                return gameObject.AddComponent<Weapon_Sword>();
             default:
                 return null;
         }
@@ -482,8 +511,8 @@ public class Player_Attack : MonoBehaviour
         if (m_leftWeapon)
             m_leftWeapon.m_weaponObject.SetActive(_show);
 
-        if (m_leftWeapon)
-            m_leftWeapon.m_weaponObject.SetActive(_show);
+        if (m_rightWeapon)
+            m_rightWeapon.m_weaponObject.SetActive(_show);
 
         //if (m_leftWeaponObject != null)
         //    m_leftWeaponObject.SetActive(_show);
@@ -534,6 +563,23 @@ public class Player_Attack : MonoBehaviour
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
                 break;
+        }
+    }
+
+    public void SetWeaponData(Hand _hand, WeaponData _data)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftWeaponData = _data;
+                ApplyWeaponData(Hand.LEFT);
+                break;
+            case Hand.RIGHT:
+                m_rightWeaponData = _data;
+                ApplyWeaponData(Hand.RIGHT);
+                break;
+            default:
+                return;
         }
     }
 }

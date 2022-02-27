@@ -21,7 +21,7 @@ public class CrossbowBolt : MonoBehaviour
 
         if (m_weaponData != null)
         {
-            m_projectileSpeed = m_projectileSpeed * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed; 
+            m_projectileSpeed = m_projectileSpeed * m_weaponData.m_projectileSpeed * m_projectileUser.playerController.playerStats.m_attackSpeed; 
         }
     }
     // Update is called once per frame

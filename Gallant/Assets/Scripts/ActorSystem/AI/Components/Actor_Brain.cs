@@ -14,17 +14,16 @@ namespace ActorSystem.AI.Components
      * @file : Actor.cs
      * @year : 2021
      */
-    public class Actor_Brain : MonoBehaviour
+    public class Actor_Brain : Actor_Component
     {
         #region Actor sub-sections
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
-        public Actor_Tracker m_tracker { get; private set; } //The stat tracker for dummy
         public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
         public Actor_Material m_material { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
-
+        public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
 
         public MultiAudioAgent m_audioAgent { get; private set; }
@@ -47,25 +46,26 @@ namespace ActorSystem.AI.Components
         private float m_baseAbilResist;
 
         private FloatRange m_adrenalineGain;
+        private Timer m_refreshTimer;
         protected virtual void Awake()
         {
             m_arms = GetComponentInChildren<Actor_Arms>();
             m_legs = GetComponentInChildren<Actor_Legs>();
             m_animator = GetComponentInChildren<Actor_Animator>();
-            m_tracker = GetComponentInChildren<Actor_Tracker>();
             m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
             m_material = GetComponentInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponentInChildren<MultiAudioAgent>();
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
-
+            m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
+            m_myOutline.enabled = false;
             SetOutlineEnabled(false);
         }
 
         public void StartSpawnAnimation()
         {
-            m_animator.enabled = true;
+            m_animator.SetEnabled(true);
             m_animator.PlayAnimation("Spawn");
         }
 
@@ -73,56 +73,30 @@ namespace ActorSystem.AI.Components
         {
             //Externals
             UpdateExternals();
-
+            m_refreshTimer?.Update();
         }
 
-        public void OnEnable()
+        public override void SetEnabled(bool status)
         {
-            SetEnabled(true);
-        }
+            this.enabled = status;
+            foreach (var item in GetComponentsInChildren<Actor_Component>())
+            {
+                if (item == this)
+                    continue;
 
-        public void OnDisable()
-        {
-            SetEnabled(false);
-        }
-
-
-        private void SetEnabled(bool status)
-        {
-            if (m_arms != null)
-                m_arms.enabled = status;
-
-            if (m_legs != null)
-                m_legs.enabled = status;
-
-            if (m_animator != null)
-                m_animator.enabled = status;
-
-            if (m_tracker != null)
-                m_tracker.enabled = status;
-
-            if (m_projSource != null)
-                m_projSource.enabled = status;
-
-            if (m_material != null)
-                m_material.enabled = status;
-
-            if (m_ui != null)
-                m_ui.enabled = status;
-
-            if (m_audioAgent != null)
-                m_audioAgent.enabled = status;
-
-            if (m_myOutline != null)
-                m_myOutline.enabled = status;
+                item.SetEnabled(status);
+            }
         }
 
         private void UpdateExternals()
         {
-            m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
-            m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
+            if(m_animator != null && m_animator.m_hasVelocity)
+            {
+                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
+                m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
+            }
+
             m_ui?.SetBar("Health", (float) m_currHealth / m_startHealth);
-            m_tracker?.RecordResistance(m_currPhyResist, m_currAbilResist);
         }
 
         public void LoadData(ActorData _data, uint _level = 0)
@@ -154,7 +128,8 @@ namespace ActorSystem.AI.Components
             //projScource
 
             //Material
-            m_material.RefreshColor();
+            m_material?.RefreshColor();
+            
             //UI
 
             //Colliders
@@ -164,6 +139,16 @@ namespace ActorSystem.AI.Components
             }
 
             //Start
+            if(_data.invincible && m_refreshTimer == null)
+            {
+                m_refreshTimer = new Timer();
+                m_refreshTimer.onFinish.AddListener(Refresh);
+            }
+            else if(!_data.invincible)
+            {
+                m_refreshTimer = null;
+            }
+                
             m_currHealth = m_startHealth;
             m_currPhyResist = m_basePhyResist;
             m_currAbilResist = m_baseAbilResist;
@@ -208,7 +193,7 @@ namespace ActorSystem.AI.Components
             m_arms.m_activeAttack = null;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type)
+        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null)
         {
             switch (_type)
             {
@@ -225,8 +210,14 @@ namespace ActorSystem.AI.Components
             }
 
             //External
-            m_tracker?.RecordDamage(damage);
             m_material?.ShowHit();
+            m_refreshTimer?.Start(5.0f);
+            //Hit animation
+            if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
+            {
+                m_animator.SetTrigger("Hit");
+                m_animator.SetVector3("HitHorizontal", "", "HitVertical", (transform.position.DirectionTo(_damageLoc.Value)).normalized);
+            }
 
             //Internal
             m_currHealth -= damage;
@@ -235,13 +226,20 @@ namespace ActorSystem.AI.Components
             return IsDead;
         }
 
+        public void Refresh()
+        {
+            m_currHealth = m_startHealth;
+        }
+
         public void DropOrbs(int amount)
         {
-            AdrenalineDrop.CreateAdrenalineDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
+            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
         }
 
         public bool PlaySoundEffect(string soundName)
         {
+            if (m_audioAgent == null)
+                return false;
             return m_audioAgent.Play(soundName, false, UnityEngine.Random.Range(0.75f, 1.25f));
         }
 

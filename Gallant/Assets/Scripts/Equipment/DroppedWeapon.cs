@@ -84,7 +84,7 @@ public class DroppedWeapon : MonoBehaviour
     public static GameObject CreateDroppedWeapon(Vector3 _position, WeaponData _data) 
     {
         GameObject prefab = Resources.Load<GameObject>("BaseWeaponDrop"); // Get prefab from resources.
-        GameObject droppedWeapon = Instantiate(prefab, _position, Quaternion.Euler(0, 0, 0)); // Instantiate object at given position
+        GameObject droppedWeapon = Instantiate(prefab, _position, Quaternion.Euler(30, 0, 0)); // Instantiate object at given position
 
         if (droppedWeapon.GetComponent<DroppedWeapon>())
         {

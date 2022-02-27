@@ -14,7 +14,7 @@ namespace ActorSystem.AI.Components
 {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Rigidbody))]
-    public class Actor_Legs : MonoBehaviour
+    public class Actor_Legs : Actor_Component
     {
         [HideInInspector]
         public float m_baseSpeed;
@@ -93,30 +93,35 @@ namespace ActorSystem.AI.Components
                 return;
             }
 
-            m_agent.isStopped = false;
-            m_agent.velocity = moveVector;
+            if(m_agent.enabled && m_agent.isOnNavMesh)
+            {
+                m_agent.isStopped = false;
+                m_agent.velocity = moveVector;
+            }
         }
 
-        public void OnEnable()
+        public override void SetEnabled(bool status)
         {
-            m_agent.enabled = true;
-            NavMeshHit hit;
-            if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+            this.enabled = status;
+            if(status)
             {
-                m_agent.Warp(hit.position);
-                m_agent.updatePosition = true;
+                NavMeshHit hit;
+                if (!m_agent.updatePosition && NavMesh.SamplePosition(transform.position, out hit, 0.15f, NavMesh.AllAreas))
+                {
+                    m_agent.Warp(hit.position);
+                    m_agent.updatePosition = true;
+                    m_body.isKinematic = true;
+                }
+                else if (!m_agent.updatePosition)
+                {
+                    m_body.isKinematic = false;
+                }
+            }
+            else
+            {
+                m_agent.enabled = false;
                 m_body.isKinematic = true;
             }
-            else if(!m_agent.updatePosition)
-            {
-                m_body.isKinematic = false;
-            }
-        }
-
-        public void OnDisable()
-        {
-            m_agent.enabled = false;
-            m_body.isKinematic = true;
         }
 
         /*********************

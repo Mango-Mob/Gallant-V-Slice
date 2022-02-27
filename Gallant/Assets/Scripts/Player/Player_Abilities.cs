@@ -9,6 +9,8 @@ public enum Ability
     ICE_ROLL,
     HP_BUFF,
     THORNS,
+    ARCANE_BOLT,
+    FLAME_ROLL,
 
     NONE,
 }
@@ -139,12 +141,18 @@ public class Player_Abilities : MonoBehaviour
                 abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
                 break;
             case Ability.HP_BUFF:
-                    abilityScript = gameObject.AddComponent<Ability_Barrier>();
-                    break;
+                abilityScript = gameObject.AddComponent<Ability_Barrier>();
+                break;
             case Ability.THORNS:
                 abilityScript = gameObject.AddComponent<Ability_Thorns>();
-                    break;
-            default:
+                break;
+            case Ability.ARCANE_BOLT:
+                abilityScript = gameObject.AddComponent<Ability_ArcaneBolt>();
+                break;
+            case Ability.FLAME_ROLL:
+                abilityScript = gameObject.AddComponent<Ability_FlameEvade>();
+                break;
+                default:
                 Debug.Log("No ability script set for " + _ability);
                 break;
         }
@@ -230,13 +238,13 @@ public class Player_Abilities : MonoBehaviour
                 abilityScript.AbilityPassive();
                 break;
             case PassiveType.HIT_RECIEVED:
-                if (_object == null)
-                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                //if (_object == null)
+                //    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
                 abilityScript.AbilityOnHitRecieved(_object, _damage);
                 break;
             case PassiveType.HIT_DEALT:
-                if (_object == null)
-                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                //if (_object == null)
+                //    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
                 abilityScript.AbilityOnHitDealt(_object, _damage);
                 break;
             case PassiveType.BEGIN_ROLL:

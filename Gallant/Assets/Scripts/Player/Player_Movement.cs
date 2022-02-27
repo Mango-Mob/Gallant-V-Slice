@@ -16,11 +16,14 @@ public class Player_Movement : MonoBehaviour
 
     public GameObject playerModel;
 
+    private float m_currentMoveSpeedLerp = 1.0f;
+
     [Header("Movement Attributes")]
     public float m_gravityMult = 9.81f;
     public float m_moveSpeed = 5.0f;
     public float m_rollSpeed = 12.0f;
     public float m_attackMoveSpeed = 0.4f;
+    public float m_attackMoveSpeedLerpSpeed = 5.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
@@ -48,6 +51,12 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_maxAngle = 60.0f;
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
+
+    [Header("Ice")]
+    [SerializeField] private float m_slip = 1.0f;
+    public bool m_onIce = false;
+    private bool m_wasOnIce = false;
+    private Vector3 m_slideVelocity = Vector3.zero;
 
     //Respawn Code
     public Vector3 m_lastGroundedPosition { get; private set; }
@@ -226,10 +235,11 @@ public class Player_Movement : MonoBehaviour
                 normalizedMove += _move.x * transform.right;
 
                 // Apply movement
-                movement = normalizedMove * speed * _deltaTime;
+                m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
+                movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
-                if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
-                    movement *= m_attackMoveSpeed;
+                //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
+                //    movement *= m_attackMoveSpeed;
 
                 // If player is not trying to aim, aim in direction of movement.
                 if (_aim.magnitude == 0 && m_currentTarget == null)
@@ -306,8 +316,42 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
+        Vector3 horizLastMove = characterController.velocity;
+        horizLastMove.y = 0;
+
+        if (m_onIce)
+        {
+            if (!m_wasOnIce)
+                m_slideVelocity = horizLastMove * _deltaTime;
+            if (!m_isRolling)
+            {
+                m_slideVelocity -= m_slideVelocity * _deltaTime;
+                m_slideVelocity += movement * m_slip * _deltaTime;
+
+                if (m_slideVelocity.magnitude > m_moveSpeed)
+                {
+                    m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
+                }
+                characterController.Move(m_slideVelocity + transform.up * m_yVelocity * Time.fixedDeltaTime);
+            }
+            else
+            {
+                m_slideVelocity = horizLastMove * _deltaTime;
+            }
+            m_wasOnIce = true;
+        }
+        else
+        {
+            m_slideVelocity = Vector3.zero;
+            characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+
+            m_wasOnIce = false;
+        }
+
+        //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move
-        characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+        //characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
+
     }
 
     /*******************
@@ -366,22 +410,6 @@ public class Player_Movement : MonoBehaviour
         m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
-    /*******************
-     * GiveAdrenaline : Grants the player adrenaline when they perform a successful dodge.
-     * @author : William de Beer
-     * @param : (float) Value to add
-     */
-    public void GiveAdrenaline(float _val)
-    {
-        //playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
-
-        //playerController.playerResources.ChangeAdrenaline(_val);
-
-        //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
-
-        //Slow motion
-        GameManager.Instance.SlowTime(0.4f, _val);
-    }
 
     private void OnDrawGizmos()
     {

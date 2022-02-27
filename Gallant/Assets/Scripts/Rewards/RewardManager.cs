@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class RewardManager : Singleton<RewardManager>
 {
+    public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
+
     public GameObject m_window;
     public GameObject[] m_rewardSlots;
     public GameObject m_weaponRewardOption;
@@ -36,6 +38,14 @@ public class RewardManager : Singleton<RewardManager>
     private int m_select = -1;
     private float m_timer = 0.0f;
     private List<Reward> m_rewards = new List<Reward>();
+
+    public enum RewardType
+    {
+        STANDARD,   //One weapon garenteed
+        GENERAL,    //Completely random
+        WEAPONS,    //Three weapons garenteeds
+        RUNE,       //No Weapon garenteed
+    }
 
     protected void Start()
     {
@@ -94,7 +104,7 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
-    public void Show(int level)
+    public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_window.SetActive(true);
         m_rewards.Clear();
@@ -108,35 +118,58 @@ public class RewardManager : Singleton<RewardManager>
                     Destroy((m_rewardSlots[i].transform as RectTransform).GetChild(j).gameObject);
                 }
             }
-            
+
             //Generate a random selection of rewards
-            int rollSize = 10000;
-            float roll = Random.Range(0, rollSize);
             List<ScriptableObject> rewards = new List<ScriptableObject>();
-
-            for (int i = 0; i < m_rewardSlots.Length; i++)
+            switch (type)
             {
-                if (roll <= m_weaponProbability[i] * rollSize)
-                {
-                    WeaponData weapon;
-                    do
-                    {
-                        weapon = WeaponData.GenerateWeapon(level);
-                    } while (!IsUniqueWeapon(rewards, weapon));
-
+                case RewardType.STANDARD:
+                    //Garenteed weapon
                     rewards.Add(WeaponData.GenerateWeapon(level));
-                }
-                else
-                {
-                    int select;
-                    do
+                    for (int i = 0; i < 2; i++)
                     {
-                        select = Random.Range(0, m_items.Count);
-                    } while (!IsUniqueItem(rewards, m_items[select]));
-
-                    rewards.Add(m_items[select]);
-                }
+                        if (IsAWeaponReward())
+                        {
+                            rewards.Add(GenerateWeapon(rewards, level));
+                        }
+                        else
+                        {
+                            rewards.Add(GenerateItem(rewards));
+                        }
+                    }
+                    break;
+                case RewardType.GENERAL:
+                    //Complete random
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (IsAWeaponReward())
+                        {
+                            rewards.Add(GenerateWeapon(rewards, level));
+                        }
+                        else
+                        {
+                            rewards.Add(GenerateItem(rewards));
+                        }
+                    }
+                    break;
+                case RewardType.WEAPONS:
+                    //Three weapons
+                    for (int i = 0; i < 3; i++)
+                    {
+                        rewards.Add(GenerateWeapon(rewards, level));
+                    }
+                    break;
+                case RewardType.RUNE:
+                    //No Weapons
+                    for (int i = 0; i < 3; i++)
+                    {
+                        rewards.Add(GenerateItem(rewards));
+                    }
+                    break;
+                default:
+                    break;
             }
+
             //Shuffle
             rewards.Sort((a, b) => { return 1 - 2 * Random.Range(0, 2); });
 
@@ -159,6 +192,40 @@ public class RewardManager : Singleton<RewardManager>
             }
             EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
         }
+    }
+
+    public bool IsAWeaponReward(int magnitude = 10000)
+    {
+        int totalOptions = m_items.Count + System.Enum.GetNames(typeof(Weapon)).Length;
+        float probOfWeapon = (m_items.Count - totalOptions) / totalOptions;
+
+        return (Random.Range(0, magnitude) <= probOfWeapon * magnitude);
+    }
+
+    public WeaponData GenerateWeapon(List<ScriptableObject> currentList, int level)
+    {
+        WeaponData weapon;
+        do
+        {
+            weapon = WeaponData.GenerateWeapon(level);
+        } while (!IsUniqueWeapon(currentList, weapon));
+
+        return weapon;
+    }
+    public ItemData GenerateItem(List<ScriptableObject> currentList)
+    {
+        int select;
+        do
+        {
+            select = Random.Range(0, m_items.Count);
+        } while (!IsUniqueItem(currentList, m_items[select]));
+
+        return m_items[select];
+    }
+
+    private void LoadRewards(RewardType type, int level)
+    {
+        
     }
 
     public void Hover(int id)

@@ -45,10 +45,9 @@ public class Ability_FrostEvade : AbilityBase
     }
     public override void AbilityOnBeginRoll()
     {
-        Debug.Log("Ice go woosh");
         if (m_pathPrefab != null)
         {
-            playerController.playerAudioAgent.Iceroll();
+            playerController.playerAudioAgent.FirewaveLaunch();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_pathPrefab,

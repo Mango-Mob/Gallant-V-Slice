@@ -17,7 +17,7 @@ public abstract class WeaponBase : MonoBehaviour
     public Hand m_hand;
 
     // Start is called before the first frame update
-    protected virtual void Awake()
+    protected void Awake()
     {
         playerController = GetComponent<Player_Controller>();
     }
@@ -45,6 +45,15 @@ public abstract class WeaponBase : MonoBehaviour
     public void SetHand(Hand _hand) { m_hand = _hand; }
     public void SetInUse(bool _inUse) { m_isInUse = _inUse; }
 
+    public virtual string GetWeaponName()
+    {
+        if (m_weaponData.overrideAnimation =="")
+            return m_weaponData.weaponType.ToString()[0] + m_weaponData.weaponType.ToString().Substring(1).ToLower();
+        else
+        {
+            return m_weaponData.overrideAnimation;
+        }
+    }
 
     /*******************
      * MeleeAttack : Create sphere attack detection and damages enemies in it.
