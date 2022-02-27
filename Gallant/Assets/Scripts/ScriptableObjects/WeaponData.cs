@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,11 +23,14 @@ public class WeaponData : ScriptableObject
     public AbilityData abilityData;
     public ItemEffect itemEffect; // Only for weapons with passives.
 
+    public string overrideAnimation = "";
+
     [Header("Base Weapon Stats")]
     public int m_level = 0;
     public int m_damage = 10; 
     public float m_speed = 1;
     public float m_knockback = 1;
+    public float m_projectileSpeed = 0;
 
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
@@ -38,16 +40,22 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)UnityEngine.Random.Range(0, Enum.GetNames(typeof(Weapon)).Length);
+        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length);
         ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.m_damage += (int)(data.m_damage * UnityEngine.Random.Range(0.1f, 0.2f) * (_level - 1.0f));
-        data.m_speed += (data.m_speed * UnityEngine.Random.Range(0.05f, 0.1f) * (_level - 1.0f));
+        data.SetDamage(data.m_damage + (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_level - 1.0f)));
+        data.SetSpeed(data.m_speed + (data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f)));
 
-        data.m_level = _level;
+        data.SetLevel(_level);
+
+        //// Damage / Speed are randomly assigned (between a range that increases based on the level value).
+        //data.m_damage += (int)(data.m_damage * Random.Range(0.1f, 0.2f) * (_level - 1.0f));
+        //data.m_speed += (data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f));
+
+        //data.m_level = _level;
 
         // Random ability and power level is assigned.
         Ability newAbilityType = (Ability)UnityEngine.Random.Range(0, 6);
@@ -90,11 +98,17 @@ public class WeaponData : ScriptableObject
 
         data.abilityData = null;
 
-        // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.m_damage += (int)(data.m_damage * UnityEngine.Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
-        data.m_speed += (int)(data.m_speed * UnityEngine.Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+        //// Damage / Speed are randomly assigned (between a range that increases based on the level value).
+        //data.m_damage += (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
+        //data.m_speed += (data.m_speed * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f));
 
-        data.m_level = _powerLevel;
+        //data.m_level = _powerLevel;
+
+        // Damage / Speed are randomly assigned (between a range that increases based on the level value).
+        data.SetDamage(data.m_damage + (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f)));
+        data.SetSpeed(data.m_speed + (data.m_speed * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f)));
+
+        data.SetLevel(_weaponLevel);
 
         ApplyAbilityData(data, _abilityType, _powerLevel);
 
@@ -187,22 +201,40 @@ public class WeaponData : ScriptableObject
         return GenerateSpecificWeapon(data.m_level + 1, data.weaponType, data.abilityData != null ? data.abilityData.abilityPower : Ability.NONE, data.abilityData != null ? data.abilityData.starPowerLevel : 1);
     }
 
+    public void SetDamage(int _damage)
+    {
+        this.m_damage = _damage;
+    }
+    public void SetSpeed(float _speed)
+    {
+        this.m_speed = _speed;
+    }
+    public void SetLevel(int _level)
+    {
+        this.m_level = _level;
+    }
+
+
     public void Clone(WeaponData other)
     {
-         this.weaponName = other.weaponName;
-         this.weaponType = other.weaponType;
-         this.weaponModelPrefab = other.weaponModelPrefab;
+        this.weaponName = other.weaponName;
+        this.weaponType = other.weaponType;
+        this.weaponModelPrefab = other.weaponModelPrefab;
 
-         this.isTwoHanded = other.isTwoHanded;
-         this.weaponIcon = other.weaponIcon;
-         this.hitCenterOffset = other.hitCenterOffset;
-         this.hitSize = other.hitSize;
-         this.abilityData = other.abilityData;
-         this.itemEffect = other.itemEffect;
+        this.isTwoHanded = other.isTwoHanded;
+        this.weaponIcon = other.weaponIcon;
+        this.hitCenterOffset = other.hitCenterOffset;
+        this.hitSize = other.hitSize;
+        this.abilityData = other.abilityData;
+        this.itemEffect = other.itemEffect;
 
-         this.m_level = other.m_level;
-         this.m_damage = other.m_damage;
-         this.m_speed = other.m_speed;
-         this.m_knockback = other.m_knockback;
+        this.overrideAnimation = other.overrideAnimation;
+
+        this.m_level = other.m_level;
+        this.m_damage = other.m_damage;
+        this.m_speed = other.m_speed;
+        this.m_knockback = other.m_knockback;
+        this.m_projectileSpeed = other.m_projectileSpeed;
+        
     }
 }

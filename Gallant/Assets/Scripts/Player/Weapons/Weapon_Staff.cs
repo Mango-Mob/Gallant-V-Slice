@@ -20,8 +20,4 @@ public class Weapon_Staff : Weapon_Sword
     {
         base.Update();
     }
-    public override string GetWeaponName()
-    {
-        return "Sword";
-    }
 }
