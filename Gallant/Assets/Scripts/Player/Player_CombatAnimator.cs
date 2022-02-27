@@ -16,7 +16,7 @@ public class Player_CombatAnimator : MonoBehaviour
         if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
             !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
         {
-            playerController.animator.CrossFade(_animName, 0.1f);
+            playerController.animator.CrossFade(_animName, 0.1f, playerController.animator.GetLayerIndex("Arm"));
 
             if (_animName[0] == 'L')
                 playerController.animator.SetBool("UsingLeft", true);

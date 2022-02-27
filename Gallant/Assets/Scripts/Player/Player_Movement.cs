@@ -53,9 +53,9 @@ public class Player_Movement : MonoBehaviour
     private UI_LockonTarget m_lockonTarget;
 
     [Header("Ice")]
-    private Vector3 m_slideVelocity = Vector3.zero;
     [SerializeField] private float m_slip = 1.0f;
     [SerializeField] private bool m_onIce = false;
+    private Vector3 m_slideVelocity = Vector3.zero;
 
     //Respawn Code
     public Vector3 m_lastGroundedPosition { get; private set; }
@@ -315,20 +315,27 @@ public class Player_Movement : MonoBehaviour
             }
         }
 
-        Vector3 horizLastMove = m_lastGroundedVelocity;
+        Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
 
         if (m_onIce)
         {
-            m_slideVelocity -= m_slideVelocity * _deltaTime;
-            m_slideVelocity += movement * m_slip * _deltaTime;
-
-            if (m_slideVelocity.magnitude > m_moveSpeed)
+            if (!m_isRolling)
             {
-                m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
-            }
+                m_slideVelocity -= m_slideVelocity * _deltaTime;
+                m_slideVelocity += movement * m_slip * _deltaTime;
 
-            characterController.Move(m_slideVelocity + transform.up * m_yVelocity * Time.fixedDeltaTime);
+                if (m_slideVelocity.magnitude > m_moveSpeed)
+                {
+                    m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
+                }
+                characterController.Move(m_slideVelocity + transform.up * m_yVelocity * Time.fixedDeltaTime);
+            }
+            else
+            {
+                m_slideVelocity = horizLastMove * _deltaTime;
+            }
+            
         }
         else
         {
@@ -338,7 +345,7 @@ public class Player_Movement : MonoBehaviour
 
         //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move
-        characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
+        //characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
 
     }
 
