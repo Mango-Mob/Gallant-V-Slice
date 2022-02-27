@@ -58,8 +58,8 @@ public class WeaponData : ScriptableObject
         //data.m_level = _level;
 
         // Random ability and power level is assigned.
-        Ability newAbilityType = (Ability)Random.Range(0, 6);
-        int curve = Random.Range(0, 3) + Random.Range(0, 3) - 2;
+        Ability newAbilityType = (Ability)UnityEngine.Random.Range(0, 6);
+        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
         int result = Mathf.Max(_level + curve, 0);
 
         // Power level

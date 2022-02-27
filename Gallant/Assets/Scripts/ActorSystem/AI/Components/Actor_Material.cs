@@ -5,7 +5,7 @@ using UnityEngine;
 namespace ActorSystem.AI.Components
 {
     [RequireComponent(typeof(Renderer))]
-    public class Actor_Material : MonoBehaviour
+    public class Actor_Material : Actor_Component
     {
         public Material m_hitMaterial;
         public bool m_isDisolving { get; private set; } = false;
@@ -54,9 +54,10 @@ namespace ActorSystem.AI.Components
                 }
             }
         }
-        private void LateUpdate()
-        {
 
+        public override void SetEnabled(bool status)
+        {
+            this.enabled = status;
         }
 
         public void StartDisolve()

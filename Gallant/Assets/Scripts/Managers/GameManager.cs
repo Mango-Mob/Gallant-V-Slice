@@ -34,29 +34,10 @@ public class GameManager : Singleton<GameManager>
         m_player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    public void SlowTime(float _percentage, float _duration)
+    public void FinishLevel()
     {
-        StartCoroutine(SlowTimeRoutine(_percentage, _duration));
-    }
-    private IEnumerator SlowTimeRoutine(float _percentage, float _duration)
-    {
-        
-        Time.timeScale = _percentage;
-        AudioManager.Instance.m_globalPitch = Time.timeScale;
-        Time.fixedDeltaTime = 0.02f * _percentage;
-        float rate = _duration / (1f - _percentage);
-        while (_duration > 0)
-        {
-            _duration -= Time.unscaledDeltaTime;
-            yield return new WaitForEndOfFrame();
-            AudioManager.Instance.m_globalPitch = Time.timeScale;
-            Time.timeScale += rate * Time.unscaledDeltaTime;
-            Time.fixedDeltaTime = 0.02f * _percentage;
-        }
-        Time.timeScale = 1.0f;
-        AudioManager.Instance.m_globalPitch = Time.timeScale;
-        Time.fixedDeltaTime = 0.02f;
-        yield return null;
+        //TODO
+        Debug.Log("Game over");
     }
 
     public static void Advance()

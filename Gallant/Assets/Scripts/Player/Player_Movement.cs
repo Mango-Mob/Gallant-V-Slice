@@ -398,22 +398,6 @@ public class Player_Movement : MonoBehaviour
         m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
-    /*******************
-     * GiveAdrenaline : Grants the player adrenaline when they perform a successful dodge.
-     * @author : William de Beer
-     * @param : (float) Value to add
-     */
-    public void GiveAdrenaline(float _val)
-    {
-        //playerController.playerAudioAgent.PlayAdrenalineGain(); // Audio
-
-        //playerController.playerResources.ChangeAdrenaline(_val);
-
-        //GetComponent<Player_AudioAgent>().PlayAdrenalineGain();
-
-        //Slow motion
-        GameManager.Instance.SlowTime(0.4f, _val);
-    }
 
     private void OnDrawGizmos()
     {
