@@ -453,9 +453,11 @@ public class Player_Attack : MonoBehaviour
             case Weapon.AXE:
                 return gameObject.AddComponent<Weapon_Axe>();
             case Weapon.STAFF:
-                return gameObject.AddComponent<Weapon_Sword>();
+                return gameObject.AddComponent<Weapon_Staff>();
             case Weapon.BOW:
-                return gameObject.AddComponent<Weapon_Crossbow>();
+                return gameObject.AddComponent<Weapon_Bow>();
+            case Weapon.GREATSWORD:
+                return gameObject.AddComponent<Weapon_Sword>();
             default:
                 return null;
         }

@@ -6,6 +6,7 @@ public class Weapon_Bow : Weapon_Crossbow
 {
     new private void Awake()
     {
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
         base.Awake();
     }
 
@@ -19,9 +20,5 @@ public class Weapon_Bow : Weapon_Crossbow
     new private void Update()
     {
         base.Update();
-    }
-    public override string GetWeaponName()
-    {
-        return "Spear";
     }
 }
