@@ -7,12 +7,14 @@ public class Room : MonoBehaviour
 {
     public bool m_finalRoom;
     public GameObject[] m_gates;
-    private ActorSpawner m_mySpawnner;
+    private Renderer m_debugRenderer;
+
+    public ActorSpawner m_mySpawnner { get; private set; }
     // Start is called before the first frame update
     protected virtual void Awake()
     {
         m_mySpawnner = GetComponentInChildren<ActorSpawner>();
-
+        m_debugRenderer = GetComponent<Renderer>();
         foreach (var item in m_gates)
         {
             item.SetActive(false);
@@ -22,7 +24,9 @@ public class Room : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(m_mySpawnner == null)
+        m_debugRenderer.enabled = DebugManager.showRoomLocations;
+
+        if (m_mySpawnner.m_waves.Count == 0 && !m_mySpawnner.m_hasStarted)
         {
             foreach (var gate in m_gates)
             {
@@ -35,21 +39,21 @@ public class Room : MonoBehaviour
                     GameManager.Instance.FinishLevel();
                 }
             }
-            else
-                Destroy(this);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if(m_mySpawnner.enabled && !m_mySpawnner.m_hasStarted)
         {
-            m_mySpawnner?.StartCombat();
-            foreach (var gate in m_gates)
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                gate.SetActive(true);
+                m_mySpawnner.StartCombat();
+                foreach (var gate in m_gates)
+                {
+                    gate.SetActive(true);
+                }
             }
-            GetComponent<Collider>().enabled = false;
         }
     }
 }

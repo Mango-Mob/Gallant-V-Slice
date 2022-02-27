@@ -13,6 +13,8 @@ namespace ActorSystem
         public float m_innerHeight = 0;
         public float m_outerRadius = 10.0f;
 
+        public float m_value;
+
         [Header("Predefined points")]
         public List<Vector3> m_positions = new List<Vector3>();
 
@@ -30,13 +32,18 @@ namespace ActorSystem
             public Vector3 m_forward;
         }
 
-        private bool m_hasStarted = false;
+        public bool m_hasStarted { get; private set; } = false;
 
         public uint m_spawnLocationCount;
         private List<SpawnLocation> m_spawnLocations = new List<SpawnLocation>();
-        
+        public List<RoomData> m_waveArchive;
         private void Awake()
         {
+            m_waveArchive = new List<RoomData>(m_waves);
+            foreach (var wave in m_waves)
+            {
+                m_value += wave.CalculateCost();
+            }
             for (int i = 0; i < m_spawnLocationCount; i++)
             {
                 CreateSpawn();
@@ -46,7 +53,6 @@ namespace ActorSystem
             {
                 StartCombat();
             }
-            
         }
         public void StartCombat()
         {
@@ -54,6 +60,27 @@ namespace ActorSystem
             m_waves.RemoveAt(0);
 
             SpawnWave(wave);
+        }
+
+        public void ForceWave(bool startCombat = false)
+        {
+            m_hasStarted = (startCombat || m_hasStarted);
+
+            var wave = m_waves[0];
+            m_waves.RemoveAt(0);
+
+            SpawnWave(wave);
+        }
+
+        public void Restart()
+        {
+            m_waves = new List<RoomData>(m_waveArchive);
+            Stop();
+        }
+
+        public void Stop()
+        {
+            m_hasStarted = false;
         }
 
         private void CreateSpawn()
@@ -322,9 +349,9 @@ namespace ActorSystem
             {
                  if (m_waves.Count == 0)
                  {
-                     Destroy(gameObject);
-                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
-                    GameManager.Advance();
+                     Stop();
+                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                     GameManager.Advance();
                  }
                  else
                  {
