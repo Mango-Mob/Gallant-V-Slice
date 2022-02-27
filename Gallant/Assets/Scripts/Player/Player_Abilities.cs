@@ -238,13 +238,13 @@ public class Player_Abilities : MonoBehaviour
                 abilityScript.AbilityPassive();
                 break;
             case PassiveType.HIT_RECIEVED:
-                if (_object == null)
-                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                //if (_object == null)
+                //    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
                 abilityScript.AbilityOnHitRecieved(_object, _damage);
                 break;
             case PassiveType.HIT_DEALT:
-                if (_object == null)
-                    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
+                //if (_object == null)
+                //    Debug.LogError($"Passive type {_type} requires _object and _float parameters to be used");
                 abilityScript.AbilityOnHitDealt(_object, _damage);
                 break;
             case PassiveType.BEGIN_ROLL:
