@@ -12,6 +12,9 @@ using UnityEngine.UI;
 public class DebugManager : SingletonPersistent<DebugManager>
 {
     public LayerMask m_raycastLayers;
+
+    public static bool showRoomLocations = false;
+
     [SerializeField] private GameObject m_contentParent;
     [SerializeField] private Image m_backgroundImage;
 
@@ -24,6 +27,15 @@ public class DebugManager : SingletonPersistent<DebugManager>
     [SerializeField] private Text m_selelectedName;
     [SerializeField] private Button[] m_toggleSelectedButtons;
     [SerializeField] private Button m_killOneBtn;
+    [SerializeField] private Toggle m_showRooms;
+    [SerializeField] private GameObject m_detailActorView;
+    [SerializeField] private GameObject m_detailRoomView;
+    [SerializeField] private GameObject m_detailOtherView;
+    [SerializeField] private Image m_toggleButtonImage;
+
+    //Room View
+    [SerializeField] private Text m_roomWaves;
+    [SerializeField] private Text m_roomCost;
 
     [Header("Scene Content")]
     [SerializeField] private Dropdown m_sceneList;
@@ -46,6 +58,7 @@ public class DebugManager : SingletonPersistent<DebugManager>
     // Start is called before the first frame update
     void Start()
     {
+        m_showRooms.isOn = showRoomLocations;
         m_sceneList.ClearOptions();
         List<string> options = new List<string>();
         
@@ -86,6 +99,7 @@ public class DebugManager : SingletonPersistent<DebugManager>
     // Update is called once per frame
     void Update()
     {
+        UpdateRoomDetails();
         if (InputManager.Instance.IsKeyDown(KeyType.TILDE))
         {
             GetComponent<Animator>().SetTrigger("StateUpdate");
@@ -119,7 +133,10 @@ public class DebugManager : SingletonPersistent<DebugManager>
         m_ActorCountTxt.text = count.ToString();
         m_killAllBtn.interactable = count > 0;
 
-        HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
+        if(HUDManager.Instance != null)
+            HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
+
+        DebugManager.showRoomLocations = m_showRooms.isOn;
     }
 
     private void SelectedUpdate()
@@ -134,9 +151,10 @@ public class DebugManager : SingletonPersistent<DebugManager>
                 ray = m_mainCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
 
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1 << m_raycastLayers))
+            if (Physics.Raycast(ray, out hit, m_raycastLayers))
             {
                 m_selected = hit.collider.gameObject;
+                EvaluateSelected();
             }
 
             m_selelectedName.text = (m_selected != null) ? $"\"{m_selected.name}\"" : "null";
@@ -144,6 +162,29 @@ public class DebugManager : SingletonPersistent<DebugManager>
             m_toggleSelectedButtons[0].interactable = !m_selected.activeInHierarchy;
             m_toggleSelectedButtons[1].interactable = m_selected.activeInHierarchy;
             m_killOneBtn.interactable = m_selected.GetComponentInParent<Actor>() != null;
+        }
+    }
+
+    public void EvaluateSelected()
+    {
+        m_detailActorView.SetActive(false);
+        m_detailRoomView.SetActive(false);
+        m_detailOtherView.SetActive(false);
+
+        if (m_selected.GetComponent<Actor>() != null)
+        {
+            m_detailActorView.SetActive(true);
+            return;
+        }
+        else if (m_selected.GetComponent<Room>() != null)
+        {
+            m_detailRoomView.SetActive(true);
+            return;
+        }
+        else
+        {
+            m_detailOtherView.SetActive(true);
+            return;
         }
     }
 
@@ -215,4 +256,46 @@ public class DebugManager : SingletonPersistent<DebugManager>
         m_toggleSelectedButtons[0].interactable = !status;
         m_toggleSelectedButtons[1].interactable = status;
     }
+
+    #region DisplayUpdate
+    private void UpdateRoomDetails()
+    {
+        if(m_detailRoomView.activeInHierarchy)
+        {
+            var room = m_selected.GetComponent<Room>();
+
+            if(room.m_mySpawnner.m_waves != null)
+                m_roomWaves.text = room.m_mySpawnner.m_waves.Count.ToString();
+            m_roomCost.text = room.m_mySpawnner.m_value.ToString();
+        }
+    }
+    #endregion
+
+    #region ButtonFunctions
+    public void ResetRoom()
+    {
+        var room = m_selected.GetComponent<Room>();
+        room.m_mySpawnner.Restart();
+    }
+
+    public void ToggleRoom()
+    {
+        var room = m_selected.GetComponent<Room>();
+        room.m_mySpawnner.enabled = !room.m_mySpawnner.enabled;
+        if(room.m_mySpawnner.enabled)
+        {
+            m_toggleButtonImage.color = new Color(0, 176, 0);
+        }
+        else
+        {
+            m_toggleButtonImage.color = new Color(197, 0, 0);
+        }
+    }
+
+    public void ForceRoom()
+    {
+        var room = m_selected.GetComponent<Room>();
+        room.m_mySpawnner.ForceWave();
+    }
+    #endregion
 }
