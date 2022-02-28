@@ -41,9 +41,9 @@ namespace ActorSystem.AI.Components
         public float m_idealDistance = 1.5f;
 
         private bool m_isInvincible;
-        private float m_startHealth;
-        private float m_basePhyResist;
-        private float m_baseAbilResist;
+        public float m_startHealth { get; private set; }
+        public float m_basePhyResist { get; private set; }
+        public float m_baseAbilResist   { get; private set; }
 
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
