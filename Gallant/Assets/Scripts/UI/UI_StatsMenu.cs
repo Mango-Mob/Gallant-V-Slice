@@ -5,20 +5,29 @@ using UnityEngine;
 public class UI_StatsMenu : UI_Element
 {
     private bool m_active = false;
-    public Transform m_runeGroup;
-    public float m_deactiveOffset = -150.0f;
-    private float m_offsetLerp = 0.0f;
+    public float m_deactiveOffset = 300.0f;
 
+    [Header("Rune Info")]
+    public Transform m_runeGroup;
     public GameObject m_listObject;
     public GameObject m_runeInfoPrefab;
+    private float m_runeStartPosX = 0.0f;
 
-    private Player_Stats playerStats;
+    [Header("Weapon Info")]
+    public Transform m_weaponGroup;
+    private float m_weaponStartPosX = 0.0f;
+
     private List<RuneInfo> m_runeList = new List<RuneInfo>();
+    private float m_offsetLerp = 0.0f;
+    private Player_Stats playerStats;
 
     // Start is called before the first frame update
     void Start()
     {
         playerStats = FindObjectOfType<Player_Stats>();
+
+        m_runeStartPosX = m_runeGroup.position.x;
+        m_weaponStartPosX = m_weaponGroup.position.x;
     }
 
     // Update is called once per frame
@@ -29,7 +38,8 @@ public class UI_StatsMenu : UI_Element
 
         m_offsetLerp = Mathf.Clamp(m_offsetLerp + (m_active ? 1.0f : -1.0f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
-        m_runeGroup.position = new Vector3(Mathf.Lerp(m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z); 
+        m_runeGroup.position = new Vector3(m_runeStartPosX + Mathf.Lerp(-m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z);
+        m_weaponGroup.position = new Vector3(m_weaponStartPosX + Mathf.Lerp(m_deactiveOffset, 0, m_offsetLerp), m_weaponGroup.position.y, m_weaponGroup.position.z);
     }
 
     public void ToggleActive()

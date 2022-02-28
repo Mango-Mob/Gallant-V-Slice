@@ -8,9 +8,7 @@ using TMPro;
 public class SkillButton : MonoBehaviour, IPointerEnterHandler
 {
     [Header("Skill Information")]
-    public string m_skillName;
-    public string m_skillDescription;
-    public string m_skillID;
+    public SkillData m_skillData;
     public Image m_icon;
 
     private SkillTreeManager m_manager;
@@ -74,7 +72,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
             PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_unlockCost);
             
-            SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillID);
+            SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
     }
     public void RefundSkill()
@@ -86,7 +84,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
     public bool IsUnlockable()
     {
-        if (PlayerPrefs.GetInt("Player Balance") < m_unlockCost || m_upgradeMaximum < m_upgradeAmount + 1)
+        if (PlayerPrefs.GetInt("Player Balance") < m_skillData.upgradeCost || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
         {
             return false;
         }
