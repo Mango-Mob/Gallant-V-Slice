@@ -15,7 +15,7 @@ public class WeakenStatus : StatusEffect
     public float m_maxResistance;
     public float m_currResistance;
 
-    public WeakenStatus(float str, float dur) : base(str, dur) { m_displayColor = Color.white; }
+    public WeakenStatus(float str, float dur) : base(str, dur) { }
 
     public override bool ReactTo(StatusEffect other)
     {

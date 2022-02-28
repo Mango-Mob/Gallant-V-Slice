@@ -54,11 +54,11 @@ namespace ActorSystem.AI.Users
 
             if(m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
             {
-                m_myBrain.enabled = false;
+                m_myBrain.SetEnabled(false);
             }
             else if (!m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) < m_disableDistance)
             {
-                m_myBrain.enabled = true;
+                m_myBrain.SetEnabled(true);
             }
 
             if (m_showUI)

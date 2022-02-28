@@ -30,8 +30,10 @@ public class DebugManager : SingletonPersistent<DebugManager>
     [SerializeField] private Toggle m_showRooms;
     [SerializeField] private GameObject m_detailActorView;
     [SerializeField] private GameObject m_detailRoomView;
-    [SerializeField] private GameObject m_detailOtherView;
+    [SerializeField] private GameObject m_classDisplayPrefab;
+    [SerializeField] private GameObject m_classDisplayParent;
     [SerializeField] private Image m_toggleButtonImage;
+    private List<GameObject> m_ActorComponents;
 
     //Room View
     [SerializeField] private Text m_roomWaves;
@@ -100,6 +102,8 @@ public class DebugManager : SingletonPersistent<DebugManager>
     void Update()
     {
         UpdateRoomDetails();
+        UpdateActorDetails();
+        
         if (InputManager.Instance.IsKeyDown(KeyType.TILDE))
         {
             GetComponent<Animator>().SetTrigger("StateUpdate");
@@ -153,8 +157,11 @@ public class DebugManager : SingletonPersistent<DebugManager>
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, m_raycastLayers))
             {
-                m_selected = hit.collider.gameObject;
-                EvaluateSelected();
+                if(m_selected != hit.collider.gameObject)
+                {
+                    m_selected = hit.collider.gameObject;
+                    EvaluateSelected();
+                }
             }
 
             m_selelectedName.text = (m_selected != null) ? $"\"{m_selected.name}\"" : "null";
@@ -169,11 +176,24 @@ public class DebugManager : SingletonPersistent<DebugManager>
     {
         m_detailActorView.SetActive(false);
         m_detailRoomView.SetActive(false);
-        m_detailOtherView.SetActive(false);
 
         if (m_selected.GetComponent<Actor>() != null)
         {
             m_detailActorView.SetActive(true);
+            if(m_ActorComponents != null && m_ActorComponents.Count > 0)
+            {
+                for (int i = 0; i < m_ActorComponents.Count; i++)
+                {
+                    Destroy(m_ActorComponents[i]);
+                }
+            }
+            m_ActorComponents = new List<GameObject>();
+            foreach (var comp in m_selected.GetComponentsInChildren<Actor_Component>())
+            {
+                m_ActorComponents.Add(Instantiate(m_classDisplayPrefab, m_classDisplayParent.transform));
+                m_ActorComponents[m_ActorComponents.Count - 1].GetComponent<UI_ScriptDisplay>().m_reference = comp;
+                m_ActorComponents[m_ActorComponents.Count - 1].SetActive(true);
+            }
             return;
         }
         else if (m_selected.GetComponent<Room>() != null)
@@ -183,7 +203,6 @@ public class DebugManager : SingletonPersistent<DebugManager>
         }
         else
         {
-            m_detailOtherView.SetActive(true);
             return;
         }
     }
@@ -225,6 +244,7 @@ public class DebugManager : SingletonPersistent<DebugManager>
 
     public void ToggleFreeCamera(bool status)
     {
+        GameManager.Instance.m_activeCamera = (status) ? m_freeCamera.GetComponent<Camera>() : m_mainCamera;
         m_freeCamera.gameObject.SetActive(status);
         m_player.m_isDisabledInput = status;
 
@@ -258,6 +278,14 @@ public class DebugManager : SingletonPersistent<DebugManager>
     }
 
     #region DisplayUpdate
+    private void UpdateActorDetails()
+    {
+        if (m_detailActorView.activeInHierarchy)
+        {
+            
+        }
+    }
+
     private void UpdateRoomDetails()
     {
         if(m_detailRoomView.activeInHierarchy)
@@ -267,8 +295,11 @@ public class DebugManager : SingletonPersistent<DebugManager>
             if(room.m_mySpawnner.m_waves != null)
                 m_roomWaves.text = room.m_mySpawnner.m_waves.Count.ToString();
             m_roomCost.text = room.m_mySpawnner.m_value.ToString();
+
+            m_toggleButtonImage.color = (room.m_mySpawnner.enabled) ? new Color(0, 176, 0) : new Color(197, 0, 0);
         }
     }
+
     #endregion
 
     #region ButtonFunctions
@@ -282,14 +313,6 @@ public class DebugManager : SingletonPersistent<DebugManager>
     {
         var room = m_selected.GetComponent<Room>();
         room.m_mySpawnner.enabled = !room.m_mySpawnner.enabled;
-        if(room.m_mySpawnner.enabled)
-        {
-            m_toggleButtonImage.color = new Color(0, 176, 0);
-        }
-        else
-        {
-            m_toggleButtonImage.color = new Color(197, 0, 0);
-        }
     }
 
     public void ForceRoom()
