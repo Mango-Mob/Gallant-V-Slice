@@ -11,4 +11,8 @@ public class ClassData : ScriptableObject
     [Header("Starting Weapons")]
     public WeaponData leftWeapon;
     public WeaponData rightWeapon;
+
+    [Header("Armour")]
+    public Mesh helmetModel;
+    public Material helmetMaterial;
 }

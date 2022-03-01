@@ -536,6 +536,10 @@ public class Player_Attack : MonoBehaviour
                 Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_leftWeaponData.hitCenterOffset, m_leftWeaponData.hitSize);
             }
         }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(m_leftHandTransform.position - m_leftHandTransform.forward * 0.3f, m_leftHandTransform.position + m_leftHandTransform.forward);
+        Gizmos.DrawLine(m_rightHandTransform.position - m_rightHandTransform.forward * 0.3f, m_rightHandTransform.position + m_rightHandTransform.forward);
     }
     public void ToggleBlock(bool _active)
     {

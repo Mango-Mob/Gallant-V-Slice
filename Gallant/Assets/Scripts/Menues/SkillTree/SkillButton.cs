@@ -17,8 +17,6 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private List<SkillButton> m_unlockDependencies = new List<SkillButton>();
     private List<SkillButtonLink> m_dependencyLink = new List<SkillButtonLink>();
 
-    public int m_unlockCost = 1;
-    public int m_upgradeMaximum = 1;
     public int m_upgradeAmount {get; private set; } = 0;
     [SerializeField] private TextMeshProUGUI m_upgradeNumberText;
     [SerializeField] private Image[] m_availabilityImages;
@@ -70,14 +68,14 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         {
             m_upgradeAmount++;
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_unlockCost);
+            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_skillData.upgradeCost);
             
             SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
     }
     public void RefundSkill()
     {
-        PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_upgradeAmount * m_unlockCost);
+        PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_upgradeAmount * m_skillData.upgradeCost);
         m_upgradeAmount = 0;
         m_upgradeNumberText.text = m_upgradeAmount.ToString();
     }
@@ -110,7 +108,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         foreach (var dependency in m_unlockDependencies)
         {
             GameObject newObject = Instantiate(SkillTreeManager.m_linePrefab, transform);
-            newObject.transform.parent = newObject.transform.parent.parent;
+            newObject.transform.SetParent(newObject.transform.parent.parent);
             newObject.transform.SetAsFirstSibling();
 
             newObject.transform.position = (m_lineEnterance.position + dependency.m_lineExit.position) / 2 ;
