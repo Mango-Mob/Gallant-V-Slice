@@ -129,8 +129,8 @@ public class SkillTreeDisplayControl : MonoBehaviour
 
         m_currentlyDisplayedButton = _button;
 
-        m_skillName.text = _button.m_skillName;
-        m_skillDescription.text = _button.m_skillDescription;
+        m_skillName.text = _button.m_skillData.skillName;
+        m_skillDescription.text = _button.m_skillData.description;
         m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_upgradeMaximum}";
         m_skillCost.text = $"Upgrade Cost ${_button.m_unlockCost}";
         m_skillIcon.sprite = _button.m_icon.sprite;
