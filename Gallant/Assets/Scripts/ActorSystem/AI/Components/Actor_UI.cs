@@ -21,13 +21,22 @@ namespace ActorSystem.AI.Components
             m_UIElements = GetComponentsInChildren<UI_Element>();
             m_myCanvas = GetComponent<Canvas>();
         }
+
         public override void SetEnabled(bool status)
         {
-            this.enabled = status;
+            if(m_UIElements != null)
+            {
+                for (int i = 0; i < m_UIElements.Length; i++)
+                {
+                    m_UIElements[i].gameObject.SetActive(status);
+                }
+
+            }
 
             if(m_myCanvas != null)
                 m_myCanvas.enabled = status;
         }
+
         /*******************
          * GetElement : A Generic function used to find a UI_Element within this container.
          * @author : Michael Jordan

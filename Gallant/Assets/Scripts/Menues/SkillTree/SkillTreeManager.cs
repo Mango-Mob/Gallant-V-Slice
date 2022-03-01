@@ -34,7 +34,7 @@ public class SkillTreeManager : MonoBehaviour
         
         foreach (var button in m_buttons)
         {
-            button.SetUpgradeLevel(SkillTreeReader.instance.GetUpgradeLevel(m_treeClass, button.m_skillID));
+            button.SetUpgradeLevel(SkillTreeReader.instance.GetUpgradeLevel(m_treeClass, button.m_skillData.name));
         }
     }
     public void RefundTree()

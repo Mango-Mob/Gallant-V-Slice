@@ -40,6 +40,12 @@ public class Player_Stats : MonoBehaviour
     public float m_maximumHealthStrength = 0.1f;
 
     public Dictionary<ItemEffect, int> m_effects = new Dictionary<ItemEffect, int>();
+    public UI_StatsMenu m_statsMenu;
+
+    private void Awake()
+    {
+        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+    }
 
     /*******************
      * AddEffect : Adds an effect to the dictionary
@@ -143,5 +149,6 @@ public class Player_Stats : MonoBehaviour
             }
             Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
         }
+        m_statsMenu.UpdateList();
     }
 }

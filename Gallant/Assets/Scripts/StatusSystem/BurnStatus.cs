@@ -11,7 +11,7 @@ using UnityEngine;
  */
 public class BurnStatus : StatusEffect
 {
-    public BurnStatus(float str, float dur) : base(str, dur) { m_displayColor = Color.red; }
+    public BurnStatus(float str, float dur) : base(str, dur) { }
 
     public override bool ReactTo(StatusEffect other)
     {

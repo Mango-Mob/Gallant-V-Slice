@@ -10,7 +10,7 @@ using UnityEngine;
  */
 public class SlowStatus : StatusEffect
 {
-    public SlowStatus(float str, float dur) : base(str, dur) { m_displayColor = Color.cyan; }
+    public SlowStatus(float str, float dur) : base(str, dur) { }
 
     public override bool ReactTo(StatusEffect other)
     {
@@ -36,8 +36,6 @@ public class SlowStatus : StatusEffect
     {
         if(_actor.m_myBrain.m_legs != null)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f - m_strength;
-
-        _actor.m_myBrain?.m_material.SetColor(m_displayColor);
     }
 
     public override void StartPlayer(Player_Controller _player)
@@ -53,7 +51,6 @@ public class SlowStatus : StatusEffect
             float strength = Mathf.Lerp(1.0f - m_strength, 1.0f, lerp);
             _actor.m_myBrain.m_legs.m_speedModifier = strength;
 
-            _actor.m_myBrain?.m_material.SetColor(Color.Lerp(m_displayColor, _actor.m_myBrain.m_material.m_default, lerp));
         }
 
         m_duration -= dt;

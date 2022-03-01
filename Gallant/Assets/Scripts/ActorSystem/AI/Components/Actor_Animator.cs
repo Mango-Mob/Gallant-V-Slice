@@ -48,7 +48,9 @@ namespace ActorSystem.AI.Components
 
         public override void SetEnabled(bool status)
         {
-            m_animator.enabled = status;
+            if(m_animator != null)
+                m_animator.enabled = status;
+
             this.enabled = status;
         }
 

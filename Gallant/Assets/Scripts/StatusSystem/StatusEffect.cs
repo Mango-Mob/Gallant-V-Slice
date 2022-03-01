@@ -34,8 +34,6 @@ public abstract class StatusEffect
     //Compute variable of if this status effect has expired.
     public bool HasExpired { get { return m_duration <= 0 && !m_lastsForever; } }
 
-    public Color m_displayColor { get; protected set; }
-
     public StatusEffect(float str, float dur)
     {
         m_strength = str;

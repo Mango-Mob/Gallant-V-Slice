@@ -911,7 +911,7 @@ GameObject:
   - component: {fileID: 4531405050405771441}
   - component: {fileID: 4255191983329411205}
   - component: {fileID: 283509152}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SwampMeleeMinion
   m_TagString: Boss
   m_Icon: {fileID: 0}
@@ -931,6 +931,7 @@ Transform:
   m_Children:
   - {fileID: 6580121214321580454}
   - {fileID: 5041717079019819068}
+  - {fileID: 5508827595995248807}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1451,7 +1452,6 @@ Transform:
   - {fileID: 746678401696854867}
   - {fileID: 8015382257544191957}
   - {fileID: 866929781512104316}
-  - {fileID: 5508827595995248807}
   - {fileID: 4783710353503115902}
   m_Father: {fileID: 6580121214321580454}
   m_RootOrder: 0
@@ -1597,7 +1597,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4783710353503115902}
   - component: {fileID: 8209147067986168648}
-  - component: {fileID: 8298868356756549421}
+  - component: {fileID: 3396527157552134940}
   m_Layer: 17
   m_Name: MiniMapIcon
   m_TagString: Untagged
@@ -1617,7 +1617,7 @@ Transform:
   m_LocalScale: {x: 0.2916667, y: 0.29166666, z: 0.29166672}
   m_Children: []
   m_Father: {fileID: 3839376059807090751}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!212 &8209147067986168648
 SpriteRenderer:
@@ -1669,7 +1669,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8298868356756549421
+--- !u!114 &3396527157552134940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1678,7 +1678,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4556741277283616432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e82790e430f613448ac281e683e8339, type: 3}
+  m_Script: {fileID: 11500000, guid: 3d77d5a6af80fd84da76ece27564b6cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_idealRotation: {x: -0.65328145, y: 0.27059808, z: -0.27059808, w: -0.65328145}
@@ -2490,13 +2490,8 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 3839376059807090751}
+    m_TransformParent: {fileID: 3222191498181553981}
     m_Modifications:
-    - target: {fileID: 2668283082267877037, guid: d387efa772994064986990a62bdc8bcd,
-        type: 3}
-      propertyPath: m_Name
-      value: Health
-      objectReference: {fileID: 0}
     - target: {fileID: 5016897514871456098, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
       propertyPath: m_Name
@@ -2515,7 +2510,7 @@ PrefabInstance:
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
@@ -2612,6 +2607,11 @@ PrefabInstance:
       propertyPath: m_anchorTransform
       value: 
       objectReference: {fileID: 866929781512104316}
+    - target: {fileID: 5016897514968805804, guid: d387efa772994064986990a62bdc8bcd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d387efa772994064986990a62bdc8bcd, type: 3}
 --- !u!224 &5508827595995248807 stripped
