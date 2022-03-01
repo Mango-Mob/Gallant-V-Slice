@@ -78,7 +78,6 @@ public class StatusEffectContainer : MonoBehaviour
             {
                 bar = m_actor.m_myBrain.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
                 bar.SetImage(effect.m_displayImage);
-                bar.SetColor(effect.m_displayColor);
             }
             effect.StartActor(m_actor);
         }

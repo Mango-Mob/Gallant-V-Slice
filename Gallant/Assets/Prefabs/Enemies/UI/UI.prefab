@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5556461464242229195}
   - component: {fileID: 705737821223760}
   - component: {fileID: 390067849525384800}
-  m_Layer: 9
-  m_Name: HealthBacking
+  - component: {fileID: 5532576965903000811}
+  m_Layer: 0
+  m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +29,9 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 9032013663284063610}
+  - {fileID: 586943988687225457}
   m_Father: {fileID: 5016897514968805805}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -74,6 +77,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5532576965903000811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2247291624923618637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18f25af538c7e6240bf8df56e1973481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_value: 1
+  m_barImage: {fileID: 6812884672360222560}
 --- !u!1 &2668283082267877037
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,9 +102,8 @@ GameObject:
   - component: {fileID: 9032013663284063610}
   - component: {fileID: 7380681168929260104}
   - component: {fileID: 6812884672360222560}
-  - component: {fileID: 2491280563513853524}
-  m_Layer: 9
-  m_Name: Health
+  m_Layer: 0
+  m_Name: HealthFill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,12 +120,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.0499982, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5016897514968805805}
-  m_RootOrder: 2
+  m_Father: {fileID: 5556461464242229195}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7380681168929260104
@@ -149,20 +165,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2491280563513853524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2668283082267877037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18f25af538c7e6240bf8df56e1973481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_value: 1
-  m_barImage: {fileID: 6812884672360222560}
 --- !u!1 &5016897514871456098
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +178,7 @@ GameObject:
   - component: {fileID: 5016897514871456110}
   - component: {fileID: 5016897514871456097}
   - component: {fileID: 5016897514871456096}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -285,7 +287,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5016897514968805805}
   - component: {fileID: 5016897514968805802}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Display
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -305,8 +307,6 @@ RectTransform:
   m_Children:
   - {fileID: 5016897516510808316}
   - {fileID: 5556461464242229195}
-  - {fileID: 9032013663284063610}
-  - {fileID: 586943988687225457}
   m_Father: {fileID: 5016897514871456099}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -339,7 +339,7 @@ GameObject:
   - component: {fileID: 5016897516510808316}
   - component: {fileID: 5016897516510808314}
   - component: {fileID: 5016897516510808317}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: StatusList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 586943988687225457}
   - component: {fileID: 4619932080725820552}
   - component: {fileID: 1671532795212110864}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: HealthFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,12 +431,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5016897514968805805}
-  m_RootOrder: 3
+  m_Father: {fileID: 5556461464242229195}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 158, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4619932080725820552

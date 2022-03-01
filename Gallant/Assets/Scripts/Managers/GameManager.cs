@@ -14,13 +14,14 @@ public class GameManager : Singleton<GameManager>
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
     public GameObject m_player;
-
+    public Camera m_activeCamera;
     internal bool enableTimer = false;
 
     // Start is called before the first frame update
     void Start()
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
+        m_activeCamera = m_player.GetComponentInChildren<Camera>();
     }
 
     // Update is called once per frame

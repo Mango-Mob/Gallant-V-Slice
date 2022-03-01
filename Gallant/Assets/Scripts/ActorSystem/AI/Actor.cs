@@ -36,13 +36,10 @@ namespace ActorSystem.AI
             if (m_toReserveOnLoad)
             {
                 ActorManager.Instance.ReserveMe(this);
-                m_myBrain.SetEnabled(false);
             }
             else
             {
                 ActorManager.Instance.Subscribe(this);
-                m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
-                m_myBrain.SetEnabled(true);
             }
                 
             m_states = new List<State.Type>(m_myData.m_states);
@@ -52,6 +49,17 @@ namespace ActorSystem.AI
         {
             //Start Statemachine
             SetState(m_myData.m_initialState);
+
+            if (m_toReserveOnLoad)
+            {
+                m_myBrain.SetEnabled(false);
+            }
+            else
+            {
+                m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
+                m_myBrain.SetEnabled(true);
+            }
+
         }
 
         public void Spawn(uint level, Vector3 start, Vector3 end, Vector3 forward)
