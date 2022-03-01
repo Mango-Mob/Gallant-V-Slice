@@ -16,6 +16,7 @@ namespace Exceed.Debug
         public LayerMask m_raycastLayers;
 
         public static bool showRoomLocations = false;
+        public bool m_isMinimised = true;
 
         [SerializeField] private GameObject m_contentParent;
         [SerializeField] private Image m_backgroundImage;
@@ -29,10 +30,13 @@ namespace Exceed.Debug
         [SerializeField] private Text m_selelectedName;
         [SerializeField] private Button[] m_toggleSelectedButtons;
         [SerializeField] private Button m_killOneBtn;
-        [SerializeField] private Toggle m_showRooms;
         [SerializeField] private Debug_ActorDetail m_detailActorView;
+        
         [SerializeField] private GameObject m_detailRoomView;
         [SerializeField] private Image m_toggleButtonImage;
+        [SerializeField] private GameObject m_actorFieldPrefab;
+        [SerializeField] private GameObject m_actorFieldParent;
+        private List<Debug_ActorField> m_actorFieldList;
 
         //Room View
         [SerializeField] private Text m_roomWaves;
@@ -47,6 +51,9 @@ namespace Exceed.Debug
         [SerializeField] private Toggle m_timeCheck;
         [SerializeField] private Toggle m_HudCheck;
 
+        [Header("Other Content")]
+        [SerializeField] private Toggle m_showRooms;
+
         private Player_Controller m_player;
         private Camera m_mainCamera;
 
@@ -54,6 +61,7 @@ namespace Exceed.Debug
         private void Awake()
         {
             m_player = FindObjectOfType<Player_Controller>();
+            m_actorFieldList = new List<Debug_ActorField>();
         }
 
         // Start is called before the first frame update
@@ -85,6 +93,23 @@ namespace Exceed.Debug
             m_toggleCamButtons[0].interactable = (m_player != null);
             m_toggleCamButtons[1].interactable = false;
 
+            if(m_actorFieldList.Count > 0)
+            {
+                foreach (var item in m_actorFieldList)
+                {
+                    Destroy(item.gameObject);
+                }
+                m_actorFieldList.Clear();
+            }
+
+            foreach (var item in ActorManager.Instance.m_reserved.Keys)
+            {
+                var field = Instantiate(m_actorFieldPrefab, m_actorFieldParent.transform).GetComponent<Debug_ActorField>();
+                field.m_actorName = item;
+                field.gameObject.SetActive(true);
+                m_actorFieldList.Add(field);
+            }
+
             m_mainCamera = (m_player != null) ? m_player.GetComponentInChildren<Camera>() : Camera.main;
             m_timeSlider.value = 1.0f;
             Time.timeScale = 1.0f;
@@ -101,7 +126,7 @@ namespace Exceed.Debug
         void Update()
         {
             UpdateRoomDetails();
-
+            GetComponent<Animator>().SetBool("IsMinimised", m_isMinimised);
             if (InputManager.Instance.IsKeyDown(KeyType.TILDE))
             {
                 GetComponent<Animator>().SetTrigger("StateUpdate");
@@ -208,6 +233,8 @@ namespace Exceed.Debug
 
         public void ShowPanel(int index)
         {
+            m_isMinimised = false;
+
             if (m_panelArray.Length > 0 && m_buttonArray.Length > 0)
             {
                 for (int i = 0; i < m_panelArray.Length; i++)
@@ -215,12 +242,13 @@ namespace Exceed.Debug
                     if (i == index)
                     {
                         m_panelArray[i].SetActive(true);
-                        EventSystem.current.SetSelectedGameObject(m_buttonArray[Mathf.Min(i, m_buttonArray.Length - 1)].gameObject);
+                        m_buttonArray[i].GetComponentInChildren<Text>().color = new Color(250, 244, 0);
                         continue;
                     }
                     else
                     {
                         m_panelArray[i].SetActive(false);
+                        m_buttonArray[i].GetComponentInChildren<Text>().color = new Color(255, 255, 255);
                     }
                 }
             }
@@ -259,6 +287,11 @@ namespace Exceed.Debug
             m_selected.SetActive(status);
             m_toggleSelectedButtons[0].interactable = !status;
             m_toggleSelectedButtons[1].interactable = status;
+        }
+
+        public void Minimise()
+        {
+            m_isMinimised = true;
         }
 
         #region DisplayUpdate
