@@ -34,7 +34,10 @@ public class SkillTreeManager : MonoBehaviour
         
         foreach (var button in m_buttons)
         {
-            button.SetUpgradeLevel(SkillTreeReader.instance.GetUpgradeLevel(m_treeClass, button.m_skillData.name));
+            if (button.m_skillData)
+                button.SetUpgradeLevel(SkillTreeReader.instance.GetUpgradeLevel(m_treeClass, button.m_skillData.name));
+            else
+                Debug.Log($"{button} does not have skill data attached.");
         }
     }
     public void RefundTree()
