@@ -19,7 +19,7 @@ public class Player_Controller : MonoBehaviour
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     private Hand m_lastAttackHand = Hand.NONE;
-    private InkmanClass m_inkmanClass;
+    private ClassData m_inkmanClass;
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -30,6 +30,7 @@ public class Player_Controller : MonoBehaviour
     public Player_Stats playerStats { private set; get; }
     public Player_AudioAgent playerAudioAgent { private set; get; }
     public Player_CombatAnimator playerCombatAnimator { private set; get; }
+    public Player_ClassArmour playerClassArmour { private set; get; }
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
@@ -58,6 +59,7 @@ public class Player_Controller : MonoBehaviour
         playerStats = GetComponentInChildren<Player_Stats>();
         playerAudioAgent = GetComponent<Player_AudioAgent>();
         playerCombatAnimator = GetComponent<Player_CombatAnimator>();
+        playerClassArmour = GetComponent<Player_ClassArmour>();
 
         if (GameManager.m_containsPlayerInfo)
         {
@@ -65,6 +67,10 @@ public class Player_Controller : MonoBehaviour
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
+            m_inkmanClass = GameManager.RetrieveClassData();
+            if (m_inkmanClass)
+                playerClassArmour.SetClassArmour(m_inkmanClass);
+
             playerStats.EvaluateEffects();
         }
 
@@ -418,7 +424,7 @@ public class Player_Controller : MonoBehaviour
 
     public void StorePlayerInfo()
     {
-        GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects);
+        GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, m_inkmanClass);
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
@@ -440,14 +446,11 @@ public class Player_Controller : MonoBehaviour
     }
     public void SelectClass(ClassData _class)
     {
-        m_inkmanClass = _class.inkmanClass;
+        m_inkmanClass = _class;
 
-        //WeaponData data = null;
-
-        //_class.leftWeapon.Clone(data);
         playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
-
-        //_class.rightWeapon.Clone(data);
         playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
+
+        playerClassArmour.SetClassArmour(_class);
     }    
 }

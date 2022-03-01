@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
     {
         public WeaponData m_leftWeapon;
         public WeaponData m_rightWeapon;
+        public ClassData m_classData;
          
         public Dictionary<ItemEffect, int> m_effects;
     }
@@ -57,12 +58,14 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<ItemEffect, int> _effects)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<ItemEffect, int> _effects, ClassData _class)
     {
         m_playerInfo.m_leftWeapon = _leftWeapon;
         m_playerInfo.m_rightWeapon = _rightWeapon;
 
         m_playerInfo.m_effects = _effects;
+
+        m_playerInfo.m_classData = _class;
 
         m_containsPlayerInfo = true;
     }
@@ -85,12 +88,19 @@ public class GameManager : Singleton<GameManager>
         return m_playerInfo.m_effects;
     }
 
+    public static ClassData RetrieveClassData()
+    {
+        return m_playerInfo.m_classData;
+    }
+
     public static void ResetPlayerInfo()
     {
         m_playerInfo.m_leftWeapon = null;
         m_playerInfo.m_rightWeapon = null;
 
         m_playerInfo.m_effects = null;
+
+        m_playerInfo.m_classData = null;
 
         m_containsPlayerInfo = false;
     }
