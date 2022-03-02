@@ -52,10 +52,13 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_maxDistance = 20.0f;
     private UI_LockonTarget m_lockonTarget;
 
-    [Header("Ice")]
-    [SerializeField] private float m_slip = 1.0f;
-    public bool m_onIce = false;
+    [Header("Environmental Hazards")]
+    [SerializeField] private float m_iceSlip = 1.0f;
+    [SerializeField] private float m_bogSlow = 0.5f;
+    [SerializeField] private float m_lavaDamage = 10.0f;
+
     private bool m_wasOnIce = false;
+    public List<GroundSurface.SurfaceType> m_touchedSurfaces = new List<GroundSurface.SurfaceType>();
     private Vector3 m_slideVelocity = Vector3.zero;
 
     //Respawn Code
@@ -81,6 +84,11 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
+        {
+            playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
+        }
+
         if (m_currentTarget != null && (m_currentTarget.m_myBrain.IsDead || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
         {
             m_currentTarget.m_myBrain.SetOutlineEnabled(false);
@@ -224,9 +232,15 @@ public class Player_Movement : MonoBehaviour
             }
 
             float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed; // Player movement speed
-            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed);
+            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.BOG)) // If the player is walking in bog.
+            {
+                speed *= m_bogSlow;
+            }
+            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / m_moveSpeed);
 
             Vector3 normalizedMove = Vector3.zero;
+
+            
 
             if (_move.magnitude != 0)
             {
@@ -319,14 +333,14 @@ public class Player_Movement : MonoBehaviour
         Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
 
-        if (m_onIce)
+        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.ICE)) // If the player is walking on ice.
         {
             if (!m_wasOnIce)
                 m_slideVelocity = horizLastMove * _deltaTime;
             if (!m_isRolling)
             {
                 m_slideVelocity -= m_slideVelocity * _deltaTime;
-                m_slideVelocity += movement * m_slip * _deltaTime;
+                m_slideVelocity += movement * m_iceSlip * _deltaTime;
 
                 if (m_slideVelocity.magnitude > m_moveSpeed)
                 {
