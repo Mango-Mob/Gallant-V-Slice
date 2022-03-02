@@ -23,11 +23,11 @@ namespace ActorSystem.AI
 
         public uint instancesPerAttack = 1;
         public CombatSystem.DamageType damageType;
+        public bool canBeCanceled = false;
 
         //TODO:
         private bool canAttackMove = false;
         private bool hasExitTime;
-        private bool canBeCanceled;
         public bool isAwaysFacingTarget = false;
         //Has effect
 

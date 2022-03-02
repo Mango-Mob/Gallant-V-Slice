@@ -58,8 +58,9 @@ namespace Exceed.Debug
         private Camera m_mainCamera;
 
         private GameObject m_selected;
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             m_player = FindObjectOfType<Player_Controller>();
             m_actorFieldList = new List<Debug_ActorField>();
         }
