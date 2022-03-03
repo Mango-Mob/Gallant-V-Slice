@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_StatsMenu : UI_Element
 {
     private bool m_active = false;
     public float m_deactiveOffset = 300.0f;
+
+    [SerializeField] private Image m_background;
 
     [Header("Rune Info")]
     public Transform m_runeGroup;
@@ -15,6 +18,9 @@ public class UI_StatsMenu : UI_Element
 
     [Header("Weapon Info")]
     public Transform m_weaponGroup;
+    public WeaponInfoDisplay m_leftWeaponDisplay;
+    public WeaponInfoDisplay m_rightWeaponDisplay;
+
     private float m_weaponStartPosX = 0.0f;
 
     private List<RuneInfo> m_runeList = new List<RuneInfo>();
@@ -38,10 +44,26 @@ public class UI_StatsMenu : UI_Element
 
         m_offsetLerp = Mathf.Clamp(m_offsetLerp + (m_active ? 1.0f : -1.0f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
+        Color backgroundColor = m_background.color;
+        backgroundColor.a = 0.85f * m_offsetLerp;
+        m_background.color = backgroundColor;
+
         m_runeGroup.position = new Vector3(m_runeStartPosX + Mathf.Lerp(-m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z);
         m_weaponGroup.position = new Vector3(m_weaponStartPosX + Mathf.Lerp(m_deactiveOffset, 0, m_offsetLerp), m_weaponGroup.position.y, m_weaponGroup.position.z);
     }
 
+    public void UpdateWeaponInfo(Hand _hand, WeaponData _data)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftWeaponDisplay.LoadWeapon(_data);
+                break;
+            case Hand.RIGHT:
+                m_rightWeaponDisplay.LoadWeapon(_data);
+                break;
+        }
+    }
     public void ToggleActive()
     {
         m_active = !m_active;

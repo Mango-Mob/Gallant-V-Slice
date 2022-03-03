@@ -45,6 +45,12 @@ public class Player_Controller : MonoBehaviour
     private bool m_isAiming = false;
 
     private Animator animatorCamera;
+    public UI_StatsMenu m_statsMenu;
+
+    private void Awake()
+    {
+        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+    }
 
     // Start is called before the first frame update
     void Start()

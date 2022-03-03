@@ -400,6 +400,8 @@ public class Player_Attack : MonoBehaviour
                         m_leftWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
                 }
+
+                playerController.m_statsMenu.UpdateWeaponInfo(Hand.LEFT, m_leftWeaponData);
                 break;
             case Hand.RIGHT:
                 // Delete old weapon from player
@@ -425,6 +427,8 @@ public class Player_Attack : MonoBehaviour
                         m_rightWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
                 }
+
+                playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);
                 break;
         }
 

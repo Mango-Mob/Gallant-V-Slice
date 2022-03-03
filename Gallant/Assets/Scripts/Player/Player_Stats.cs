@@ -18,6 +18,8 @@ public enum ItemEffect
  */
 public class Player_Stats : MonoBehaviour
 {
+    public Player_Controller playerController { private set; get; }
+
     [Header("Movement Speed")]
     public float m_movementSpeed = 1.0f;
     public float m_movementSpeedItemStrength = 0.2f;
@@ -40,11 +42,10 @@ public class Player_Stats : MonoBehaviour
     public float m_maximumHealthStrength = 0.1f;
 
     public Dictionary<ItemEffect, int> m_effects = new Dictionary<ItemEffect, int>();
-    public UI_StatsMenu m_statsMenu;
 
-    private void Awake()
+    private void Start()
     {
-        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+        playerController = GetComponent<Player_Controller>();
     }
 
     /*******************
@@ -149,6 +150,6 @@ public class Player_Stats : MonoBehaviour
             }
             Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
         }
-        m_statsMenu.UpdateList();
+        playerController.m_statsMenu.UpdateList();
     }
 }
