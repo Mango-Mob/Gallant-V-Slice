@@ -35,6 +35,12 @@ public class WeaponData : ScriptableObject
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
 
+    private static int m_minDamagePerLevel = 1;
+    private static int m_maxDamagePerLevel = 2;
+
+    private static float m_minSpeedPerLevel = 0.05f;
+    private static float m_maxSpeedPerLevel = 0.2f;
+
     public static WeaponData GenerateWeapon(int _level)
     {
         WeaponData data = CreateInstance<WeaponData>();
@@ -46,8 +52,8 @@ public class WeaponData : ScriptableObject
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.SetDamage(data.m_damage + (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_level - 1.0f)));
-        data.SetSpeed(data.m_speed + (data.m_speed * Random.Range(0.05f, 0.1f) * (_level - 1.0f)));
+        data.SetDamage(data.m_damage + (int)(Random.Range(m_minDamagePerLevel, m_maxDamagePerLevel) * (_level - 1.0f)));
+        data.SetSpeed(data.m_speed + (Random.Range(m_minSpeedPerLevel, m_maxSpeedPerLevel) * (_level - 1.0f)));
 
         data.SetLevel(_level);
 
@@ -105,8 +111,8 @@ public class WeaponData : ScriptableObject
         //data.m_level = _powerLevel;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
-        data.SetDamage(data.m_damage + (int)(data.m_damage * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f)));
-        data.SetSpeed(data.m_speed + (data.m_speed * Random.Range(0.05f, 0.1f) * (_weaponLevel - 1.0f)));
+        data.SetDamage(data.m_damage + (int)(Random.Range(m_minDamagePerLevel, m_maxDamagePerLevel) * (_weaponLevel - 1.0f)));
+        data.SetSpeed(data.m_speed + (Random.Range(m_minSpeedPerLevel, m_maxSpeedPerLevel) * (_weaponLevel - 1.0f)));
 
         data.SetLevel(_weaponLevel);
 
@@ -198,7 +204,14 @@ public class WeaponData : ScriptableObject
     {
         WeaponData data = CreateInstance<WeaponData>();
         data.Clone(_data);
-        return GenerateSpecificWeapon(data.m_level + 1, data.weaponType, data.abilityData != null ? data.abilityData.abilityPower : Ability.NONE, data.abilityData != null ? data.abilityData.starPowerLevel : 1);
+
+        data.SetDamage(data.m_damage + Random.Range(m_minDamagePerLevel, m_maxDamagePerLevel));
+        data.SetSpeed(data.m_speed + Random.Range(m_minSpeedPerLevel, m_maxSpeedPerLevel));
+
+        data.SetLevel(data.m_level + 1);
+
+
+        return data;
     }
 
     public void SetDamage(int _damage)

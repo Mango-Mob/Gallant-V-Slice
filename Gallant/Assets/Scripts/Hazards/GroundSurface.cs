@@ -9,6 +9,8 @@ public class GroundSurface : MonoBehaviour
         ICE,
         BOG,
         LAVA,
+        SPEED,
+        JUMP,
     }
 
     public SurfaceType m_surfaceType;

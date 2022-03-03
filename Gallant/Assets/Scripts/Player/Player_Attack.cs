@@ -112,6 +112,9 @@ public class Player_Attack : MonoBehaviour
         if (thisWeapon == null)
             return;
 
+        if (thisWeapon.m_isInUse)
+            return;
+
         animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();

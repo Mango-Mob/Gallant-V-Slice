@@ -57,10 +57,10 @@ public class UI_StatsMenu : UI_Element
         switch (_hand)
         {
             case Hand.LEFT:
-                m_leftWeaponDisplay.LoadWeapon(_data);
+                m_leftWeaponDisplay.SetWeapon(_data);
                 break;
             case Hand.RIGHT:
-                m_rightWeaponDisplay.LoadWeapon(_data);
+                m_rightWeaponDisplay.SetWeapon(_data);
                 break;
         }
     }

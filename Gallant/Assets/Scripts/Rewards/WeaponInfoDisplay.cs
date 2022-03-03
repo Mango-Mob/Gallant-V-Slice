@@ -20,14 +20,38 @@ public class WeaponInfoDisplay : MonoBehaviour
 
     private Sprite m_defaultImage;
     public WeaponData m_activeWeapon { get; private set; }
+    private Player_Controller playerController;
 
     private void Awake()
     {
         m_defaultImage = Resources.Load<Sprite>("DefaultIcon");
+        playerController = FindObjectOfType<Player_Controller>();
     }
 
-    public void LoadWeapon(WeaponData data)
+    private void Update()
     {
+        if (m_activeWeapon)
+        {
+            m_levelText.text = "Level: " + m_activeWeapon.m_level;
+            m_damage.text = m_activeWeapon.m_damage.ToString();
+
+            m_speed.text = m_activeWeapon.m_speed.ToString("0.0");
+
+            if (playerController.playerStats.m_attackSpeed != 1.0f)
+                m_speed.text += $" (+{((playerController.playerStats.m_attackSpeed - 1.0f) * m_activeWeapon.m_speed).ToString("0.0")})";
+
+            m_knockback.text = m_activeWeapon.m_knockback.ToString("0.0");
+
+
+            m_weaponImageLoc.sprite = m_activeWeapon.weaponIcon;
+        }
+
+    }
+
+    public void SetWeapon(WeaponData data)
+    {
+        m_activeWeapon = data;
+
         for (int i = 0; i < 3; i++)
         {
             m_stars[i].SetActive(true);
@@ -72,7 +96,7 @@ public class WeaponInfoDisplay : MonoBehaviour
 
             m_levelText.text = "Level: " + data.m_level;
             m_damage.text = data.m_damage.ToString();
-            m_speed.text = data.m_speed.ToString("0.0");
+            m_speed.text = data.m_speed.ToString("0.0") + $"+ ({(playerController.playerStats.m_attackSpeed - 1.0f).ToString("0.0%")})";
             m_knockback.text = data.m_knockback.ToString("0.0");
 
             m_weaponImageLoc.sprite = data.weaponIcon;
