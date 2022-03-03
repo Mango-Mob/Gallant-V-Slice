@@ -15,7 +15,9 @@ public class UI_Collectable : UI_Element
     // Start is called before the first frame update
     void Start()
     {
-        
+#if UNITY_EDITOR
+        m_unlocked = true;
+#endif
     }
 
     // Update is called once per frame

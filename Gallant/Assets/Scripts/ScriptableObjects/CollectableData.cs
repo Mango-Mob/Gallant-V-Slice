@@ -11,5 +11,5 @@ public class CollectableData : ScriptableObject
     public Sprite itemIcon;
 
     [TextArea(10, 15)]
-    public string description;
+    public List<string> descriptions;
 }
