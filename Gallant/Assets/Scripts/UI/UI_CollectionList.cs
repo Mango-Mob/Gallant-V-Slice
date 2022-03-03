@@ -13,6 +13,11 @@ public class UI_CollectionList : UI_Element
     public Text m_itemDescription;
     public Image m_itemIcon;
 
+    public Button m_prevBtn;
+    public Button m_nextBtn;
+
+    private int m_currentPage;
+    private CollectableData m_currentCollectable;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +29,8 @@ public class UI_CollectionList : UI_Element
             button.GetComponent<UI_Collectable>().SetData(item);
             button.GetComponent<UI_Collectable>().SetParentList(this);
         }
+
+        ShowItem(data[0]);
     }
 
     // Update is called once per frame
@@ -32,12 +39,31 @@ public class UI_CollectionList : UI_Element
         
     }
 
-    public void ShowItem(CollectableData data)
+    public void ShowItem(CollectableData data, int page = 0)
     {
+        if (page < 0)
+            return;
+
+        m_currentCollectable = data;
+        m_currentPage = page;
         m_itemTitle.text = data.itemName;
-        m_itemDescription.text = data.description;
+        m_itemDescription.text = data.descriptions[page];
         m_itemIcon.sprite = data.itemIcon;
+
+        m_nextBtn.interactable = data.descriptions.Count > page;
+        m_prevBtn.interactable = page > 0;
+
         m_window.SetActive(true);
+    }
+
+    public void PreviousPage()
+    {
+        ShowItem(m_currentCollectable, m_currentPage - 1);
+    }
+
+    public void NextPage()
+    {
+        ShowItem(m_currentCollectable, m_currentPage + 1);
     }
 
     public override bool IsContainingVector(Vector2 _pos)
