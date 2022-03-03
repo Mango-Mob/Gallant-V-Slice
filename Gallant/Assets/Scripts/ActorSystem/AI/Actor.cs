@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI.Components;
+using ActorSystem.Spawning;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -194,9 +195,9 @@ namespace ActorSystem.AI
             if(m_lastSpawner != null)
             {
                 m_myBrain.SetEnabled(false);
-                ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawnFromStart(transform.position);
+                //ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawnFromStart(transform.position);
                 SetState(m_myData.m_initialState);
-                m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
+                //m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
             }
             else if (m_myBrain.m_legs != null)
             {
