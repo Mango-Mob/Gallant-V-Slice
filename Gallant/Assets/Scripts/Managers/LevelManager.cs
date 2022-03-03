@@ -20,7 +20,7 @@ public class LevelManager : SingletonPersistent<LevelManager>
     public static bool cheatsEnabled = false;
     public static bool loadingNextArea = false;
 
-    public GameObject CompleteLoadUI;
+    public GameObject loadingBarPrefab;
 
     public static GameObject transitionPrefab;
     public static GameObject youdiedPrefab;
@@ -85,12 +85,6 @@ public class LevelManager : SingletonPersistent<LevelManager>
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().name));
     }
 
-    public void LoadLevelAsync(int levelIndex, float maxTime)
-    {
-        //StartCoroutine(OperationLoadLevelAsync(levelIndex, maxTime));
-    }
-
-
     IEnumerator LoadLevel(string _name, Transition _transition = Transition.CROSSFADE)
     {
         float timeMult = 1.0f;
@@ -120,8 +114,31 @@ public class LevelManager : SingletonPersistent<LevelManager>
             // Wait to let animation finish playing
             yield return new WaitForSeconds(transitionTime * timeMult);
         }
-        //Load Scene
-        SceneManager.LoadScene(_name);
+
+        transition.speed = 0.0f;
+
+        // Loading screen
+        AsyncOperation gameLoad = SceneManager.LoadSceneAsync(_name);
+        Slider loadingBar = Instantiate(loadingBarPrefab, transition.transform).GetComponent<Slider>();
+        loadingBar.transform.SetAsLastSibling();
+
+        while (!gameLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(gameLoad.progress / 0.9f);
+
+            if (loadingBar)
+            {
+                loadingBar.value = progress;
+            }
+
+            yield return new WaitForEndOfFrame();
+        }
+
+        transition.speed = 1.0f / timeMult;
+
+        Destroy(loadingBar.gameObject);
+
+        //SceneManager.LoadScene(_name);
         yield return new WaitForSeconds(transitionTime * timeMult);
 
         if (transition != null)
@@ -132,40 +149,34 @@ public class LevelManager : SingletonPersistent<LevelManager>
         isTransitioning = false;
         yield return null;
     }
-
-    //public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //IEnumerator LoadLevelAsync(string _name)
     //{
-    //    //if(GameManager.HasInstance())
-    //    //{
-    //    //    var objects = GameManager.Instance.m_saveSlot.GetSceneData(scene.buildIndex);
+    //    AsyncOperation gameLoad = SceneManager.LoadSceneAsync(_name);
+    //    gameLoad.allowSceneActivation = false;
+    //    float time = 0.0f;
 
-    //    //    if (objects == null || objects.Length == 0)
-    //    //        return;
-
-    //    //    foreach (var item in objects)
-    //    //    {
-    //    //        if (item != null)
-    //    //        {
-    //    //            int id = item.m_itemID;
-    //    //            GameObject prefab = Resources.Load<GameObject>(GameManager.Instance.m_items.list[id].placePrefabName);
-
-    //    //            GameObject inWorld = Instantiate(prefab, new Vector3(item.x, item.y, item.z), Quaternion.Euler(item.rx, item.ry, item.rz));
-    //    //            inWorld.GetComponent<SerializedObject>().UpdateTo(item);
-    //    //        }
-    //    //    }
-
-    //    //    GameManager.Instance.m_saveSlot.InstansiateNPCs(scene.buildIndex);
-    //    //}
-    //}
-
-    //public void SaveSceneToSlot(SaveSlot slot)
-    //{
-    //    slot.SaveObjects(GameObject.FindGameObjectsWithTag("SerializedObject"));
-    //    foreach (var item in GameObject.FindGameObjectsWithTag("NPC"))
+    //    while (!gameLoad.isDone && isTransitioning == false)
     //    {
-    //        slot.AddNPC(item.GetComponent<NPCScript>());
+    //        gameLoad.progress
+
+    //        time += Time.deltaTime;
+    //        if (gameLoad.progress >= 0.9f)
+    //        {
+    //            CompleteLoadUI.SetActive(true);
+
+    //        }
+    //        yield return new WaitForEndOfFrame();
     //    }
+
+    //    CompleteLoadUI.SetActive(false);
+    //    yield return null;
     //}
+
+    //public void LoadingScreenLoad(int levelIndex, float maxTime)
+    //{
+    //    StartCoroutine(LoadLevelAsync(levelIndex, maxTime));
+    //}
+
     //IEnumerator OperationLoadLevelAsync(int levelIndex, float maxTime)
     //{
     //    AsyncOperation gameLoad = SceneManager.LoadSceneAsync(levelIndex);
@@ -179,11 +190,7 @@ public class LevelManager : SingletonPersistent<LevelManager>
     //        {
     //            CompleteLoadUI.SetActive(true);
 
-    //            if (InputManager.GetInstance().GetKeyDown(InputManager.ButtonType.BUTTON_SOUTH, 0))
-    //            {
-    //                gameLoad.allowSceneActivation = true;
-    //            }
-    //            if (InputManager.GetInstance().GetKeyDown(InputManager.ButtonType.BUTTON_SOUTH, 1))
+    //            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.SOUTH, 0))
     //            {
     //                gameLoad.allowSceneActivation = true;
     //            }
@@ -197,5 +204,39 @@ public class LevelManager : SingletonPersistent<LevelManager>
 
     //    CompleteLoadUI.SetActive(false);
     //    yield return null;
+    //}
+
+    //public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    //{
+    //    if (GameManager.HasInstance())
+    //    {
+    //        var objects = GameManager.Instance.m_saveSlot.GetSceneData(scene.buildIndex);
+
+    //        if (objects == null || objects.Length == 0)
+    //            return;
+
+    //        foreach (var item in objects)
+    //        {
+    //            if (item != null)
+    //            {
+    //                int id = item.m_itemID;
+    //                GameObject prefab = Resources.Load<GameObject>(GameManager.Instance.m_items.list[id].placePrefabName);
+
+    //                GameObject inWorld = Instantiate(prefab, new Vector3(item.x, item.y, item.z), Quaternion.Euler(item.rx, item.ry, item.rz));
+    //                inWorld.GetComponent<SerializedObject>().UpdateTo(item);
+    //            }
+    //        }
+
+    //        GameManager.Instance.m_saveSlot.InstansiateNPCs(scene.buildIndex);
+    //    }
+    //}
+
+    //public void SaveSceneToSlot(SaveSlot slot)
+    //{
+    //    slot.SaveObjects(GameObject.FindGameObjectsWithTag("SerializedObject"));
+    //    foreach (var item in GameObject.FindGameObjectsWithTag("NPC"))
+    //    {
+    //        slot.AddNPC(item.GetComponent<NPCScript>());
+    //    }
     //}
 }

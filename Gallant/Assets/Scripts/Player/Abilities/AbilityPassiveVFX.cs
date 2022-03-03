@@ -17,6 +17,7 @@ public class AbilityPassiveVFX : MonoBehaviour
     [SerializeField] private Material m_iceMaterial;
     [SerializeField] private Material m_barrierMaterial;
     [SerializeField] private Material m_thornsMaterial;
+    [SerializeField] private Material m_flameRollMaterial;
 
     // Start is called before the first frame update
     void Start()
@@ -38,45 +39,34 @@ public class AbilityPassiveVFX : MonoBehaviour
                 return;
         }
 
-        bool m_leftPassive = true;
-        bool m_rightPassive = true;
-        switch (m_leftAbilityType)
-        {
-            case Ability.ICE_ROLL:
-                SetButtonMaterial(Hand.LEFT, m_iceMaterial);
-                break;
-            case Ability.HP_BUFF:
-                SetButtonMaterial(Hand.LEFT, m_barrierMaterial);
-                break;
-            case Ability.THORNS:
-                SetButtonMaterial(Hand.LEFT, m_thornsMaterial);
-                break;
-            default:
-                SetButtonMaterial(Hand.LEFT);
-                m_leftPassive = false;
-                break;
-        }
-
-        switch (m_rightAbilityType)
-        {
-            case Ability.ICE_ROLL:
-                SetButtonMaterial(Hand.RIGHT, m_iceMaterial);
-                break;
-            case Ability.HP_BUFF:
-                SetButtonMaterial(Hand.RIGHT, m_barrierMaterial);
-                break;
-            case Ability.THORNS:
-                SetButtonMaterial(Hand.RIGHT, m_thornsMaterial);
-                break;
-            default:
-                SetButtonMaterial(Hand.RIGHT);
-                m_rightPassive = false;
-                break;
-        }
+        bool m_leftPassive = SetButtons(Hand.LEFT, m_leftAbilityType);
+        bool m_rightPassive = SetButtons(Hand.RIGHT, m_rightAbilityType);
 
         m_frameBase.SetActive((m_leftPassive || m_rightPassive));
     }
 
+    private bool SetButtons(Hand _hand, Ability _ability)
+    {
+        switch (_ability)
+        {
+            case Ability.ICE_ROLL:
+                SetButtonMaterial(_hand, m_iceMaterial);
+                break;
+            case Ability.HP_BUFF:
+                SetButtonMaterial(_hand, m_barrierMaterial);
+                break;
+            case Ability.THORNS:
+                SetButtonMaterial(_hand, m_thornsMaterial);
+                break;
+            case Ability.FLAME_ROLL:
+                SetButtonMaterial(_hand, m_flameRollMaterial);
+                break;
+            default:
+                SetButtonMaterial(_hand);
+                return false;
+        }
+        return true;
+    }
     private void SetButtonMaterial(Hand _hand, Material _material = null)
     {
         switch (_hand)

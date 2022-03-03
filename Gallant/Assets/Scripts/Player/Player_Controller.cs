@@ -43,8 +43,16 @@ public class Player_Controller : MonoBehaviour
     private Vector2 m_lastAimDirection = Vector2.zero;
 
     private bool m_isAiming = false;
+    private bool m_hasSwappedTarget = false;
 
     private Animator animatorCamera;
+    public UI_StatsMenu m_statsMenu;
+
+
+    private void Awake()
+    {
+        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -222,6 +230,49 @@ public class Player_Controller : MonoBehaviour
             playerMovement.LockOnTarget();
         }
 
+        if (playerMovement.m_currentTarget != null)
+        {
+            Vector2 aim = InputManager.Instance.isInGamepadMode ? GetPlayerAimVector() : InputManager.Instance.GetMouseDelta() * Time.deltaTime * 10.0f;
+
+            if (aim.magnitude >= 1.0f && !m_hasSwappedTarget)
+            {
+                List<Actor> actors = GetActorsInfrontOfTransform(playerMovement.m_currentTarget.transform.position, 
+                    aim.y * transform.forward + aim.x * transform.right, 60.0f, 7.0f);
+
+                Actor closestActor = null;
+                float closestDistance = Mathf.Infinity;
+                foreach (var actor in actors)
+                {
+                    if (actor == playerMovement.m_currentTarget)
+                        continue;
+
+                    float distance = Vector3.Distance(playerMovement.m_currentTarget.transform.position, actor.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestActor = actor;
+                    }
+                }
+
+                if (closestActor != null)
+                {
+                    playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(false);
+                    playerMovement.m_currentTarget = closestActor;
+                    playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
+                    m_hasSwappedTarget = true;
+                }
+            }
+            else if (aim.magnitude < 1.0f)
+            {
+                m_hasSwappedTarget = false;
+            }
+        }
+        else
+        {
+            m_hasSwappedTarget = false;
+        }
+
+
         if (InputManager.Instance.IsBindDown("Consume", gamepadID))
         {
             // Heal from adrenaline
@@ -353,9 +404,10 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
-    public List<Actor> GetActorsInfrontOfPlayer(float _angle, float _distance)
+
+    public List<Actor> GetActorsInfrontOfTransform(Vector3 _pos, Vector3 _forward, float _angle, float _distance)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        Collider[] colliders = Physics.OverlapSphere(_pos, _distance, playerAttack.m_attackTargets);
         List<Actor> targets = new List<Actor>();
 
         foreach (var collider in colliders)
@@ -364,14 +416,36 @@ public class Player_Controller : MonoBehaviour
             if (actor == null)
                 continue;
 
-            Vector3 direction = (actor.transform.position - transform.position).normalized;
-            float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+            Vector3 direction = (actor.transform.position - _pos).normalized;
+            float dot = Vector3.Dot(direction, _forward);
             if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
             {
                 targets.Add(actor);
             }
         }
         return targets;
+    }
+    public List<Actor> GetActorsInfrontOfPlayer(float _angle, float _distance)
+    {
+        return GetActorsInfrontOfTransform(transform.position, playerMovement.playerModel.transform.forward, _angle, _distance);
+
+        //Collider[] colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        //List<Actor> targets = new List<Actor>();
+
+        //foreach (var collider in colliders)
+        //{
+        //    Actor actor = collider.GetComponentInParent<Actor>();
+        //    if (actor == null)
+        //        continue;
+
+        //    Vector3 direction = (actor.transform.position - transform.position).normalized;
+        //    float dot = Vector3.Dot(direction, playerMovement.playerModel.transform.forward);
+        //    if (dot >= Mathf.Cos(_angle * Mathf.Deg2Rad))
+        //    {
+        //        targets.Add(actor);
+        //    }
+        //}
+        //return targets;
     }
     public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance)
     {

@@ -56,6 +56,8 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_iceSlip = 1.0f;
     [SerializeField] private float m_bogSlow = 0.5f;
     [SerializeField] private float m_lavaDamage = 10.0f;
+    [SerializeField] private float m_speedBoost = 2.0f;
+    [SerializeField] private float m_jumpBounce = 5.0f;
 
     private bool m_wasOnIce = false;
     public List<GroundSurface.SurfaceType> m_touchedSurfaces = new List<GroundSurface.SurfaceType>();
@@ -236,6 +238,10 @@ public class Player_Movement : MonoBehaviour
             {
                 speed *= m_bogSlow;
             }
+            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.SPEED)) // If the player is walking in speed.
+            {
+                speed *= m_speedBoost;
+            }
             playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / m_moveSpeed);
 
             Vector3 normalizedMove = Vector3.zero;
@@ -333,6 +339,10 @@ public class Player_Movement : MonoBehaviour
         Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
 
+        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.JUMP))
+        {
+            StunPlayer(0.0f, transform.up * m_jumpBounce);
+        }
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.ICE)) // If the player is walking on ice.
         {
             if (!m_wasOnIce)
