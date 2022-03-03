@@ -1,6 +1,7 @@
 ﻿using ActorSystem.AI.Components;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace ActorSystem.AI
 {
@@ -89,7 +90,7 @@ namespace ActorSystem.AI
                 ActorManager.Instance.UnSubscribe(this);
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         { 
             GetComponent<Actor_Brain>().DrawGizmos();
         }
@@ -196,6 +197,21 @@ namespace ActorSystem.AI
                 ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawnFromStart(transform.position);
                 SetState(m_myData.m_initialState);
                 m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
+            }
+            else if (m_myBrain.m_legs != null)
+            {
+                NavMeshHit hit;
+                SetState(m_myData.m_initialState);
+                if (NavMesh.FindClosestEdge(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.areaMask))
+                {
+                    var end = hit.position;
+                    if (NavMesh.SamplePosition(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.radius * 4f, 1 << NavMesh.GetAreaFromName("Water")))
+                    {
+                        var start = hit.position;
+
+                        m_mySpawn.StartSpawn(start, end, start.DirectionTo(end));
+                    }
+                }
             }
         }
     }

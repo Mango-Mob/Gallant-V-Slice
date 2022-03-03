@@ -13,9 +13,13 @@ public class Player_Resources : MonoBehaviour
 {
     public float m_health { get; private set; } = 100.0f;
     public float m_maxHealth { get; private set; } = 100.0f;
+    public float m_defaultHealth { get; private set; } = 100.0f;
+
     public float m_barrier { get; private set; } = 0.0f;
     public float m_maxBarrier { get; private set; } = 50.0f;
     public int m_adrenaline { get; private set; } = 0;
+    public int m_startingAdrenaline = 3;
+    public int m_defaultAdrenaline { get; private set; } = 3;
 
     private Player_Controller playerController;
     public UI_Bar healthBar { get; private set; }
@@ -38,11 +42,15 @@ public class Player_Resources : MonoBehaviour
         barrierBar = HUDManager.Instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.Instance.GetElement<UI_PortraitHP>("Portrait");
         adrenalineOrbs = HUDManager.Instance.GetElement<UI_OrbCount>("Adrenaline");
+
+        m_defaultAdrenaline = m_startingAdrenaline;
+        m_adrenaline = m_startingAdrenaline;
     }
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<Player_Controller>();
+
     }
 
     // Update is called once per frame
@@ -77,6 +85,13 @@ public class Player_Resources : MonoBehaviour
 
         if (adrenalineOrbs != null)
             adrenalineOrbs.SetValue(m_adrenaline);
+    }
+
+
+    public void ResetResources()
+    {
+        m_adrenaline = m_startingAdrenaline;
+        m_health = m_maxHealth;
     }
 
     /*******************

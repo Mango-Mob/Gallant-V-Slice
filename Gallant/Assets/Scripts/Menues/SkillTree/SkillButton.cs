@@ -29,6 +29,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     void Start()
     {
         m_manager = GetComponentInParent<SkillTreeManager>();
+
+        m_icon.sprite = m_skillData.skillIcon;
     }
 
     // Update is called once per frame

@@ -14,7 +14,16 @@ namespace ActorSystem.AI.Components
         public List<AttackData> m_myData = new List<AttackData>();
 
         private float[] m_cooldowns;
-
+        public bool hasCancel { 
+            get 
+            {
+                if (m_activeAttack.HasValue)
+                {
+                    return m_myData[m_activeAttack.Value].canBeCanceled;
+                }
+                return false;
+            } 
+        }
         private void Awake()
         {
             m_myData.Sort(new AttackPrioritySort());

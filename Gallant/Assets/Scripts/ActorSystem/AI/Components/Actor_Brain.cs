@@ -33,12 +33,14 @@ namespace ActorSystem.AI.Components
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
 
         [Header("Preview")]
+        public float m_agility;
         public float m_currHealth;
         public float m_currPhyResist;
         public float m_currAbilResist;
         public GameObject m_target;
 
         public float m_idealDistance = 1.5f;
+        public float m_stamina { get; private set; } = 1.0f;
 
         private bool m_isInvincible;
         public float m_startHealth { get; private set; }
@@ -102,6 +104,8 @@ namespace ActorSystem.AI.Components
         public void LoadData(ActorData _data, uint _level = 0)
         {
             //Brain
+            m_stamina = 1.0f;
+            m_agility = _data.agility;
             m_startHealth = _data.health + _data.deltaHealth * _level;
             m_basePhyResist = _data.phyResist + _data.deltaPhyResist * _level;
             m_baseAbilResist = _data.abilResist + _data.deltaAbilResist * _level;
@@ -113,7 +117,6 @@ namespace ActorSystem.AI.Components
             {
                 m_arms.m_baseDamageMod = _data.m_damageModifier + _data.deltaDamageMod * _level;
             }
-
 
             //Legs
             if (m_legs != null)
@@ -173,7 +176,8 @@ namespace ActorSystem.AI.Components
             if (m_arms.m_activeAttack != null)
                 return;
 
-            if(m_animator.PlayAnimation(m_arms.m_myData[id].animID))
+            m_animator.ResetTrigger("Cancel");
+            if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
                 m_arms.Begin(id);
             }
@@ -212,6 +216,13 @@ namespace ActorSystem.AI.Components
             //External
             m_material?.ShowHit();
             m_refreshTimer?.Start(5.0f);
+
+            if(m_arms != null && m_arms.hasCancel)
+            {
+                EndAttack();
+                m_animator.SetTrigger("Cancel");
+            }
+
             //Hit animation
             if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
             {
@@ -246,11 +257,11 @@ namespace ActorSystem.AI.Components
         public void DrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            if (m_target != null)
-            {
-                Gizmos.DrawLine(transform.position, m_target.transform.position);
-                Gizmos.DrawSphere(m_target.transform.position, 0.25f);
-            }
+            //if (m_target != null)
+            //{
+            //    Gizmos.DrawLine(transform.position, m_target.transform.position);
+            //    Gizmos.DrawSphere(m_target.transform.position, 0.25f);
+            //}
 
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();

@@ -19,7 +19,7 @@ public class Player_Controller : MonoBehaviour
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     private Hand m_lastAttackHand = Hand.NONE;
-    private ClassData m_inkmanClass;
+    public ClassData m_inkmanClass { private set; get; }
 
     // Player components
     public Player_Movement playerMovement { private set; get; }
@@ -31,6 +31,7 @@ public class Player_Controller : MonoBehaviour
     public Player_AudioAgent playerAudioAgent { private set; get; }
     public Player_CombatAnimator playerCombatAnimator { private set; get; }
     public Player_ClassArmour playerClassArmour { private set; get; }
+    public Player_Skills playerSkills { private set; get; }
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
@@ -60,6 +61,7 @@ public class Player_Controller : MonoBehaviour
         playerAudioAgent = GetComponent<Player_AudioAgent>();
         playerCombatAnimator = GetComponent<Player_CombatAnimator>();
         playerClassArmour = GetComponent<Player_ClassArmour>();
+        playerSkills = GetComponent<Player_Skills>();
 
         if (GameManager.m_containsPlayerInfo)
         {
@@ -70,9 +72,13 @@ public class Player_Controller : MonoBehaviour
             m_inkmanClass = GameManager.RetrieveClassData();
             if (m_inkmanClass)
                 playerClassArmour.SetClassArmour(m_inkmanClass);
+            else
+                playerSkills.EvaluateSkills();
 
             playerStats.EvaluateEffects();
         }
+        else
+            playerSkills.EvaluateSkills();
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
@@ -452,5 +458,7 @@ public class Player_Controller : MonoBehaviour
         playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
 
         playerClassArmour.SetClassArmour(_class);
+
+        playerSkills.EvaluateSkills();
     }    
 }
