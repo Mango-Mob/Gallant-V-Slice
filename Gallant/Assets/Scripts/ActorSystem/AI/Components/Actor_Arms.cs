@@ -61,7 +61,7 @@ namespace ActorSystem.AI.Components
         {
             if(m_activeAttack != null)
             {
-                return m_myData[m_activeAttack.Value].GetOverlaping(transform, m_targetMask);
+                return m_myData[m_activeAttack.Value].GetOverlaping(transform, m_targetMask).ToArray();
             }
             return null;
         }
