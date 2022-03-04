@@ -76,7 +76,7 @@ public class UI_StatsMenu : UI_Element
             bool runeInfoExists = false;
             foreach (var rune in m_runeList)
             {
-                if (rune.m_effect == effect.Key)
+                if (rune.m_effect.effect == effect.Key.effect)
                 {
                     SetRuneInfo(rune, effect.Key);
                     runeInfoExists = true;
@@ -88,14 +88,14 @@ public class UI_StatsMenu : UI_Element
                 RuneInfo newObject = Instantiate(m_runeInfoPrefab, m_listObject.transform).GetComponent<RuneInfo>();
                 newObject.m_effect = effect.Key;
                 m_runeList.Add(newObject);
-                
+
                 SetRuneInfo(newObject, effect.Key);
             }
         }
     }
-    public void SetRuneInfo(RuneInfo _runeInfo, ItemEffect _effect)
+    public void SetRuneInfo(RuneInfo _runeInfo, EffectData _effect)
     {
-        switch (_effect)
+        switch (_effect.effect)
         {
             case ItemEffect.NONE:
                 break;
