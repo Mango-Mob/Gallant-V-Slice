@@ -46,7 +46,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
         protected override void Update()
         {
             base.Update();
-            if(m_spawnning && Vector3.Distance(m_endLocation, transform.position) < m_height/2.0f)
+            if(m_spawnning && m_endLocation.y - transform.position.y < m_height/2.0f)
             {
                 GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", false);
                 m_spawnning = false;
