@@ -188,7 +188,10 @@ namespace ActorSystem.AI.Components
 
         public void InvokeAttack()
         {
-            Collider[] hits = m_arms.GetOverlapping();
+            if (m_arms == null)
+                return;
+
+            Collider[] hits = m_arms.GetOverlapping(); 
             foreach (var hit in hits)
             {
                 m_arms.Invoke(hit, m_projSource);

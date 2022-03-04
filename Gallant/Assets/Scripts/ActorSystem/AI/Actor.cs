@@ -200,24 +200,28 @@ namespace ActorSystem.AI
             if(m_lastSpawner != null)
             {
                 m_myBrain.SetEnabled(false);
-                //var data = m_lastSpawner.GetClosestSpawn(transform.position);
-                SetState(m_myData.m_initialState);
-                //m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
+                SpawnData data;
+                if(m_lastSpawner.GetClosestSpawn(transform.position, out data))
+                {
+                    SetState(m_myData.m_initialState);
+                    m_mySpawn.StartSpawn(data.startPoint, data.endPoint, data.navPoint);
+                }
             }
             else if (m_myBrain.m_legs != null)
             {
-                NavMeshHit hit;
-                SetState(m_myData.m_initialState);
-                if (NavMesh.FindClosestEdge(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.areaMask))
-                {
-                    var end = hit.position;
-                    if (NavMesh.SamplePosition(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.radius * 4f, 1 << NavMesh.GetAreaFromName("Water")))
-                    {
-                        var start = hit.position;
-
-                        m_mySpawn.StartSpawn(start, end, start.DirectionTo(end));
-                    }
-                }
+                Debug.LogError("TODO");
+                //NavMeshHit hit;
+                //SetState(m_myData.m_initialState);
+                //if (NavMesh.FindClosestEdge(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.areaMask))
+                //{
+                //    var end = hit.position;
+                //    if (NavMesh.SamplePosition(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.radius * 4f, 1 << NavMesh.GetAreaFromName("Water")))
+                //    {
+                //        var start = hit.position;
+                //
+                //        m_mySpawn.StartSpawn(start, end, start.DirectionTo(end));
+                //    }
+                //}
             }
         }
     }

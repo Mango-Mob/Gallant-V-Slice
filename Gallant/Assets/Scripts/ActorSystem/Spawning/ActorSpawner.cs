@@ -145,5 +145,24 @@ namespace ActorSystem.Spawning
                  }
             }
         }
+
+        public bool GetClosestSpawn(Vector3 position, out SpawnData closest)
+        {
+            float dist = float.MaxValue;
+            closest = new SpawnData();
+            foreach (var item in m_generator.m_spawnPoints)
+            {
+                if(Vector3.Distance(position, item.startPoint) < dist)
+                {
+                    dist = Vector3.Distance(position, item.startPoint);
+                    closest = item;
+                }
+            }
+            if(dist == float.MaxValue)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
