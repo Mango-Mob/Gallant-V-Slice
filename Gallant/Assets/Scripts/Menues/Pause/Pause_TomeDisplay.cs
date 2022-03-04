@@ -23,16 +23,16 @@ public class Pause_TomeDisplay : MonoBehaviour
             foreach (var item in m_player.playerStats.m_effects)
             {
                 Pause_Tome temp = null;
-                if(m_tomeDisplays.TryGetValue(item.Key, out temp))
+                if(m_tomeDisplays.TryGetValue(item.Key.effect, out temp))
                 {
                     temp.SetAmount(item.Value);
                 }
                 else
                 {
                     temp = Instantiate(m_tomePrefab, transform).GetComponent<Pause_Tome>();
-                    temp.SetTome(m_itemImages[(int)item.Key]);
+                    temp.SetTome(m_itemImages[(int)item.Key.effect]);
                     temp.SetAmount(item.Value);
-                    m_tomeDisplays.Add(item.Key, temp);
+                    m_tomeDisplays.Add(item.Key.effect, temp);
                 }
             }
     }

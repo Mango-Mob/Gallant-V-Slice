@@ -53,13 +53,13 @@ public class GameManager : Singleton<GameManager>
         public WeaponData m_rightWeapon;
         public ClassData m_classData;
          
-        public Dictionary<ItemEffect, int> m_effects;
+        public Dictionary<EffectData, int> m_effects;
     }
 
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<ItemEffect, int> _effects, ClassData _class)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class)
     {
         m_playerInfo.m_leftWeapon = _leftWeapon;
         m_playerInfo.m_rightWeapon = _rightWeapon;
@@ -84,7 +84,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public static Dictionary<ItemEffect, int> RetrieveEffectsDictionary()
+    public static Dictionary<EffectData, int> RetrieveEffectsDictionary()
     {
         return m_playerInfo.m_effects;
     }

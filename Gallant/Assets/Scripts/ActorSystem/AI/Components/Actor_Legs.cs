@@ -85,7 +85,7 @@ namespace ActorSystem.AI.Components
                 m_body.velocity -= (m_body.velocity.normalized * m_agent.acceleration * Time.fixedDeltaTime);
             }
             
-            Debug.Log(m_body.velocity.magnitude);
+            //Debug.Log(m_body.velocity.magnitude);
             m_agent.updatePosition = !m_isKnocked && !m_isSeekingMesh;
             m_body.isKinematic = !m_isKnocked && !m_isSeekingMesh;
             
