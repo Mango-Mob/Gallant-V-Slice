@@ -240,6 +240,8 @@ namespace ActorSystem.AI.Components
             {
                 m_isKnocked = true;
                 m_body.isKinematic = false;
+                m_agent.updatePosition = false;
+                m_body.velocity = force;
                 return;
             }
             m_body.velocity = force;

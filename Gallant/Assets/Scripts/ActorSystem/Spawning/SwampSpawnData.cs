@@ -36,7 +36,9 @@ namespace ActorSystem.Spawning
                     // z = radius/MAX(|cos(deg)|, |sin(deg)|) * sin(deg)
                     float m = Mathf.Max(Mathf.Abs(Mathf.Cos(curr)), Mathf.Abs(Mathf.Sin(curr)));
                     direct.x = (1.0f / m) * Mathf.Cos(curr);    
-                    direct.z = (1.0f / m) * Mathf.Sin(curr);    
+                    direct.z = (1.0f / m) * Mathf.Sin(curr);
+                    //Rotate point based upon world rotation
+                    direct = transform.rotation * direct;
                 }
 
                 //Get point at the edge of the circle/square.
@@ -109,6 +111,7 @@ namespace ActorSystem.Spawning
                         float m = Mathf.Max(Mathf.Abs(Mathf.Cos(curr)), Mathf.Abs(Mathf.Sin(curr)));
                         direct.x = (1.0f / m) * Mathf.Cos(curr);    // x = radius/MAX(|cos(deg)|, |sin(deg)|) * cos(deg)
                         direct.z = (1.0f / m) * Mathf.Sin(curr);    // z = radius/MAX(|cos(deg)|, |sin(deg)|) * sin(deg)
+                        direct = transform.rotation * direct;
                     }
 
                     Vector3 point = transform.position + direct * m_spawnSize;

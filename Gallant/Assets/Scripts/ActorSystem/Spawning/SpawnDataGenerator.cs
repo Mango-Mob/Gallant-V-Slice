@@ -44,7 +44,7 @@ namespace ActorSystem.Spawning
             if (m_isCircle)
                 Extentions.GizmosDrawCircle(transform.position, m_spawnSize);
             else
-                Extentions.GizmosDrawSquare(transform.position, transform.rotation, new Vector2(m_spawnSize, m_spawnSize));
+                Extentions.GizmosDrawSquare(transform.position, transform.rotation, new Vector2(m_spawnSize, m_spawnSize) * 2);
 
             if (m_spawnPoints != null)
             {

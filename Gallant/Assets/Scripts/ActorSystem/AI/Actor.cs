@@ -98,7 +98,8 @@ namespace ActorSystem.AI
 
         public void KnockbackActor(Vector3 force)
         {
-            m_myBrain.m_legs?.KnockBack(force);
+            if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
+                m_myBrain.m_legs.KnockBack(force);
         }
 
         public void SetTarget(GameObject _target)
@@ -122,7 +123,11 @@ namespace ActorSystem.AI
 
         public void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
         {
-            if(!m_myBrain.IsDead)
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                m_mySpawn.StopSpawning();
+            }
+            if (!m_myBrain.IsDead)
             {
                 if(m_myBrain.HandleDamage(_damage, _type, _damageLoc))
                 {
@@ -195,7 +200,7 @@ namespace ActorSystem.AI
             if(m_lastSpawner != null)
             {
                 m_myBrain.SetEnabled(false);
-                //ActorSpawner.SpawnLocation data = m_lastSpawner.CreateSpawnFromStart(transform.position);
+                //var data = m_lastSpawner.GetClosestSpawn(transform.position);
                 SetState(m_myData.m_initialState);
                 //m_mySpawn.StartSpawn(data.m_start, data.m_end, data.m_forward);
             }
