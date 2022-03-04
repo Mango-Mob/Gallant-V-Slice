@@ -47,7 +47,7 @@ public class Ability_FlameEvade : AbilityBase
     {
         if (m_pathPrefab != null)
         {
-            playerController.playerAudioAgent.Iceroll();
+            playerController.playerAudioAgent.FirewaveLaunch();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_pathPrefab,
