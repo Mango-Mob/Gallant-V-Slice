@@ -111,7 +111,7 @@ public class Player_Movement : MonoBehaviour
             m_lastGroundedPosition = transform.position;
             m_lastGroundedVelocity = characterController.velocity;
         }
-        else
+        else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
         RollUpdate();
@@ -167,6 +167,9 @@ public class Player_Movement : MonoBehaviour
         m_isStunned = true;
         m_stunTimer = _stunDuration;
         m_knockbackVelocity = _knockbackVelocity;
+        m_knockbackVelocity.y = 0;
+        m_yVelocity = _knockbackVelocity.y;
+
         m_isRolling = false;
         m_isRollInvincible = false;
     }
@@ -371,6 +374,8 @@ public class Player_Movement : MonoBehaviour
 
             m_wasOnIce = false;
         }
+
+        Debug.Log(m_yVelocity);
 
         //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move

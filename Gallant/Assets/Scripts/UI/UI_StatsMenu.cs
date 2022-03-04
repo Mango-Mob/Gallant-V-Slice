@@ -8,6 +8,8 @@ public class UI_StatsMenu : UI_Element
     private bool m_active = false;
     public float m_deactiveOffset = 300.0f;
 
+    private CanvasGroup m_canvasGroup;
+
     [SerializeField] private Image m_background;
 
     [Header("Rune Info")]
@@ -31,6 +33,7 @@ public class UI_StatsMenu : UI_Element
     void Start()
     {
         playerStats = FindObjectOfType<Player_Stats>();
+        m_canvasGroup = GetComponent<CanvasGroup>();
 
         m_runeStartPosX = m_runeGroup.position.x;
         m_weaponStartPosX = m_weaponGroup.position.x;
@@ -44,9 +47,10 @@ public class UI_StatsMenu : UI_Element
 
         m_offsetLerp = Mathf.Clamp(m_offsetLerp + (m_active ? 1.0f : -1.0f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
-        Color backgroundColor = m_background.color;
-        backgroundColor.a = 0.85f * m_offsetLerp;
-        m_background.color = backgroundColor;
+        m_canvasGroup.alpha = m_offsetLerp;
+        //Color backgroundColor = m_background.color;
+        //backgroundColor.a = 0.85f * m_offsetLerp;
+        //m_background.color = backgroundColor;
 
         m_runeGroup.position = new Vector3(m_runeStartPosX + Mathf.Lerp(-m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z);
         m_weaponGroup.position = new Vector3(m_weaponStartPosX + Mathf.Lerp(m_deactiveOffset, 0, m_offsetLerp), m_weaponGroup.position.y, m_weaponGroup.position.z);
