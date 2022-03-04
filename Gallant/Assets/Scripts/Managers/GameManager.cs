@@ -22,6 +22,10 @@ public class GameManager : Singleton<GameManager>
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_activeCamera = m_player.GetComponentInChildren<Camera>();
+
+        for (int i = 0; i < 31; i++)
+            Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Water"), i);
+        
     }
 
     // Update is called once per frame

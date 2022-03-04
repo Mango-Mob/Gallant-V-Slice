@@ -61,7 +61,10 @@ namespace ActorSystem.AI.Components
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
-            m_myOutline.enabled = false;
+
+            if(m_myOutline != null)
+                m_myOutline.enabled = false;
+
             SetOutlineEnabled(false);
         }
 
