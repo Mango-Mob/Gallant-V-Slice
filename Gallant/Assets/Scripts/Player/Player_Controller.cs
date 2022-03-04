@@ -191,7 +191,7 @@ public class Player_Controller : MonoBehaviour
             {
                 if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
                 {
-                    if (m_lastAttackHand == Hand.RIGHT)
+                    if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
                     {
                         playerAttack.StartUsing(Hand.LEFT);
                     }

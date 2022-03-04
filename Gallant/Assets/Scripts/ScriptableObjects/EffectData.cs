@@ -38,11 +38,11 @@ public class EffectData : ScriptableObject
             case StackCalculation.DIMINISHING:
                 for (int i = 1; i <= _stackCount; i++)
                 {
-                    value += m_stackStrength * Mathf.Pow(0.5f, i - 1);
+                    value += m_stackStrength * Mathf.Pow(m_diminishingValue, i - 1);
                 }
                 break;
             case StackCalculation.CURVE_TO_EXTREME:
-                value = 1.0f * ((1.0f - m_extremeValue) * Mathf.Pow(m_stackStrength, -_stackCount) + m_extremeValue);
+                value = m_default * ((1.0f - m_extremeValue) * Mathf.Pow(1.0f / m_stackStrength, -_stackCount) + m_extremeValue);
                 break;
             default:
                 break;
