@@ -36,6 +36,7 @@ public class State_MoveToTarget : State
         else
         {
             m_myActor.SetTargetVelocity(Vector3.zero);
+            m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
         }
         
         if(m_myActor.m_states.Contains(Type.ATTACK))
