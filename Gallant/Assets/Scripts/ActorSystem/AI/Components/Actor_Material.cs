@@ -62,7 +62,7 @@ namespace ActorSystem.AI.Components
 
         public void StartDisolve()
         {
-            if (m_myMesh.material.name.Contains("Disolve") || m_hit != null)
+            if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = true;
             }

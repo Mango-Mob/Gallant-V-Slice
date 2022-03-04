@@ -227,7 +227,7 @@ namespace ActorSystem.AI.Components
             if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
             {
                 m_animator.SetTrigger("Hit");
-                m_animator.SetVector3("HitHorizontal", "", "HitVertical", (transform.position.DirectionTo(_damageLoc.Value)).normalized);
+                m_animator.SetVector3("HitHorizontal", "", "HitVertical", transform.TransformVector(transform.position.DirectionTo(_damageLoc.Value)).normalized);
             }
 
             //Internal
