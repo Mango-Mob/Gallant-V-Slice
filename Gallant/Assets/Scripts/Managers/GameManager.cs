@@ -51,6 +51,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     #region Player Info Storage
+    [Serializable]
     private struct PlayerInfo
     {
         public WeaponData m_leftWeapon;
@@ -63,6 +64,26 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
+    public static void SavePlayerInfoToFile()
+    {
+        Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+
+        string json = JsonUtility.ToJson(m_playerInfo);
+        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+    }
+    public static void LoadPlayerInfoFromFile()
+    {
+        if (File.Exists(Application.persistentDataPath + "/playerInfo.json"))
+        {
+            // Read the json from the file into a string
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + "/playerInfo.json");
+
+            // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
+            m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
+        }
+
+        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+    }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class)
     {
         m_playerInfo.m_leftWeapon = _leftWeapon;
@@ -90,6 +111,8 @@ public class GameManager : Singleton<GameManager>
 
     public static Dictionary<EffectData, int> RetrieveEffectsDictionary()
     {
+        if (m_playerInfo.m_effects == null)
+            m_playerInfo.m_effects = new Dictionary<EffectData, int>();
         return m_playerInfo.m_effects;
     }
 

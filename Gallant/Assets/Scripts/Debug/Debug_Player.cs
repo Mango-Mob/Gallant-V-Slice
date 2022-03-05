@@ -52,6 +52,15 @@ public class Debug_Player : MonoBehaviour
     public void CreateWeapon()
     {
         DroppedWeapon.CreateDroppedWeapon(GameManager.Instance.m_player.transform.position,
-            WeaponData.GenerateSpecificWeapon(1, (Weapon)m_weaponSelectInput.value, (Ability)m_weaponSelectInput.value, 1));
+            WeaponData.GenerateSpecificWeapon(1, (Weapon)m_weaponSelectInput.value, (Ability)m_abilitySelectInput.value, 1));
+    }
+
+    public void SavePlayerInfoToFile()
+    {
+        GameManager.SavePlayerInfoToFile();
+    }
+    public void LoadPlayerInfoFromFile()
+    {
+        GameManager.LoadPlayerInfoFromFile();
     }
 }
