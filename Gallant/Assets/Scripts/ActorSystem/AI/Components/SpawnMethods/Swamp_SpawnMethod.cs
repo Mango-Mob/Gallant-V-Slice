@@ -17,8 +17,6 @@ namespace ActorSystem.AI.Components.SpawnMethods
         private Vector3 m_endLocation;
         private bool m_hasResentlySpawnned;
 
-        //
-        //private bool spawnedTrigger = false;
         public override void StartSpawn(Vector3 start, Vector3 end, Vector3 navMeshPoint)
         {
             m_velocity = Vector3.zero;
