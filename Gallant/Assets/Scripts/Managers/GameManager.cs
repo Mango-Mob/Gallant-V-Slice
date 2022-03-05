@@ -58,8 +58,17 @@ public class GameManager : Singleton<GameManager>
         public WeaponData m_rightWeapon;
         public ClassData m_classData;
          
-        public Dictionary<EffectData, int> m_effects;
+        //public Dictionary<EffectData, int> m_effects;
+        public List<EffectsInfo> m_effects;
     }
+
+    [Serializable]
+    private struct EffectsInfo
+    {
+        public EffectData effect;
+        public int amount;
+    }
+
 
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
@@ -80,6 +89,8 @@ public class GameManager : Singleton<GameManager>
 
             // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
             m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
+
+            m_containsPlayerInfo = true;
         }
 
         Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
@@ -89,7 +100,20 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo.m_leftWeapon = _leftWeapon;
         m_playerInfo.m_rightWeapon = _rightWeapon;
 
-        m_playerInfo.m_effects = _effects;
+        if (m_playerInfo.m_effects != null)
+            m_playerInfo.m_effects.Clear();
+        else
+            m_playerInfo.m_effects = new List<EffectsInfo>();
+
+        foreach (var effect in _effects)
+        {
+            EffectsInfo effectsInfo;
+            effectsInfo.effect = effect.Key;
+            effectsInfo.amount = effect.Value;
+            m_playerInfo.m_effects.Add(effectsInfo);
+        }
+
+        //m_playerInfo.m_effects = _effects;
 
         m_playerInfo.m_classData = _class;
 
@@ -112,8 +136,21 @@ public class GameManager : Singleton<GameManager>
     public static Dictionary<EffectData, int> RetrieveEffectsDictionary()
     {
         if (m_playerInfo.m_effects == null)
-            m_playerInfo.m_effects = new Dictionary<EffectData, int>();
-        return m_playerInfo.m_effects;
+        {
+            m_playerInfo.m_effects = new List<EffectsInfo>();
+            return new Dictionary<EffectData, int>();
+        }
+        else
+        {
+            Dictionary<EffectData, int> effects = new Dictionary<EffectData, int>();
+
+            foreach (var effect in m_playerInfo.m_effects)
+            {
+                effects.Add(effect.effect, effect.amount);
+            }
+
+            return effects;
+        }
     }
 
     public static ClassData RetrieveClassData()
