@@ -70,7 +70,7 @@ public abstract class WeaponBase : MonoBehaviour
             if (hitList.Contains(collider.gameObject))
                 continue;
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage);
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage, _data.m_knockback);
             Actor actor = collider.GetComponentInParent<Actor>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {
@@ -96,7 +96,7 @@ public abstract class WeaponBase : MonoBehaviour
             if (hitList.Contains(collider.gameObject))
                 continue;
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage);
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage, _data.m_knockback);
             Actor actor = collider.GetComponentInParent<Actor>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {

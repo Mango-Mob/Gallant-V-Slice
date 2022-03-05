@@ -47,7 +47,7 @@ public class Ability_FrostEvade : AbilityBase
     {
         if (m_pathPrefab != null)
         {
-            playerController.playerAudioAgent.FirewaveLaunch();
+            playerController.playerAudioAgent.Iceroll();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_pathPrefab,

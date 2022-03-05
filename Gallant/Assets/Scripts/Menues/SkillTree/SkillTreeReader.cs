@@ -79,7 +79,6 @@ public class SkillTreeReader : MonoBehaviour
         LoadSkillTree(InkmanClass.MAGE);
         LoadSkillTree(InkmanClass.HUNTER);
     }
-
     private string GetSkillTreePath(InkmanClass _class)
     {
         string path = Application.persistentDataPath;

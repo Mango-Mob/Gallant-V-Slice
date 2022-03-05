@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "classData", menuName = "Game Data/Class Data", order = 1)]
+[System.Serializable]
 public class ClassData : ScriptableObject
 {
     public InkmanClass inkmanClass;

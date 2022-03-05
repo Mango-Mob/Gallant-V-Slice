@@ -51,6 +51,7 @@ public class Player_Controller : MonoBehaviour
 
     private void Awake()
     {
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
     }
 
@@ -71,25 +72,7 @@ public class Player_Controller : MonoBehaviour
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
 
-        if (GameManager.m_containsPlayerInfo)
-        {
-            playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
-            playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
-
-            playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
-            m_inkmanClass = GameManager.RetrieveClassData();
-            if (m_inkmanClass)
-                playerClassArmour.SetClassArmour(m_inkmanClass);
-            else
-                playerSkills.EvaluateSkills();
-
-            playerStats.EvaluateEffects();
-        }
-        else
-            playerSkills.EvaluateSkills();
-
-        playerAttack.ApplyWeaponData(Hand.LEFT);
-        playerAttack.ApplyWeaponData(Hand.RIGHT);
+        LoadPlayerInfo();
     }
 
     // Update is called once per frame
@@ -506,6 +489,28 @@ public class Player_Controller : MonoBehaviour
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, m_inkmanClass);
     }
+    public void LoadPlayerInfo()
+    {
+        if (GameManager.m_containsPlayerInfo)
+        {
+            playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
+            playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
+
+            playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
+            m_inkmanClass = GameManager.RetrieveClassData();
+            if (m_inkmanClass)
+                playerClassArmour.SetClassArmour(m_inkmanClass);
+            else
+                playerSkills.EvaluateSkills();
+
+            playerStats.EvaluateEffects();
+        }
+        else
+            playerSkills.EvaluateSkills();
+
+        playerAttack.ApplyWeaponData(Hand.LEFT);
+        playerAttack.ApplyWeaponData(Hand.RIGHT);
+    }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
     {
@@ -521,7 +526,7 @@ public class Player_Controller : MonoBehaviour
 
     public void RespawnPlayerToGround(bool _isFullHP = false)
     {
-        Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized;
+        Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized * 2.0f;
         RespawnPlayerTo(targetPosition, _isFullHP);
     }
     public void SelectClass(ClassData _class)
