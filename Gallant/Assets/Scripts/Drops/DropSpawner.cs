@@ -18,6 +18,13 @@ public class DropSpawner : MonoBehaviour
         DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, WeaponData.GenerateSpecificWeapon(m_weaponLevel, m_weaponType, m_abilityType, m_abilityPowerLevel));
     }
 
+    public void Configure(int _level, Weapon _weapon, Ability _ability, int _abilityLevel)
+    {
+        m_weaponLevel = _level;
+        m_weaponType = _weapon;
+        m_abilityType = _ability;
+        m_abilityPowerLevel = _abilityLevel;
+    }
     // Update is called once per frame
     void Update()
     {

@@ -105,23 +105,23 @@ public class UI_StatsMenu : UI_Element
                 break;
             case ItemEffect.MOVE_SPEED:
                 _runeInfo.m_name.text = "Movement Speed";
-                _runeInfo.m_number.text = (playerStats.m_movementSpeed).ToString("0.0%");
+                _runeInfo.m_number.text = (playerStats.m_movementSpeed - _effect.m_default).ToString((playerStats.m_movementSpeed > _effect.m_default ? "+0.0%" : "0.0%"));
                 break;
             case ItemEffect.ABILITY_CD:
                 _runeInfo.m_name.text = "Ability Cooldown";
-                _runeInfo.m_number.text = (playerStats.m_abilityCD).ToString("0.0%");
+                _runeInfo.m_number.text = (playerStats.m_abilityCD - _effect.m_default).ToString((playerStats.m_abilityCD > _effect.m_default ? "+0.0%" : "0.0%"));
                 break;
             case ItemEffect.ATTACK_SPEED:
                 _runeInfo.m_name.text = "Attack Speed";
-                _runeInfo.m_number.text = (playerStats.m_attackSpeed).ToString("0.0%");
+                _runeInfo.m_number.text = (playerStats.m_attackSpeed - _effect.m_default).ToString((playerStats.m_attackSpeed > _effect.m_default ? "+0.0%" : "0.0%"));
                 break;
             case ItemEffect.DAMAGE_RESISTANCE:
                 _runeInfo.m_name.text = "Damage Resistance";
-                _runeInfo.m_number.text = (playerStats.m_damageResistance).ToString("0.0%");
+                _runeInfo.m_number.text = (playerStats.m_damageResistance - _effect.m_default).ToString((playerStats.m_damageResistance > _effect.m_default ? "+0.0%" : "0.0%"));
                 break;
             case ItemEffect.MAX_HEALTH_INCREASE:
                 _runeInfo.m_name.text = "Max Health";
-                _runeInfo.m_number.text = (playerStats.m_maximumHealth).ToString("0.0%");
+                _runeInfo.m_number.text = (playerStats.m_maximumHealth - _effect.m_default).ToString((playerStats.m_maximumHealth > _effect.m_default ? "+0.0%" : "0.0%"));
                 break;
             default:
                 break;
