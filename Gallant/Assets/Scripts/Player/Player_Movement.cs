@@ -375,7 +375,6 @@ public class Player_Movement : MonoBehaviour
             m_wasOnIce = false;
         }
 
-        Debug.Log(m_yVelocity);
 
         //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move
