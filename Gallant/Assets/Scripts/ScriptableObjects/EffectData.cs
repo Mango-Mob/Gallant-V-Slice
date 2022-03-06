@@ -7,6 +7,7 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(fileName = "effectData", menuName = "Game Data/Effect Data", order = 1)]
+[System.Serializable]
 public class EffectData : ScriptableObject
 {   
     public enum StackCalculation

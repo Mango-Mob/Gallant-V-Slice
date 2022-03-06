@@ -62,8 +62,6 @@ public abstract class WeaponBase : MonoBehaviour
      */
     protected void MeleeAttack(WeaponData _data, Vector3 _source)
     {
-        
-
         List<GameObject> hitList = new List<GameObject>();
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset,
             _data.hitSize, playerController.playerAttack.m_attackTargets);

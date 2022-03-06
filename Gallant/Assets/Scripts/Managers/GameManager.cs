@@ -51,24 +51,69 @@ public class GameManager : Singleton<GameManager>
     }
 
     #region Player Info Storage
+    [Serializable]
     private struct PlayerInfo
     {
         public WeaponData m_leftWeapon;
         public WeaponData m_rightWeapon;
         public ClassData m_classData;
          
-        public Dictionary<EffectData, int> m_effects;
+        //public Dictionary<EffectData, int> m_effects;
+        public List<EffectsInfo> m_effects;
     }
+
+    [Serializable]
+    private struct EffectsInfo
+    {
+        public EffectData effect;
+        public int amount;
+    }
+
 
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
+    public static void SavePlayerInfoToFile()
+    {
+        Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+
+        string json = JsonUtility.ToJson(m_playerInfo);
+        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+    }
+    public static void LoadPlayerInfoFromFile()
+    {
+        if (File.Exists(Application.persistentDataPath + "/playerInfo.json"))
+        {
+            // Read the json from the file into a string
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + "/playerInfo.json");
+
+            // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
+            m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
+
+            m_containsPlayerInfo = true;
+        }
+
+        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+    }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class)
     {
         m_playerInfo.m_leftWeapon = _leftWeapon;
         m_playerInfo.m_rightWeapon = _rightWeapon;
 
-        m_playerInfo.m_effects = _effects;
+        if (m_playerInfo.m_effects != null)
+            m_playerInfo.m_effects.Clear();
+        else
+            m_playerInfo.m_effects = new List<EffectsInfo>();
+
+        foreach (var effect in _effects)
+        {
+            EffectsInfo effectsInfo;
+            effectsInfo.effect = effect.Key;
+            effectsInfo.amount = effect.Value;
+            m_playerInfo.m_effects.Add(effectsInfo);
+        }
+
+        //m_playerInfo.m_effects = _effects;
 
         m_playerInfo.m_classData = _class;
 
@@ -90,7 +135,22 @@ public class GameManager : Singleton<GameManager>
 
     public static Dictionary<EffectData, int> RetrieveEffectsDictionary()
     {
-        return m_playerInfo.m_effects;
+        if (m_playerInfo.m_effects == null)
+        {
+            m_playerInfo.m_effects = new List<EffectsInfo>();
+            return new Dictionary<EffectData, int>();
+        }
+        else
+        {
+            Dictionary<EffectData, int> effects = new Dictionary<EffectData, int>();
+
+            foreach (var effect in m_playerInfo.m_effects)
+            {
+                effects.Add(effect.effect, effect.amount);
+            }
+
+            return effects;
+        }
     }
 
     public static ClassData RetrieveClassData()
