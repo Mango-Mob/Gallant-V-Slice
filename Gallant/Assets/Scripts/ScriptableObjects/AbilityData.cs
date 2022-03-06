@@ -35,6 +35,7 @@ public class AbilityData : ScriptableObject
     public float duration = 0.0f; // The duration of any buff or status effect applied to the target. (does not apply to all abilities)
 
     public float lastCooldown = 0.0f;
+    public bool isPassive = false;
 
     public static string EvaluateDescription(AbilityData data)
     {
