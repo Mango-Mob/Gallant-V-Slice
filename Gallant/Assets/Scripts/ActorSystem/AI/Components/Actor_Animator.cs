@@ -140,6 +140,11 @@ namespace ActorSystem.AI.Components
             m_animator.SetTrigger(triggerName);
         }
 
+        public void ResetTrigger(string triggerName)
+        {
+            m_animator.ResetTrigger(triggerName);
+        }
+
         /*******************
         * SetVector3 : Sets a boolean value in the animator.
         * @author : Michael Jordan

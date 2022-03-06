@@ -9,8 +9,10 @@ namespace ActorSystem.AI.Components
 {
     public abstract class Actor_SpawnMethod : Actor_Component
     {
-        public abstract void StartSpawn(Vector3 start, Vector3 end, Vector3 finalForward);
+        public bool m_spawnning = false;
 
+        public abstract void StartSpawn(Vector3 start, Vector3 end, Vector3 navPoint);
+        public abstract void StopSpawning();
         protected virtual void Update() { }
 
         protected void EndSpawn()

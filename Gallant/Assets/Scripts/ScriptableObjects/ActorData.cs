@@ -9,7 +9,8 @@ public class ActorData : ScriptableObject
 
     [Header("Base Stats")]
     public float health;
-    
+
+    public float agility;
     public string ActorName;
     public float baseSpeed;
 

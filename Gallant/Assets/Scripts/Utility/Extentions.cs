@@ -33,4 +33,21 @@ public static class Extentions
 
        return sphere;
     }
+    public static void GizmosDrawCircle(Vector3 point, float radius)
+    {
+        Gizmos.matrix = Matrix4x4.TRS(point, Quaternion.identity, new Vector3(1f, 0f, 1f));
+
+        Gizmos.DrawWireSphere(Vector3.zero, radius);
+
+        Gizmos.matrix = Matrix4x4.identity;
+    }
+
+    public static void GizmosDrawSquare(Vector3 point, Quaternion rotation, Vector2 size)
+    {
+        Gizmos.matrix = Matrix4x4.TRS(point, rotation, new Vector3(1f, 0f, 1f));
+
+        Gizmos.DrawWireCube(Vector3.zero, new Vector3(size.x, 0, size.y));
+
+        Gizmos.matrix = Matrix4x4.identity;
+    }
 }

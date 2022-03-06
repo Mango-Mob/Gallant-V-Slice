@@ -18,16 +18,17 @@ namespace ActorSystem.AI
         public GameObject vfxSpawn;
 
         public Vector3 attackOriginOffset = Vector3.forward;
+        public float requiredAngle;
         public float projSpeed;
         public float projLifeTime;
 
         public uint instancesPerAttack = 1;
         public CombatSystem.DamageType damageType;
+        public bool canBeCanceled = false;
 
         //TODO:
         private bool canAttackMove = false;
         private bool hasExitTime;
-        private bool canBeCanceled;
         public bool isAwaysFacingTarget = false;
         //Has effect
 
@@ -51,13 +52,29 @@ namespace ActorSystem.AI
 
         public bool IsOverlaping(Transform user, int targetLayer)
         {
-            return GetOverlaping(user, targetLayer).Length > 0;
+            return GetOverlaping(user, targetLayer).Count > 0;
         }
 
-        public Collider[] GetOverlaping(Transform user, int targetLayer)
+        public List<Collider> GetOverlaping(Transform user, int targetLayer)
         {
             Vector3 position = user.position + user.TransformVector(attackOriginOffset);
-            return Physics.OverlapSphere(position, attackRange, targetLayer);
+            List<Collider> colliders = new List<Collider>();
+            foreach (var collider in Physics.OverlapSphere(position, attackRange, targetLayer))
+            {
+                if(attackType == AttackType.Ranged)
+                {
+                    Quaternion lookAt = Quaternion.LookRotation((collider.transform.position - user.position).normalized, Vector3.up);
+                    if (Mathf.Abs(Quaternion.Angle(user.rotation, lookAt)) <= requiredAngle)
+                    {
+                        colliders.Add(collider);
+                    }
+                }
+                else
+                {
+                    colliders.Add(collider);
+                }
+            }
+            return colliders;
         }
 
         public void DrawGizmos(Transform user)

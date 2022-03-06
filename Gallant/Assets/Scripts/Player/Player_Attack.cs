@@ -112,6 +112,9 @@ public class Player_Attack : MonoBehaviour
         if (thisWeapon == null)
             return;
 
+        if (thisWeapon.m_isInUse)
+            return;
+
         animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
         playerController.playerAudioAgent.PlayWeaponSwing();
@@ -400,6 +403,8 @@ public class Player_Attack : MonoBehaviour
                         m_leftWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
                 }
+
+                playerController.m_statsMenu.UpdateWeaponInfo(Hand.LEFT, m_leftWeaponData);
                 break;
             case Hand.RIGHT:
                 // Delete old weapon from player
@@ -425,6 +430,8 @@ public class Player_Attack : MonoBehaviour
                         m_rightWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
                 }
+
+                playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);
                 break;
         }
 
@@ -494,7 +501,7 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
-    public void DamageTarget(GameObject _target, float _damage)
+    public void DamageTarget(GameObject _target, float _damage, float _knockbackForce = 5.0f, Vector3 _damageSource = default(Vector3))
     {
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
@@ -503,6 +510,21 @@ public class Player_Attack : MonoBehaviour
         if (actor != null)
         {
             actor.DealDamage(_damage, CombatSystem.DamageType.Physical, CombatSystem.Faction.Player, transform.position);
+        }
+
+        Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
+
+        Destructible destructible = _target.GetComponentInParent<Destructible>();
+        if (destructible != null)
+        {
+            destructible.ExplodeObject(transform.position, _knockbackForce * 8.0f, 20.0f);
+        }
+
+        if (LayerMask.LayerToName(_target.layer) == "Rubble")
+        {
+            Rigidbody rigidbody = _target.GetComponent<Rigidbody>();
+            if (rigidbody)
+                rigidbody.AddExplosionForce(_knockbackForce * 8.0f, transform.position, 20.0f);
         }
     }
 
@@ -536,6 +558,10 @@ public class Player_Attack : MonoBehaviour
                 Gizmos.DrawWireSphere(Vector3.up * m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_leftWeaponData.hitCenterOffset, m_leftWeaponData.hitSize);
             }
         }
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(m_leftHandTransform.position - m_leftHandTransform.forward * 0.3f, m_leftHandTransform.position + m_leftHandTransform.forward);
+        Gizmos.DrawLine(m_rightHandTransform.position - m_rightHandTransform.forward * 0.3f, m_rightHandTransform.position + m_rightHandTransform.forward);
     }
     public void ToggleBlock(bool _active)
     {

@@ -21,7 +21,7 @@ public class CrossbowBolt : MonoBehaviour
 
         if (m_weaponData != null)
         {
-            m_projectileSpeed = m_projectileSpeed * m_weaponData.m_projectileSpeed * m_projectileUser.playerController.playerStats.m_attackSpeed; 
+            m_projectileSpeed = m_projectileSpeed * m_weaponData.m_projectileSpeed; 
         }
     }
     // Update is called once per frame
@@ -57,11 +57,13 @@ public class CrossbowBolt : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+        //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+        LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
+        if (layerMask == (layerMask | (1 << other.gameObject.layer)))
         {
             Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
 
-            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage);
+            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage, m_weaponData.m_knockback);
 
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
 
@@ -70,7 +72,9 @@ public class CrossbowBolt : MonoBehaviour
             {
                 actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
-            Destruct();
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+                Destruct();
         }
     }
 }

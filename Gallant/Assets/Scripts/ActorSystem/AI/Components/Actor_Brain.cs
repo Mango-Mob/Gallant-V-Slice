@@ -33,12 +33,14 @@ namespace ActorSystem.AI.Components
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
 
         [Header("Preview")]
+        public float m_agility;
         public float m_currHealth;
         public float m_currPhyResist;
         public float m_currAbilResist;
         public GameObject m_target;
 
         public float m_idealDistance = 1.5f;
+        public float m_stamina { get; private set; } = 1.0f;
 
         private bool m_isInvincible;
         public float m_startHealth { get; private set; }
@@ -59,7 +61,10 @@ namespace ActorSystem.AI.Components
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
-            m_myOutline.enabled = false;
+
+            if(m_myOutline != null)
+                m_myOutline.enabled = false;
+
             SetOutlineEnabled(false);
         }
 
@@ -102,6 +107,8 @@ namespace ActorSystem.AI.Components
         public void LoadData(ActorData _data, uint _level = 0)
         {
             //Brain
+            m_stamina = 1.0f;
+            m_agility = _data.agility;
             m_startHealth = _data.health + _data.deltaHealth * _level;
             m_basePhyResist = _data.phyResist + _data.deltaPhyResist * _level;
             m_baseAbilResist = _data.abilResist + _data.deltaAbilResist * _level;
@@ -113,7 +120,6 @@ namespace ActorSystem.AI.Components
             {
                 m_arms.m_baseDamageMod = _data.m_damageModifier + _data.deltaDamageMod * _level;
             }
-
 
             //Legs
             if (m_legs != null)
@@ -173,7 +179,8 @@ namespace ActorSystem.AI.Components
             if (m_arms.m_activeAttack != null)
                 return;
 
-            if(m_animator.PlayAnimation(m_arms.m_myData[id].animID))
+            m_animator.ResetTrigger("Cancel");
+            if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
                 m_arms.Begin(id);
             }
@@ -181,7 +188,10 @@ namespace ActorSystem.AI.Components
 
         public void InvokeAttack()
         {
-            Collider[] hits = m_arms.GetOverlapping();
+            if (m_arms == null)
+                return;
+
+            Collider[] hits = m_arms.GetOverlapping(); 
             foreach (var hit in hits)
             {
                 m_arms.Invoke(hit, m_projSource);
@@ -212,11 +222,18 @@ namespace ActorSystem.AI.Components
             //External
             m_material?.ShowHit();
             m_refreshTimer?.Start(5.0f);
+
+            if(m_arms != null && m_arms.hasCancel)
+            {
+                EndAttack();
+                m_animator.SetTrigger("Cancel");
+            }
+
             //Hit animation
             if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
             {
                 m_animator.SetTrigger("Hit");
-                m_animator.SetVector3("HitHorizontal", "", "HitVertical", (transform.position.DirectionTo(_damageLoc.Value)).normalized);
+                m_animator.SetVector3("HitHorizontal", "", "HitVertical", transform.TransformVector(transform.position.DirectionTo(_damageLoc.Value)).normalized);
             }
 
             //Internal
@@ -246,11 +263,11 @@ namespace ActorSystem.AI.Components
         public void DrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            if (m_target != null)
-            {
-                Gizmos.DrawLine(transform.position, m_target.transform.position);
-                Gizmos.DrawSphere(m_target.transform.position, 0.25f);
-            }
+            //if (m_target != null)
+            //{
+            //    Gizmos.DrawLine(transform.position, m_target.transform.position);
+            //    Gizmos.DrawSphere(m_target.transform.position, 0.25f);
+            //}
 
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();

@@ -40,10 +40,10 @@ public class SkillTreeReader : MonoBehaviour
 
     // Dictionary with the skills in our skilltree
     public List<SkillTree> m_skills { get; private set; } = new List<SkillTree>();
-    public Dictionary<string, Skill> m_basicSkills { get; private set; }
-    public Dictionary<string, Skill> m_knightSkills { get; private set; }
-    public Dictionary<string, Skill> m_mageSkills { get; private set; }
-    public Dictionary<string, Skill> m_hunterSkills { get; private set; }
+    //public Dictionary<string, Skill> m_basicSkills { get; private set; }
+    //public Dictionary<string, Skill> m_knightSkills { get; private set; }
+    //public Dictionary<string, Skill> m_mageSkills { get; private set; }
+    //public Dictionary<string, Skill> m_hunterSkills { get; private set; }
     //public InkmanClass m_treeClass { get; private set; }
 
 
@@ -79,7 +79,6 @@ public class SkillTreeReader : MonoBehaviour
         LoadSkillTree(InkmanClass.MAGE);
         LoadSkillTree(InkmanClass.HUNTER);
     }
-
     private string GetSkillTreePath(InkmanClass _class)
     {
         string path = Application.persistentDataPath;
@@ -157,6 +156,11 @@ public class SkillTreeReader : MonoBehaviour
         }
 
         return -1;
+    }
+
+    public SkillTree GetSkillTree(InkmanClass _class)
+    {
+        return m_skills[(int)_class];
     }
 
     public void UnlockSkill(InkmanClass _class, string id_skill)

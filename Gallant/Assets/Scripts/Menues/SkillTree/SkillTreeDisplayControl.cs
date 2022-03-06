@@ -95,7 +95,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             SelectTab(m_selectedTree);
         }
 
-        if (InputManager.Instance.isInGamepadMode)
+        if (InputManager.Instance.isInGamepadMode) // Using Gamepad
         {
             if (eventSystem.currentSelectedGameObject != null)
             {
@@ -105,6 +105,14 @@ public class SkillTreeDisplayControl : MonoBehaviour
             {
                 SelectSkillButton(null);
             }
+            if (m_currentlyDisplayedButton == null)
+            {
+                SelectSkillButton(m_selectedTreeManager.m_rootSkill);
+            }
+            //else
+            //{
+            //    SelectSkillButton(m_currentlyDisplayedButton);
+            //}
         }
 
         if (InputManager.Instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
@@ -118,27 +126,30 @@ public class SkillTreeDisplayControl : MonoBehaviour
     {
         if (_button == null)
         {
+            m_currentlyDisplayedButton = null;
             m_upgradeInfoObject.SetActive(false);
             return;
         }
 
-        m_skillCost.enabled = !(_button.m_upgradeMaximum < _button.m_upgradeAmount + 1);
-        m_upgradeButtonSprite.enabled = !(_button.m_upgradeMaximum < _button.m_upgradeAmount + 1);
+        m_skillCost.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
+        m_upgradeButtonSprite.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
 
         m_upgradeInfoObject.SetActive(true);
 
         m_currentlyDisplayedButton = _button;
 
         m_skillName.text = _button.m_skillData.skillName;
-        m_skillDescription.text = _button.m_skillData.description;
-        m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_upgradeMaximum}";
-        m_skillCost.text = $"Upgrade Cost ${_button.m_unlockCost}";
+        m_skillDescription.text = SkillData.EvaluateDescription(_button.m_skillData);
+        m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_skillData.upgradeMaximum}";
+        m_skillCost.text = $"Upgrade Cost ${_button.m_skillData.upgradeCost}";
         m_skillIcon.sprite = _button.m_icon.sprite;
 
-        if (_button.m_upgradeMaximum < _button.m_upgradeAmount + 1)
+        if (_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1)
         {
             m_skillCost.enabled = false;
         }
+
+        eventSystem.SetSelectedGameObject(_button.gameObject);
     }
 
     public void SelectTab(InkmanClass _class)
@@ -184,6 +195,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         if (m_selectedTreeManager.m_rootSkill != null)
         {
             eventSystem.SetSelectedGameObject(thisTree.GetComponent<SkillTreeManager>().m_rootSkill.gameObject);
+            SelectSkillButton(thisTree.GetComponent<SkillTreeManager>().m_rootSkill);
         }
     }
 }
