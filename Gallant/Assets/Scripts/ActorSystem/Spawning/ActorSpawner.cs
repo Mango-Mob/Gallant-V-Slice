@@ -50,6 +50,9 @@ namespace ActorSystem.Spawning
         public void StartCombat()
         {
             m_hasStarted = true;
+
+            if (GameManager.Instance.music != null && !GameManager.Instance.music.IsCombatPlaying)
+                GameManager.Instance.music.StartCombat();
         }
 
         /*******************
@@ -83,6 +86,7 @@ namespace ActorSystem.Spawning
         public void Stop()
         {
             m_hasStarted = false;
+            GameManager.Instance.music.EndCombat();
         }
 
         /*******************
