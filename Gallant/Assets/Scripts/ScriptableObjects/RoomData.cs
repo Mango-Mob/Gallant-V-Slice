@@ -10,7 +10,7 @@ public class RoomData : ScriptableObject
     [Serializable]
     public struct Actor
     {
-        public string spawnName;
+        public ActorData actor;
         public int count;
     }
 
@@ -20,10 +20,11 @@ public class RoomData : ScriptableObject
     public float CalculateCost()
     {
         float cost = 0;
-        //foreach (var wave in m_waveInformation)
-        //{
-        //    cost += wave.spawnPrefab.GetComponent<SpawnActorObject>().m_spawnCost * wave.count;
-        //}
+        foreach (var wave in m_waveInformation)
+        {
+            if(wave.actor != null)
+                cost += wave.actor.cost * (wave.count + Mathf.RoundToInt(wave.count/2));
+        }
         return cost;
     }
 

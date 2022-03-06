@@ -9,6 +9,7 @@ public class ActorData : ScriptableObject
 
     [Header("Base Stats")]
     public float health;
+    public float cost;
 
     public float agility;
     public string ActorName;
@@ -38,8 +39,8 @@ public class ActorData : ScriptableObject
     public float deltaDamageMod = 0;
 
     [Header("Sound Effects")]
-    public string deathSoundName;
-    public string hurtSoundName;
+    public AudioClip[] deathSounds;
+    public AudioClip[] hurtSounds;
 
     public List<State.Type> m_states;
     public State.Type m_initialState;

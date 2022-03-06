@@ -38,7 +38,7 @@ public class BurnStatus : StatusEffect
 
     public override void UpdateOnActor(Actor _actor, float dt)
     {
-        _actor.DealDamage(m_strength * dt, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
+        _actor.DealDamageSilent(m_strength * dt, CombatSystem.DamageType.Ability);
         m_duration -= dt;
     }
 

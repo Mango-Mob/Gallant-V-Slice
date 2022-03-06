@@ -111,7 +111,7 @@ namespace ActorSystem.Spawning
                     int selectSpawn = Random.Range(0, m_generator.m_spawnPoints.Count);
                     
                     //Get/Create actor in the reserves
-                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
+                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].actor.ActorName);
                     m_myActors.Add(spawn);
                     spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;
