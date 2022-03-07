@@ -540,4 +540,25 @@ public class Player_Controller : MonoBehaviour
 
         playerSkills.EvaluateSkills();
     }    
+
+    public void UpgradeWeapon(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (playerAttack.m_leftWeaponData)
+                    playerAttack.m_leftWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_leftWeaponData);
+                playerAttack.ApplyWeaponData(Hand.LEFT);
+                break;
+            case Hand.RIGHT:
+                if (playerAttack.m_rightWeaponData)
+                    playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
+                playerAttack.ApplyWeaponData(Hand.RIGHT);
+                break;
+            case Hand.NONE:
+                break;
+            default:
+                break;
+        }
+    }
 }

@@ -129,11 +129,9 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if(m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                m_myBrain.m_material.ShowHit();
+                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
                 {
-                    //Fatal Damage
-                    m_myBrain.PlaySoundEffect(m_myData.deathSoundName);
-
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false;
@@ -142,8 +140,26 @@ namespace ActorSystem.AI
                     SetState(new State_Dead(this));
                     return;
                 }
-
-                m_myBrain.PlaySoundEffect(m_myData.hurtSoundName);
+            }
+        }
+        public void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        {
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                m_mySpawn.StopSpawning();
+            }
+            if (!m_myBrain.IsDead)
+            {
+                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false))
+                {
+                    foreach (var collider in GetComponentsInChildren<Collider>())
+                    {
+                        collider.enabled = false;
+                    }
+                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    SetState(new State_Dead(this));
+                    return;
+                }
             }
         }
 
