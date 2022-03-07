@@ -16,6 +16,8 @@ public abstract class WeaponBase : MonoBehaviour
 
     public Hand m_hand;
 
+    private GameObject m_hitVFXPrefab;
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -24,7 +26,6 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected void Start()
     {
-
     }
     // Update is called once per frame
     protected void Update()
@@ -78,6 +79,8 @@ public abstract class WeaponBase : MonoBehaviour
                 actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
             }
             hitList.Add(collider.gameObject);
+
+            playerController.playerAttack.CreateVFX(collider, _source);
         }
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
@@ -104,6 +107,8 @@ public abstract class WeaponBase : MonoBehaviour
                 actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
             }
             hitList.Add(collider.gameObject);
+
+            playerController.playerAttack.CreateVFX(collider, _source);
         }
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
@@ -134,4 +139,5 @@ public abstract class WeaponBase : MonoBehaviour
         GameObject projectile = Instantiate(m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data);
     }
+
 }

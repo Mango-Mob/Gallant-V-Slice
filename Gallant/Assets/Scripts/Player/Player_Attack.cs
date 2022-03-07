@@ -34,6 +34,7 @@ public class Player_Attack : MonoBehaviour
     public float m_swingHeight = 1.0f;
     public LayerMask m_attackTargets;
     private bool m_attackedThisFrame = false;
+    private GameObject m_hitVFXPrefab;
 
     [Header("Hand Transforms")]
     public Transform m_leftHandTransform;
@@ -70,6 +71,7 @@ public class Player_Attack : MonoBehaviour
 
     private void Start()
     {
+        m_hitVFXPrefab = Resources.Load<GameObject>("VFX/WeaponHit");
     }
 
     private void Update()
@@ -607,6 +609,10 @@ public class Player_Attack : MonoBehaviour
             default:
                 return;
         }
+    }
+    public void CreateVFX(Collider _target, Vector3 _hitSource)
+    {
+        GameObject newObject = Instantiate(m_hitVFXPrefab, _target.ClosestPoint(_hitSource), Quaternion.identity);
     }
 }
 
