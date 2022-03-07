@@ -87,6 +87,8 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(m_lastMoveDirection);
+
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
@@ -116,7 +118,7 @@ public class Player_Movement : MonoBehaviour
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
         RollUpdate();
-        StunUpdate();
+        StunUpdate(); 
     }
 
     /*******************
@@ -128,7 +130,7 @@ public class Player_Movement : MonoBehaviour
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
             if (m_lastMoveDirection.magnitude == 0.0f)
-                m_lastMoveDirection = transform.forward;
+                m_lastMoveDirection = playerModel.transform.forward;
 
             // Move player in stored direction while roll is active
             characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime
@@ -329,7 +331,7 @@ public class Player_Movement : MonoBehaviour
                 //    provider.m_playerRef = this;
                 //}
 
-                if (normalizedMove.magnitude != 0.0)
+                if (normalizedMove.magnitude < 0.02f)
                 {
                     m_lastMoveDirection = normalizedMove;
                 }
