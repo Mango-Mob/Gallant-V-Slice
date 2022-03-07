@@ -15,7 +15,7 @@ using UnityEngine;
 /// 
 public class MultiAudioAgent : AudioAgent
 {
-    public AudioClip[] audioClips;
+    public List<AudioClip> audioClips;
     public uint audioPlayersCount = 5;
     public AudioManager.VolumeChannel channel;
 
@@ -25,12 +25,7 @@ public class MultiAudioAgent : AudioAgent
     protected override void Awake()
     {
         base.Awake();
-        audioLibrary = new Dictionary<string, AudioClip>();
-        
-        foreach (var item in audioClips)
-        {
-            audioLibrary.Add(item.name, item);
-        }
+        UpdateList();
 
         if (audioPlayersCount != 0)
             players = new AudioPlayer[audioPlayersCount];
@@ -54,7 +49,14 @@ public class MultiAudioAgent : AudioAgent
         }
     }
 
-    
+    public void UpdateList()
+    {
+        audioLibrary = new Dictionary<string, AudioClip>();
+        foreach (var item in audioClips)
+        {
+            audioLibrary.Add(item.name, item);
+        }
+    }
 
     public bool Play(string clipName, bool isLooping = false, float pitch = 1.0f)
     {

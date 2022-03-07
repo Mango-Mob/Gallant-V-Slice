@@ -32,11 +32,11 @@ public class ActorEditor : Editor
     {
         m_showLegacy = EditorGUILayout.Toggle("Legacy View:", m_showLegacy);
        
-        if (m_showLegacy)
-        {
+        //if (m_showLegacy)
+        //{
             base.OnInspectorGUI();
             return;
-        }
+        //}
 
         m_testCase = EditorGUILayout.Toggle("Test View:", m_testCase);
 
@@ -77,8 +77,8 @@ public class ActorEditor : Editor
         
         if(m_showAudio)
         {
-            EditorExtentions.TextField("Hurt: ", ref m_data.hurtSoundName, 10);
-            EditorExtentions.TextField("Death: ", ref m_data.deathSoundName, 10);
+            //EditorExtentions.TextField("Hurt: ", ref m_data.hurtSoundName, 10);
+            //EditorExtentions.TextField("Death: ", ref m_data.deathSoundName, 10);
         }
     }
 
