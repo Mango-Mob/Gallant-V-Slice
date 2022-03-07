@@ -22,6 +22,7 @@ public class Player_Movement : MonoBehaviour
     public float m_gravityMult = 9.81f;
     public float m_moveSpeed = 5.0f;
     public float m_rollSpeed = 12.0f;
+    public float m_rollDistanceMult = 8.0f;
     public float m_attackMoveSpeed = 0.4f;
     public float m_attackMoveSpeedLerpSpeed = 5.0f;
     float m_turnSmoothTime = 0.075f;
@@ -75,7 +76,7 @@ public class Player_Movement : MonoBehaviour
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
 
-        playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f));
+        playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / m_rollDistanceMult));
 
         var animControllers = playerController.animator.runtimeAnimatorController;
         foreach (var clip in animControllers.animationClips)
@@ -245,7 +246,7 @@ public class Player_Movement : MonoBehaviour
             {
                 speed *= m_speedBoost;
             }
-            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / m_moveSpeed);
+            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / 5.0f);
 
             Vector3 normalizedMove = Vector3.zero;
 
@@ -302,7 +303,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
 
-                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / 8.0f) * (playerController.playerStats.m_movementSpeed));
+                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / m_rollDistanceMult) * (playerController.playerStats.m_movementSpeed));
                 var animControllers = playerController.animator.runtimeAnimatorController;
                 foreach (var clip in animControllers.animationClips)
                 {

@@ -105,6 +105,8 @@ public class BoomerangProjectile : MonoBehaviour
 
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
 
+            m_projectileUser.CreateVFX(other, transform.position);
+
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {

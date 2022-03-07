@@ -103,4 +103,22 @@ public class AbilityData : ScriptableObject
 
         return data;
     }
+    public void Clone(AbilityData other)
+    {
+        this.abilityName = other.abilityName;
+        this.weaponTitle = other.weaponTitle;
+        this.abilityPower = other.abilityPower;
+        this.abilityIcon = other.abilityIcon;
+        this.description = other.description;
+        
+        this.starPowerLevel = other.starPowerLevel;
+        this.cooldownTime = other.cooldownTime; 
+        this.damage = other.damage; 
+        this.lifetime = other.lifetime; 
+        this.effectiveness = other.effectiveness;
+        this.duration = other.duration;
+        
+        this.lastCooldown = other.lastCooldown;
+        this.isPassive = other.isPassive;
+    }
 }
