@@ -54,8 +54,12 @@ public class GameManager : Singleton<GameManager>
     [Serializable]
     private struct PlayerInfo
     {
-        public WeaponData m_leftWeapon;
-        public WeaponData m_rightWeapon;
+        public SerializedWeapon m_leftWeapon;
+        public AbilityData m_leftAbility;
+
+        public SerializedWeapon m_rightWeapon;
+        public AbilityData m_rightAbility;
+
         public ClassData m_classData;
          
         //public Dictionary<EffectData, int> m_effects;
@@ -97,8 +101,44 @@ public class GameManager : Singleton<GameManager>
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class)
     {
-        m_playerInfo.m_leftWeapon = _leftWeapon;
-        m_playerInfo.m_rightWeapon = _rightWeapon;
+        if (_leftWeapon != null)
+        {
+            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon);
+            m_playerInfo.m_leftAbility = _leftWeapon.abilityData;
+        }
+        else
+        {
+            m_playerInfo.m_leftWeapon = null;
+            m_playerInfo.m_leftAbility = null;
+        }
+
+        if (_rightWeapon != null)
+        {
+            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon);
+            m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+        }
+        else
+        {
+            m_playerInfo.m_rightWeapon = null;
+            m_playerInfo.m_rightAbility = null;
+        }
+
+        //if (_rightWeapon != null)
+        //{
+        //    m_playerInfo.m_rightWeapon = WeaponData.CreateInstance<WeaponData>();
+        //    m_playerInfo.m_rightWeapon.Clone(_rightWeapon);
+        //    m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+        //    WeaponData.ApplyAbilityData(m_playerInfo.m_rightWeapon, Ability.NONE, 0);
+        //}
+        //else
+        //{
+        //    m_playerInfo.m_rightWeapon = null;
+        //    m_playerInfo.m_rightAbility = null;
+        //}
+
+        //m_playerInfo.m_rightWeapon.Clone(_rightWeapon);
+        //m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+        //WeaponData.ApplyAbilityData(m_playerInfo.m_rightWeapon, Ability.NONE, 0);
 
         if (m_playerInfo.m_effects != null)
             m_playerInfo.m_effects.Clear();
@@ -122,15 +162,56 @@ public class GameManager : Singleton<GameManager>
 
     public static WeaponData RetrieveWeaponData(Hand _hand)
     {
+        WeaponData data = null;
         switch (_hand)
         {
             case Hand.LEFT:
-                return m_playerInfo.m_leftWeapon;
+                if (m_playerInfo.m_leftWeapon != null)
+                    data = SerializedWeapon.DeserializeWeapon(m_playerInfo.m_leftWeapon);
+                else
+                    return null;
+                break;
             case Hand.RIGHT:
-                return m_playerInfo.m_rightWeapon;
+                if (m_playerInfo.m_rightWeapon != null)
+                    data = SerializedWeapon.DeserializeWeapon(m_playerInfo.m_rightWeapon);
+                else
+                    return null;
+                break;
             default:
                 return null;
         }
+        return data;
+    }
+    public static AbilityData RetrieveAbilityData(Hand _hand)
+    {
+        //switch (_hand)
+        //{
+        //    case Hand.LEFT:
+        //        return m_playerInfo.m_leftAbility;
+        //    case Hand.RIGHT:
+        //        return m_playerInfo.m_rightAbility;
+        //    default:
+        //        return null;
+        //}
+        AbilityData data = AbilityData.CreateInstance<AbilityData>();
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_playerInfo.m_leftAbility)
+                    data.Clone(m_playerInfo.m_leftAbility);
+                else
+                    return null;
+                break;
+            case Hand.RIGHT:
+                if (m_playerInfo.m_rightAbility)
+                    data.Clone(m_playerInfo.m_rightAbility);
+                else
+                    return null;
+                break;
+            default:
+                return null;
+        }
+        return data;
     }
 
     public static Dictionary<EffectData, int> RetrieveEffectsDictionary()
