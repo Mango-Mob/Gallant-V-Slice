@@ -27,7 +27,7 @@ RectTransform:
   m_GameObject: {fileID: 1593939223197207901}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.92, y: 0.92, z: 0.92}
   m_Children: []
   m_Father: {fileID: 7200541239399581379}
   m_RootOrder: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 12cce2c5dca0e984e86fddb4f1450992, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dad35de3caee8f34da3cf69cb2bc2dd9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -181,8 +181,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 2.42}
-  m_SizeDelta: {x: 0, y: -4.8425446}
+  m_AnchoredPosition: {x: 0, y: -0.00065612793}
+  m_SizeDelta: {x: 0, y: -0.0012626648}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2418706454205939494
 CanvasRenderer:
@@ -213,8 +213,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 0d2169ee80efc3a4180de478afa8a502, type: 2}
-  m_sharedMaterial: {fileID: 4032859275590381027, guid: 0d2169ee80efc3a4180de478afa8a502,
+  m_fontAsset: {fileID: 11400000, guid: 3b9c77eb07b57164b9fe3e3a9fdf50a0, type: 2}
+  m_sharedMaterial: {fileID: 5330068202283086567, guid: 3b9c77eb07b57164b9fe3e3a9fdf50a0,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -239,8 +239,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.6
-  m_fontSizeBase: 25.6
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -314,11 +314,11 @@ RectTransform:
   m_Father: {fileID: 7200541239399581379}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 25, y: 25}
-  m_Pivot: {x: 1, y: 0}
+  m_Pivot: {x: 0, y: 1}
 --- !u!222 &3101604174384815683
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -419,13 +419,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.025951147, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 376339eba568a1447b37053486b28957, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -447,13 +447,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2421f0ad6149640859747750b32452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_skillName: 
-  m_skillDescription: 
-  m_skillID: 0
+  m_skillData: {fileID: 0}
   m_icon: {fileID: 3111523701985075378}
   m_unlockDependencies: []
-  m_unlockCost: 1
-  m_upgradeMaximum: 1
   m_upgradeNumberText: {fileID: 6752192983948381891}
   m_availabilityImages:
   - {fileID: 2368229536535826921}
@@ -480,11 +476,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_SelectedColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
+    m_PressedColor: {r: 0.69803923, g: 0.23137255, b: 0.015686275, a: 1}
+    m_SelectedColor: {r: 1, g: 0.78431374, b: 0.16078432, a: 1}
+    m_DisabledColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -566,7 +562,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7247477774294464541}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

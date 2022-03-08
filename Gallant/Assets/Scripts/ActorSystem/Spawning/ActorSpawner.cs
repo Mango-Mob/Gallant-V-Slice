@@ -47,9 +47,28 @@ namespace ActorSystem.Spawning
          * StartCombat : Starts combat for the player
          * @author : Michael Jordan
          */
-        public void StartCombat()
+        public bool StartCombat()
         {
-            m_hasStarted = true;
+            if(m_waves.Count > 0 || m_myActors.Count != 0)
+            {
+                m_hasStarted = true;
+
+                if (GameManager.Instance.music != null && !GameManager.Instance.music.IsCombatPlaying)
+                    GameManager.Instance.music.StartCombat();
+
+                if(m_myActors.Count != 0)
+                {
+                    foreach (var actor in m_myActors)
+                    {
+                        actor.SetLevel((uint)Mathf.FloorToInt(GameManager.currentLevel));
+                        actor.SetTarget(GameManager.Instance.m_player);
+                    }
+                }
+
+                return true;
+            }
+            
+            return false;
         }
 
         /*******************
@@ -83,6 +102,7 @@ namespace ActorSystem.Spawning
         public void Stop()
         {
             m_hasStarted = false;
+            GameManager.Instance.music.EndCombat();
         }
 
         /*******************
@@ -111,7 +131,7 @@ namespace ActorSystem.Spawning
                     int selectSpawn = Random.Range(0, m_generator.m_spawnPoints.Count);
                     
                     //Get/Create actor in the reserves
-                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].spawnName);
+                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].actor.ActorName);
                     m_myActors.Add(spawn);
                     spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;

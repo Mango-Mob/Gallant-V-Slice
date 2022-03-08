@@ -72,6 +72,12 @@ namespace ActorSystem.AI
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
+        public void SetLevel(uint level)
+        {
+            m_myLevel = level;
+            m_myBrain.LoadData(m_myData, level);
+        }
+
         protected virtual void Update()
         {
             m_myBrain.Update();
@@ -112,13 +118,13 @@ namespace ActorSystem.AI
             m_myBrain.m_legs.SetTargetLocation(locVector, lookAtTarget);
         }
 
-        public void SetTargetVelocity(Vector3 moveVector){m_myBrain.m_legs.SetTargetVelocity(moveVector);}
-        public void SetTargetVelocity(Quaternion rotatVector) { m_myBrain.m_legs.SetTargetRotation(rotatVector); }
+        public void SetTargetVelocity(Vector3 moveVector){m_myBrain.m_legs?.SetTargetVelocity(moveVector);}
+        public void SetTargetVelocity(Quaternion rotatVector) { m_myBrain.m_legs?.SetTargetRotation(rotatVector); }
         public void SetTargetOrientaion(Vector3 targetLook) { SetTargetVelocity(Quaternion.LookRotation((targetLook - transform.position).normalized, Vector3.up)); }
         public void SetTargetVelocity(Vector3 moveVector, Quaternion rotatVector)
         {
-            m_myBrain.m_legs.SetTargetVelocity(moveVector);
-            m_myBrain.m_legs.SetTargetRotation(rotatVector);
+            m_myBrain.m_legs?.SetTargetVelocity(moveVector);
+            m_myBrain.m_legs?.SetTargetRotation(rotatVector);
         }
 
         public void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
@@ -129,11 +135,9 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if(m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                m_myBrain.m_material?.ShowHit();
+                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
                 {
-                    //Fatal Damage
-                    m_myBrain.PlaySoundEffect(m_myData.deathSoundName);
-
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false;
@@ -142,8 +146,26 @@ namespace ActorSystem.AI
                     SetState(new State_Dead(this));
                     return;
                 }
-
-                m_myBrain.PlaySoundEffect(m_myData.hurtSoundName);
+            }
+        }
+        public void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        {
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                m_mySpawn.StopSpawning();
+            }
+            if (!m_myBrain.IsDead)
+            {
+                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false))
+                {
+                    foreach (var collider in GetComponentsInChildren<Collider>())
+                    {
+                        collider.enabled = false;
+                    }
+                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    SetState(new State_Dead(this));
+                    return;
+                }
             }
         }
 

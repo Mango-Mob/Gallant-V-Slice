@@ -25,8 +25,7 @@ namespace ActorSystem.AI.Components
         public Actor_UI m_ui { get; private set; } //UI display for this actor
         public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
-
-        public MultiAudioAgent m_audioAgent { get; private set; }
+        public Actor_AudioAgent m_audioAgent { get; private set; }
         public Outline m_myOutline { get; private set; }
         #endregion
 
@@ -57,7 +56,7 @@ namespace ActorSystem.AI.Components
             m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
             m_material = GetComponentInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
-            m_audioAgent = GetComponentInChildren<MultiAudioAgent>();
+            m_audioAgent = GetComponent<Actor_AudioAgent>();
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
@@ -79,6 +78,11 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
+
+            if(m_ui != null && m_myOutline != null)
+            {
+                m_ui.SetEnabled(m_myOutline.enabled);
+            }
         }
 
         public override void SetEnabled(bool status)
@@ -135,8 +139,13 @@ namespace ActorSystem.AI.Components
 
             //Material
             m_material?.RefreshColor();
-            
+
             //UI
+
+            //Audio
+            m_audioAgent?.Load(Actor_AudioAgent.SoundEffectType.Hurt, _data.hurtSounds);
+            m_audioAgent?.Load(Actor_AudioAgent.SoundEffectType.Death, _data.deathSounds);
+            m_audioAgent?.Finalise();
 
             //Colliders
             foreach (var item in GetComponentsInChildren<Collider>())
@@ -191,7 +200,11 @@ namespace ActorSystem.AI.Components
             if (m_arms == null)
                 return;
 
-            Collider[] hits = m_arms.GetOverlapping(); 
+            Collider[] hits = m_arms.GetOverlapping();
+
+            if (hits == null)
+                return;
+
             foreach (var hit in hits)
             {
                 m_arms.Invoke(hit, m_projSource);
@@ -203,8 +216,11 @@ namespace ActorSystem.AI.Components
             m_arms.m_activeAttack = null;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null)
+        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true)
         {
+            if (IsDead)
+                return true;
+
             switch (_type)
             {
                 default:
@@ -220,7 +236,6 @@ namespace ActorSystem.AI.Components
             }
 
             //External
-            m_material?.ShowHit();
             m_refreshTimer?.Start(5.0f);
 
             if(m_arms != null && m_arms.hasCancel)
@@ -239,6 +254,15 @@ namespace ActorSystem.AI.Components
             //Internal
             m_currHealth -= damage;
 
+            if (playAudio && IsDead)
+            {
+                m_audioAgent?.PlayDeath();
+            }
+            else if (playAudio)
+            {
+                m_audioAgent?.PlayHurt();
+            }
+
             m_ui.enabled = !IsDead;
             return IsDead;
         }
@@ -251,13 +275,6 @@ namespace ActorSystem.AI.Components
         public void DropOrbs(int amount)
         {
             CurrencyDrop.CreateCurrencyDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
-        }
-
-        public bool PlaySoundEffect(string soundName)
-        {
-            if (m_audioAgent == null)
-                return false;
-            return m_audioAgent.Play(soundName, false, UnityEngine.Random.Range(0.75f, 1.25f));
         }
 
         public void DrawGizmos()

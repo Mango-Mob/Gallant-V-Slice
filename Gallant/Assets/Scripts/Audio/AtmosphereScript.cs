@@ -8,24 +8,14 @@ public class AtmosphereScript : MonoBehaviour
     public JukeboxAgent m_normalAgent;
     public JukeboxAgent m_combatAgent;
 
+    public bool IsCombatPlaying { get{ return m_combatAgent.IsPlaying(); } }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_normalAgent.Play((uint)Random.Range(0, m_normalAgent.audioClips.Count));
     }
 
-    private void Update()
-    {
-        if(m_combatAgent.IsPlaying() && ActorManager.Instance.m_subscribed.Count == 0)
-        {
-            EndCombat();
-        }
-        if (m_normalAgent.IsPlaying() && ActorManager.Instance.m_subscribed.Count > 0)
-        {
-            StartCombat();
-        }
-
-    }
     public void StartCombat()
     {
         m_normalAgent.Stop();

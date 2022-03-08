@@ -135,8 +135,8 @@ public class SettingsMenu : MonoBehaviour
     }
     private void OnDestroy()
     {
-        AudioManager.Instance.SaveData();
-        InputManager.Instance.SaveBinds();
+        AudioManager.Instance?.SaveData();
+        InputManager.Instance?.SaveBinds();
     }
 
     private void OnDisable()

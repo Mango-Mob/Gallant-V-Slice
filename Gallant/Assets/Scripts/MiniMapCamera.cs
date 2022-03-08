@@ -11,6 +11,7 @@ public class MiniMapCamera : MonoBehaviour
     public void Start()
     {
         m_objectTracking = GameManager.Instance.m_player;
+        transform.position = m_objectTracking.transform.position + new Vector3(0, m_height, 0);
     }
     public void Update()
     {

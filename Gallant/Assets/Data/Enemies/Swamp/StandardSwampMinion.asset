@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: StandardSwampMinion
   m_EditorClassIdentifier: 
   health: 25
+  cost: 5
+  agility: 0
   ActorName: Swamp Minion
   baseSpeed: 2.5
   adrenalineGainMin: 0.005
@@ -28,7 +30,15 @@ MonoBehaviour:
   deltaPhyResist: 0
   deltaAbilResist: 0
   deltaDamageMod: 0.15
-  deathSoundName: MinionDeath
-  hurtSoundName: MinionHurt
-  m_states: 0000000001000000020000000300000005000000
+  deathSounds:
+  - {fileID: 8300000, guid: c7fb20f8545af7b4d86e5ba88d6bb853, type: 3}
+  - {fileID: 8300000, guid: 81115fd45c07676458cfc0758e0fd2f9, type: 3}
+  - {fileID: 8300000, guid: 420b23df775dc794da3e784de7e5e908, type: 3}
+  hurtSounds:
+  - {fileID: 8300000, guid: 7cdb6a9f8d23d4e47a11505cd6a92c0c, type: 3}
+  - {fileID: 8300000, guid: b80d8a80c9d77594dbaf470174fcae35, type: 3}
+  - {fileID: 8300000, guid: 7cd7ce02268716b4ca0177a65458640e, type: 3}
+  - {fileID: 8300000, guid: 1b0f542b478bcaa40b26ba1f1618aaba, type: 3}
+  - {fileID: 8300000, guid: 3530ea4117fe4084985305b3f1ec5345, type: 3}
+  m_states: 00000000020000000300000005000000
   m_initialState: 0

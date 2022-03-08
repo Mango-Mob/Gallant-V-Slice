@@ -5,6 +5,7 @@ using UnityEngine;
 public class Destructible : MonoBehaviour
 {
     public GameObject crackedObject;
+    public bool m_letPlayerDestroy = true;
 
     public void CrackObject()
     {
@@ -12,8 +13,11 @@ public class Destructible : MonoBehaviour
         newObject.transform.localScale = transform.localScale;
         Destroy(gameObject);
     }
-    public void ExplodeObject(Vector3 forceLoc, float forceVal, float maxDist)
+    public void ExplodeObject(Vector3 forceLoc, float forceVal, float maxDist, bool isPlayer = true)
     {
+        if (isPlayer && !m_letPlayerDestroy)
+            return;
+
         Destruction destructObject = Instantiate(crackedObject, transform.position, transform.rotation).GetComponent<Destruction>();
         destructObject.transform.localScale = transform.localScale;
         destructObject.ApplyExplosionForce(forceLoc, forceVal, maxDist);

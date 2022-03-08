@@ -1,4 +1,5 @@
 ﻿using ActorSystem;
+using ActorSystem.AI;
 using ActorSystem.Spawning;
 using Exceed.Debug;
 using System.Collections;
@@ -9,6 +10,9 @@ public class Room : MonoBehaviour
 {
     public bool m_finalRoom;
     public GameObject[] m_gates;
+
+    public Actor[] m_existingActors;
+
     private Renderer m_debugRenderer;
 
     public ActorSpawner m_mySpawnner { get; private set; }
@@ -20,6 +24,17 @@ public class Room : MonoBehaviour
         foreach (var item in m_gates)
         {
             item.SetActive(false);
+        }
+    }
+
+    private void Start()
+    {
+        if(m_mySpawnner != null)
+        {
+            foreach (var actor in m_existingActors)
+            {
+                m_mySpawnner.m_myActors.Add(actor);
+            }
         }
     }
 
@@ -50,10 +65,12 @@ public class Room : MonoBehaviour
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                m_mySpawnner.StartCombat();
-                foreach (var gate in m_gates)
+                if(m_mySpawnner.StartCombat())
                 {
-                    gate.SetActive(true);
+                    foreach (var gate in m_gates)
+                    {
+                        gate.SetActive(true);
+                    }
                 }
             }
         }

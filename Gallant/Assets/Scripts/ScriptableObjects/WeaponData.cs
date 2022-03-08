@@ -2,6 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+
+public class SerializedWeapon
+{
+    public Weapon weaponType; // The type of weapon the object is.
+    public int m_level = 0;
+    public int m_damage = 10;
+    public float m_speed = 1;
+    public float m_knockback = 1;
+    public float m_projectileSpeed = 0;
+
+    public static SerializedWeapon SerializeWeapon(WeaponData _data)
+    {
+        SerializedWeapon weapon = new SerializedWeapon();
+        weapon.weaponType = _data.weaponType;
+
+        weapon.m_level = _data.m_level;
+        weapon.m_damage = _data.m_damage;
+        weapon.m_speed = _data.m_speed;
+        weapon.m_knockback = _data.m_knockback;
+        weapon.m_projectileSpeed = _data.m_projectileSpeed;
+
+        return weapon;
+    }
+
+    public static WeaponData DeserializeWeapon(SerializedWeapon _weapon)
+    {
+        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1);
+
+       data.m_damage = _weapon.m_damage;
+       data.m_speed = _weapon.m_level;
+       data.m_knockback = _weapon.m_knockback;
+       data.m_projectileSpeed = _weapon.m_projectileSpeed;
+
+        return data;
+    }
+}
+
+
 /****************
  * WeaponData: Scriptable object containing data for weapon
  * @author : William de Beer
@@ -64,21 +103,34 @@ public class WeaponData : ScriptableObject
         //data.m_level = _level;
 
         // Random ability and power level is assigned.
-        Ability newAbilityType = (Ability)UnityEngine.Random.Range(0, 6);
-        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
-        int result = Mathf.Max(_level + curve, 0);
+        Ability newAbilityType;
+        int iter = 0;
+        do
+        {
+            newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length);
+        
+            int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
+            int result = Mathf.Max(_level + curve, 0);
 
-        // Power level
-        int powerLevel = 0;
-        if (result < 3)
-            powerLevel = 1;
-        else if (result < 6)
-            powerLevel = 2;
-        else
-            powerLevel = 3;
+            // Power level
+            int powerLevel = 0;
+            if (result < 3)
+                powerLevel = 1;
+            else if (result < 6)
+                powerLevel = 2;
+            else
+                powerLevel = 3;
 
-        // Ability
-        ApplyAbilityData(data, newAbilityType, powerLevel);
+            // Ability
+            ApplyAbilityData(data, newAbilityType, powerLevel);
+            iter++; 
+            if (iter > 20)
+            {
+                ApplyAbilityData(data, Ability.ARCANE_BOLT, powerLevel);
+                break;
+            }
+        } while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
+        
 
         // Create weapon name
         if (data.abilityData != null)
@@ -165,11 +217,14 @@ public class WeaponData : ScriptableObject
                 break;
         }
     }
-    private static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
+    public static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
     {
         // Ability
         switch (_abilityType)
         {
+            case Ability.NONE:
+                _data.abilityData = null;
+                break;
             case Ability.FIREWAVE:
                 _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
                 break;
@@ -248,6 +303,5 @@ public class WeaponData : ScriptableObject
         this.m_speed = other.m_speed;
         this.m_knockback = other.m_knockback;
         this.m_projectileSpeed = other.m_projectileSpeed;
-        
     }
 }

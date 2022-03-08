@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Controller : MonoBehaviour
 {
-    private Camera playerCamera;
+    public Camera playerCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -85,7 +85,7 @@ public class Player_Controller : MonoBehaviour
         int gamepadID = InputManager.Instance.GetAnyGamePad();
 
         // Set animation speeds based on stats
-        animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
+        //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
         animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed));
         animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
@@ -496,6 +496,11 @@ public class Player_Controller : MonoBehaviour
             playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
+            if (playerAttack.m_leftWeaponData)
+                playerAttack.m_leftWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.LEFT);
+            if (playerAttack.m_rightWeaponData)
+                playerAttack.m_rightWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.RIGHT);
+
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();
             if (m_inkmanClass)
@@ -540,4 +545,25 @@ public class Player_Controller : MonoBehaviour
 
         playerSkills.EvaluateSkills();
     }    
+
+    public void UpgradeWeapon(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (playerAttack.m_leftWeaponData)
+                    playerAttack.m_leftWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_leftWeaponData);
+                playerAttack.ApplyWeaponData(Hand.LEFT);
+                break;
+            case Hand.RIGHT:
+                if (playerAttack.m_rightWeaponData)
+                    playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
+                playerAttack.ApplyWeaponData(Hand.RIGHT);
+                break;
+            case Hand.NONE:
+                break;
+            default:
+                break;
+        }
+    }
 }

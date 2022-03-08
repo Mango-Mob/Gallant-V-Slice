@@ -17,7 +17,7 @@ public class SkillData : ScriptableObject
     public int upgradeMaximum = 1;
 
     [Header("Effect Information")]
-    public float percentageStrength = 0.05f;
+    public float effectStrength = 0.05f;
     public float effectDuration = 0.0f;
 
     public static string EvaluateDescription(SkillData data)
@@ -37,8 +37,13 @@ public class SkillData : ScriptableObject
             string after = description.Substring(i + 2);
             switch (description[i + 1])
             {
+                case 'v':
+                    string value = (data.effectStrength).ToString();
+
+                    insert = (indexOfDecimal != -1 ? value.Substring(0, indexOfDecimal) : value);
+                    break;
                 case 'p':
-                    string percentage = (data.percentageStrength * 100.0f).ToString();
+                    string percentage = (data.effectStrength * 100.0f).ToString();
 
                     indexOfDecimal = percentage.IndexOf('.');
                     insert = (indexOfDecimal != -1 ? percentage.Substring(0, indexOfDecimal) : percentage);

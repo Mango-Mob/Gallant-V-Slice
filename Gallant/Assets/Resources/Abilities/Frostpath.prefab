@@ -14,11 +14,12 @@ GameObject:
   - component: {fileID: 1921935867944775192}
   - component: {fileID: 5417275838969024711}
   - component: {fileID: 3277331271061459706}
+  - component: {fileID: 1864230898848742979}
   m_Layer: 2
   m_Name: Frostpath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
+  m_NavMeshLayer: 4
   m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &2361773069751536920
@@ -69,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1d7174e561166bd4480f1baf563ff51c, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,6 +128,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1864230898848742979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632078964223872082}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 10, y: 3, z: 10}
+  m_Center: {x: 0, y: 1, z: 0}
+  m_Area: 4
+  m_AffectedAgents: ffffffff
 --- !u!1001 &7313860072799744725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -141,8 +158,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 99289158064464911, guid: b22e359cf4bc20146813b61aae7662ba,
         type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 99289158064464911, guid: b22e359cf4bc20146813b61aae7662ba,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 99289158064464911, guid: b22e359cf4bc20146813b61aae7662ba,
+        type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2034420699667375369, guid: b22e359cf4bc20146813b61aae7662ba,
         type: 3}
@@ -158,6 +185,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3203038102369815991, guid: b22e359cf4bc20146813b61aae7662ba,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3203038102369815991, guid: b22e359cf4bc20146813b61aae7662ba,
+        type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3203038102369815993, guid: b22e359cf4bc20146813b61aae7662ba,
         type: 3}

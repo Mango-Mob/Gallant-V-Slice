@@ -28,10 +28,11 @@ namespace ActorSystem.AI.Components
         public Vector3 localVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity; } }
 
         //Statistics:
-        public float m_angleSpeed = 45f;
-
+        public float m_rotationAccel = 5f;
+        private float m_rotationSpeed = 0f;
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
+        
         protected Rigidbody m_body;
 
         //Target Orientation
@@ -47,6 +48,8 @@ namespace ActorSystem.AI.Components
             m_body = GetComponent<Rigidbody>();
             m_body.isKinematic = true;
             m_agent.updateRotation = false;
+            if(m_agent.isOnNavMesh)
+                m_agent.SetDestination(transform.position);
             m_lastPosition = transform.position;
         }
 
@@ -58,12 +61,6 @@ namespace ActorSystem.AI.Components
             if(m_delayTimer > 0)
                 return;
 
-            if (m_agent.enabled && m_agent.isOnNavMesh)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_angleSpeed * m_speedModifier * Time.deltaTime);
-                m_agent.destination = m_targetPosition;
-                m_agent.speed = m_baseSpeed * m_speedModifier;
-            }
             if(!m_agent.isOnNavMesh && !m_isKnocked)
             {
                 NavMeshHit hit;
@@ -77,6 +74,23 @@ namespace ActorSystem.AI.Components
 
         public void FixedUpdate()
         {
+            if (m_agent.enabled && m_agent.isOnNavMesh)
+            {
+                m_agent.destination = m_targetPosition;
+                m_agent.speed = m_baseSpeed * m_speedModifier;
+
+                if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                {
+                    m_rotationSpeed += m_rotationAccel * Time.fixedDeltaTime;
+
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
+                }
+                else
+                {
+                    m_rotationSpeed = 0f;
+                }
+            }
+                
             if(!m_agent.updatePosition)
                 m_agent.Warp(transform.position);
 

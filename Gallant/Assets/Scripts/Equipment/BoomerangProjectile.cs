@@ -15,6 +15,7 @@ public class BoomerangProjectile : MonoBehaviour
     public Transform m_modelTransform;
     public GameObject m_weaponModel;
     public GameObject[] m_effects;
+    private List<GameObject> hitList = new List<GameObject>();
 
     private Player_Attack m_projectileUser; // The user of the projectile so the boomerang has a target to return to
     public WeaponData m_weaponData;
@@ -26,6 +27,7 @@ public class BoomerangProjectile : MonoBehaviour
     private float m_boomerangSpeed = 10.0f;
     private float m_boomerangRotateSpeed = 1000.0f;
 
+    private bool m_returning = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +71,12 @@ public class BoomerangProjectile : MonoBehaviour
         }
         else // If projectile is moving back towards the player
         {
+            if (!m_returning)
+            {
+                m_returning = true;
+                hitList.Clear();
+            }
+
             // Get direction towards player
             Vector3 direction = ((m_handTransform.position) - transform.position);
             direction.y = 0;
@@ -95,6 +103,8 @@ public class BoomerangProjectile : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (hitList.Contains(other.gameObject))
+            return;
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
         if (layerMask == (layerMask | (1 << other.gameObject.layer)))
@@ -105,9 +115,13 @@ public class BoomerangProjectile : MonoBehaviour
 
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
 
+            m_projectileUser.CreateVFX(other, transform.position);
+
+
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
+                hitList.Add(other.gameObject);
                 actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
         }
