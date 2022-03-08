@@ -72,6 +72,12 @@ namespace ActorSystem.AI
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
+        public void SetLevel(uint level)
+        {
+            m_myLevel = level;
+            m_myBrain.LoadData(m_myData, level);
+        }
+
         protected virtual void Update()
         {
             m_myBrain.Update();
@@ -112,13 +118,13 @@ namespace ActorSystem.AI
             m_myBrain.m_legs.SetTargetLocation(locVector, lookAtTarget);
         }
 
-        public void SetTargetVelocity(Vector3 moveVector){m_myBrain.m_legs.SetTargetVelocity(moveVector);}
-        public void SetTargetVelocity(Quaternion rotatVector) { m_myBrain.m_legs.SetTargetRotation(rotatVector); }
+        public void SetTargetVelocity(Vector3 moveVector){m_myBrain.m_legs?.SetTargetVelocity(moveVector);}
+        public void SetTargetVelocity(Quaternion rotatVector) { m_myBrain.m_legs?.SetTargetRotation(rotatVector); }
         public void SetTargetOrientaion(Vector3 targetLook) { SetTargetVelocity(Quaternion.LookRotation((targetLook - transform.position).normalized, Vector3.up)); }
         public void SetTargetVelocity(Vector3 moveVector, Quaternion rotatVector)
         {
-            m_myBrain.m_legs.SetTargetVelocity(moveVector);
-            m_myBrain.m_legs.SetTargetRotation(rotatVector);
+            m_myBrain.m_legs?.SetTargetVelocity(moveVector);
+            m_myBrain.m_legs?.SetTargetRotation(rotatVector);
         }
 
         public void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)

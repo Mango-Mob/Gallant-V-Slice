@@ -24,10 +24,17 @@ public class Player_AudioAgent : MultiAudioAgent
             case Weapon.SHIELD:
                 base.PlayOnce("ShieldSlam", false, Random.Range(0.95f, 1.05f));
                 break;
+            case Weapon.BRICK:
+                base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
+                break;
             case Weapon.BOOMERANG:
                 base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
                 break;
+            case Weapon.STAFF:
+                base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
+                break;
             default:
+                base.PlayOnce("SwordCut", false, Random.Range(0.95f, 1.05f));
                 Debug.Log("No weapon audio attached to weapon type.");
                 break;
         }

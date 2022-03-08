@@ -12,7 +12,7 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Controller : MonoBehaviour
 {
-    private Camera playerCamera;
+    public Camera playerCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
