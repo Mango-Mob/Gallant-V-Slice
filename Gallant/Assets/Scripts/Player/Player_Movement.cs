@@ -37,6 +37,7 @@ public class Player_Movement : MonoBehaviour
     private float m_stunTimer = 0.0f;
     private Vector3 m_knockbackVelocity = Vector3.zero;
     public float m_minKnockbackSpeed = 0.5f;
+    public LayerMask m_groundLayerMask;
 
     [Header("Dodge Attributes")]
     public float m_shadowDuration = 1.0f;
@@ -87,6 +88,8 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(m_lastMoveDirection);
+
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
@@ -109,14 +112,18 @@ public class Player_Movement : MonoBehaviour
         if (m_grounded)
         {
             m_yVelocity = -1.0f;
-            m_lastGroundedPosition = transform.position;
-            m_lastGroundedVelocity = characterController.velocity;
+
+            if (Physics.Raycast(transform.position, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
+            {
+                m_lastGroundedPosition = transform.position;
+                m_lastGroundedVelocity = characterController.velocity;
+            }
         }
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
         RollUpdate();
-        StunUpdate();
+        StunUpdate(); 
     }
 
     /*******************
@@ -128,7 +135,7 @@ public class Player_Movement : MonoBehaviour
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
             if (m_lastMoveDirection.magnitude == 0.0f)
-                m_lastMoveDirection = transform.forward;
+                m_lastMoveDirection = playerModel.transform.forward;
 
             // Move player in stored direction while roll is active
             characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime
@@ -329,7 +336,7 @@ public class Player_Movement : MonoBehaviour
                 //    provider.m_playerRef = this;
                 //}
 
-                if (normalizedMove.magnitude != 0.0)
+                if (normalizedMove.magnitude < 0.02f)
                 {
                     m_lastMoveDirection = normalizedMove;
                 }
