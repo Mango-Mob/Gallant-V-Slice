@@ -37,6 +37,7 @@ public class Player_Movement : MonoBehaviour
     private float m_stunTimer = 0.0f;
     private Vector3 m_knockbackVelocity = Vector3.zero;
     public float m_minKnockbackSpeed = 0.5f;
+    public LayerMask m_groundLayerMask;
 
     [Header("Dodge Attributes")]
     public float m_shadowDuration = 1.0f;
@@ -108,7 +109,7 @@ public class Player_Movement : MonoBehaviour
     {
         // Gravity physics
         m_grounded = characterController.isGrounded;
-        if (m_grounded)
+        if (m_grounded && Physics.Raycast(transform.position, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
         {
             m_yVelocity = -1.0f;
             m_lastGroundedPosition = transform.position;
