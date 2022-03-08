@@ -24,15 +24,6 @@ namespace ActorSystem.AI.Components
 
         public override void SetEnabled(bool status)
         {
-            if(m_UIElements != null)
-            {
-                for (int i = 0; i < m_UIElements.Length; i++)
-                {
-                    m_UIElements[i].gameObject.SetActive(status);
-                }
-
-            }
-
             if(m_myCanvas != null)
                 m_myCanvas.enabled = status;
         }

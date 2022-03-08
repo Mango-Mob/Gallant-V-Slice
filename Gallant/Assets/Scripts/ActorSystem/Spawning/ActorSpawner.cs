@@ -47,12 +47,28 @@ namespace ActorSystem.Spawning
          * StartCombat : Starts combat for the player
          * @author : Michael Jordan
          */
-        public void StartCombat()
+        public bool StartCombat()
         {
-            m_hasStarted = true;
+            if(m_waves.Count > 0 || m_myActors.Count != 0)
+            {
+                m_hasStarted = true;
 
-            if (GameManager.Instance.music != null && !GameManager.Instance.music.IsCombatPlaying)
-                GameManager.Instance.music.StartCombat();
+                if (GameManager.Instance.music != null && !GameManager.Instance.music.IsCombatPlaying)
+                    GameManager.Instance.music.StartCombat();
+
+                if(m_myActors.Count != 0)
+                {
+                    foreach (var actor in m_myActors)
+                    {
+                        actor.SetLevel((uint)Mathf.FloorToInt(GameManager.currentLevel));
+                        actor.SetTarget(GameManager.Instance.m_player);
+                    }
+                }
+
+                return true;
+            }
+            
+            return false;
         }
 
         /*******************
