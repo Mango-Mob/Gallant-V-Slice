@@ -9,7 +9,10 @@ namespace ActorSystem.AI.Components
     public class Actor_MiniMapIcon : Actor_Component
     {
         public Quaternion m_idealRotation;
-
+        private void Awake()
+        {
+            gameObject.layer = LayerMask.NameToLayer("MiniMapOnly");
+        }
         // Update is called once per frame
         void Update()
         {

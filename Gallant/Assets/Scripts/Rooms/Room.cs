@@ -34,6 +34,7 @@ public class Room : MonoBehaviour
             foreach (var actor in m_existingActors)
             {
                 m_mySpawnner.m_myActors.Add(actor);
+                actor.m_lastSpawner = m_mySpawnner;
             }
         }
     }
