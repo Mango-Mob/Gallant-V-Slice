@@ -7,15 +7,16 @@ public class Player_Skills : MonoBehaviour
     public Player_Controller playerController { private set; get; }
     SkillTreeReader reader;
 
-    private float m_healthMult = 1.0f;
-    private float m_healthIncrease = 1.0f;
-    private float m_attackSpeedMult = 1.0f;
-    private float m_damageMult = 1.0f;
-    private float m_moveSpeedMult = 1.0f;
-    private float m_defenceMult = 1.0f;
-    private float m_attackMoveMult = 1.0f;
-    private float m_cooldownMult = 1.0f;
-    private int m_extraHealOrbs = 0;
+    public float m_healthIncrease = 0.0f;
+    public float m_moveSpeedIncrease = 0.0f;
+    public float m_physicalDefenceIncrease = 0.0f;
+    public float m_magicalDefenceIncrease = 0.0f;
+    public float m_outOfCombatSpeedIncrease = 0.0f;
+    public float m_healPowerIncrease = 0.0f;
+    public float m_rollDistanceIncrease = 0.0f;
+    public float m_stunDecrease = 0.0f;
+    public int m_experienceBonus = 0;
+    public int m_extraHealOrbs = 0;
 
     // Start is called before the first frame update
     private void Awake()
@@ -23,6 +24,8 @@ public class Player_Skills : MonoBehaviour
         reader = SkillTreeReader.instance;
 
         playerController = GetComponent<Player_Controller>();
+
+        EvaluateSkills();
     }
 
     // Update is called once per frame
@@ -33,14 +36,15 @@ public class Player_Skills : MonoBehaviour
 
     public void EvaluateSkills()
     {
-        m_healthMult = 1.0f;
-        m_healthIncrease = 1.0f;
-        m_attackSpeedMult = 1.0f;
-        m_damageMult = 1.0f;
-        m_moveSpeedMult = 1.0f;
-        m_defenceMult = 1.0f;
-        m_attackMoveMult = 1.0f;
-        m_cooldownMult = 1.0f;
+        m_healthIncrease = 0.0f;
+        m_moveSpeedIncrease = 1.0f;
+        m_physicalDefenceIncrease = 0.0f;
+        m_magicalDefenceIncrease = 0.0f;
+        m_outOfCombatSpeedIncrease = 1.0f;
+        m_healPowerIncrease = 0.0f;
+        m_rollDistanceIncrease = 1.0f;
+        m_stunDecrease = 0.0f;
+        m_experienceBonus = 0;
         m_extraHealOrbs = 0;
 
         foreach (var skill in SkillTreeReader.instance.GetSkillTree(InkmanClass.GENERAL).skills)
@@ -56,8 +60,6 @@ public class Player_Skills : MonoBehaviour
             }
         }
 
-        playerController.playerResources.m_startingAdrenaline = playerController.playerResources.m_defaultAdrenaline + m_extraHealOrbs;
-        playerController.playerResources.ResetResources();
     }
 
     private void CalculateSkillEffect(Skill _skill)
@@ -80,14 +82,39 @@ public class Player_Skills : MonoBehaviour
 
         switch (skillID)
         {
-            case "hpIncrease":
-                m_healthMult += skillData.effectStrength * _skill.upgradeLevel;
+            case "abilDefence":
+                m_magicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "defenseIncrease":
-                m_defenceMult += skillData.effectStrength * _skill.upgradeLevel;
+            case "defenceIncrease":
+                m_physicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                m_magicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "healChargeIncrease":
+            case "experienceBonus": // Added
+                m_experienceBonus += (int)skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "healChargeIncrease": // Added
                 m_extraHealOrbs = (int)skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "healPowerIncrease": // Added
+                m_healPowerIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "hpIncrease": // Added
+                m_healthIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "moveSpeedIncrease": // Added
+                m_moveSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "outOfCombatSpeedIncrease":
+                m_outOfCombatSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "phyDefence":
+                m_physicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "rollDistance": // Added
+                m_rollDistanceIncrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "stunDecrease":
+                m_stunDecrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
             default:
                 Debug.LogWarning($"No case for the skill named {_skill}.");

@@ -53,11 +53,7 @@ public class Player_Controller : MonoBehaviour
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         playerCamera = Camera.main;
         animatorCamera = playerCamera.GetComponent<Animator>();
 
@@ -71,6 +67,11 @@ public class Player_Controller : MonoBehaviour
         playerCombatAnimator = GetComponent<Player_CombatAnimator>();
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
 
         LoadPlayerInfo();
     }
