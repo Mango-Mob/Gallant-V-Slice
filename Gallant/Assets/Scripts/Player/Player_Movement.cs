@@ -72,10 +72,14 @@ public class Player_Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_lockonTarget = HUDManager.Instance.GetElement<UI_LockonTarget>("LockonTarget");
-
         playerController = GetComponent<Player_Controller>();
         characterController = GetComponent<CharacterController>();
+
+        // Skill implementation.
+        m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
+        m_rollDistanceMult *= playerController.playerSkills.m_rollDistanceIncrease;
+
+        m_lockonTarget = HUDManager.Instance.GetElement<UI_LockonTarget>("LockonTarget");
 
         playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / m_rollDistanceMult));
 
@@ -171,7 +175,7 @@ public class Player_Movement : MonoBehaviour
             return;
 
         m_isStunned = true;
-        m_stunTimer = _stunDuration;
+        m_stunTimer = _stunDuration * (1 - playerController.playerSkills.m_stunDecrease);
         m_knockbackVelocity = _knockbackVelocity;
         m_knockbackVelocity.y = 0;
         m_yVelocity = _knockbackVelocity.y;

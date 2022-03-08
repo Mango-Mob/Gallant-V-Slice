@@ -58,6 +58,7 @@ public class CurrencyDrop : MonoBehaviour
             Debug.Log("Could not find player to move towards. Destroying Object.");
             Destroy(gameObject);
         }
+        m_heldValue += m_targetPlayer.playerSkills.m_experienceBonus;
 
         GetComponent<Rigidbody>().isKinematic = false;
         m_targetScale = transform.localScale.x;

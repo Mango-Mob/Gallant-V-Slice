@@ -45,12 +45,20 @@ public class Player_Resources : MonoBehaviour
 
         m_defaultAdrenaline = m_startingAdrenaline;
         m_adrenaline = m_startingAdrenaline;
+
     }
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<Player_Controller>();
 
+        // Skill implementation.
+        m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
+        m_maxHealth += playerController.playerSkills.m_healthIncrease;
+        m_health = m_maxHealth;
+
+        m_startingAdrenaline += playerController.playerSkills.m_extraHealOrbs;
+        ResetResources();
     }
 
     // Update is called once per frame
