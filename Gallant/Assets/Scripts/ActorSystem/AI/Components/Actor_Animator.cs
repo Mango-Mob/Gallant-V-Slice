@@ -18,6 +18,7 @@ namespace ActorSystem.AI.Components
         protected Animator m_animator;
         public bool m_hasVelocity { get; private set; }
         public bool m_hasHit { get; private set; }
+        public bool m_hasPivot { get; private set; }
 
         public float m_setDelay = 0.0f;
         // Start is called before the first frame update
@@ -27,6 +28,7 @@ namespace ActorSystem.AI.Components
 
             m_hasVelocity = (HasParameter("VelocityHorizontal") && HasParameter("VelocityVertical") && HasParameter("VelocityHaste"));
             m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
+            m_hasPivot = (HasParameter("Pivot"));
         }
 
         public bool PlayAnimation(string animID)

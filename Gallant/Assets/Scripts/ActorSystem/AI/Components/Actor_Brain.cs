@@ -78,7 +78,6 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-
             if(m_ui != null && m_myOutline != null)
             {
                 m_ui.SetEnabled(m_myOutline.enabled);
@@ -104,7 +103,10 @@ namespace ActorSystem.AI.Components
                 m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
                 m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
             }
-
+            if (m_animator != null && m_animator.m_hasPivot)
+            {
+                m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
+            }
             m_ui?.SetBar("Health", (float) m_currHealth / m_startHealth);
         }
 
