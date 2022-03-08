@@ -88,8 +88,6 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(m_lastMoveDirection);
-
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);

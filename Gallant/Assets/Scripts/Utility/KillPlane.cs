@@ -10,6 +10,11 @@ public class KillPlane : MonoBehaviour
     public float damageOnHit = 0.0f;
     public LayerMask layersToLookFor;
 
+    public void Start()
+    {
+        GetComponent<Renderer>().enabled = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(layersToLookFor == (layersToLookFor | (1 << other.gameObject.layer)))

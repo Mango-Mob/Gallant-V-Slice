@@ -48,7 +48,8 @@ namespace ActorSystem.AI.Components
             m_body = GetComponent<Rigidbody>();
             m_body.isKinematic = true;
             m_agent.updateRotation = false;
-            m_agent.SetDestination(transform.position);
+            if(m_agent.isOnNavMesh)
+                m_agent.SetDestination(transform.position);
             m_lastPosition = transform.position;
         }
 
