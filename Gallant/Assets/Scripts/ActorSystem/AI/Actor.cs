@@ -72,6 +72,12 @@ namespace ActorSystem.AI
             m_mySpawn.StartSpawn(start, end, forward);
         }
 
+        public void SetLevel(uint level)
+        {
+            m_myLevel = level;
+            m_myBrain.LoadData(m_myData, level);
+        }
+
         protected virtual void Update()
         {
             m_myBrain.Update();
