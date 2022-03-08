@@ -8,6 +8,7 @@ public class Player_Skills : MonoBehaviour
     SkillTreeReader reader;
 
     private float m_healthMult = 1.0f;
+    private float m_healthIncrease = 1.0f;
     private float m_attackSpeedMult = 1.0f;
     private float m_damageMult = 1.0f;
     private float m_moveSpeedMult = 1.0f;
@@ -32,6 +33,16 @@ public class Player_Skills : MonoBehaviour
 
     public void EvaluateSkills()
     {
+        m_healthMult = 1.0f;
+        m_healthIncrease = 1.0f;
+        m_attackSpeedMult = 1.0f;
+        m_damageMult = 1.0f;
+        m_moveSpeedMult = 1.0f;
+        m_defenceMult = 1.0f;
+        m_attackMoveMult = 1.0f;
+        m_cooldownMult = 1.0f;
+        m_extraHealOrbs = 0;
+
         foreach (var skill in SkillTreeReader.instance.GetSkillTree(InkmanClass.GENERAL).skills)
         {
             CalculateSkillEffect(skill);
@@ -60,16 +71,19 @@ public class Player_Skills : MonoBehaviour
             return;
         }
 
-        switch (_skill.id)
+        char[] numbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        string skillID = _skill.id.Substring(0, _skill.id.IndexOfAny(numbers));
+
+        switch (skillID)
         {
             case "hpIncrease":
-                m_healthMult = 1.0f + skillData.percentageStrength * _skill.upgradeLevel;
+                m_healthMult += skillData.effectStrength * _skill.upgradeLevel;
                 break;
             case "defenseIncrease":
-                m_defenceMult = 1.0f + skillData.percentageStrength * _skill.upgradeLevel;
+                m_defenceMult += skillData.effectStrength * _skill.upgradeLevel;
                 break;
             case "healChargeIncrease":
-                m_extraHealOrbs = (int)skillData.percentageStrength * _skill.upgradeLevel;
+                m_extraHealOrbs = (int)skillData.effectStrength * _skill.upgradeLevel;
                 break;
             default:
                 Debug.LogWarning($"No case for the skill named {_skill}.");
