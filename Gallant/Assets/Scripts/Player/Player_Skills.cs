@@ -72,7 +72,11 @@ public class Player_Skills : MonoBehaviour
         }
 
         char[] numbers = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-        string skillID = _skill.id.Substring(0, _skill.id.IndexOfAny(numbers));
+        string skillID;
+        if (_skill.id.IndexOfAny(numbers) != -1)
+            skillID = _skill.id.Substring(0, _skill.id.IndexOfAny(numbers));
+        else
+            skillID = _skill.id;
 
         switch (skillID)
         {

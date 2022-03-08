@@ -109,11 +109,15 @@ public class Player_Movement : MonoBehaviour
     {
         // Gravity physics
         m_grounded = characterController.isGrounded;
-        if (m_grounded && Physics.Raycast(transform.position, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
+        if (m_grounded)
         {
             m_yVelocity = -1.0f;
-            m_lastGroundedPosition = transform.position;
-            m_lastGroundedVelocity = characterController.velocity;
+
+            if (Physics.Raycast(transform.position, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
+            {
+                m_lastGroundedPosition = transform.position;
+                m_lastGroundedVelocity = characterController.velocity;
+            }
         }
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
