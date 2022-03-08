@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace ActorSystem.AI
 {
@@ -9,6 +10,58 @@ namespace ActorSystem.AI
         public List<Actor> m_subscribed { get; private set; } = new List<Actor>();
 
         public Dictionary<string, List<Actor>> m_reserved = new Dictionary<string, List<Actor>>();
+
+        private List<NavMeshSurface> m_surfaces = new List<NavMeshSurface>();
+        protected override void Awake()
+        {
+            base.Awake();
+            m_surfaces.AddRange(FindObjectsOfType<NavMeshSurface>());
+            foreach (var item in m_surfaces)
+            {
+                item.BuildNavMesh();
+            }
+        }
+
+        private void OnLevelWasLoaded(int level)
+        {
+            m_surfaces.Clear();
+            m_surfaces.AddRange(FindObjectsOfType<NavMeshSurface>());
+            foreach (var item in m_surfaces)
+            {
+                item.BuildNavMesh();
+            }
+        }
+
+        public void AddObstacle(Transform obstacle)
+        {
+            float dist = float.MaxValue;
+            NavMeshSurface surface = null;
+            foreach (var item in m_surfaces)
+            {
+                float testDist = Vector3.Distance(item.transform.position, obstacle.position);
+                if(testDist < dist)
+                {
+                    surface = item;
+                    dist = testDist;
+                }
+            }
+
+            if(surface != null)
+            {
+                obstacle.SetParent(surface.transform);
+                surface.BuildNavMesh();
+            }
+        }
+
+        public void RemoveObstacle(Transform obstacle)
+        {
+            NavMeshSurface surface = obstacle.GetComponentInParent<NavMeshSurface>();
+            if (surface != null)
+            {
+                obstacle.SetParent(null);
+                surface.BuildNavMesh();
+            }
+        }
 
         public void ClearActors()
         {

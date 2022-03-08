@@ -73,6 +73,8 @@ public class CrossbowBolt : MonoBehaviour
                 actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
             }
 
+            m_projectileUser.CreateVFX(other, transform.position);
+
             if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
                 Destruct();
         }

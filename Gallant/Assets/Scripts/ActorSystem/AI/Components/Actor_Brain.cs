@@ -78,6 +78,11 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
+
+            if(m_ui != null && m_myOutline != null)
+            {
+                m_ui.SetEnabled(m_myOutline.enabled);
+            }
         }
 
         public override void SetEnabled(bool status)
