@@ -48,7 +48,7 @@ public class Flamepath : MonoBehaviour
                     //vfx.transform.SetParent(null);
                     vfx.GetComponent<VFXTimerScript>().m_startedTimer = true;
                 }
-
+                ActorManager.Instance.RemoveObstacle(transform);
                 Destroy(gameObject);
                 return;
             }
@@ -63,6 +63,7 @@ public class Flamepath : MonoBehaviour
         {
             SpawnVFX(Vector3.Lerp(m_startPos, m_endPos, i / count));
         }
+        ActorManager.Instance?.AddObstacle(transform);
     }
     public void SetEdgePoint(Vector3 _pos)
     {
