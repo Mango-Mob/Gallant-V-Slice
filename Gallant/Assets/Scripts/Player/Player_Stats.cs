@@ -172,6 +172,7 @@ public class Player_Stats : MonoBehaviour
             }
         }
 
+        playerController.m_statsMenu.UpdateList();
 
         //foreach (var effect in m_effects)
         //{
@@ -205,6 +206,5 @@ public class Player_Stats : MonoBehaviour
         //    }
         //    Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
         //}
-        playerController.m_statsMenu.UpdateList();
     }
 }

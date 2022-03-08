@@ -12,6 +12,7 @@ public class SerializedWeapon
     public float m_speed = 1;
     public float m_knockback = 1;
     public float m_projectileSpeed = 0;
+    public string m_weaponModel;
 
     public static SerializedWeapon SerializeWeapon(WeaponData _data)
     {
@@ -23,6 +24,7 @@ public class SerializedWeapon
         weapon.m_speed = _data.m_speed;
         weapon.m_knockback = _data.m_knockback;
         weapon.m_projectileSpeed = _data.m_projectileSpeed;
+        weapon.m_weaponModel = _data.weaponModelPrefab.name;
 
         return weapon;
     }
@@ -31,11 +33,12 @@ public class SerializedWeapon
     {
         WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1);
 
-       data.m_damage = _weapon.m_damage;
-       data.m_speed = _weapon.m_level;
-       data.m_knockback = _weapon.m_knockback;
-       data.m_projectileSpeed = _weapon.m_projectileSpeed;
-
+        data.m_damage = _weapon.m_damage;
+        data.m_speed = _weapon.m_speed;
+        data.m_knockback = _weapon.m_knockback;
+        data.m_projectileSpeed = _weapon.m_projectileSpeed;
+        data.weaponModelPrefab = Resources.Load<GameObject>("Weapons/Held Weapons/" + _weapon.m_weaponModel);
+       
         return data;
     }
 }
