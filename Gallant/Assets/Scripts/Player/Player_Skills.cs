@@ -24,6 +24,8 @@ public class Player_Skills : MonoBehaviour
         reader = SkillTreeReader.instance;
 
         playerController = GetComponent<Player_Controller>();
+
+        EvaluateSkills();
     }
 
     // Update is called once per frame
@@ -58,8 +60,6 @@ public class Player_Skills : MonoBehaviour
             }
         }
 
-        playerController.playerResources.m_startingAdrenaline = playerController.playerResources.m_defaultAdrenaline + m_extraHealOrbs;
-        playerController.playerResources.ResetResources();
     }
 
     private void CalculateSkillEffect(Skill _skill)

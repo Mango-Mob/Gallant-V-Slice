@@ -56,6 +56,9 @@ public class Player_Resources : MonoBehaviour
         m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
         m_maxHealth += playerController.playerSkills.m_healthIncrease;
         m_health = m_maxHealth;
+
+        m_startingAdrenaline += playerController.playerSkills.m_extraHealOrbs;
+        ResetResources();
     }
 
     // Update is called once per frame
