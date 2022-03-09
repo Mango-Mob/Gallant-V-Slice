@@ -25,10 +25,16 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private Transform m_lineEnterance;
     [SerializeField] private Transform m_lineExit;
 
+    [Header("Components")]
+    private Button m_button;
+    private CanvasGroup m_canvasGroup;
+
     // Start is called before the first frame update
     void Start()
     {
         m_manager = GetComponentInParent<SkillTreeManager>();
+        m_canvasGroup = GetComponent<CanvasGroup>();
+        m_button = GetComponent<Button>();
 
         m_icon.sprite = m_skillData.skillIcon;
     }
@@ -50,6 +56,14 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
                 image.color = new Color(0.5f, 0.5f, 0.5f);
             }
         }
+
+        m_canvasGroup.alpha = IsAvailable() ? 1.0f : 0.0f;
+        m_button.enabled = IsAvailable();
+        foreach (var link in m_dependencyLink)
+        {
+            link.ToggleAvailability(IsAvailable());
+        }
+        
 
     }
     public void OnPointerEnter(PointerEventData eventData)
@@ -104,7 +118,23 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
         return unlockable;
     }
+    public bool IsAvailable()
+    {
+        if (m_unlockDependencies.Count == 0)
+            return true;
 
+        bool unlockable = false;
+        foreach (var item in m_unlockDependencies)
+        {
+            m_dependencyLink[m_unlockDependencies.IndexOf(item)].ToggleActive(item.m_upgradeAmount > 0);
+            if (item.m_upgradeAmount > 0)
+            {
+                unlockable = true;
+            }
+        }
+
+        return unlockable;
+    }
     public void CreateDepencencyLinks()
     {
         foreach (var dependency in m_unlockDependencies)
@@ -112,18 +142,18 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             GameObject newObject = Instantiate(SkillTreeManager.m_linePrefab, transform.position, Quaternion.identity, SkillTreeDisplayControl._instance.m_lineCanvas.transform);
             //newObject.transform.SetParent(SkillTreeDisplayControl._instance.m_lineCanvas.transform);
             //newObject.transform.SetAsFirstSibling();
-
-            newObject.transform.position = (m_lineEnterance.position + dependency.m_lineExit.position) / 2 ;
             //newObject.transform.localScale = new Vector3(1, 1.0f * (dependency.m_lineExit.position - m_lineEnterance.position).magnitude, 1);
             //newObject.GetComponent<RectTransform>().sizeDelta = new Vector2(6, (dependency.m_lineExit.position - m_lineEnterance.position).magnitude * 2.0f);
+
+            newObject.transform.position = (m_lineEnterance.position + dependency.m_lineExit.position) / 2 ;
 
             Vector3 difference = m_lineEnterance.position - dependency.m_lineExit.position;
             newObject.transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(difference.y / difference.x) + 90.0f);
 
             m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
             
-           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 0.5f);
-           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 0.5f);
+           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 5.0f);
+           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 5.0f);
         }
     }
     public void SetUpgradeLevel(int _level)
