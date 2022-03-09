@@ -532,7 +532,7 @@ public class Player_Controller : MonoBehaviour
 
     public void RespawnPlayerToGround(bool _isFullHP = false)
     {
-        Vector3 targetPosition = playerMovement.m_lastGroundedPosition - playerMovement.m_lastGroundedVelocity.normalized * 2.0f;
+        Vector3 targetPosition = playerMovement.m_lastGroundedPosition/* - playerMovement.m_lastGroundedVelocity.normalized * 2.0f*/;
         RespawnPlayerTo(targetPosition, _isFullHP);
     }
     public void SelectClass(ClassData _class)
