@@ -92,6 +92,8 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log(m_lastMoveDirection);
+
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
@@ -115,7 +117,10 @@ public class Player_Movement : MonoBehaviour
         {
             m_yVelocity = -1.0f;
 
-            if (Physics.Raycast(transform.position, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
+            if (Physics.Raycast(transform.position + transform.forward * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
+                Physics.Raycast(transform.position - transform.forward * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
+                Physics.Raycast(transform.position + transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
+                Physics.Raycast(transform.position - transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
             {
                 m_lastGroundedPosition = transform.position;
                 m_lastGroundedVelocity = characterController.velocity;
@@ -136,7 +141,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_isRolling) // Check if the player is supposed to be rolling
         {
-            if (m_lastMoveDirection.magnitude == 0.0f)
+            if (m_lastMoveDirection.magnitude < 0.1f)
                 m_lastMoveDirection = playerModel.transform.forward;
 
             // Move player in stored direction while roll is active
@@ -338,7 +343,7 @@ public class Player_Movement : MonoBehaviour
                 //    provider.m_playerRef = this;
                 //}
 
-                if (normalizedMove.magnitude < 0.02f)
+                if (normalizedMove.magnitude > 0.1f)
                 {
                     m_lastMoveDirection = normalizedMove;
                 }
