@@ -109,17 +109,21 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     {
         foreach (var dependency in m_unlockDependencies)
         {
-            GameObject newObject = Instantiate(SkillTreeManager.m_linePrefab, transform);
-            newObject.transform.SetParent(newObject.transform.parent.parent);
-            newObject.transform.SetAsFirstSibling();
+            GameObject newObject = Instantiate(SkillTreeManager.m_linePrefab, transform.position, Quaternion.identity, SkillTreeDisplayControl._instance.m_lineCanvas.transform);
+            //newObject.transform.SetParent(SkillTreeDisplayControl._instance.m_lineCanvas.transform);
+            //newObject.transform.SetAsFirstSibling();
 
             newObject.transform.position = (m_lineEnterance.position + dependency.m_lineExit.position) / 2 ;
-            newObject.transform.localScale = new Vector3(1, 1.0f * (dependency.m_lineExit.position - m_lineEnterance.position).magnitude, 1);
+            //newObject.transform.localScale = new Vector3(1, 1.0f * (dependency.m_lineExit.position - m_lineEnterance.position).magnitude, 1);
+            //newObject.GetComponent<RectTransform>().sizeDelta = new Vector2(6, (dependency.m_lineExit.position - m_lineEnterance.position).magnitude * 2.0f);
 
             Vector3 difference = m_lineEnterance.position - dependency.m_lineExit.position;
             newObject.transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(difference.y / difference.x) + 90.0f);
 
             m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
+            
+           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 0.5f);
+           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 0.5f);
         }
     }
     public void SetUpgradeLevel(int _level)

@@ -7,6 +7,7 @@ using TMPro;
 
 public class SkillTreeDisplayControl : MonoBehaviour
 {
+    public Canvas m_lineCanvas;
     public static SkillTreeDisplayControl _instance { get; private set; }
 
     [SerializeField] private InkmanClass m_selectedTree;
@@ -120,7 +121,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             m_selectedTreeManager.RefundTree();
         }
 
-        m_currencyText.text = $"${PlayerPrefs.GetInt("Player Balance")}";
+        m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
     }
     public void SelectSkillButton(SkillButton _button)
     {
@@ -141,7 +142,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         m_skillName.text = _button.m_skillData.skillName;
         m_skillDescription.text = SkillData.EvaluateDescription(_button.m_skillData);
         m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_skillData.upgradeMaximum}";
-        m_skillCost.text = $"Upgrade Cost ${_button.m_skillData.upgradeCost}";
+        m_skillCost.text = $"Upgrade Cost: {_button.m_skillData.upgradeCost}";
         m_skillIcon.sprite = _button.m_icon.sprite;
 
         if (_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1)
