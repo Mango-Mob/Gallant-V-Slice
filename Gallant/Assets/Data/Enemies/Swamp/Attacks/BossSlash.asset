@@ -13,18 +13,29 @@ MonoBehaviour:
   m_Name: BossSlash
   m_EditorClassIdentifier: 
   baseDamage: 15
-  attackRange: 1
-  animID: SwipeSwampBoss
+  animID: Swipe
   cooldown: 2.5
-  priority: 8
+  priority: 9
   projectile: {fileID: 0}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0.5, y: 1, z: 1.8}
+  requiredAngle: 0
   projSpeed: 0
   projLifeTime: 0
   instancesPerAttack: 1
   damageType: 0
-  isAwaysFacingTarget: 0
+  canBeCanceled: 0
+  canAttackMove: 1
+  canTrackTarget: 1
   attackType: 0
+  attackHitbox:
+    start: {x: 0, y: 0, z: 1.5}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 2
+  damageHitbox:
+    start: {x: 0, y: 1, z: 1.5}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 1.8
   effectAfterwards: 0
   effectPower: 0

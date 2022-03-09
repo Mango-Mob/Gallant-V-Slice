@@ -13,19 +13,29 @@ MonoBehaviour:
   m_Name: SwordSlash
   m_EditorClassIdentifier: 
   baseDamage: 35
-  attackRange: 1.44
   animID: Slash
   cooldown: 5
   priority: 8
   projectile: {fileID: 0}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0, y: 0.9, z: 1.69}
+  requiredAngle: 0
   projSpeed: 0
   projLifeTime: 0
   instancesPerAttack: 1
   damageType: 0
   canBeCanceled: 1
-  isAwaysFacingTarget: 0
+  canAttackMove: 1
+  canTrackTarget: 1
   attackType: 0
+  attackHitbox:
+    start: {x: 0, y: 0, z: 2.5}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 3
+  damageHitbox:
+    start: {x: 0, y: 0.7, z: 2}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 1.8
   effectAfterwards: 0
   effectPower: 0

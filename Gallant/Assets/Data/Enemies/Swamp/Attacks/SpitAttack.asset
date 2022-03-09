@@ -13,17 +13,30 @@ MonoBehaviour:
   m_Name: SpitAttack
   m_EditorClassIdentifier: 
   baseDamage: 15
-  attackRange: 15
-  animID: RangedSpitWaterSwampBoss
+  animID: Spit
   cooldown: 7.5
-  priority: 15
+  priority: 8
   projectile: {fileID: 112836106941330074, guid: 47fc1d0f54be42046ab0c3741dbd4fc9,
     type: 3}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0, y: 0, z: 1}
+  requiredAngle: 45
   projSpeed: 22
   projLifeTime: 5
   instancesPerAttack: 1
   damageType: 0
-  isAwaysFacingTarget: 1
+  canBeCanceled: 1
+  canAttackMove: 0
+  canTrackTarget: 1
   attackType: 1
+  attackHitbox:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 10
+  damageHitbox:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 10
+  effectAfterwards: 0
+  effectPower: 0

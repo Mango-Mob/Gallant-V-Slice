@@ -18,7 +18,7 @@ namespace ActorSystem.AI.Components
         }
         public void CreateProjectileInstantly(AttackData data, Collider target, float mod)
         {
-            GameObject proj = GameObject.Instantiate(data.projectile, target.transform.position + target.transform.TransformVector(data.attackOriginOffset), Quaternion.identity);
+            GameObject proj = GameObject.Instantiate(data.projectile, target.transform.position, Quaternion.identity);
             proj.GetComponent<AreaEffect>().m_data = data;
         }
         public override void SetEnabled(bool status)

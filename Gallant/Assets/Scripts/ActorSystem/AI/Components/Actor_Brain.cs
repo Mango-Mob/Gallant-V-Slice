@@ -46,6 +46,7 @@ namespace ActorSystem.AI.Components
         public float m_basePhyResist { get; private set; }
         public float m_baseAbilResist   { get; private set; }
 
+        private bool m_trackingTarget = false;
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
         protected virtual void Awake()
@@ -81,6 +82,10 @@ namespace ActorSystem.AI.Components
             if(m_ui != null && m_myOutline != null)
             {
                 m_ui.SetEnabled(m_myOutline.enabled);
+            }
+            if(m_trackingTarget && m_target != null && m_legs != null)
+            {
+                m_legs.SetTargetRotation(Quaternion.LookRotation((m_target.transform.position - transform.position).normalized, Vector3.up));
             }
         }
 
@@ -194,7 +199,22 @@ namespace ActorSystem.AI.Components
             if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
                 m_arms.Begin(id);
+
+                if (m_arms.m_myData[m_arms.m_activeAttack.Value].canAttackMove)
+                {
+                    m_legs.SetTargetLocation(m_target.transform.position);
+                }
+                else
+                {
+                    m_legs.Halt();
+                }
+                m_trackingTarget = m_arms.m_myData[m_arms.m_activeAttack.Value].canTrackTarget;
             }
+        }
+
+        public void HaltRotation()
+        {
+            m_trackingTarget = false;
         }
 
         public void InvokeAttack()
@@ -216,9 +236,10 @@ namespace ActorSystem.AI.Components
         public void EndAttack()
         {
             m_arms.m_activeAttack = null;
+            m_trackingTarget = false;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true)
+        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true)
         {
             if (IsDead)
                 return true;
@@ -281,12 +302,8 @@ namespace ActorSystem.AI.Components
 
         public void DrawGizmos()
         {
-            Gizmos.color = Color.yellow;
-            //if (m_target != null)
-            //{
-            //    Gizmos.DrawLine(transform.position, m_target.transform.position);
-            //    Gizmos.DrawSphere(m_target.transform.position, 0.25f);
-            //}
+            Gizmos.color = Color.white;
+            Extentions.GizmosDrawCircle(transform.position, m_idealDistance);
 
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();

@@ -13,21 +13,30 @@ MonoBehaviour:
   m_Name: RaiseWater
   m_EditorClassIdentifier: 
   baseDamage: 10
-  attackRange: 15
-  animID: RaiseWaterTorrent
+  animID: Raise
   cooldown: 8
-  priority: 13
+  priority: 7
   projectile: {fileID: 112836106941330074, guid: 31f73d7741c70f64898d843340d2c4c1,
     type: 3}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0, y: 0, z: 0}
   requiredAngle: 0
   projSpeed: 0
   projLifeTime: 5
   instancesPerAttack: 1
   damageType: 0
   canBeCanceled: 0
-  isAwaysFacingTarget: 1
+  canAttackMove: 0
+  canTrackTarget: 0
   attackType: 2
+  attackHitbox:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 13
+  damageHitbox:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 2
+    size: 13
   effectAfterwards: 2
   effectPower: 2

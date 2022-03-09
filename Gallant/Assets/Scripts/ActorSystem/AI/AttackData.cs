@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace ActorSystem.AI
@@ -9,7 +10,6 @@ namespace ActorSystem.AI
     public class AttackData : ScriptableObject
     {
         public float baseDamage;
-        public float attackRange = 1;
         public string animID;
         public float cooldown;
         public uint priority;
@@ -17,7 +17,6 @@ namespace ActorSystem.AI
         public GameObject projectile;
         public GameObject vfxSpawn;
 
-        public Vector3 attackOriginOffset = Vector3.forward;
         public float requiredAngle;
         public float projSpeed;
         public float projLifeTime;
@@ -26,10 +25,10 @@ namespace ActorSystem.AI
         public CombatSystem.DamageType damageType;
         public bool canBeCanceled = false;
 
-        //TODO:
-        private bool canAttackMove = false;
+        public bool canAttackMove = false;
+        public bool canTrackTarget = false;
+        //Todo
         private bool hasExitTime;
-        public bool isAwaysFacingTarget = false;
         //Has effect
 
         public enum AttackType
@@ -37,6 +36,16 @@ namespace ActorSystem.AI
             Melee,      //Effect after animation
             Ranged,     //Spawn Proj after animation
             Instant,    //Spawn proj at target after animation
+        }
+
+        [System.Serializable]
+        public class HitBox
+        {
+            public enum HitType { Box, Sphere, Capsule }
+            public Vector3 start;
+            public Vector3 end;
+            public HitType type;
+            public float size;
         }
 
         public enum Effect
@@ -47,31 +56,46 @@ namespace ActorSystem.AI
         }
 
         public AttackType attackType;
+        public HitBox attackHitbox;
+        public HitBox damageHitbox;
         public Effect effectAfterwards;
         public float effectPower;
 
-        public bool IsOverlaping(Transform user, int targetLayer)
+        public List<Collider> GetAttackOverlaping(Transform user, int targetLayer)
         {
-            return GetOverlaping(user, targetLayer).Count > 0;
+            return GetOverlappingColliders(attackHitbox, user, targetLayer);
+        }
+        public List<Collider> GetDamagingOverlaping(Transform user, int targetLayer)
+        {
+            return GetOverlappingColliders(damageHitbox, user, targetLayer);
         }
 
-        public List<Collider> GetOverlaping(Transform user, int targetLayer)
+        private List<Collider> GetOverlappingColliders(HitBox box, Transform user, int targetLayer)
         {
-            Vector3 position = user.position + user.TransformVector(attackOriginOffset);
             List<Collider> colliders = new List<Collider>();
-            foreach (var collider in Physics.OverlapSphere(position, attackRange, targetLayer))
+            Vector3 start = user.position + user.TransformVector(box.start);
+            Vector3 end = user.position + user.TransformVector(box.end);
+            switch (box.type)
             {
-                if(attackType == AttackType.Ranged)
+                case HitBox.HitType.Box:
+                    break;
+                default:
+                case HitBox.HitType.Sphere:
+                    colliders.AddRange(Physics.OverlapSphere(start, box.size, targetLayer));
+                    break;
+                case HitBox.HitType.Capsule:
+                    colliders.AddRange(Physics.OverlapCapsule(start, end, box.size, targetLayer));
+                    break;
+            }
+            for (int i = colliders.Count - 1; i >= 0; i--)
+            {
+                if (attackType == AttackType.Ranged)
                 {
-                    Quaternion lookAt = Quaternion.LookRotation((collider.transform.position - user.position).normalized, Vector3.up);
-                    if (Mathf.Abs(Quaternion.Angle(user.rotation, lookAt)) <= requiredAngle)
+                    Quaternion lookAt = Quaternion.LookRotation((colliders[i].transform.position - user.position).normalized, Vector3.up);
+                    if (Mathf.Abs(Quaternion.Angle(user.rotation, lookAt)) > requiredAngle)
                     {
-                        colliders.Add(collider);
+                        colliders.RemoveAt(i);
                     }
-                }
-                else
-                {
-                    colliders.Add(collider);
                 }
             }
             return colliders;
@@ -79,13 +103,49 @@ namespace ActorSystem.AI
 
         public void DrawGizmos(Transform user)
         {
-            Vector3 position = user.position + user.TransformVector(attackOriginOffset);
+            Gizmos.matrix = user.localToWorldMatrix;
 
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(position, attackRange);
-
+            Gizmos.color = Color.yellow;
+            DrawHitbox(attackHitbox);
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(position, 0.05f);
+            DrawHitbox(damageHitbox);
+
+            Gizmos.matrix = Matrix4x4.identity;
+        }
+
+        private void DrawHitbox(HitBox box)
+        {
+            if (box.size == 0)
+                return;
+
+            switch (box.type)
+            {
+                case HitBox.HitType.Box:
+                    break;
+                default:
+                case HitBox.HitType.Sphere:
+                    Gizmos.DrawWireSphere(box.start, box.size);
+                    Gizmos.DrawSphere(box.start, 0.05f);
+                    break;
+                case HitBox.HitType.Capsule:
+                    Vector3 forward = (box.end - box.start).normalized;
+                    float mag = (box.end - box.start).magnitude;
+                    Gizmos.matrix *= Matrix4x4.TRS(box.start, Quaternion.LookRotation(forward, Vector3.up), new Vector3(1, 1, 1));
+                    Gizmos.DrawSphere(Vector3.zero, 0.05f);
+                    Gizmos.DrawLine(Vector3.zero, Vector3.forward * mag);
+                    Gizmos.DrawSphere(Vector3.forward * mag, 0.05f);
+                    
+                    Gizmos.DrawWireSphere(Vector3.zero, box.size);
+                    Gizmos.DrawWireSphere(Vector3.forward * mag, box.size);
+
+                    Gizmos.DrawLine(new Vector3(box.size, 0, 0), Vector3.forward * mag + new Vector3(box.size, 0, 0));
+                    Gizmos.DrawLine(new Vector3(-box.size, 0, 0), Vector3.forward * mag + new Vector3(-box.size, 0, 0));
+                    Gizmos.DrawLine(new Vector3(0, box.size, 0), Vector3.forward * mag + new Vector3(0, box.size, 0));
+                    Gizmos.DrawLine(new Vector3(0, -box.size, 0), Vector3.forward * mag + new Vector3(0, -box.size, 0));
+                    Gizmos.matrix *= Matrix4x4.TRS(box.start, Quaternion.LookRotation(forward, Vector3.up), new Vector3(1, 1, 1)).inverse;
+                    break;
+            }
+            
         }
 
         public static void ApplyEffect(Player_Controller target, Transform source, AttackData.Effect effect, float power)

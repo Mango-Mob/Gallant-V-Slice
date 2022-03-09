@@ -61,7 +61,7 @@ namespace ActorSystem.AI.Components
         {
             if(m_activeAttack != null)
             {
-                return m_myData[m_activeAttack.Value].GetOverlaping(transform, m_targetMask).ToArray();
+                return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask).ToArray();
             }
             return null;
         }
@@ -103,7 +103,7 @@ namespace ActorSystem.AI.Components
         {
             for (int i = 0; i < m_myData.Count; i++)
             {
-                if(m_cooldowns[i] <= 0 && m_myData[i].IsOverlaping(transform, m_targetMask))
+                if(m_cooldowns[i] <= 0 && m_myData[i].GetAttackOverlaping(transform, m_targetMask).Count > 0)
                 {
                     return i;
                 }

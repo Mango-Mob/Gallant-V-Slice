@@ -13,19 +13,29 @@ MonoBehaviour:
   m_Name: SingleSlash
   m_EditorClassIdentifier: 
   baseDamage: 10
-  attackRange: 1
   animID: MeleeAttack
   cooldown: 1
   priority: 8
   projectile: {fileID: 0}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0, y: 0.8, z: 0.8}
+  requiredAngle: 0
   projSpeed: 0
   projLifeTime: 0
   instancesPerAttack: 1
   damageType: 0
   canBeCanceled: 1
-  isAwaysFacingTarget: 0
+  canAttackMove: 0
+  canTrackTarget: 0
   attackType: 0
+  attackHitbox:
+    start: {x: 0, y: 0.9, z: 0.9}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 0.9
+  damageHitbox:
+    start: {x: 0, y: 0.9, z: 1.25}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 0.8
   effectAfterwards: 0
   effectPower: 0
