@@ -150,7 +150,7 @@ public class DialogWriter : EditorWindow
                 {
                     m_fileData.RemoveEntry(m_currentIndex);
                     m_maxIndex = m_fileData.m_list.Count;
-                    LoadItem(m_currentIndex);
+                    LoadItem((m_maxIndex == m_currentIndex) ? --m_currentIndex : m_currentIndex);
                 }
                 GUILayout.EndHorizontal();
             }

@@ -30,6 +30,7 @@ namespace ActorSystem.AI.Components
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
+        public bool m_canBeTarget = true;
 
         [Header("Preview")]
         public float m_agility;
@@ -38,7 +39,6 @@ namespace ActorSystem.AI.Components
         public float m_currAbilResist;
         public GameObject m_target;
 
-        public float m_idealDistance = 1.5f;
         public float m_stamina { get; private set; } = 1.0f;
 
         private bool m_isInvincible;
@@ -79,7 +79,7 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_ui != null && m_myOutline != null)
+            if(m_canBeTarget && m_ui != null && m_myOutline != null)
             {
                 m_ui.SetEnabled(m_myOutline.enabled);
             }
@@ -303,7 +303,6 @@ namespace ActorSystem.AI.Components
         public void DrawGizmos()
         {
             Gizmos.color = Color.white;
-            Extentions.GizmosDrawCircle(transform.position, m_idealDistance);
 
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();

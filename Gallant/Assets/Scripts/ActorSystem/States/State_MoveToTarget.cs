@@ -29,7 +29,7 @@ public class State_MoveToTarget : State
         }
 
         //Transition To Attack
-        if(Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) > m_myActor.m_myBrain.m_idealDistance)
+        if(Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) > m_myActor.m_myBrain.m_legs.m_idealDistance)
         {
             m_myActor.SetTargetLocation(m_myActor.m_target.transform.position, true);
         }
