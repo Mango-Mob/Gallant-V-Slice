@@ -109,6 +109,7 @@ namespace ActorSystem.AI
 
             list.Add(user);
             user.transform.position = transform.position + new Vector3(list.Count * 2f, 0f, x * 1.5f);
+            user.transform.localScale = new Vector3(1, 1, 1);
             user.transform.SetParent(transform);
         }
 
@@ -126,6 +127,7 @@ namespace ActorSystem.AI
                         if(m_subscribed[i].m_name == name)
                         {
                             used = Instantiate(m_subscribed[i].gameObject, transform.position, Quaternion.identity).GetComponent<Actor>();
+                            used.transform.localScale = new Vector3(1, 1, 1);
                             found = true;
                             break;
                         }

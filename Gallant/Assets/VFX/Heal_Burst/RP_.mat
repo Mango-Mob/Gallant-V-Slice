@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 2
+  version: 4
 --- !u!21 &2100000
 Material:
   serializedVersion: 6
@@ -114,6 +114,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - DstMode: 1
     - SrcMode: 5
@@ -122,9 +134,12 @@ Material:
     - _AlphaPow: -1
     - _Blend: 0
     - _BumpScale: 1
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.7
     - _Cutout: 0.2
+    - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
     - _EnvironmentReflections: 0
@@ -164,7 +179,8 @@ Material:
     - _Color0: {r: 9.291255, g: 193.20755, b: 0, a: 1}
     - _DistortSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _Distortspeed: {r: 0, g: 0, b: 0, a: 0}
-    - _EmissionColor: {r: 0.8156863, g: 2.9960785, b: 0, a: 1}
+    - _EmissionColor: {r: 0.6307572, g: 11.179362, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Tiling: {r: 800, g: 800, b: 8, a: 8}
     - _TintColor: {r: 23.958443, g: 1.2422895, b: 33.89676, a: 1}
+  m_BuildTextureStacks: []

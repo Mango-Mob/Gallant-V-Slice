@@ -14,7 +14,7 @@ namespace ActorSystem.AI.Users
         public TextAsset m_dialog;
         public string m_nextScene = "";
         public float m_disableDistance;
-
+        public float m_idealDistance = 1.5f;
         private bool m_hasGivenReward = false;
         
         private Interactable m_myInteractLogic;
@@ -25,7 +25,7 @@ namespace ActorSystem.AI.Users
         private bool m_showUI { 
             get {
                 if (m_player != null)
-                    return Vector3.Distance(transform.position, m_player.transform.position) <= m_myBrain.m_idealDistance;
+                    return Vector3.Distance(transform.position, m_player.transform.position) <= m_idealDistance;
                 
                 return false; 
             }  
@@ -51,8 +51,9 @@ namespace ActorSystem.AI.Users
         {
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
+            m_myBrain.m_myOutline.SetEnabled(!m_hasGivenReward);
 
-            if(m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
+            if (m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
             {
                 m_myBrain.enabled = false;
             }

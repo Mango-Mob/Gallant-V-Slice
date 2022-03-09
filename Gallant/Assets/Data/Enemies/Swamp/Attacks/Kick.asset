@@ -13,18 +13,29 @@ MonoBehaviour:
   m_Name: Kick
   m_EditorClassIdentifier: 
   baseDamage: 15
-  attackRange: 1
-  animID: KickSwampBoss
+  animID: Kick
   cooldown: 5
-  priority: 9
+  priority: 10
   projectile: {fileID: 0}
   vfxSpawn: {fileID: 0}
-  attackOriginOffset: {x: 0.5, y: 1, z: 1.8}
+  requiredAngle: 0
   projSpeed: 0
   projLifeTime: 0
   instancesPerAttack: 1
   damageType: 0
-  isAwaysFacingTarget: 1
+  canBeCanceled: 0
+  canAttackMove: 0
+  canTrackTarget: 1
   attackType: 0
+  attackHitbox:
+    start: {x: 0, y: 0, z: 1.5}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: 1.5
+  damageHitbox:
+    start: {x: 0, y: 0, z: 2.5}
+    end: {x: 0, y: 3, z: 2.5}
+    type: 2
+    size: 1
   effectAfterwards: 1
   effectPower: 25

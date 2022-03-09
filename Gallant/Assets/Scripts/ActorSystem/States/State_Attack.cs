@@ -27,18 +27,10 @@ public class State_Attack : State
         {
             m_myUser.SetState(new State_Idle(m_myUser));
         }
-
-        m_myActor.SetTargetVelocity(Vector3.zero);
-        m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
     }
 
     public override void Update()
     {
-        if(attackData != null)
-        {
-            if(attackData.isAwaysFacingTarget)
-                m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
-        }
         if(m_myActor.m_myBrain.m_arms != null && !m_myActor.m_myBrain.m_arms.m_activeAttack.HasValue)
         {
             //Search for target

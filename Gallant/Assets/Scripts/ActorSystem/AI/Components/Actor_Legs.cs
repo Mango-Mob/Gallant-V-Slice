@@ -34,6 +34,7 @@ namespace ActorSystem.AI.Components
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
         public float m_pivotMin = 160;
+        public float m_idealDistance { get{ return m_agent.stoppingDistance; } }
         protected Rigidbody m_body;
 
         //Target Orientation
@@ -221,6 +222,9 @@ namespace ActorSystem.AI.Components
 
         public void DrawGizmos()
         {
+            Gizmos.color = Color.white;
+            Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().radius + GetComponent<NavMeshAgent>().stoppingDistance);
+
             Gizmos.color = Color.cyan;
             if (m_agent != null)
             {
