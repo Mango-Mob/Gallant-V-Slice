@@ -18,7 +18,7 @@ namespace ActorSystem.AI
         public uint m_myLevel = 0;
         public string m_name = "";
         public Transform m_selfTargetTransform;
-
+        public GameObject m_HurtVFXPrefab;
         [SerializeField] protected ActorData m_myData;
 
         public GameObject m_target { get { return m_myBrain.m_target; }}
@@ -138,6 +138,9 @@ namespace ActorSystem.AI
                 m_myBrain.m_material?.ShowHit();
                 if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
                 {
+                    if(m_HurtVFXPrefab != null)
+                        Instantiate(m_HurtVFXPrefab, m_selfTargetTransform.position, Quaternion.identity);
+
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false;
