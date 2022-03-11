@@ -272,6 +272,18 @@ public class Player_Movement : MonoBehaviour
 
                 // Apply movement
                 m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
+                
+                if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.LEFT)
+                {
+                    m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed; 
+                }
+                else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)
+                {
+                    m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
+                }
+
+                Debug.Log(m_currentMoveSpeedLerp);
+
                 movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)

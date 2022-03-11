@@ -11,6 +11,7 @@ public enum Ability
     THORNS,
     ARCANE_BOLT,
     FLAME_ROLL,
+    ROLL_BASH,
 
     NONE,
 }
@@ -152,7 +153,10 @@ public class Player_Abilities : MonoBehaviour
             case Ability.FLAME_ROLL:
                 abilityScript = gameObject.AddComponent<Ability_FlameEvade>();
                 break;
-                default:
+            case Ability.ROLL_BASH:
+                abilityScript = gameObject.AddComponent<Ability_RollBash>();
+                break;
+            default:
                 Debug.Log("No ability script set for " + _ability);
                 break;
         }

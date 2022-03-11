@@ -15,6 +15,7 @@ public class AbilityData : ScriptableObject
     public string weaponTitle; //_ <weapon> of <title>
     public Ability abilityPower;
     public Sprite abilityIcon;
+    public string tags;
     [TextArea(10, 15)]
     public string description;
     [ColorUsage(false, true)] public Color droppedEnergyColor;
