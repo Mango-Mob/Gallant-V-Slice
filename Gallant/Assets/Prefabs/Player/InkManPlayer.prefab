@@ -582,7 +582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3b47cd4124a04b9735458379b8b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_swingHeight: 1
+  m_swingHeight: 1.25
   m_attackTargets:
     serializedVersion: 2
     m_Bits: 12800
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d570bcaa7abb945a22000579396f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_durationTransition: 0.1
+  m_durationTransition: 0.2
 --- !u!114 &972039595792485957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2834,6 +2834,38 @@ MonoBehaviour:
         - m_Target: {fileID: 3122777058140226028}
           m_TargetAssemblyTypeName: 
           m_MethodName: UseWeapon
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _name: LeftWeaponStop
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226028}
+          m_TargetAssemblyTypeName: Player_Attack, Assembly-CSharp
+          m_MethodName: StopUseWeapon
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - _name: RightWeaponStop
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226028}
+          m_TargetAssemblyTypeName: Player_Attack, Assembly-CSharp
+          m_MethodName: StopUseWeapon
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

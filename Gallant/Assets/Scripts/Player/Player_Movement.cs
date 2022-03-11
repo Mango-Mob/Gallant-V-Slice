@@ -282,8 +282,6 @@ public class Player_Movement : MonoBehaviour
                     m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
                 }
 
-                Debug.Log(m_currentMoveSpeedLerp);
-
                 movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
@@ -320,7 +318,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.animator.SetFloat("Vertical", 0);
             }
 
-            if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
+            if (_roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 

@@ -25,4 +25,5 @@ public class Weapon_Shield : WeaponBase
         MeleeAttack(m_weaponData, transform.position);
         BeginBlock();
     }
+    public override void WeaponRelease() { }
 }

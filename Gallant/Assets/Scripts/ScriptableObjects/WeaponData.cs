@@ -328,5 +328,6 @@ public class WeaponData : ScriptableObject
         this.m_speed = other.m_speed;
         this.m_knockback = other.m_knockback;
         this.m_projectileSpeed = other.m_projectileSpeed;
+        this.m_attackMoveSpeed = other.m_attackMoveSpeed;
     }
 }

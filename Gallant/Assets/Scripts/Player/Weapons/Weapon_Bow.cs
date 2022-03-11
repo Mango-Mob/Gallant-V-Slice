@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Bow : Weapon_Crossbow
+public class Weapon_Bow : WeaponBase
 {
+    private bool m_chargingShot = false;
+    private float m_charge = 0.0f;
+    private float m_chargeRate = 0.4f;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
@@ -20,5 +23,21 @@ public class Weapon_Bow : Weapon_Crossbow
     new private void Update()
     {
         base.Update();
+        if (m_chargingShot)
+        {
+            m_charge += Time.deltaTime * m_chargeRate;
+            m_charge = Mathf.Clamp(m_charge, 0.0f, 1.0f);
+        }
+    }
+    public override void WeaponFunctionality()
+    {
+        m_chargingShot = true;
+    }
+    public override void WeaponRelease()
+    {
+        m_chargingShot = false;
+        m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_charge);
+        m_charge = 0.0f;
     }
 }

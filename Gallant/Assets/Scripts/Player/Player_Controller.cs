@@ -178,19 +178,23 @@ public class Player_Controller : MonoBehaviour
                     if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
                     {
                         playerAttack.StartUsing(Hand.LEFT);
+                        m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                     }
                     else
                     {
                         playerAttack.StartUsing(Hand.RIGHT);
+                        m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                     }
                 }
                 else if (rightWeaponAttack)
                 {
                     playerAttack.StartUsing(Hand.RIGHT);
+                    m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                 }
                 else if (leftWeaponAttack)
                 {
                     playerAttack.StartUsing(Hand.LEFT);
+                    m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                 }
             }
             else
