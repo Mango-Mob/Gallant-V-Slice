@@ -114,9 +114,9 @@ public class UI_PickupDisplay : UI_Element
         float speed = (_heldWeapon != null) ? _heldWeapon.m_speed : 0;
         float knockback = (_heldWeapon != null) ? _heldWeapon.m_knockback : 0;
 
-        WeaponReward.UpdateCompareField(m_leftDamage, droppedWeapon.m_weaponData.m_damage, damage, (float)WeaponReward.m_damageDiffScale);
-        WeaponReward.UpdateCompareField(m_leftSpeed, droppedWeapon.m_weaponData.m_speed, speed, WeaponReward.m_speedDiffScale);
-        WeaponReward.UpdateCompareField(m_leftKnockback, droppedWeapon.m_weaponData.m_knockback, knockback, WeaponReward.m_knockDiffScale);
+        WeaponReward.UpdateCompareField(m_leftDamage, droppedWeapon.m_weaponData.m_damage, damage);
+        WeaponReward.UpdateCompareField(m_leftSpeed, droppedWeapon.m_weaponData.m_speed, speed);
+        WeaponReward.UpdateCompareField(m_leftKnockback, droppedWeapon.m_weaponData.m_knockback, knockback);
     }
 
     public bool UpdatePickupTimer(WeaponData _heldWeapon, Hand _hand)
