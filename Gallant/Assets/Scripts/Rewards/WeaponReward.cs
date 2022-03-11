@@ -15,6 +15,8 @@ public class WeaponReward : Reward
     [SerializeField] private Image m_abilityImageLoc;
     private Image m_background;
     [SerializeField] private Text m_levelText;
+    [SerializeField] private GameObject m_passiveObject;
+    [SerializeField] private Text m_passiveText;
 
     [SerializeField] private GameObject[] m_stars;
 
@@ -92,6 +94,7 @@ public class WeaponReward : Reward
         }
 
         LoadTags(activeTags);
+        //m_passiveText.text = WeaponData;
     }
 
     private void LoadTags(List<TagDetails> tags)
