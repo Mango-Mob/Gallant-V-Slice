@@ -6,7 +6,7 @@ public class Weapon_Bow : WeaponBase
 {
     private bool m_chargingShot = false;
     private float m_charge = 0.0f;
-    private float m_chargeRate = 0.4f;
+    private float m_chargeRate = 0.7f;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
@@ -23,10 +23,15 @@ public class Weapon_Bow : WeaponBase
     new private void Update()
     {
         base.Update();
-        if (m_chargingShot)
+        if (m_chargingShot && m_charge < 1.0f)
         {
             m_charge += Time.deltaTime * m_chargeRate;
             m_charge = Mathf.Clamp(m_charge, 0.0f, 1.0f);
+
+            if (m_charge >= 1.0f)
+            {
+                playerController.playerAudioAgent.PlayOrbPickup();
+            }
         }
     }
     public override void WeaponFunctionality()

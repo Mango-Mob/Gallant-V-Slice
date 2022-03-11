@@ -43,6 +43,8 @@ public class CrossbowBolt : MonoBehaviour
         m_projectileUser = _user;
         m_weaponData = _data;
         m_charge = _charge;
+
+        m_effects[0].SetActive(_charge >= 1.0f);
     }
 
     private void Destruct()
@@ -52,6 +54,9 @@ public class CrossbowBolt : MonoBehaviour
             effect.transform.SetParent(null);
             if (effect.GetComponent<VFXTimerScript>() != null)
                 effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
+
+            if (effect.GetComponent<ParticleSystem>() != null)
+                effect.GetComponent<ParticleSystem>().Stop();
         }
 
         Destroy(gameObject);
