@@ -140,62 +140,73 @@ public class Player_Attack : MonoBehaviour
         if (_left)
         {
             if (m_leftWeapon)
-                m_leftWeapon.TriggerWeapon();
+                m_leftWeapon.TriggerWeapon(true);
         }
         else
         {
             if (m_rightWeapon)
-                m_rightWeapon.TriggerWeapon();
+                m_rightWeapon.TriggerWeapon(true);
         }
 
-        //WeaponData thisData;
-        //Vector3 thisHandPosition;
-
-        //if (_left)
-        //{
-        //    if (m_leftWeaponInUse)
-        //        return;
-        //    // Set weapon information
-        //    thisData = m_leftWeaponData;
-        //    thisHandPosition = m_leftHandTransform.position;
-        //}
-        //else
-        //{
-        //    if (m_rightWeaponInUse)
-        //        return;
-        //    // Set weapon information
-        //    thisData = m_rightWeaponData;
-        //    thisHandPosition = m_rightHandTransform.position;
-        //}
-
-        //// If weapon is not in hand
-        //if (thisData == null)
-        //    return;
-
-        //switch (thisData.weaponType)
-        //{
-        //    case Weapon.SWORD: // Use sword
-        //        WeaponAttack(thisData, transform.position);
-        //        break;
-        //    case Weapon.SHIELD: // Use shield
-        //        WeaponAttack(thisData, transform.position);
-        //        BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
-        //        break;
-        //    case Weapon.BOOMERANG: // Use boomerang
-        //        ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
-        //        break;
-        //    default:
-        //        Debug.Log("Weapon not implemented:" + thisData.weaponType);
-        //        break;
-        //}
-
-
-        //playerController.animator.SetBool("LeftShield", false);
-        //playerController.animator.SetBool("RightShield", false);
-        //playerController.animator.SetBool("LeftSword", false);
-        //playerController.animator.SetBool("RightSword", false);
-        //playerController.animator.SetBool("LeftBoomerang", false);
-        //playerController.animator.SetBool("RightBoomerang", false);
+        {
+            //WeaponData thisData;
+            //Vector3 thisHandPosition;
+            //if (_left)
+            //{
+            //    if (m_leftWeaponInUse)
+            //        return;
+            //    // Set weapon information
+            //    thisData = m_leftWeaponData;
+            //    thisHandPosition = m_leftHandTransform.position;
+            //}
+            //else
+            //{
+            //    if (m_rightWeaponInUse)
+            //        return;
+            //    // Set weapon information
+            //    thisData = m_rightWeaponData;
+            //    thisHandPosition = m_rightHandTransform.position;
+            //}
+            //// If weapon is not in hand
+            //if (thisData == null)
+            //    return;
+            //switch (thisData.weaponType)
+            //{
+            //    case Weapon.SWORD: // Use sword
+            //        WeaponAttack(thisData, transform.position);
+            //        break;
+            //    case Weapon.SHIELD: // Use shield
+            //        WeaponAttack(thisData, transform.position);
+            //        BeginBlock(_left ? Hand.LEFT : Hand.RIGHT);
+            //        break;
+            //    case Weapon.BOOMERANG: // Use boomerang
+            //        ThrowBoomerang(thisHandPosition, thisData, _left ? Hand.LEFT : Hand.RIGHT);
+            //        break;
+            //    default:
+            //        Debug.Log("Weapon not implemented:" + thisData.weaponType);
+            //        break;
+            //}
+            //playerController.animator.SetBool("LeftShield", false);
+            //playerController.animator.SetBool("RightShield", false);
+            //playerController.animator.SetBool("LeftSword", false);
+            //playerController.animator.SetBool("RightSword", false);
+            //playerController.animator.SetBool("LeftBoomerang", false);
+            //playerController.animator.SetBool("RightBoomerang", false);
+        }
+    }
+    public void StopUseWeapon(bool _left)
+    {
+        Debug.Log("Pew");
+        if (_left)
+        {
+            if (m_leftWeapon)
+                m_leftWeapon.TriggerWeapon(false);
+        }
+        else
+        {
+            if (m_rightWeapon)
+                m_rightWeapon.TriggerWeapon(false);
+        }
     }
     public bool IsDuelWielding()
     {

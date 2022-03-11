@@ -20,4 +20,5 @@ public class Weapon_Staff : Weapon_Sword
     {
         base.Update();
     }
+    public override void WeaponRelease() { }
 }

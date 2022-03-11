@@ -92,8 +92,6 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(m_lastMoveDirection);
-
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
@@ -274,6 +272,16 @@ public class Player_Movement : MonoBehaviour
 
                 // Apply movement
                 m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
+                
+                if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.LEFT)
+                {
+                    m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed; 
+                }
+                else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)
+                {
+                    m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
+                }
+
                 movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
@@ -310,7 +318,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.animator.SetFloat("Vertical", 0);
             }
 
-            if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
+            if (_roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 

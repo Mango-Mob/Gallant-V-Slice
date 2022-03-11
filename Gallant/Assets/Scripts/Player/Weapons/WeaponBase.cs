@@ -36,12 +36,16 @@ public abstract class WeaponBase : MonoBehaviour
     {
         Destroy(m_weaponObject);
     }
-    public void TriggerWeapon()
+    public void TriggerWeapon(bool _active)
     {
-        WeaponFunctionality();
+        if (_active)
+            WeaponFunctionality();
+        else
+            WeaponRelease();
     }
 
     public abstract void WeaponFunctionality();
+    public abstract void WeaponRelease();
 
     public void SetHand(Hand _hand) { m_hand = _hand; }
     public void SetInUse(bool _inUse) { m_isInUse = _inUse; }
@@ -134,10 +138,10 @@ public abstract class WeaponBase : MonoBehaviour
         m_isInUse = true;
     }
 
-    protected void ShootProjectile(Vector3 _pos, WeaponData _data)
+    protected void ShootProjectile(Vector3 _pos, WeaponData _data, float _charge = 1.0f)
     {
         GameObject projectile = Instantiate(m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data);
+        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data, _charge);
     }
 
 }

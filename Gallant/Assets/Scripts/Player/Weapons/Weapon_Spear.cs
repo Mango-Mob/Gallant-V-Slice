@@ -31,4 +31,5 @@ public class Weapon_Spear : WeaponBase
         Gizmos.DrawWireSphere(capsulePos, m_weaponData.hitSize);
         Gizmos.DrawWireSphere(capsulePos + playerController.playerMovement.playerModel.transform.forward * m_weaponData.hitSize, m_weaponData.hitSize);
     }
+    public override void WeaponRelease() { }
 }
