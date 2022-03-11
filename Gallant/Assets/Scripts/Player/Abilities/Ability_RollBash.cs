@@ -51,7 +51,7 @@ public class Ability_RollBash : AbilityBase
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_objectPrefab, transform);
-            m_lastProjectile.transform.position += 0.5f * transform.up;
+            m_lastProjectile.transform.position += 0.6f * transform.up;
 
             if (m_lastProjectile.GetComponent<Rollbash>() != null)
             {

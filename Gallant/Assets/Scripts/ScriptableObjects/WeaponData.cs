@@ -73,6 +73,7 @@ public class WeaponData : ScriptableObject
     public float m_speed = 1;
     public float m_knockback = 1;
     public float m_projectileSpeed = 0;
+    public float m_attackMoveSpeed = 0.5f;
 
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
@@ -288,6 +289,24 @@ public class WeaponData : ScriptableObject
         this.m_level = _level;
     }
 
+    public string GetPassiveEffectDescription()
+    {
+        switch (itemEffect)
+        {
+            case ItemEffect.MOVE_SPEED:
+                return "Higher movement speed.";
+            case ItemEffect.ABILITY_CD:
+                return "Lower ability cooldowns.";
+            case ItemEffect.ATTACK_SPEED:
+                return "Higher attack speed.";
+            case ItemEffect.DAMAGE_RESISTANCE:
+                return "Higher damage resistance.";
+            case ItemEffect.MAX_HEALTH_INCREASE:
+                return "Higher maximum health.";
+            default:
+                return null;
+        }
+    }
 
     public void Clone(WeaponData other)
     {
