@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -65,6 +66,7 @@ public class UI_PauseMenu : MonoBehaviour
     {
         isPaused = false;
         SetPause(false);
+        ActorManager.Instance.ClearActors();
         SceneManager.LoadScene(0);
     }
 }
