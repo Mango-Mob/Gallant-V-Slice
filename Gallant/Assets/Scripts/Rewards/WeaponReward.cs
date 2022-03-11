@@ -9,7 +9,7 @@ public class WeaponReward : Reward
 {
     public Text m_title;
     public HorizontalLayoutGroup m_tagRowPrefab;
-    public Transform m_tagRowTransform; 
+    public Transform m_tagRowTransform;
 
     [SerializeField] private Image m_weaponImageLoc;
     [SerializeField] private Image m_abilityImageLoc;
@@ -94,7 +94,8 @@ public class WeaponReward : Reward
         }
 
         LoadTags(activeTags);
-        //m_passiveText.text = WeaponData;
+        m_passiveText.text = data.GetPassiveEffectDescription();
+        m_passiveObject.SetActive(m_passiveText.text == null);
     }
 
     private void LoadTags(List<TagDetails> tags)
