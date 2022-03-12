@@ -38,13 +38,13 @@ public class CrossbowBolt : MonoBehaviour
             Destruct();
         }
     }
-    public void SetProjectileData(Player_Attack _user, WeaponData _data, float _charge)
+    public void SetProjectileData(Player_Attack _user, WeaponData _data, float _charge, bool _canCharge = false)
     {
         m_projectileUser = _user;
         m_weaponData = _data;
         m_charge = _charge;
 
-        m_effects[0].SetActive(_charge >= 1.0f);
+        m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
     }
 
     private void Destruct()

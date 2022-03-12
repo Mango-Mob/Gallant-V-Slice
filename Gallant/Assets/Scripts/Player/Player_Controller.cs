@@ -18,7 +18,7 @@ public class Player_Controller : MonoBehaviour
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
-    private Hand m_lastAttackHand = Hand.NONE;
+    public Hand m_lastAttackHand = Hand.NONE;
     public ClassData m_inkmanClass { private set; get; }
 
     // Player components
@@ -178,28 +178,20 @@ public class Player_Controller : MonoBehaviour
                     if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
                     {
                         playerAttack.StartUsing(Hand.LEFT);
-                        m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                     }
                     else
                     {
                         playerAttack.StartUsing(Hand.RIGHT);
-                        m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                     }
                 }
                 else if (rightWeaponAttack)
                 {
                     playerAttack.StartUsing(Hand.RIGHT);
-                    m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                 }
                 else if (leftWeaponAttack)
                 {
                     playerAttack.StartUsing(Hand.LEFT);
-                    m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
                 }
-            }
-            else
-            {
-                m_lastAttackHand = playerAttack.GetCurrentAttackingHand();
             }
 
             // Ability attacks

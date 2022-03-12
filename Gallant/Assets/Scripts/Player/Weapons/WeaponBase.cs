@@ -138,10 +138,10 @@ public abstract class WeaponBase : MonoBehaviour
         m_isInUse = true;
     }
 
-    protected void ShootProjectile(Vector3 _pos, WeaponData _data, float _charge = 1.0f)
+    protected void ShootProjectile(Vector3 _pos, WeaponData _data, float _charge = 1.0f, bool _canCharge = false)
     {
         GameObject projectile = Instantiate(m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data, _charge);
+        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data, _charge, _canCharge);
     }
 
 }

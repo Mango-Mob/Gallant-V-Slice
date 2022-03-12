@@ -25,7 +25,7 @@ public class Weapon_Bow : WeaponBase
         base.Update();
         if (m_chargingShot && m_charge < 1.0f)
         {
-            m_charge += Time.deltaTime * m_chargeRate;
+            m_charge += Time.deltaTime * m_chargeRate * playerController.animator.GetFloat(m_hand == Hand.LEFT ? "LeftAttackSpeed" : "RightAttackSpeed");
             m_charge = Mathf.Clamp(m_charge, 0.0f, 1.0f);
 
             if (m_charge >= 1.0f)
@@ -42,7 +42,7 @@ public class Weapon_Bow : WeaponBase
     {
         m_chargingShot = false;
         m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_charge);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_charge, true);
         m_charge = 0.0f;
     }
 }
