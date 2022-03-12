@@ -13,6 +13,8 @@ public class Weapon_Staff : Weapon_Sword
     new private void Start()
     {
         base.Start();
+        if (m_weaponObject.GetComponentInChildren<MeshRenderer>().materials.Length > 1 && m_weaponData.abilityData != null)
+            m_weaponObject.GetComponentInChildren<MeshRenderer>().materials[1].color = m_weaponData.abilityData.droppedEnergyColor;
     }
 
     // Update is called once per frame
