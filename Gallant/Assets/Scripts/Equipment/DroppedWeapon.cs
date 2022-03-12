@@ -41,8 +41,11 @@ public class DroppedWeapon : MonoBehaviour
             {
                 if (m_weaponData.weaponType == Weapon.STAFF)
                 {
-                    if (m_weaponModel.GetComponentInChildren<MeshRenderer>().materials.Length > 1)
-                        m_weaponModel.GetComponentInChildren<MeshRenderer>().materials[1].color = m_weaponData.abilityData.droppedEnergyColor;
+                    MeshRenderer[] meshRenderers = m_weaponModel.GetComponentsInChildren<MeshRenderer>();
+                    int meshCount = meshRenderers.Length;
+
+                    if (meshCount > 1 && m_weaponData.abilityData != null)
+                        meshRenderers[meshCount - 1].material.color = m_weaponData.abilityData.droppedEnergyColor;
                 }
 
 
