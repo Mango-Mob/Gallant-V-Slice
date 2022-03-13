@@ -46,4 +46,5 @@ public class Weapon_Brick : WeaponBase
 
         m_currentAttack = Random.Range(0, 3);
     }
+    public override void WeaponRelease() { }
 }

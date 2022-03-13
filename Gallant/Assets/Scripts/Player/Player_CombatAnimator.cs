@@ -20,9 +20,15 @@ public class Player_CombatAnimator : MonoBehaviour
             playerController.animator.CrossFade(_animName, m_durationTransition, playerController.animator.GetLayerIndex("Arm"));
 
             if (_animName[0] == 'L')
+            {
                 playerController.animator.SetBool("UsingLeft", true);
+                playerController.m_lastAttackHand = Hand.LEFT;
+            }
             if (_animName[0] == 'R')
+            {
                 playerController.animator.SetBool("UsingRight", true);
+                playerController.m_lastAttackHand = Hand.RIGHT;
+            }
         }
     }
 }

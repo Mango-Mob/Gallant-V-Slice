@@ -39,6 +39,16 @@ public class DroppedWeapon : MonoBehaviour
 
             if (m_weaponData.abilityData != null)
             {
+                if (m_weaponData.weaponType == Weapon.STAFF)
+                {
+                    MeshRenderer[] meshRenderers = m_weaponModel.GetComponentsInChildren<MeshRenderer>();
+                    int meshCount = meshRenderers.Length;
+
+                    if (meshCount > 1 && m_weaponData.abilityData != null)
+                        meshRenderers[meshCount - 1].material.color = m_weaponData.abilityData.droppedEnergyColor;
+                }
+
+
                 Color newColor = m_weaponData.abilityData.droppedEnergyColor;
                 newColor.a = m_weaponBubble.material.color.a;
 

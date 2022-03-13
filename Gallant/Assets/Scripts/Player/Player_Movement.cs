@@ -182,9 +182,15 @@ public class Player_Movement : MonoBehaviour
         m_knockbackVelocity = _knockbackVelocity;
         m_knockbackVelocity.y = 0;
         m_yVelocity = _knockbackVelocity.y;
+        
+        if (_stunDuration != 0.0f)
+        {
+            m_isRolling = false;
+            m_isRollInvincible = false;
 
-        m_isRolling = false;
-        m_isRollInvincible = false;
+            playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
+            playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
+        }
     }
     /*******************
      * StunUpdate : Updates the players state of being stunned.
@@ -229,7 +235,19 @@ public class Player_Movement : MonoBehaviour
      */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
-        _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f);
+        // Move speed mult
+        m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
+
+        if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.LEFT)
+        {
+            m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed;
+        }
+        else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)
+        {
+            m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
+        }
+
+        _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp);
 
         Vector3 movement = Vector3.zero;
         if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
@@ -262,8 +280,6 @@ public class Player_Movement : MonoBehaviour
 
             Vector3 normalizedMove = Vector3.zero;
 
-            
-
             if (_move.magnitude != 0)
             {
                 // Movement
@@ -271,20 +287,7 @@ public class Player_Movement : MonoBehaviour
                 normalizedMove += _move.x * transform.right;
 
                 // Apply movement
-                m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
-                
-                if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.LEFT)
-                {
-                    m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed; 
-                }
-                else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)
-                {
-                    m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
-                }
-
-                Debug.Log(m_currentMoveSpeedLerp);
-
-                movement = normalizedMove * Mathf.Lerp(speed * m_attackMoveSpeed, speed, m_currentMoveSpeedLerp) * _deltaTime;
+                movement = normalizedMove * speed * _deltaTime;
 
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
                 //    movement *= m_attackMoveSpeed;
@@ -320,7 +323,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.animator.SetFloat("Vertical", 0);
             }
 
-            if (_roll && m_rollCDTimer <= 0.0f) // If roll input is triggered
+            if (_roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 

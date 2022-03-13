@@ -492,7 +492,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 32768
   m_isDisabledInput: 0
-  m_standMoveWeightLerpSpeed: 2
+  m_standMoveWeightLerpSpeed: 5
+  m_lastAttackHand: 2
   m_dualWieldSpeed: 1.3
   m_statsMenu: {fileID: 0}
 --- !u!114 &3122777058140226030
@@ -513,7 +514,7 @@ MonoBehaviour:
   m_rollSpeed: 9
   m_rollDistanceMult: 5
   m_attackMoveSpeed: 0.5
-  m_attackMoveSpeedLerpSpeed: 5
+  m_attackMoveSpeedLerpSpeed: 2
   m_minKnockbackSpeed: 0.5
   m_groundLayerMask:
     serializedVersion: 2
@@ -582,7 +583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3b47cd4124a04b9735458379b8b00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_swingHeight: 1
+  m_swingHeight: 1.25
   m_attackTargets:
     serializedVersion: 2
     m_Bits: 12800
@@ -657,6 +658,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 1da949951ec4bdd4a8151ec2d0a71033, type: 3}
   - {fileID: 8300000, guid: 15bd6ee6376723b4a8188b38f8e29ae8, type: 3}
   - {fileID: 8300000, guid: 7a5e592c942dc3d4a9acb89035e944ce, type: 3}
+  - {fileID: 8300000, guid: dd749ff5367dd3f42bb3dc4316a898ac, type: 3}
+  - {fileID: 8300000, guid: c9cb247895fbd3e48bb7d8e32e7bbd13, type: 3}
+  - {fileID: 8300000, guid: c8b892fb314a4e14497f5afaf65fda6b, type: 3}
+  - {fileID: 8300000, guid: 01be1ddbd00afeb4589108d9c128fa15, type: 3}
   audioPlayersCount: 12
   channel: 1
 --- !u!114 &6606438092573322739
@@ -671,7 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d570bcaa7abb945a22000579396f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_durationTransition: 0.1
+  m_durationTransition: 0.2
 --- !u!114 &972039595792485957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2834,6 +2839,38 @@ MonoBehaviour:
         - m_Target: {fileID: 3122777058140226028}
           m_TargetAssemblyTypeName: 
           m_MethodName: UseWeapon
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _name: LeftWeaponStop
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226028}
+          m_TargetAssemblyTypeName: Player_Attack, Assembly-CSharp
+          m_MethodName: StopUseWeapon
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+  - _name: RightWeaponStop
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226028}
+          m_TargetAssemblyTypeName: Player_Attack, Assembly-CSharp
+          m_MethodName: StopUseWeapon
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

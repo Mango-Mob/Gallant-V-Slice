@@ -13,6 +13,7 @@ public class CrossbowBolt : MonoBehaviour
 
     private float m_lifeTimer = 0.0f;
     private float m_lifeDuration = 1.0f;
+    private float m_charge = 1.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,10 +38,13 @@ public class CrossbowBolt : MonoBehaviour
             Destruct();
         }
     }
-    public void SetProjectileData(Player_Attack _user, WeaponData _data)
+    public void SetProjectileData(Player_Attack _user, WeaponData _data, float _charge, bool _canCharge = false)
     {
         m_projectileUser = _user;
         m_weaponData = _data;
+        m_charge = _charge;
+
+        m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
     }
 
     private void Destruct()
@@ -50,6 +54,9 @@ public class CrossbowBolt : MonoBehaviour
             effect.transform.SetParent(null);
             if (effect.GetComponent<VFXTimerScript>() != null)
                 effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
+
+            if (effect.GetComponent<ParticleSystem>() != null)
+                effect.GetComponent<ParticleSystem>().Stop();
         }
 
         Destroy(gameObject);
@@ -61,16 +68,16 @@ public class CrossbowBolt : MonoBehaviour
         LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
         if (layerMask == (layerMask | (1 << other.gameObject.layer)))
         {
-            Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage);
+            Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge);
 
-            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage, m_weaponData.m_knockback);
+            m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge, m_weaponData.m_knockback * m_charge);
 
-            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
+            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
 
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback);
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
             }
 
             m_projectileUser.CreateVFX(other, transform.position);

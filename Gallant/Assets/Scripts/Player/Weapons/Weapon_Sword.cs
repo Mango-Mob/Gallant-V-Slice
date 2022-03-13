@@ -24,4 +24,5 @@ public class Weapon_Sword : WeaponBase
     {
         MeleeAttack(m_weaponData, transform.position);
     }
+    public override void WeaponRelease() { }
 }
