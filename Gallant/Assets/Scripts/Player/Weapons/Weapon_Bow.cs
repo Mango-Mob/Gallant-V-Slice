@@ -40,6 +40,8 @@ public class Weapon_Bow : WeaponBase
     }
     public override void WeaponRelease()
     {
+        playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
+
         m_chargingShot = false;
         m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_charge, true);
