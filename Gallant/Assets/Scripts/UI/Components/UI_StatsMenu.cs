@@ -65,14 +65,14 @@ public class UI_StatsMenu : UI_Element
                 {
                     Debug.LogWarning("Left Weapon Display is null");
                 }
-                m_leftWeaponDisplay.SetWeapon(_data);
+                m_leftWeaponDisplay.LoadWeapon(_data);
                 break;
             case Hand.RIGHT:
                 if (m_rightWeaponDisplay == null)
                 {
                     Debug.LogWarning("Right Weapon Display is null");
                 }
-                m_rightWeaponDisplay.SetWeapon(_data);
+                m_rightWeaponDisplay.LoadWeapon(_data);
                 break;
         }
     }

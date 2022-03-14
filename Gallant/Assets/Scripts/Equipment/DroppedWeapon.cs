@@ -19,17 +19,19 @@ public class DroppedWeapon : MonoBehaviour
     public ParticleSystem m_particleSystem;
 
     [Header("Display")]
-    public UI_PickupDisplay m_pickupDisplay;
+    public InfoDisplay m_pickupDisplay;
 
     private void Start()
     {
-        //m_pickupDisplay = GetComponentInChildren<UI_PickupDisplay>();
+        m_pickupDisplay = GetComponentInChildren<InfoDisplay>();
 
         if (m_weaponData != null)
         {
             m_defaultModel.GetComponent<MeshRenderer>().enabled = false;
             m_weaponModel = Instantiate(m_weaponData.weaponModelPrefab, m_defaultModel.transform);
-            
+
+            m_pickupDisplay.m_weaponData = m_weaponData;
+
             if (m_weaponModel.transform.GetChild(0) != null)
             {
                 m_weaponModel.transform.GetChild(0).localPosition = Vector3.zero;

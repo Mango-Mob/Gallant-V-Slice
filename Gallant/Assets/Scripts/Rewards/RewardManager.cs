@@ -9,7 +9,7 @@ public class RewardManager : Singleton<RewardManager>
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
     public GameObject m_window;
-    public GameObject[] m_rewardSlots;
+    public InfoDisplay[] m_rewardSlots;
     public GameObject m_weaponRewardOption;
     public GameObject m_itemRewardOption;
 
@@ -37,7 +37,6 @@ public class RewardManager : Singleton<RewardManager>
 
     private int m_select = -1;
     private float m_timer = 0.0f;
-    private List<Reward> m_rewards = new List<Reward>();
 
     public enum RewardType
     {
@@ -94,7 +93,7 @@ public class RewardManager : Singleton<RewardManager>
 
                 if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
                 {
-                    EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
+                    EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].transform.parent.gameObject);
                 }
                 else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
                 {
@@ -107,17 +106,9 @@ public class RewardManager : Singleton<RewardManager>
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_window.SetActive(true);
-        m_rewards.Clear();
         if (level >= 0)
         {
             m_player.m_isDisabledInput = true;
-            for (int i = 0; i < m_rewardSlots.Length; i++)
-            {
-                for (int j = ((m_rewardSlots[i].transform as RectTransform).childCount) - 1; j >= 0; j--)
-                {
-                    Destroy((m_rewardSlots[i].transform as RectTransform).GetChild(j).gameObject);
-                }
-            }
 
             //Generate a random selection of rewards
             List<ScriptableObject> rewards = new List<ScriptableObject>();
@@ -175,22 +166,17 @@ public class RewardManager : Singleton<RewardManager>
 
             for (int i = 0; i < m_rewardSlots.Length; i++)
             {
+
                 if (rewards[i].GetType() == typeof(WeaponData))
                 {
-                    WeaponReward wReward = GameObject.Instantiate(m_weaponRewardOption, m_rewardSlots[i].transform).GetComponent<WeaponReward>();
-                    wReward.LoadWeapon(rewards[i] as WeaponData, m_player);
-                    m_rewards.Add(wReward);
-                    m_rewards[m_rewards.Count - 1].m_id = m_rewards.Count - 1;
+                    m_rewardSlots[i].LoadWeapon(rewards[i] as WeaponData);
                 }
                 else
                 {
-                    ItemReward iReward = GameObject.Instantiate(m_itemRewardOption, m_rewardSlots[i].transform).GetComponent<ItemReward>();
-                    iReward.LoadItem(rewards[i] as ItemData, m_player);
-                    m_rewards.Add(iReward);
-                    m_rewards[m_rewards.Count - 1].m_id = m_rewards.Count - 1;
+                    m_rewardSlots[i].LoadItem(rewards[i] as ItemData);
                 }
             }
-            EventSystem.current.SetSelectedGameObject(m_rewards[0].gameObject);
+            EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].gameObject);
         }
     }
 
@@ -223,55 +209,47 @@ public class RewardManager : Singleton<RewardManager>
         return m_items[select];
     }
 
-    private void LoadRewards(RewardType type, int level)
-    {
-        
-    }
-
     public void Hover(int id)
-    {
-        WeaponReward temp = m_rewards[id] as WeaponReward;
-        if (temp != null)
+    {        
+        if (m_rewardSlots[id].IsAWeapon)
         {
             m_abilityImage.gameObject.SetActive(true);
 
-            m_abilityImage.sprite = temp.m_activeWeapon.abilityData.abilityIcon;
-            m_abilityDescription.text = AbilityData.EvaluateDescription(temp.m_activeWeapon.abilityData);
+            m_abilityImage.sprite = m_rewardSlots[id].m_weaponData.abilityData.abilityIcon;
+            m_abilityDescription.text = AbilityData.EvaluateDescription(m_rewardSlots[id].m_weaponData.abilityData);
 
-            if (temp.m_activeWeapon.abilityData.cooldownTime > 0)
+            if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
             {
                 m_abilityCooldownHeader.text = "Cooldown:";
-                m_abilityCooldownText.text = temp.m_activeWeapon.abilityData.cooldownTime.ToString() + "s";
+                m_abilityCooldownText.text = m_rewardSlots[id].m_weaponData.abilityData.cooldownTime.ToString() + "s";
             }
             else
             {
                 m_abilityCooldownHeader.text = "";
                 m_abilityCooldownText.text = "";
             }
-            return;
         }
-        ItemReward temp2 = m_rewards[id] as ItemReward;
-        if (temp2 != null)
+        else
         {
-            m_abilityImage.gameObject.SetActive(false);
-            m_abilityDescription.text = temp2.m_currentlyLoaded.description;
+            m_abilityImage.sprite = m_rewardSlots[id].m_itemData.itemIcon;
             m_abilityCooldownHeader.text = "";
             m_abilityCooldownText.text = "";
         }
     }
 
     public void Select(int item)
-    {
-        if(m_select != -1)
-            m_rewards[m_select].Unselect();
-
-       
+    {      
         m_select = item;
+
+        for (int i = 0; i < m_rewardSlots.Length; i++)
+        {
+            m_rewardSlots[i].GetComponentInParent<Button>().interactable = i != item;
+        }
     }
 
     public void Confirm()
     {
-        m_rewards[m_select].GiveReward();
+        m_rewardSlots[m_select].GiveReward();
         m_player.m_isDisabledInput = false;
         m_select = -1;
     }
@@ -279,7 +257,7 @@ public class RewardManager : Singleton<RewardManager>
     public void Hide()
     {
         m_window.SetActive(false);
-        EventSystem.current.SetSelectedGameObject(null);
+        
     }
 
     public bool IsUniqueWeapon(List<ScriptableObject> list, WeaponData data)
