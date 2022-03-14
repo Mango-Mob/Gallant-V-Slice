@@ -40,6 +40,7 @@ public class UI_PickupDisplay : UI_Element
 
     public HorizontalLayoutGroup m_tagRowPrefab;
     public Transform m_tagRowTransform;
+    public int m_tagFontSize = 18;
 
     [SerializeField] private TagDetails[] m_allTags;
 
@@ -90,6 +91,7 @@ public class UI_PickupDisplay : UI_Element
             }
         }
 
+        activeTags.Sort(TagDetails.Compare);
         LoadTags(activeTags);
     }
 
@@ -124,7 +126,9 @@ public class UI_PickupDisplay : UI_Element
                 current = (m_tagRowTransform as RectTransform).rect.width;
                 m_rows.RemoveAt(0);
             }
-            Instantiate(tags[0].gameObject, m_rows[0].transform).SetActive(true);
+            GameObject tag = Instantiate(tags[0].gameObject, m_rows[0].transform);
+            tag.SetActive(true);
+            tag.GetComponentInChildren<TagDetails>().m_fontSize = m_tagFontSize;
             tags.RemoveAt(0);
         }
     }
