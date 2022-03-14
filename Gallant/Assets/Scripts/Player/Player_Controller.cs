@@ -46,7 +46,7 @@ public class Player_Controller : MonoBehaviour
     private bool m_hasSwappedTarget = false;
 
     private Animator animatorCamera;
-    public UI_StatsMenu m_statsMenu;
+    [HideInInspector] public UI_StatsMenu m_statsMenu;
 
     private bool m_godMode = false;
 
