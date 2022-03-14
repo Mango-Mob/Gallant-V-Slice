@@ -20,8 +20,8 @@ public class UI_StatsMenu : UI_Element
 
     [Header("Weapon Info")]
     public Transform m_weaponGroup;
-    public WeaponInfoDisplay m_leftWeaponDisplay;
-    public WeaponInfoDisplay m_rightWeaponDisplay;
+    public InfoDisplay m_leftWeaponDisplay;
+    public InfoDisplay m_rightWeaponDisplay;
 
     private float m_weaponStartPosX = 0.0f;
 
