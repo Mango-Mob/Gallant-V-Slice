@@ -53,8 +53,8 @@ namespace ActorSystem.Spawning
             {
                 m_hasStarted = true;
 
-                if (GameManager.Instance.music != null && !GameManager.Instance.music.IsCombatPlaying)
-                    GameManager.Instance.music.StartCombat();
+                if(m_hasStarted)
+                    ActorManager.Instance.m_activeSpawnners.Add(this);
 
                 if(m_myActors.Count != 0)
                 {
@@ -79,6 +79,9 @@ namespace ActorSystem.Spawning
         {
             m_hasStarted = (startCombat || m_hasStarted);
 
+            if (m_hasStarted)
+                ActorManager.Instance.m_activeSpawnners.Add(this);
+
             var wave = m_waves[0];
             m_waves.RemoveAt(0);
 
@@ -102,7 +105,7 @@ namespace ActorSystem.Spawning
         public void Stop()
         {
             m_hasStarted = false;
-            GameManager.Instance.music.EndCombat();
+            ActorManager.Instance.m_activeSpawnners.Remove(this);
         }
 
         /*******************

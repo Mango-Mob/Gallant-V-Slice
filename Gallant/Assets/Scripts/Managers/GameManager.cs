@@ -1,4 +1,5 @@
-﻿using ActorSystem.AI.Components;
+﻿using ActorSystem.AI;
+using ActorSystem.AI.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ public class GameManager : Singleton<GameManager>
     public GameObject m_player;
     public Camera m_activeCamera;
     public bool enableTimer = false;
+
+    public bool IsInCombat { get { return ActorManager.Instance.m_activeSpawnners.Count > 0; } }
 
     public AtmosphereScript music { get; private set; }
     // Start is called before the first frame update

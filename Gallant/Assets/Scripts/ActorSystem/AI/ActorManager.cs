@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ActorSystem.Spawning;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,6 +9,7 @@ namespace ActorSystem.AI
     public class ActorManager : SingletonPersistent<ActorManager>
     {
         public List<Actor> m_subscribed { get; private set; } = new List<Actor>();
+        public List<ActorSpawner> m_activeSpawnners = new List<ActorSpawner>();
 
         public Dictionary<string, List<Actor>> m_reserved = new Dictionary<string, List<Actor>>();
 
