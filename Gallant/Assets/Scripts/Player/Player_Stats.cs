@@ -207,4 +207,17 @@ public class Player_Stats : MonoBehaviour
         //    Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
         //}
     }
+
+    public int GetEffectQuantity(ItemEffect _effect)
+    {
+        foreach (var effect in m_effects) // Check if effect is in dictionary
+        {
+            if (effect.Key.effect == _effect)//  Check if effect matches
+            {
+                return effect.Value; // Return value.
+            }
+        }
+
+        return 0;
+    }
 }
