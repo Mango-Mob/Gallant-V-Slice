@@ -92,7 +92,7 @@ public class WeaponReward : Reward
                 }
             }
         }
-
+        activeTags.Sort(TagDetails.Compare);
         LoadTags(activeTags);
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveObject.SetActive(m_passiveText.text == null);

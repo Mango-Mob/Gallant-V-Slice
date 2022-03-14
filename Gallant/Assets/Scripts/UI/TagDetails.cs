@@ -33,6 +33,6 @@ public class TagDetails : MonoBehaviour
         if (a.weight == b.weight)
             return 0;
 
-        return (a.weight - b.weight) / Mathf.Abs(a.weight - b.weight);
+        return (b.weight - a.weight) / Mathf.Abs(b.weight - a.weight);
     }
 }
