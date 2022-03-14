@@ -19,6 +19,8 @@ public class Debug_Player : MonoBehaviour
     [SerializeField] private Button[] m_stars;
     private int m_abilityPowerLevel = 1;
 
+    // Cheats
+    [SerializeField] private Toggle m_godModeToggle;
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +95,11 @@ public class Debug_Player : MonoBehaviour
         {
             GameManager.Instance.m_player.GetComponent<Player_Controller>().UpgradeWeapon(Hand.RIGHT);
         }
+    }
 
+    public void ToggleGodMode(bool _active)
+    {
+        Debug.Log(_active);
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().SetGodMode(_active);
     }
 }
