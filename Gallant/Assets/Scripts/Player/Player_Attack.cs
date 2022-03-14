@@ -10,11 +10,12 @@ public enum Weapon
     BOOMERANG,
     SHIELD,
     CROSSBOW,
-    BRICK,
     AXE,
     STAFF,
     GREATSWORD,
     BOW,
+
+    BRICK,
 }
 public enum Hand
 {

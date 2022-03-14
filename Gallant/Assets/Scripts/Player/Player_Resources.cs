@@ -21,11 +21,22 @@ public class Player_Resources : MonoBehaviour
     public int m_startingAdrenaline = 3;
     public int m_defaultAdrenaline { get; private set; } = 3;
 
+    public float m_stamina { get; private set; } = 100.0f;
+    public float m_maxStamina { get; private set; } = 100.0f;
+    public float m_staminaRegenDelayTimer = 0.0f;
+
+    [Header("Stamina")]
+    [SerializeField] private float m_staminaRegenDelay = 0.4f;
+    [SerializeField] private float m_staminaRegenRate = 20.0f;
+    [SerializeField] private float m_staminaBarRadialRange = 0.19f;
+
+
     private Player_Controller playerController;
     public UI_Bar healthBar { get; private set; }
     public UI_PortraitHP portrait { get; private set; }
     public UI_Bar barrierBar { get; private set; }
     public UI_OrbCount adrenalineOrbs { get; private set; }
+    public UI_Bar staminaBar { get; private set; }
 
     public float m_adrenalineHeal = 40.0f;
     [SerializeField] private GameObject healVFXPrefab;
@@ -42,6 +53,7 @@ public class Player_Resources : MonoBehaviour
         barrierBar = HUDManager.Instance.GetElement<UI_Bar>("Barrier");
         portrait = HUDManager.Instance.GetElement<UI_PortraitHP>("Portrait");
         adrenalineOrbs = HUDManager.Instance.GetElement<UI_OrbCount>("Adrenaline");
+        staminaBar = HUDManager.Instance.GetElement<UI_Bar>("Endurance");
 
         m_defaultAdrenaline = m_startingAdrenaline;
         m_adrenaline = m_startingAdrenaline;
@@ -56,6 +68,7 @@ public class Player_Resources : MonoBehaviour
         m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
         m_maxHealth += playerController.playerSkills.m_healthIncrease;
         m_health = m_maxHealth;
+        m_stamina = m_maxStamina;
 
         m_startingAdrenaline += playerController.playerSkills.m_extraHealOrbs;
         ResetResources();
@@ -75,6 +88,18 @@ public class Player_Resources : MonoBehaviour
                 m_barrier = 0.0f;
         }
 
+        if (m_staminaRegenDelayTimer > 0.0f)
+        {
+            m_staminaRegenDelayTimer -= Time.deltaTime;
+        }
+        else if (m_stamina < m_maxStamina)
+        {
+            m_stamina += m_staminaRegenRate * Time.deltaTime;
+            m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
+            m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
+        }
+
+
         float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
 
         if (healthBar != null)
@@ -93,6 +118,12 @@ public class Player_Resources : MonoBehaviour
 
         if (adrenalineOrbs != null)
             adrenalineOrbs.SetValue(m_adrenaline);
+
+        if (staminaBar != null)
+        {
+            staminaBar.SetValue((0.5f - m_staminaBarRadialRange) + (m_stamina / m_maxStamina) * m_staminaBarRadialRange * 2.0f);
+        }
+
     }
 
 
@@ -100,6 +131,19 @@ public class Player_Resources : MonoBehaviour
     {
         m_adrenaline = m_startingAdrenaline;
         m_health = m_maxHealth;
+    }
+
+    /*******************
+   * ChangeStamina : Changes stamina value
+   * @author : William de Beer
+   * @param : (float) Amount to add to stamina
+   */
+    public void ChangeStamina(float _amount)
+    {
+        m_stamina += _amount;
+        m_staminaRegenDelayTimer = m_staminaRegenDelay;
+
+        m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
     }
 
     /*******************
