@@ -73,6 +73,7 @@ public class WeaponData : ScriptableObject
     public float m_speed = 1;
     public float m_knockback = 1;
     public float m_projectileSpeed = 0;
+    public float m_attackMoveSpeed = 0.5f;
 
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
@@ -110,7 +111,7 @@ public class WeaponData : ScriptableObject
         int iter = 0;
         do
         {
-            newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length);
+            newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 1);
         
             int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
             int result = Mathf.Max(_level + curve, 0);
@@ -252,6 +253,9 @@ public class WeaponData : ScriptableObject
             case Ability.FLAME_ROLL:
                 _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
                 break;
+            case Ability.ROLL_BASH:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
+                break;
             default:
                 Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
                 break;
@@ -285,6 +289,52 @@ public class WeaponData : ScriptableObject
         this.m_level = _level;
     }
 
+    public static string GetTags(Weapon type)
+    {
+        switch (type)
+        {
+            case Weapon.SWORD:
+                return "One hand, Melee";
+            case Weapon.SPEAR:
+                return "Two hands, Melee";
+            case Weapon.BOOMERANG:
+                return "One hand, Ranged";
+            case Weapon.SHIELD:
+                return "One hand, Melee";
+            case Weapon.CROSSBOW:
+                return "One hand, Ranged";
+            case Weapon.AXE:
+                return "One hand, Melee";
+            case Weapon.STAFF:
+                return "One hand, Melee, Arcane";
+            case Weapon.GREATSWORD:
+                return "Two hands, Melee";
+            case Weapon.BOW:
+                return "Two hands, Ranged";
+            default:
+            case Weapon.BRICK:
+                return "";
+		}
+	}
+	
+    public string GetPassiveEffectDescription()
+    {
+        switch (itemEffect)
+        {
+            case ItemEffect.MOVE_SPEED:
+                return "Higher movement speed.";
+            case ItemEffect.ABILITY_CD:
+                return "Lower ability cooldowns.";
+            case ItemEffect.ATTACK_SPEED:
+                return "Higher attack speed.";
+            case ItemEffect.DAMAGE_RESISTANCE:
+                return "Higher damage resistance.";
+            case ItemEffect.MAX_HEALTH_INCREASE:
+                return "Higher maximum health.";
+            default:
+                return null;
+        }
+    }
 
     public void Clone(WeaponData other)
     {
