@@ -48,7 +48,10 @@ public class Debug_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (m_godModeToggle != null)
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().SetGodMode(m_godModeToggle.isOn);
+        }
     }
 
     public void CreateWeapon()
@@ -97,7 +100,7 @@ public class Debug_Player : MonoBehaviour
         }
     }
 
-    public void ToggleGodMode(bool _active)
+    private void ToggleGodMode(bool _active)
     {
         Debug.Log(_active);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().SetGodMode(_active);
