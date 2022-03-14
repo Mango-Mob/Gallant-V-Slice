@@ -75,6 +75,27 @@ public class UI_StatsMenu : UI_Element
 
     public void UpdateList()
     {
+        List<RuneInfo> removeList = new List<RuneInfo>();
+        foreach (var rune in m_runeList)
+        {
+            bool foundEffect = false;
+            foreach (var effect in playerStats.m_effects)
+            {
+                foundEffect = true;
+                continue;
+            }
+            if (!foundEffect)
+            {
+                removeList.Add(rune);
+            }
+        }
+        foreach (var item in removeList)
+        {
+            m_runeList.Remove(item);
+            Destroy(item.gameObject);
+        }
+
+
         foreach (var effect in playerStats.m_effects)
         {
             bool runeInfoExists = false;
@@ -96,6 +117,7 @@ public class UI_StatsMenu : UI_Element
                 SetRuneInfo(newObject, effect.Key);
             }
         }
+
     }
     public void SetRuneInfo(RuneInfo _runeInfo, EffectData _effect)
     {

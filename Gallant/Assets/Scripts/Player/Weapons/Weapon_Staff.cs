@@ -13,6 +13,12 @@ public class Weapon_Staff : Weapon_Sword
     new private void Start()
     {
         base.Start();
+
+        MeshRenderer[] meshRenderers = m_weaponObject.GetComponentsInChildren<MeshRenderer>();
+        int meshCount = meshRenderers.Length;
+
+        if (meshCount > 1 && m_weaponData.abilityData != null)
+            meshRenderers[meshCount - 1].material.color = m_weaponData.abilityData.droppedEnergyColor;
     }
 
     // Update is called once per frame
@@ -20,4 +26,5 @@ public class Weapon_Staff : Weapon_Sword
     {
         base.Update();
     }
+    public override void WeaponRelease() { }
 }

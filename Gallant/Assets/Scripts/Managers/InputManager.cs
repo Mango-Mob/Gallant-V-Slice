@@ -873,19 +873,19 @@ public class InputManager : SingletonPersistent<InputManager>
             case KeyType.NUM_NINE:  { return "NUM_9"; }
             case KeyType.NUM_ZERO:  { return "NUM_0"; }
                                       
-            case KeyType.L_SHIFT:   { return "L SHIFT"; }
-            case KeyType.L_CTRL:    { return "L CTRL";  }
-            case KeyType.L_ALT:     { return "L ALT"; }
+            case KeyType.L_SHIFT:   { return "L Shift"; }
+            case KeyType.L_CTRL:    { return "L Ctrl";  }
+            case KeyType.L_ALT:     { return "L Alt"; }
                                       
-            case KeyType.TAB:       { return "TAB";  }
-            case KeyType.ESC:       { return "ESC";  }
-            case KeyType.SPACE:     { return "SPACE"; }
+            case KeyType.TAB:       { return "Tab";  }
+            case KeyType.ESC:       { return "Esc";  }
+            case KeyType.SPACE:     { return "Space"; }
                                       
-            case KeyType.R_SHIFT:   { return "R SHIFT"; }
-            case KeyType.R_CTRL:    { return "R CTRL"; }
-            case KeyType.R_ALT:     { return "R ALT"; }
+            case KeyType.R_SHIFT:   { return "R Shift"; }
+            case KeyType.R_CTRL:    { return "R Ctrl"; }
+            case KeyType.R_ALT:     { return "R Alt"; }
                                       
-            case KeyType.ENTER:     { return "ENTER"; }
+            case KeyType.ENTER:     { return "Enter"; }
 
             default:
             

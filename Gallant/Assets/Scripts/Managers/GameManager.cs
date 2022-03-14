@@ -1,4 +1,5 @@
-﻿using ActorSystem.AI.Components;
+﻿using ActorSystem.AI;
+using ActorSystem.AI.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,13 +10,15 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     public static float currentLevel = 0;
-    public static float deltaLevel = 1/3f;
+    public static float deltaLevel = 1/2f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
     
     public GameObject m_player;
     public Camera m_activeCamera;
     public bool enableTimer = false;
+
+    public bool IsInCombat { get { return ActorManager.Instance.m_activeSpawnners.Count > 0; } }
 
     public AtmosphereScript music { get; private set; }
     // Start is called before the first frame update

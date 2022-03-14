@@ -5,16 +5,27 @@ using UnityEngine;
 public class Player_AudioAgent : MultiAudioAgent
 {
     #region Weapon
-    public void PlayWeaponSwing()
-    {
-        base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
-    }
 
     public void PlayShieldBlock()
     {
         base.PlayOnce("ShieldBlock", false, Random.Range(0.95f, 1.05f));
     }
-    public void PlayWeaponHit(Weapon _weapon)
+    public void PlayWeaponSwing(Weapon _weapon, int _sound = 1)
+    {
+        switch (_weapon)
+        {
+            case Weapon.CROSSBOW:
+                base.PlayOnce("BowLaunch", false, Random.Range(0.95f, 1.05f));
+                break;
+            case Weapon.BOW:
+                base.PlayOnce("BowLoad", false, Random.Range(0.95f, 1.05f));
+                break;
+            default:
+                base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
+                break;
+        }
+    }
+    public void PlayWeaponHit(Weapon _weapon, int _sound = 1)
     {
         switch (_weapon)
         {
@@ -31,7 +42,23 @@ public class Player_AudioAgent : MultiAudioAgent
                 base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
                 break;
             case Weapon.STAFF:
-                base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
+                base.PlayOnce("BowImpact", false, Random.Range(0.95f, 1.05f));
+                break;
+            case Weapon.BOW:
+                switch (_sound)
+                {
+                    case 1:
+                        base.PlayOnce("BowLaunch", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    case 2:
+                        base.PlayOnce("BowImpact", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case Weapon.CROSSBOW:
+                base.PlayOnce("BowImpact", false, Random.Range(0.95f, 1.05f));
                 break;
             default:
                 base.PlayOnce("SwordCut", false, Random.Range(0.95f, 1.05f));

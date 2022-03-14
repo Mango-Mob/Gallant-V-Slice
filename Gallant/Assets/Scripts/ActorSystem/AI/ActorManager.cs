@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ActorSystem.Spawning;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,6 +9,7 @@ namespace ActorSystem.AI
     public class ActorManager : SingletonPersistent<ActorManager>
     {
         public List<Actor> m_subscribed { get; private set; } = new List<Actor>();
+        public List<ActorSpawner> m_activeSpawnners = new List<ActorSpawner>();
 
         public Dictionary<string, List<Actor>> m_reserved = new Dictionary<string, List<Actor>>();
 
@@ -67,14 +69,16 @@ namespace ActorSystem.AI
         {
             foreach (var item in m_reserved.Values)
             {
-                for (int i = 0; i < item.Count; i++)
+                for (int i = item.Count - 1; i >= 0; i--)
                 {
                     Destroy(item[i].gameObject);
+                    item.RemoveAt(i);
                 }
             }
-            foreach (var item in m_subscribed)
+            for (int i = m_subscribed.Count - 1; i >= 0; i--)
             {
-                Destroy(item);
+                Destroy(m_subscribed[i].gameObject);
+                m_subscribed.RemoveAt(i);
             }
             m_subscribed.Clear();
             m_reserved.Clear();
@@ -82,7 +86,8 @@ namespace ActorSystem.AI
 
         public void Subscribe(Actor user)
         {
-            m_subscribed.Add(user);
+            if(!m_subscribed.Contains(user))
+                m_subscribed.Add(user);
         }
 
         public void ReserveMe(Actor user)
