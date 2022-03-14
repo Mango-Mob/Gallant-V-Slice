@@ -48,6 +48,8 @@ public class Player_Controller : MonoBehaviour
     private Animator animatorCamera;
     public UI_StatsMenu m_statsMenu;
 
+    private bool m_godMode = false;
+
 
     private void Awake()
     {
@@ -474,7 +476,8 @@ public class Player_Controller : MonoBehaviour
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
+        if (!m_godMode)
+            playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
 
@@ -562,5 +565,10 @@ public class Player_Controller : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SetGodMode(bool _active)
+    {
+        m_godMode = _active;
     }
 }

@@ -70,6 +70,7 @@ public class DroppedWeapon : MonoBehaviour
                 }
             }
         }
+        ToggleDisplay(false);
     }
     private void FixedUpdate()
     {

@@ -74,7 +74,12 @@ public class UI_PickupDisplay : UI_Element
         m_levelText.text = "Level: " + thisWeapon.m_level;
         m_weaponImageLoc.sprite = thisWeapon.weaponIcon;
 
-        string taglist = WeaponData.GetTags(thisWeapon.weaponType) + ", " + thisWeapon.abilityData.tags;
+        //string taglist = WeaponData.GetTags(thisWeapon.weaponType) + ", " + thisWeapon.abilityData.tags;
+
+        string taglist = WeaponData.GetTags(thisWeapon.weaponType);
+        if (thisWeapon.abilityData)
+            taglist += ", " + thisWeapon.abilityData.tags;
+
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();
         foreach (var tagDetail in m_allTags)
