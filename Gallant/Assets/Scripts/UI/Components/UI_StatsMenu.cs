@@ -61,9 +61,17 @@ public class UI_StatsMenu : UI_Element
         switch (_hand)
         {
             case Hand.LEFT:
+                if (m_leftWeaponDisplay == null)
+                {
+                    Debug.LogWarning("Left Weapon Display is null");
+                }
                 m_leftWeaponDisplay.SetWeapon(_data);
                 break;
             case Hand.RIGHT:
+                if (m_rightWeaponDisplay == null)
+                {
+                    Debug.LogWarning("Right Weapon Display is null");
+                }
                 m_rightWeaponDisplay.SetWeapon(_data);
                 break;
         }
