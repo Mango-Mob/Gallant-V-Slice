@@ -40,7 +40,7 @@ public class UI_PickupDisplay : UI_Element
 
     public HorizontalLayoutGroup m_tagRowPrefab;
     public Transform m_tagRowTransform;
-    public int m_tagFontSize = 18;
+    public uint m_tagFontSize = 18;
 
     [SerializeField] private TagDetails[] m_allTags;
 
