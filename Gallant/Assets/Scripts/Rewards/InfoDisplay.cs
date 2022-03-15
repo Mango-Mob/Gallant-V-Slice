@@ -62,8 +62,8 @@ public class InfoDisplay : MonoBehaviour
     {
         if (IsADrop)
         {
-            m_background.color = new Color(m_background.color.r, m_background.color.g, m_background.color.b, 0.8f);
-            m_foreground.color = new Color(m_foreground.color.r, m_foreground.color.g, m_foreground.color.b, 0.9f);
+            m_background.color = new Color(m_background.color.r, m_background.color.g, m_background.color.b, 1f);
+            m_foreground.color = new Color(m_foreground.color.r, m_foreground.color.g, m_foreground.color.b, 1f);
         }
 
         m_leftHand.SetActive(IsADrop);
