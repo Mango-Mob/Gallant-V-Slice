@@ -110,19 +110,36 @@ public class InfoDisplay : MonoBehaviour
         m_weaponData = data;
 
         if (data == null)
+        {
+            gameObject.SetActive(false);
             return;
+        }
 
+        gameObject.SetActive(true);
         m_itemDetailsLoc.SetActive(!IsAWeapon);
         m_weaponDetailsLoc.SetActive(IsAWeapon);
 
         m_title.text = data.weaponName;
         m_level.text = "Level: " + (data.m_level + 1).ToString();
         m_weaponImageLoc.sprite = data.weaponIcon;
-        m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
 
-        for (int i = 0; i < m_abilityStars.Length; i++)
+        if(data.abilityData != null)
         {
-            m_abilityStars[i].gameObject.SetActive(i < data.abilityData.starPowerLevel);
+            m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
+
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(i < data.abilityData.starPowerLevel);
+            }
+        }
+        else
+        {
+            m_abilityImageLoc.gameObject.SetActive(false);
+
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(false);
+            }
         }
 
         playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
@@ -134,7 +151,10 @@ public class InfoDisplay : MonoBehaviour
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
 
-        string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+        string taglist = WeaponData.GetTags(data.weaponType) + ", ";
+        if(data.abilityData != null)
+            taglist += data.abilityData.tags;
+
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();
         foreach (var tagDetail in m_allTags)
