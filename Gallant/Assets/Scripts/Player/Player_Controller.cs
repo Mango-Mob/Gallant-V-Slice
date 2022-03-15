@@ -74,7 +74,6 @@ public class Player_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         LoadPlayerInfo();
     }
 
@@ -503,18 +502,18 @@ public class Player_Controller : MonoBehaviour
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();
-            if (m_inkmanClass)
-                playerClassArmour.SetClassArmour(m_inkmanClass);
-            else
-                playerSkills.EvaluateSkills();
 
             playerStats.EvaluateEffects();
         }
-        else
-            playerSkills.EvaluateSkills();
+        playerSkills.EvaluateSkills();
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
+
+        if (m_inkmanClass)
+            playerClassArmour.SetClassArmour(m_inkmanClass.inkmanClass);
+        else
+            playerClassArmour.SetClassArmour(InkmanClass.GENERAL);
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
@@ -541,7 +540,7 @@ public class Player_Controller : MonoBehaviour
         playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
         playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
 
-        playerClassArmour.SetClassArmour(_class);
+        playerClassArmour.SetClassArmour(_class.inkmanClass);
 
         playerSkills.EvaluateSkills();
     }    
