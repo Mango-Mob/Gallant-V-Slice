@@ -15,7 +15,17 @@ public class AtmosphereScript : MonoBehaviour
     {
         m_normalAgent.Play((uint)Random.Range(0, m_normalAgent.audioClips.Count));
     }
-
+    public void Update()
+    {
+        if(GameManager.Instance.IsInCombat && !m_combatAgent.IsPlaying())
+        {
+            StartCombat();
+        }
+        if (!GameManager.Instance.IsInCombat && !m_normalAgent.IsPlaying())
+        {
+            EndCombat();
+        }
+    }
     public void StartCombat()
     {
         m_normalAgent.Stop();

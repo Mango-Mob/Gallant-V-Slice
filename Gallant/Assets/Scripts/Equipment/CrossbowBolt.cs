@@ -72,7 +72,7 @@ public class CrossbowBolt : MonoBehaviour
 
             m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge, m_weaponData.m_knockback * m_charge);
 
-            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType); // Audio
+            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
 
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)

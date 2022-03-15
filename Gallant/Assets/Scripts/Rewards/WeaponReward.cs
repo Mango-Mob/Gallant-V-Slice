@@ -1,17 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WeaponReward : Reward
 {
     public Text m_title;
+    public HorizontalLayoutGroup m_tagRowPrefab;
+    public Transform m_tagRowTransform;
 
     [SerializeField] private Image m_weaponImageLoc;
     [SerializeField] private Image m_abilityImageLoc;
     private Image m_background;
     [SerializeField] private Text m_levelText;
+    [SerializeField] private GameObject m_passiveObject;
+    [SerializeField] private Text m_passiveText;
 
     [SerializeField] private GameObject[] m_stars;
 
@@ -23,9 +28,10 @@ public class WeaponReward : Reward
     [SerializeField] private Text m_rightSpeed;
     [SerializeField] private Text m_rightKnockback;
 
-    static public int m_damageDiffScale = 2;
-    static public float m_speedDiffScale = 3.0f;
-    static public float m_knockDiffScale = 50.0f;
+    [SerializeField] private TagDetails[] m_allTags;
+
+    static public int m_diffPrecentScale = 50;
+
     private Color m_baseColor;
 
     public AudioClip m_collectAudio;
@@ -69,6 +75,63 @@ public class WeaponReward : Reward
 
         CompareTo(data, player.playerAttack.m_leftWeaponData, true);
         CompareTo(data, player.playerAttack.m_rightWeaponData, false);
+
+        string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+        string[] tags = taglist.Split(',');
+        List<TagDetails> activeTags = new List<TagDetails>();
+        foreach (var tagDetail in m_allTags)
+        {
+            string tagString = String.Concat(tagDetail.m_tagTitle.Where(c => !Char.IsWhiteSpace(c))).ToLower();
+            tagDetail.gameObject.SetActive(false);
+            foreach (var weaponTag in tags)
+            {
+                if (tagString == String.Concat(weaponTag.Where(c => !Char.IsWhiteSpace(c))).ToLower())
+                {
+                    activeTags.Add(tagDetail);
+                    break;
+                }
+            }
+        }
+        activeTags.Sort(TagDetails.Compare);
+        LoadTags(activeTags);
+        m_passiveText.text = data.GetPassiveEffectDescription();
+        m_passiveObject.SetActive(m_passiveText.text == null);
+    }
+
+    private void LoadTags(List<TagDetails> tags)
+    {
+        //Get Total Width
+        float totalWidth = 0; //right spacing
+        foreach (var item in tags)
+        {
+            totalWidth += (item.transform as RectTransform).rect.width;
+            totalWidth += 20; //left spacing + padding
+        }
+
+        //Calculate how many rows there are:
+        int rows = Mathf.CeilToInt(totalWidth / (m_tagRowTransform as RectTransform).rect.width); // div maxWidth
+        List<GameObject> m_rows = new List<GameObject>();
+        for (int i = 0; i < rows; i++)
+        {
+            m_rows.Add(Instantiate(m_tagRowPrefab.gameObject, m_tagRowTransform));
+            m_rows[m_rows.Count - 1].SetActive(true);
+        }
+
+        //Generate rows:
+        float current = (m_tagRowTransform as RectTransform).rect.width;
+        while (totalWidth > 0 && tags.Count > 0)
+        {
+            float width = (tags[0].transform as RectTransform).rect.width + 20;
+            totalWidth -= width;
+            current -= width;
+            if (current < 0)
+            {
+                current = (m_tagRowTransform as RectTransform).rect.width;
+                m_rows.RemoveAt(0);
+            }
+            Instantiate(tags[0].gameObject, m_rows[0].transform).SetActive(true);
+            tags.RemoveAt(0);
+        }
     }
 
     public void CompareTo(WeaponData rewardWeapon, WeaponData playerWeapon, bool isLeft = true)
@@ -79,15 +142,15 @@ public class WeaponReward : Reward
 
         if(isLeft)
         {
-            UpdateCompareField(m_leftDamage, rewardWeapon.m_damage, damage, (float)m_damageDiffScale);
-            UpdateCompareField(m_leftSpeed, rewardWeapon.m_speed, speed, m_speedDiffScale);
-            UpdateCompareField(m_leftKnockback, rewardWeapon.m_knockback, knockback, m_knockDiffScale);
+            UpdateCompareField(m_leftDamage, rewardWeapon.m_damage, damage);
+            UpdateCompareField(m_leftSpeed, rewardWeapon.m_speed, speed);
+            UpdateCompareField(m_leftKnockback, rewardWeapon.m_knockback, knockback);
         }
         else
         {
-            UpdateCompareField(m_rightDamage, rewardWeapon.m_damage, damage, (float)m_damageDiffScale);
-            UpdateCompareField(m_rightSpeed, rewardWeapon.m_speed, speed, m_speedDiffScale);
-            UpdateCompareField(m_rightKnockback, rewardWeapon.m_knockback, knockback, m_knockDiffScale);
+            UpdateCompareField(m_rightDamage, rewardWeapon.m_damage, damage);
+            UpdateCompareField(m_rightSpeed, rewardWeapon.m_speed, speed);
+            UpdateCompareField(m_rightKnockback, rewardWeapon.m_knockback, knockback);
         }
     }
 
@@ -98,24 +161,23 @@ public class WeaponReward : Reward
     * @param : (float) The actual difference between the player and this weapon.
     * @param : (float) The current difference scale.
     */
-    public static void UpdateCompareField(Text compareField, float rewardStat, float currentStat, float diffScale)
+    public static void UpdateCompareField(Text compareField, float rewardStat, float currentStat)
     {
-        if (diffScale == 0)
-            return;
+        float change = rewardStat - currentStat;
+        float percent = (change / currentStat) * 100f;
+        int diff = Mathf.Clamp(Mathf.CeilToInt(Mathf.Abs(percent) / m_diffPrecentScale), 0, 5);
         
-        int diff = Mathf.Clamp(Mathf.CeilToInt((rewardStat - currentStat) / diffScale), -3, 3);
-
-        if(diff > 0)
+        if(percent > 0)
         {
             compareField.text = new String('+', diff);
             compareField.color = Color.green;
         }
-        else if(diff < 0)
+        else if(percent < 0)
         {
             compareField.text = new String('-', Mathf.Abs(diff));
             compareField.color = Color.red;
         }
-        else
+        else if(change == 0)
         {
             compareField.text = "=";
             compareField.color = Color.yellow;

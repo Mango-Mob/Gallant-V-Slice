@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,9 +19,17 @@ public class WeaponInfoDisplay : MonoBehaviour
     [SerializeField] private Text m_speed;
     [SerializeField] private Text m_knockback;
 
+    public HorizontalLayoutGroup m_tagRowPrefab;
+    public Transform m_tagRowTransform;
+
+    [SerializeField] private GameObject m_passiveObject;
+    [SerializeField] private Text m_passiveText;
+    [SerializeField] private TagDetails[] m_allTags;
+
     private Sprite m_defaultImage;
     public WeaponData m_activeWeapon { get; private set; }
     private Player_Controller playerController;
+    private List<GameObject> m_showingTagRows = new List<GameObject>();
 
     private void Awake()
     {
@@ -51,6 +60,12 @@ public class WeaponInfoDisplay : MonoBehaviour
     public void SetWeapon(WeaponData data)
     {
         m_activeWeapon = data;
+
+        for (int i = m_showingTagRows.Count - 1; i >= 0; i--)
+        {
+            Destroy(m_showingTagRows[i]);
+        }
+        m_showingTagRows.Clear();
 
         for (int i = 0; i < 3; i++)
         {
@@ -100,8 +115,69 @@ public class WeaponInfoDisplay : MonoBehaviour
             m_knockback.text = data.m_knockback.ToString("0.0");
 
             m_weaponImageLoc.sprite = data.weaponIcon;
-        }
-        
 
+            string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+            string[] tags = taglist.Split(',');
+            List<TagDetails> activeTags = new List<TagDetails>();
+            foreach (var tagDetail in m_allTags)
+            {
+                string tagString = String.Concat(tagDetail.m_tagTitle.Where(c => !Char.IsWhiteSpace(c))).ToLower();
+                tagDetail.gameObject.SetActive(false);
+                foreach (var weaponTag in tags)
+                {
+                    if (tagString == String.Concat(weaponTag.Where(c => !Char.IsWhiteSpace(c))).ToLower())
+                    {
+                        activeTags.Add(tagDetail);
+                        break;
+                    }
+                }
+            }
+            activeTags.Sort(TagDetails.Compare);
+            LoadTags(activeTags);
+            m_passiveText.text = data.GetPassiveEffectDescription();
+            m_passiveObject.SetActive(m_passiveText.text == null);
+        }
+    }
+
+    private void LoadTags(List<TagDetails> tags)
+    {
+        //Get Total Width
+        float totalWidth = 0; //right spacing
+        foreach (var item in tags)
+        {
+            totalWidth += (item.transform as RectTransform).rect.width;
+            totalWidth += 20; //left spacing + padding
+        }
+
+        //Calculate how many rows there are:
+        int rows = Mathf.CeilToInt(totalWidth / (m_tagRowTransform as RectTransform).rect.width); // div maxWidth
+        List<GameObject> m_rows = new List<GameObject>();
+        for (int i = 0; i < rows; i++)
+        {
+            m_rows.Add(Instantiate(m_tagRowPrefab.gameObject, m_tagRowTransform));
+            m_rows[m_rows.Count - 1].SetActive(true);
+        }
+
+        //Generate rows:
+        float current = (m_tagRowTransform as RectTransform).rect.width;
+        while (totalWidth > 0 && tags.Count > 0)
+        {
+            float width = (tags[0].transform as RectTransform).rect.width + 20;
+            totalWidth -= width;
+            current -= width;
+            if (current < 0)
+            {
+                current = (m_tagRowTransform as RectTransform).rect.width;
+                m_showingTagRows.Add(m_rows[0]);
+                m_rows.RemoveAt(0);
+            }
+            Instantiate(tags[0].gameObject, m_rows[0].transform).SetActive(true);
+            tags.RemoveAt(0);
+        }
+
+        if(m_rows.Count > 0)
+        {
+            m_showingTagRows.Add(m_rows[0]);
+        }
     }
 }

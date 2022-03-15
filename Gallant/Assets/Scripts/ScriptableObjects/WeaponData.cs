@@ -289,6 +289,34 @@ public class WeaponData : ScriptableObject
         this.m_level = _level;
     }
 
+    public static string GetTags(Weapon type)
+    {
+        switch (type)
+        {
+            case Weapon.SWORD:
+                return "One hand, Melee";
+            case Weapon.SPEAR:
+                return "Two hands, Melee";
+            case Weapon.BOOMERANG:
+                return "One hand, Ranged";
+            case Weapon.SHIELD:
+                return "One hand, Melee";
+            case Weapon.CROSSBOW:
+                return "One hand, Ranged";
+            case Weapon.AXE:
+                return "One hand, Melee";
+            case Weapon.STAFF:
+                return "One hand, Melee, Arcane";
+            case Weapon.GREATSWORD:
+                return "Two hands, Melee";
+            case Weapon.BOW:
+                return "Two hands, Ranged";
+            default:
+            case Weapon.BRICK:
+                return "";
+		}
+	}
+	
     public string GetPassiveEffectDescription()
     {
         switch (itemEffect)

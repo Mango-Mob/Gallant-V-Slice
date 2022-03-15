@@ -53,7 +53,7 @@ namespace ActorSystem.AI.Components
                         return subItem;
                 }
             }
-            Debug.LogError($"This actor does not contain an element required. (named: {name})");
+            Debug.LogError($"This actor {GetComponentInParent<Actor>().gameObject.name} does not contain an element required. (named: {name})");
             return null;
         }
 
