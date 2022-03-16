@@ -215,30 +215,60 @@ public class RewardManager : Singleton<RewardManager>
     }
 
     public void Hover(int id)
-    {        
-        if (m_rewardSlots[id].IsAWeapon)
-        {
-            m_abilityImage.gameObject.SetActive(true);
+    {
+        ScriptableObject data;
 
-            m_abilityImage.sprite = m_rewardSlots[id].m_weaponData.abilityData.abilityIcon;
-            m_abilityDescription.text = AbilityData.EvaluateDescription(m_rewardSlots[id].m_weaponData.abilityData);
-
-            if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+        switch(id)
             {
-                m_abilityCooldownHeader.text = "Cooldown:";
-                m_abilityCooldownText.text = m_rewardSlots[id].m_weaponData.abilityData.cooldownTime.ToString() + "s";
+            case 0: case 1: case 2:
+                if(m_rewardSlots[id].IsAWeapon)
+                    data = m_rewardSlots[id].m_weaponData;
+                else
+                    data = m_rewardSlots[id].m_itemData;
+                break;
+            default:
+            case 3:
+                data = m_leftHand.m_weaponData;
+                break;
+            case 4:
+                data = m_rightHand.m_weaponData;
+                break;
+        }
+
+        if(data is WeaponData)
+        {
+            WeaponData wData = data as WeaponData;
+            if(wData.abilityData != null)
+            {
+                m_abilityImage.gameObject.SetActive(true);
+                m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
+                m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
+
+                if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+                {
+                    m_abilityCooldownHeader.text = "Cooldown:";
+                }
+                else
+                {
+                    m_abilityCooldownHeader.text = "";
+                    m_abilityCooldownText.text = "";
+                }
             }
             else
             {
+                m_abilityImage.gameObject.SetActive(false);
+                m_abilityDescription.text = "";
                 m_abilityCooldownHeader.text = "";
                 m_abilityCooldownText.text = "";
             }
         }
-        else
+        else if(data is ItemData)
         {
+            ItemData iData = data as ItemData;
             m_abilityImage.sprite = m_rewardSlots[id].m_itemData.itemIcon;
             m_abilityCooldownHeader.text = "";
             m_abilityCooldownText.text = "";
+            m_abilityDescription.text = iData.description;
         }
     }
 
