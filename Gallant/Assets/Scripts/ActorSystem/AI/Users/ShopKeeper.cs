@@ -19,6 +19,7 @@ namespace ActorSystem.AI.Users
 
         private Interactable m_myInteractLogic;
 
+        private GameObject m_interactDisplay;
         private UI_Text m_keyboardInput;
         private UI_Image m_gamepadInput;
         private GameObject m_player;
@@ -43,15 +44,17 @@ namespace ActorSystem.AI.Users
             m_player = GameManager.Instance.m_player;
             m_keyboardInput = m_myBrain.m_ui.GetElement<UI_Text>("Keyboard");
             m_gamepadInput = m_myBrain.m_ui.GetElement<UI_Image>("Gamepad");
-
+            m_interactDisplay = m_keyboardInput.transform.parent.gameObject;
             m_myBrain.m_ui.GetElement<UI_Bar>("Health").gameObject.SetActive(false);
             
         }
 
         protected override void Update()
         {
-            m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
+            m_interactDisplay.SetActive(m_showUI);
+            m_keyboardInput.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
+
             m_myBrain.m_myOutline.SetEnabled(!m_hasGivenReward);
             if (m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
             {

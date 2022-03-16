@@ -62,6 +62,9 @@ public class RewardManager : Singleton<RewardManager>
     {
         EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
 
+        if(m_window.activeInHierarchy)
+            m_player.m_isDisabledInput = true;
+
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
@@ -111,10 +114,10 @@ public class RewardManager : Singleton<RewardManager>
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
 
+        m_player.m_isDisabledInput = true;
+
         if (level >= 0)
         {
-            m_player.m_isDisabledInput = true;
-
             //Generate a random selection of rewards
             List<ScriptableObject> rewards = new List<ScriptableObject>();
             switch (type)
@@ -294,6 +297,7 @@ public class RewardManager : Singleton<RewardManager>
     public void Hide()
     {
         m_window.SetActive(false);
+        m_player.m_isDisabledInput = false;
         m_select = -1;
     }
 
