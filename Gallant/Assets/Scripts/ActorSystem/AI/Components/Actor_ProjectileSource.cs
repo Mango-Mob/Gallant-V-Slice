@@ -20,6 +20,7 @@ namespace ActorSystem.AI.Components
         {
             GameObject proj = GameObject.Instantiate(data.projectile, target.transform.position, Quaternion.identity);
             proj.GetComponent<AreaEffect>().m_data = data;
+            proj.GetComponent<AreaEffect>().damage = data.baseDamage * mod;
         }
         public override void SetEnabled(bool status)
         {

@@ -46,7 +46,6 @@ namespace ActorSystem.AI.Users
             m_gamepadInput = m_myBrain.m_ui.GetElement<UI_Image>("Gamepad");
             m_interactDisplay = m_keyboardInput.transform.parent.gameObject;
             m_myBrain.m_ui.GetElement<UI_Bar>("Health").gameObject.SetActive(false);
-            
         }
 
         protected override void Update()

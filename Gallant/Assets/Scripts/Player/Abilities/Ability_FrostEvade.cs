@@ -67,7 +67,7 @@ public class Ability_FrostEvade : AbilityBase
     }
     public override void AbilityOnEndRoll()
     {
-        m_lastProjectile.GetComponent<Frostpath>().StartLife();
+        m_lastProjectile?.GetComponent<Frostpath>()?.StartLife();
     }
 }
 
