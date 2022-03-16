@@ -28,6 +28,9 @@ public class RewardManager : Singleton<RewardManager>
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
 
+    public InfoDisplay m_leftHand;
+    public InfoDisplay m_rightHand;
+
     private const float probFirstWeapon = 1.0f;
     private const float probSecondWeapon = 0.6666f;
     private const float probThirdWeapon = 0.05f;
