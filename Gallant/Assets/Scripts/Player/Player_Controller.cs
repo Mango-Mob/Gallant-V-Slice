@@ -49,7 +49,7 @@ public class Player_Controller : MonoBehaviour
     [HideInInspector] public UI_StatsMenu m_statsMenu;
 
     private bool m_godMode = false;
-
+    [SerializeField] private GameObject m_damageVFXPrefab;
 
     private void Awake()
     {
@@ -479,6 +479,9 @@ public class Player_Controller : MonoBehaviour
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
+        // Create VFX
+        if (m_damageVFXPrefab != null)
+            Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
 
         if (animatorCamera)
             animatorCamera.SetTrigger("Shake");
