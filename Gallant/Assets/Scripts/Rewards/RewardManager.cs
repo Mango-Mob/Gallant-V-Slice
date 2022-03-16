@@ -166,7 +166,7 @@ public class RewardManager : Singleton<RewardManager>
 
             for (int i = 0; i < m_rewardSlots.Length; i++)
             {
-
+                m_rewardSlots[i].GetComponent<Button>().interactable = true;
                 if (rewards[i].GetType() == typeof(WeaponData))
                 {
                     m_rewardSlots[i].LoadWeapon(rewards[i] as WeaponData);
@@ -239,11 +239,13 @@ public class RewardManager : Singleton<RewardManager>
 
     public void Select(int item)
     {      
-        m_select = item;
-
-        for (int i = 0; i < m_rewardSlots.Length; i++)
+        if(m_select != item)
         {
-            m_rewardSlots[i].GetComponentInParent<Button>().interactable = i != item;
+            m_select = item;
+            for (int i = 0; i < m_rewardSlots.Length; i++)
+            {
+                //m_rewardSlots[i].GetComponentInParent<Button>().interactable = i != item;
+            }
         }
     }
 
@@ -257,7 +259,7 @@ public class RewardManager : Singleton<RewardManager>
     public void Hide()
     {
         m_window.SetActive(false);
-        
+        m_select = -1;
     }
 
     public bool IsUniqueWeapon(List<ScriptableObject> list, WeaponData data)

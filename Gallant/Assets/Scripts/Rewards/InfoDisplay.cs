@@ -60,14 +60,10 @@ public class InfoDisplay : MonoBehaviour
 
     private void Start()
     {
-        if (IsADrop)
-        {
-            m_background.color = new Color(m_background.color.r, m_background.color.g, m_background.color.b, 1f);
-            m_foreground.color = new Color(m_foreground.color.r, m_foreground.color.g, m_foreground.color.b, 1f);
-        }
-
-        m_leftHand.SetActive(IsADrop);
-        m_rightHand.SetActive(IsADrop);
+        if(m_leftHand != null)
+            m_leftHand.SetActive(IsADrop);
+        if (m_rightHand != null)
+            m_rightHand.SetActive(IsADrop);
 
         m_itemDetailsLoc.SetActive(!IsAWeapon);
         m_weaponDetailsLoc.SetActive(IsAWeapon);
@@ -126,6 +122,8 @@ public class InfoDisplay : MonoBehaviour
         if(data.abilityData != null)
         {
             m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
+            m_abilityImageLoc.gameObject.SetActive(true);
+            m_abilityImageLoc.transform.parent.gameObject.SetActive(true);
 
             for (int i = 0; i < m_abilityStars.Length; i++)
             {
@@ -135,7 +133,7 @@ public class InfoDisplay : MonoBehaviour
         else
         {
             m_abilityImageLoc.gameObject.SetActive(false);
-
+            m_abilityImageLoc.transform.parent.gameObject.SetActive(false);
             for (int i = 0; i < m_abilityStars.Length; i++)
             {
                 m_abilityStars[i].gameObject.SetActive(false);
@@ -202,12 +200,17 @@ public class InfoDisplay : MonoBehaviour
         m_level.text = "Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString();
         m_itemImageLoc.sprite = data.itemIcon;
         m_itemDescription.text = data.description;
+
+        m_passiveLocation.SetActive(false);
     }
 
     public void ResetPickupTimer()
     {
-        m_leftBar.fillAmount = 0.0f;
-        m_rightBar.fillAmount = 0.0f;
+        if(IsADrop)
+        {
+            m_leftBar.fillAmount = 0.0f;
+            m_rightBar.fillAmount = 0.0f;
+        }
     }
 
     public void InitDisplayValues(WeaponData data, Hand loc)
@@ -270,7 +273,6 @@ public class InfoDisplay : MonoBehaviour
             Vector3 pos = UnityEngine.Random.insideUnitSphere;
             pos.y = 0;
             DroppedWeapon.CreateDroppedWeapon(playerController.transform.position + pos.normalized * 0.5f, m_weaponData);
-            RewardManager.Instance.Hide();
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
@@ -281,7 +283,8 @@ public class InfoDisplay : MonoBehaviour
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
-        }  
+        }
+        RewardManager.Instance.Hide();
     }
 
     private void CompareVariables(float a, float b, Text display)
