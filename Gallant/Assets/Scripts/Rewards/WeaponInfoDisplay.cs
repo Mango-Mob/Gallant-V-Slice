@@ -116,7 +116,13 @@ public class WeaponInfoDisplay : MonoBehaviour
 
             m_weaponImageLoc.sprite = data.weaponIcon;
 
-            string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+            //string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+
+            string taglist = WeaponData.GetTags(data.weaponType);
+            if (data.abilityData)
+                taglist += ", " + data.abilityData.tags;
+
+
             string[] tags = taglist.Split(',');
             List<TagDetails> activeTags = new List<TagDetails>();
             foreach (var tagDetail in m_allTags)

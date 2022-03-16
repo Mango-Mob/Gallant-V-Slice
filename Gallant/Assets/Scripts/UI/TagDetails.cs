@@ -13,6 +13,8 @@ public class TagDetails : MonoBehaviour
     public Color m_textColor;
     public uint m_fontSize = 20;
 
+    public float m_width { get { return m_tagTitle.Length* m_fontSize; } }
+
     // Update is called once per frame
     void Update()
     {
@@ -23,7 +25,7 @@ public class TagDetails : MonoBehaviour
         foreach (var text in GetComponentsInChildren<Text>())
         {
             text.text = m_tagTitle;
-            text.fontSize = (int)m_fontSize;
+            text.fontSize = (int) m_fontSize;
             text.color = m_textColor;
         }
     }

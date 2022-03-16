@@ -27,8 +27,6 @@ public class Combo : StateMachineBehaviour
         animator.SetBool("LeftCast", false);
         animator.SetBool("RightCast", false);
 
-        Debug.Log("Help");
-
         //animator.SetBool("LeftShield", false);
         //animator.SetBool("RightShield", false);
 

@@ -25,6 +25,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollDistanceMult = 8.0f;
     public float m_attackMoveSpeed = 0.4f;
     public float m_attackMoveSpeedLerpSpeed = 5.0f;
+    public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
     public bool m_isRolling { get; private set; } = false;
@@ -323,8 +324,9 @@ public class Player_Movement : MonoBehaviour
                 playerController.animator.SetFloat("Vertical", 0);
             }
 
-            if (_roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
+            if (!playerController.playerResources.m_isExhausted && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
+                playerController.playerResources.ChangeStamina(-m_rollCost);
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
 
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);

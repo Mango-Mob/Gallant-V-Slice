@@ -306,6 +306,55 @@ public class InputManager : SingletonPersistent<InputManager>
         return null;
     }
 
+    public string GetBindString(string _id)
+    {
+        Bind[] result = null;
+        if (m_binds.ContainsKey(_id))
+            result = m_binds[_id];
+
+        if(result != null)
+        {
+            foreach (var bind in result)
+            {
+                if (bind.enumType == typeof(KeyType))
+                {
+                    return GetKeyString((KeyType)bind.value);
+                }
+                else if (bind.enumType == typeof(MouseButton))
+                {
+                    return GetMouseButtonString((MouseButton)bind.value);
+                }
+            }
+        }
+        
+        return "";
+    }
+
+    public Sprite GetBindImage(string _id)
+    {
+        Bind[] result = null;
+        if (m_binds.ContainsKey(_id))
+            result = m_binds[_id];
+
+        if (result != null)
+        {
+            foreach (var bind in result)
+            {
+                if (bind.enumType == typeof(ButtonType))
+                {
+                    return GetGamepadSprite((ButtonType)bind.value);
+                }
+                else if (bind.enumType == typeof(StickType))
+                {
+                    return GetGameStickSprite((StickType)bind.value);
+                }
+            }
+
+        }
+
+        return null;
+    }
+
     public bool DoesBindContainNull(string _id)
     {
         Bind[] list;

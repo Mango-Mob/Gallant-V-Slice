@@ -41,7 +41,7 @@ public class UI_PickupDisplay : UI_Element
     public HorizontalLayoutGroup m_tagRowPrefab;
     public Transform m_tagRowTransform;
     public uint m_tagFontSize = 18;
-
+    public float m_tagWidth = 200;
     [SerializeField] private TagDetails[] m_allTags;
 
     private bool m_gamepadButtons = true;
@@ -74,7 +74,12 @@ public class UI_PickupDisplay : UI_Element
         m_levelText.text = "Level: " + thisWeapon.m_level;
         m_weaponImageLoc.sprite = thisWeapon.weaponIcon;
 
-        string taglist = WeaponData.GetTags(thisWeapon.weaponType) + ", " + thisWeapon.abilityData.tags;
+        //string taglist = WeaponData.GetTags(thisWeapon.weaponType) + ", " + thisWeapon.abilityData.tags;
+
+        string taglist = WeaponData.GetTags(thisWeapon.weaponType);
+        if (thisWeapon.abilityData)
+            taglist += ", " + thisWeapon.abilityData.tags;
+
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();
         foreach (var tagDetail in m_allTags)
@@ -101,12 +106,11 @@ public class UI_PickupDisplay : UI_Element
         float totalWidth = 0; //right spacing
         foreach (var item in tags)
         {
-            totalWidth += (item.transform as RectTransform).rect.width;
-            totalWidth += 20; //left spacing + padding
+            totalWidth += item.m_width;
         }
 
         //Calculate how many rows there are:
-        int rows = Mathf.CeilToInt(totalWidth / (m_tagRowTransform as RectTransform).rect.width); // div maxWidth
+        int rows = Mathf.CeilToInt(totalWidth / m_tagWidth); // div maxWidth
         List<GameObject> m_rows = new List<GameObject>();
         for (int i = 0; i < rows; i++)
         {
@@ -115,15 +119,14 @@ public class UI_PickupDisplay : UI_Element
         }
 
         //Generate rows:
-        float current = (m_tagRowTransform as RectTransform).rect.width;
+        float current = m_tagWidth;
         while (totalWidth > 0 && tags.Count > 0)
         {
-            float width = (tags[0].transform as RectTransform).rect.width + 20;
-            totalWidth -= width;
-            current -= width;
+            totalWidth -= tags[0].m_width;
+            current -= tags[0].m_width;
             if (current < 0)
             {
-                current = (m_tagRowTransform as RectTransform).rect.width;
+                current = m_tagWidth;
                 m_rows.RemoveAt(0);
             }
             GameObject tag = Instantiate(tags[0].gameObject, m_rows[0].transform);

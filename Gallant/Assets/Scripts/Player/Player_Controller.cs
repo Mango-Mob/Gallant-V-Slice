@@ -46,8 +46,10 @@ public class Player_Controller : MonoBehaviour
     private bool m_hasSwappedTarget = false;
 
     private Animator animatorCamera;
-    public UI_StatsMenu m_statsMenu;
+    [HideInInspector] public UI_StatsMenu m_statsMenu;
 
+    private bool m_godMode = false;
+    [SerializeField] private GameObject m_damageVFXPrefab;
 
     private void Awake()
     {
@@ -72,7 +74,6 @@ public class Player_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         LoadPlayerInfo();
     }
 
@@ -304,7 +305,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_SEVEN))
         {
-            playerStats.AddEffect(ItemEffect.ABILITY_CD);
+            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_EIGHT))
         {
@@ -474,9 +475,13 @@ public class Player_Controller : MonoBehaviour
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
         Debug.Log($"Player is damaged: {_damage} points of health.");
-        playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
+        if (!m_godMode)
+            playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
         animator.SetTrigger("HitPlayer");
+        // Create VFX
+        if (m_damageVFXPrefab != null)
+            Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
 
         if (animatorCamera)
             animatorCamera.SetTrigger("Shake");
@@ -500,18 +505,18 @@ public class Player_Controller : MonoBehaviour
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();
-            if (m_inkmanClass)
-                playerClassArmour.SetClassArmour(m_inkmanClass);
-            else
-                playerSkills.EvaluateSkills();
 
             playerStats.EvaluateEffects();
         }
-        else
-            playerSkills.EvaluateSkills();
+        playerSkills.EvaluateSkills();
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
+
+        if (m_inkmanClass)
+            playerClassArmour.SetClassArmour(m_inkmanClass.inkmanClass);
+        else
+            playerClassArmour.SetClassArmour(InkmanClass.GENERAL);
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
@@ -538,7 +543,7 @@ public class Player_Controller : MonoBehaviour
         playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
         playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
 
-        playerClassArmour.SetClassArmour(_class);
+        playerClassArmour.SetClassArmour(_class.inkmanClass);
 
         playerSkills.EvaluateSkills();
     }    
@@ -562,5 +567,10 @@ public class Player_Controller : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SetGodMode(bool _active)
+    {
+        m_godMode = _active;
     }
 }
