@@ -230,7 +230,8 @@ public class Player_Resources : MonoBehaviour
         if (m_adrenaline >= 1)
         {
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
-            ChangeHealth(m_adrenalineHeal);
+            Debug.Log(m_adrenalineHeal * m_maxHealth * playerController.playerStats.m_maximumHealth);
+            ChangeHealth(m_adrenalineHeal * (m_maxHealth / 100.0f) * playerController.playerStats.m_maximumHealth);
             ChangeAdrenaline(-1);
 
             // Create VFX
