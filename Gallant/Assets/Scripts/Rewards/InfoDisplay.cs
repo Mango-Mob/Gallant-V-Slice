@@ -17,6 +17,7 @@ public class InfoDisplay : MonoBehaviour
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
     public Color m_lesserColor = Color.red;
+    public Color selectColor;
     public AudioClip m_collectAudio;
 
     [Header("General Information")]
@@ -266,6 +267,12 @@ public class InfoDisplay : MonoBehaviour
 
         return false;
     }
+
+    public void Select(bool status)
+    {
+        m_background.color = (status) ? selectColor : Color.white;
+    }
+
     public void GiveReward()
     {
         if(IsAWeapon)

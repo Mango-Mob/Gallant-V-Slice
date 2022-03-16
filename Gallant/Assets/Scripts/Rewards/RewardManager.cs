@@ -68,7 +68,6 @@ public class RewardManager : Singleton<RewardManager>
             Show(1);
         }
 #endif
-
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.Instance.isInGamepadMode && m_select != -1);
 
@@ -109,6 +108,9 @@ public class RewardManager : Singleton<RewardManager>
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_window.SetActive(true);
+        m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
+        m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
+
         if (level >= 0)
         {
             m_player.m_isDisabledInput = true;
@@ -247,7 +249,7 @@ public class RewardManager : Singleton<RewardManager>
             m_select = item;
             for (int i = 0; i < m_rewardSlots.Length; i++)
             {
-                //m_rewardSlots[i].GetComponentInParent<Button>().interactable = i != item;
+                m_rewardSlots[i].Select(i == item);
             }
         }
     }
