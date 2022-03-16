@@ -7,17 +7,14 @@ public class Player_ClassArmour : MonoBehaviour
     public Player_Controller playerController { private set; get; }
 
     [Header("Slots")]
-    public GameObject m_headSlot;
-    private MeshRenderer m_headMeshRenderer;
-    private MeshFilter m_headMeshFilter;
+    public GameObject m_knightClass;
+    public GameObject m_mageClass;
+    public GameObject m_hunterClass;
 
     // Start is called before the first frame update
     private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
-
-        m_headMeshRenderer = m_headSlot.GetComponentInChildren<MeshRenderer>();
-        m_headMeshFilter = m_headSlot.GetComponentInChildren<MeshFilter>();
     }
 
     // Update is called once per frame
@@ -26,9 +23,25 @@ public class Player_ClassArmour : MonoBehaviour
         
     }
 
-    public void SetClassArmour(ClassData _class)
+    public void SetClassArmour(InkmanClass _class)
     {
-        m_headMeshRenderer.material = _class.helmetMaterial;
-        m_headMeshFilter.mesh = _class.helmetModel;
+        m_knightClass.SetActive(false);
+        m_mageClass.SetActive(false);
+        m_hunterClass.SetActive(false);
+
+        switch (_class)
+        {
+            case InkmanClass.KNIGHT:
+                m_knightClass.SetActive(true);
+                break;
+            case InkmanClass.MAGE:
+                m_mageClass.SetActive(true);
+                break;
+            case InkmanClass.HUNTER:
+                m_hunterClass.SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -17,6 +17,7 @@ public class InfoDisplay : MonoBehaviour
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
     public Color m_lesserColor = Color.red;
+    public Color selectColor;
     public AudioClip m_collectAudio;
 
     [Header("General Information")]
@@ -60,14 +61,10 @@ public class InfoDisplay : MonoBehaviour
 
     private void Start()
     {
-        if (IsADrop)
-        {
-            m_background.color = new Color(m_background.color.r, m_background.color.g, m_background.color.b, 1f);
-            m_foreground.color = new Color(m_foreground.color.r, m_foreground.color.g, m_foreground.color.b, 1f);
-        }
-
-        m_leftHand.SetActive(IsADrop);
-        m_rightHand.SetActive(IsADrop);
+        if(m_leftHand != null)
+            m_leftHand.SetActive(IsADrop);
+        if (m_rightHand != null)
+            m_rightHand.SetActive(IsADrop);
 
         m_itemDetailsLoc.SetActive(!IsAWeapon);
         m_weaponDetailsLoc.SetActive(IsAWeapon);
@@ -110,19 +107,38 @@ public class InfoDisplay : MonoBehaviour
         m_weaponData = data;
 
         if (data == null)
+        {
+            gameObject.SetActive(false);
             return;
+        }
 
+        gameObject.SetActive(true);
         m_itemDetailsLoc.SetActive(!IsAWeapon);
         m_weaponDetailsLoc.SetActive(IsAWeapon);
 
         m_title.text = data.weaponName;
         m_level.text = "Level: " + (data.m_level + 1).ToString();
         m_weaponImageLoc.sprite = data.weaponIcon;
-        m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
 
-        for (int i = 0; i < m_abilityStars.Length; i++)
+        if(data.abilityData != null)
         {
-            m_abilityStars[i].gameObject.SetActive(i < data.abilityData.starPowerLevel);
+            m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
+            m_abilityImageLoc.gameObject.SetActive(true);
+            m_abilityImageLoc.transform.parent.gameObject.SetActive(true);
+
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(i < data.abilityData.starPowerLevel);
+            }
+        }
+        else
+        {
+            m_abilityImageLoc.gameObject.SetActive(false);
+            m_abilityImageLoc.transform.parent.gameObject.SetActive(false);
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(false);
+            }
         }
 
         playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
@@ -134,7 +150,10 @@ public class InfoDisplay : MonoBehaviour
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
 
-        string taglist = WeaponData.GetTags(data.weaponType) + ", " + data.abilityData.tags;
+        string taglist = WeaponData.GetTags(data.weaponType) + ", ";
+        if(data.abilityData != null)
+            taglist += data.abilityData.tags;
+
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();
         foreach (var tagDetail in m_allTags)
@@ -182,12 +201,17 @@ public class InfoDisplay : MonoBehaviour
         m_level.text = "Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString();
         m_itemImageLoc.sprite = data.itemIcon;
         m_itemDescription.text = data.description;
+
+        m_passiveLocation.SetActive(false);
     }
 
     public void ResetPickupTimer()
     {
-        m_leftBar.fillAmount = 0.0f;
-        m_rightBar.fillAmount = 0.0f;
+        if(IsADrop)
+        {
+            m_leftBar.fillAmount = 0.0f;
+            m_rightBar.fillAmount = 0.0f;
+        }
     }
 
     public void InitDisplayValues(WeaponData data, Hand loc)
@@ -243,6 +267,12 @@ public class InfoDisplay : MonoBehaviour
 
         return false;
     }
+
+    public void Select(bool status)
+    {
+        m_background.color = (status) ? selectColor : Color.white;
+    }
+
     public void GiveReward()
     {
         if(IsAWeapon)
@@ -250,7 +280,6 @@ public class InfoDisplay : MonoBehaviour
             Vector3 pos = UnityEngine.Random.insideUnitSphere;
             pos.y = 0;
             DroppedWeapon.CreateDroppedWeapon(playerController.transform.position + pos.normalized * 0.5f, m_weaponData);
-            RewardManager.Instance.Hide();
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
@@ -261,7 +290,8 @@ public class InfoDisplay : MonoBehaviour
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
-        }  
+        }
+        RewardManager.Instance.Hide();
     }
 
     private void CompareVariables(float a, float b, Text display)
