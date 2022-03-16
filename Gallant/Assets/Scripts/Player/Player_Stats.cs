@@ -164,7 +164,13 @@ public class Player_Stats : MonoBehaviour
                     m_damageResistance = effect.Key.GetEffectValue(effect.Value);
                     break;
                 case ItemEffect.MAX_HEALTH_INCREASE:
+                    float currentHealth = m_maximumHealth;
                     m_maximumHealth = effect.Key.GetEffectValue(effect.Value);
+
+                    float healAmount = (m_maximumHealth - currentHealth) * playerController.playerResources.m_maxHealth;
+
+                    if (healAmount > 0.0f)
+                        playerController.playerResources.ChangeHealth(healAmount);
                     break;
                 default:
                     Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
