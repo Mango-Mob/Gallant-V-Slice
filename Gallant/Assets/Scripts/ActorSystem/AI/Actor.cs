@@ -97,7 +97,7 @@ namespace ActorSystem.AI
                 ActorManager.Instance.UnSubscribe(this);
         }
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         { 
             GetComponent<Actor_Brain>().DrawGizmos();
         }
@@ -106,6 +106,9 @@ namespace ActorSystem.AI
         {
             if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
                 m_myBrain.m_legs.KnockBack(force);
+
+            if (m_myBrain.m_ragDoll != null && m_myBrain.m_ragDoll.enabled)
+                m_myBrain.m_ragDoll.velocity = force * 3;
         }
 
         public void SetTarget(GameObject _target)
@@ -235,18 +238,6 @@ namespace ActorSystem.AI
             else if (m_myBrain.m_legs != null)
             {
                 Debug.LogError("TODO");
-                //NavMeshHit hit;
-                //SetState(m_myData.m_initialState);
-                //if (NavMesh.FindClosestEdge(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.areaMask))
-                //{
-                //    var end = hit.position;
-                //    if (NavMesh.SamplePosition(m_myBrain.m_legs.m_agent.nextPosition, out hit, m_myBrain.m_legs.m_agent.radius * 4f, 1 << NavMesh.GetAreaFromName("Water")))
-                //    {
-                //        var start = hit.position;
-                //
-                //        m_mySpawn.StartSpawn(start, end, start.DirectionTo(end));
-                //    }
-                //}
             }
         }
     }

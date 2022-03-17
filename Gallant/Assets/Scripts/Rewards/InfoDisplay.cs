@@ -178,7 +178,7 @@ public class InfoDisplay : MonoBehaviour
         activeTags.Sort(TagDetails.Compare);
         foreach (var tag in activeTags)
         {
-            Instantiate(tag.gameObject, m_tagLoc.transform);
+            Instantiate(tag.gameObject, m_tagLoc.transform).SetActive(true);
         }
     }
 
