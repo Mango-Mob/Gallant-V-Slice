@@ -79,7 +79,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + 1);
+            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + 50);
         }
 #endif
 

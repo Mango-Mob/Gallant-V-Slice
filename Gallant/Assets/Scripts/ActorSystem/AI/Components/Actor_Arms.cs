@@ -95,7 +95,7 @@ namespace ActorSystem.AI.Components
         {
             if(_target.gameObject.layer == LayerMask.NameToLayer("Player"))
             {
-                _target.GetComponent<Player_Controller>()?.DamagePlayer(m_myData[m_activeAttack.Value].baseDamage * (m_baseDamageMod), gameObject);
+                _target.GetComponent<Player_Controller>()?.DamagePlayer(m_myData[m_activeAttack.Value].baseDamage * (m_baseDamageMod), CombatSystem.DamageType.Physical, gameObject);
             }
         }
 

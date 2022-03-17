@@ -15,7 +15,11 @@ public class DropSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, WeaponData.GenerateSpecificWeapon(m_weaponLevel, m_weaponType, m_abilityType, m_abilityPowerLevel));
+        WeaponData weaponData = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, WeaponData.GenerateSpecificWeapon(m_weaponLevel, m_weaponType, m_abilityType, m_abilityPowerLevel)).GetComponentInChildren<DroppedWeapon>().m_weaponData;
+        InfoDisplay display = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, WeaponData.GenerateSpecificWeapon(m_weaponLevel, m_weaponType, m_abilityType, m_abilityPowerLevel)).GetComponentInChildren<InfoDisplay>();
+
+        if (display != null & weaponData != null)
+            display.LoadWeapon(weaponData);
     }
 
     public void Configure(int _level, Weapon _weapon, Ability _ability, int _abilityLevel)
