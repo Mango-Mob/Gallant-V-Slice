@@ -13,7 +13,8 @@ public class GameManager : Singleton<GameManager>
     public static float deltaLevel = 1/2f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
-    
+    public static bool m_firstTime = false;
+
     public GameObject m_player;
     public Camera m_activeCamera;
     public bool enableTimer = false;
