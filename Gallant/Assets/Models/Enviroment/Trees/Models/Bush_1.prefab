@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 405050}
-  - component: {fileID: 19388122}
   - component: {fileID: 3373892}
   - component: {fileID: 2309914}
   m_Layer: 0
@@ -33,15 +32,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!193 &19388122
-Tree:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 155120}
-  m_SpeedTreeWindAsset: {fileID: 0}
-  m_TreeData: {fileID: 11465608}
 --- !u!33 &3373892
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -100,9 +90,10 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Optimized Bark Material
-  m_Shader: {fileID: 4800000, guid: 0f4122b9a743b744abe2fb6a0a88868b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: d6763a28ff379084f9170707c5c0eb05,
+    type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -111,6 +102,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_9ed26f1e692440ffb2ff3e1417d398da:
+        m_Texture: {fileID: 2800000, guid: c36503d17711cf24eb32195e94322509, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -131,12 +126,26 @@ Material:
         m_Texture: {fileID: 2800000, guid: 472037337da51c949afe20680dea4703, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Cull: 2
     - _Cutoff: 0.3
     - _SquashAmount: 1
     - _WindQuality: 0
     m_Colors:
+    - Vector2_b284111f2bdc4f69af9416de1f02da54: {r: 1, g: 0, b: 0, a: 0}
+    - Vector4_3ccd3f8465ac49df8bc69aecf8c30135: {r: 1, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
@@ -151,18 +160,22 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Optimized Leaf Material
-  m_Shader: {fileID: 4800000, guid: 0f4122b9a743b744abe2fb6a0a88868b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: d6763a28ff379084f9170707c5c0eb05,
+    type: 3}
   m_ShaderKeywords: GEOM_TYPE_LEAF
-  m_LightmapFlags: 5
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
-  stringTagMap:
-    RenderType: TreeTransparentCutout
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_9ed26f1e692440ffb2ff3e1417d398da:
+        m_Texture: {fileID: 2800000, guid: 1e923be4bdd97e34498f0f11998dc440, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -187,6 +200,18 @@ Material:
         m_Texture: {fileID: 2800000, guid: 472037337da51c949afe20680dea4703, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Cull: 0
     - _Cutoff: 0.625
@@ -196,6 +221,8 @@ Material:
     - _TranslucencyViewDependency: 0.441
     - _WindQuality: 3
     m_Colors:
+    - Vector2_b284111f2bdc4f69af9416de1f02da54: {r: 1, g: 0, b: 0, a: 0}
+    - Vector4_3ccd3f8465ac49df8bc69aecf8c30135: {r: 1, g: 0, b: 0, a: 0}
     - _Color: {r: 0.5820286, g: 1, b: 0.3820755, a: 1}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
     - _TranslucencyColor: {r: 0.009407449, g: 0.6397059, b: 0.35281137, a: 1}
