@@ -124,14 +124,17 @@ public class Player_Controller : MonoBehaviour
             standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
 
+        armWeight = Mathf.Clamp(armWeight, 0.0f, 1.0f);
+        standArmWeight = Mathf.Clamp(standArmWeight, 0.0f, 1.0f);
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), Mathf.Clamp(standArmWeight, 0.0f, 1.0f));
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), Mathf.Clamp(standArmWeight, 0.0f, 1.0f));
+        Debug.Log(standArmWeight);
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), standArmWeight);
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), standArmWeight);
 
-        animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
-        animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));
+        animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
+        animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
 
         // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.Instance.IsBindDown("Roll", gamepadID), Time.deltaTime);
