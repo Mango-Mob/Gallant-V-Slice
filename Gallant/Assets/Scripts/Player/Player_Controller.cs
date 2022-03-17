@@ -269,7 +269,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            DamagePlayer(20.0f, FindObjectOfType<Actor>().gameObject, false);
+            DamagePlayer(20.0f, CombatSystem.DamageType.True, FindObjectOfType<Actor>().gameObject, false);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -454,10 +454,22 @@ public class Player_Controller : MonoBehaviour
 
         return dot >= Mathf.Cos(_angle * Mathf.Deg2Rad);
     }
-    public void DamagePlayer(float _damage, GameObject _attacker = null, bool _bypassInvincibility = false)
+    public void DamagePlayer(float _damage, CombatSystem.DamageType _damageType, GameObject _attacker = null, bool _bypassInvincibility = false)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
+
+        float resistance = 0;
+        if (_damageType == CombatSystem.DamageType.Ability)
+        {
+            resistance += playerSkills.m_magicalDefenceIncrease;
+        }
+        else if (_damageType == CombatSystem.DamageType.Ability)
+        {
+            resistance += playerSkills.m_physicalDefenceIncrease;
+        }
+        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f));
+
 
         if (playerAttack.m_isBlocking && _attacker != null)
         {
