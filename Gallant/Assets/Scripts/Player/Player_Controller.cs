@@ -127,6 +127,9 @@ public class Player_Controller : MonoBehaviour
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), Mathf.Clamp(standArmWeight, 0.0f, 1.0f));
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), Mathf.Clamp(standArmWeight, 0.0f, 1.0f));
+
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), Mathf.Clamp(armWeight, 0.0f, 1.0f));
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), Mathf.Clamp(standArmWeight, 0.0f, 0.9f));
 
