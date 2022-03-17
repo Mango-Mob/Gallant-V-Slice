@@ -17,8 +17,18 @@ public class State_Dead : State
 
         m_myActor.SetTargetVelocity(Vector3.zero);
         m_myActor.m_myBrain.m_legs.SetEnabled(false);
-        m_myActor.m_myBrain.m_animator?.PlayAnimation("Death");
-        m_myActor.m_myBrain?.m_animator.SetTrigger("Cancel");
+
+         if(m_myActor.m_myBrain.m_ragDoll == null)
+        {
+            m_myActor.m_myBrain.m_animator?.PlayAnimation("Death");
+            m_myActor.m_myBrain?.m_animator.SetTrigger("Cancel");
+        }
+        else
+        {
+            m_myActor.m_myBrain.m_animator.SetEnabled(false);
+            m_myActor.m_myBrain.m_ragDoll.EnableRagdoll();
+        }
+        
         m_myActor.m_myBrain.m_material.StartDisolve();
     }
 

@@ -40,7 +40,7 @@ namespace ActorSystem.AI.Components
             if (m_isDisolving && m_myMesh != null)
             {
                 m_timer += Time.deltaTime;
-                float maxTime = 4.5f;
+                float maxTime = 7.5f;
                 float disolveVal = 1.0f - m_timer / maxTime;
 
                 if (m_hit == null)

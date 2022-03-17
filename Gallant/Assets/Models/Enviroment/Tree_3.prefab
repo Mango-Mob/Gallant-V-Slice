@@ -65,11 +65,12 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 989073af466c8dd4d8ffb418eaa08da1, type: 2}
-  - {fileID: 2100000, guid: 989073af466c8dd4d8ffb418eaa08da1, type: 2}
+  - {fileID: 2167218}
+  - {fileID: 2181844}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,6 +91,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!21 &2167218
 Material:
   serializedVersion: 6
@@ -128,6 +130,7 @@ Material:
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!21 &2181844
 Material:
   serializedVersion: 6
@@ -174,6 +177,7 @@ Material:
     - _TranslucencyColor: {r: 0.9044118, g: 0.77801424, b: 0.5519572, a: 1}
     - _TreeInstanceColor: {r: 1, g: 1, b: 1, a: 1}
     - _TreeInstanceScale: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!43 &4344442
 Mesh:
   m_ObjectHideFlags: 0
@@ -344,6 +348,7 @@ Mesh:
   m_MeshMetrics[1]: 1
   m_MeshOptimizationFlags: -1
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
@@ -572,7 +577,7 @@ MonoBehaviour:
     childGroupIDs: 41000000d2280000
     lodQualityMultiplier: 2
     geometryMode: 0
-    materialBranch: {fileID: 0}
+    materialBranch: {fileID: 2100000, guid: 5b349d7629fc25b48b85f02ec7ad06fe, type: 2}
     materialBreak: {fileID: 0}
     materialFrond: {fileID: 0}
     height: {x: 10, y: 15}
@@ -828,7 +833,7 @@ MonoBehaviour:
     childGroupIDs: 7d0000000d1c0000fa200000
     lodQualityMultiplier: 1.463
     geometryMode: 0
-    materialBranch: {fileID: 0}
+    materialBranch: {fileID: 2100000, guid: 5b349d7629fc25b48b85f02ec7ad06fe, type: 2}
     materialBreak: {fileID: 0}
     materialFrond: {fileID: 0}
     height: {x: 3.3288765, y: 8.328873}
@@ -1066,7 +1071,7 @@ MonoBehaviour:
     childGroupIDs: 8a000000
     lodQualityMultiplier: 1
     geometryMode: 0
-    materialBranch: {fileID: 0}
+    materialBranch: {fileID: 2100000, guid: 5b349d7629fc25b48b85f02ec7ad06fe, type: 2}
     materialBreak: {fileID: 0}
     materialFrond: {fileID: 0}
     height: {x: 3.328877, y: 4.126059}
@@ -1304,7 +1309,7 @@ MonoBehaviour:
     childGroupIDs: d4280000
     lodQualityMultiplier: 1
     geometryMode: 0
-    materialBranch: {fileID: 0}
+    materialBranch: {fileID: 2100000, guid: 5b349d7629fc25b48b85f02ec7ad06fe, type: 2}
     materialBreak: {fileID: 0}
     materialFrond: {fileID: 0}
     height: {x: 10, y: 15}
@@ -1542,7 +1547,7 @@ MonoBehaviour:
     childGroupIDs: ba290000f3280000
     lodQualityMultiplier: 1
     geometryMode: 0
-    materialBranch: {fileID: 0}
+    materialBranch: {fileID: 2100000, guid: 5b349d7629fc25b48b85f02ec7ad06fe, type: 2}
     materialBreak: {fileID: 0}
     materialFrond: {fileID: 0}
     height: {x: 3.328877, y: 4.126059}
@@ -1780,8 +1785,8 @@ MonoBehaviour:
     parentGroupID: 125
     childGroupIDs: 
     geometryMode: 0
-    materialLeaf: {fileID: 0}
-    instanceMesh: {fileID: 0}
+    materialLeaf: {fileID: 2100000, guid: 5b1437911d939484296e566f429a91ca, type: 2}
+    instanceMesh: {fileID: 157344, guid: af137ba2efca8ca468332cefb3836b4e, type: 2}
     size: {x: 1.0269573, y: 1.2642983}
     perpendicularAlign: 0.608
     horizontalAlign: 0.141
@@ -1886,8 +1891,8 @@ MonoBehaviour:
     parentGroupID: 65
     childGroupIDs: 
     geometryMode: 1
-    materialLeaf: {fileID: 0}
-    instanceMesh: {fileID: 0}
+    materialLeaf: {fileID: 2100000, guid: 5b1437911d939484296e566f429a91ca, type: 2}
+    instanceMesh: {fileID: 157344, guid: af137ba2efca8ca468332cefb3836b4e, type: 2}
     size: {x: 1.0574577, y: 1.2229314}
     perpendicularAlign: 0.862
     horizontalAlign: 0.324
@@ -1983,8 +1988,8 @@ MonoBehaviour:
     parentGroupID: 65
     childGroupIDs: 
     geometryMode: 0
-    materialLeaf: {fileID: 0}
-    instanceMesh: {fileID: 0}
+    materialLeaf: {fileID: 2100000, guid: 5629ca60392acc64baf518b23f23d723, type: 2}
+    instanceMesh: {fileID: 157344, guid: af137ba2efca8ca468332cefb3836b4e, type: 2}
     size: {x: 0.8293214, y: 1.13853}
     perpendicularAlign: 0.841
     horizontalAlign: 0.486
@@ -2089,8 +2094,8 @@ MonoBehaviour:
     parentGroupID: 10452
     childGroupIDs: 
     geometryMode: 1
-    materialLeaf: {fileID: 0}
-    instanceMesh: {fileID: 0}
+    materialLeaf: {fileID: 2100000, guid: 5b1437911d939484296e566f429a91ca, type: 2}
+    instanceMesh: {fileID: 157344, guid: af137ba2efca8ca468332cefb3836b4e, type: 2}
     size: {x: 1.0709329, y: 1.2364067}
     perpendicularAlign: 0.862
     horizontalAlign: 0.324
@@ -2186,8 +2191,8 @@ MonoBehaviour:
     parentGroupID: 10452
     childGroupIDs: 
     geometryMode: 0
-    materialLeaf: {fileID: 0}
-    instanceMesh: {fileID: 0}
+    materialLeaf: {fileID: 2100000, guid: 5629ca60392acc64baf518b23f23d723, type: 2}
+    instanceMesh: {fileID: 157344, guid: af137ba2efca8ca468332cefb3836b4e, type: 2}
     size: {x: 0.8966973, y: 1.2059058}
     perpendicularAlign: 0.841
     horizontalAlign: 0.486
