@@ -23,16 +23,22 @@ public class TutorialManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Vector3.Distance(m_guide.transform.position, m_tutorialPositions[current].position) < 1.5f)
+        if(Vector3.Distance(m_guide.transform.position, m_tutorialPositions[current].position) < 0.5f)
         {
             m_guide.SetTargetOrientaion(m_tutorialPositions[current].position + m_tutorialPositions[current].forward);
+            m_guide.m_myBrain.m_myOutline.enabled = true;
+        }
+        else
+        {
+            m_guide.SetTargetOrientaion(m_guide.transform.position + m_guide.m_myBrain.m_legs.velocity.normalized);
         }
     }
 
     public void TutorialOne()
     {
         current++;
-        m_guide.SetTargetLocation(m_tutorialPositions[current].position, true);
+        m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+        m_guide.m_myBrain.m_myOutline.enabled = false;
     }
 
     private void OnDrawGizmos()

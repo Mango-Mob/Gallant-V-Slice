@@ -51,7 +51,6 @@ namespace ActorSystem.AI.Users
         {
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
-            m_myBrain.m_myOutline.SetEnabled(true);
 
             if (m_showUI)
             {
