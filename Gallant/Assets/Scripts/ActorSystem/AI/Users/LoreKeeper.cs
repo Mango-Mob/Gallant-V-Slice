@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace ActorSystem.AI.Users
@@ -13,9 +14,8 @@ namespace ActorSystem.AI.Users
         [Header("~ LoreKeeper ~")]
         public TextAsset m_dialog;
         public string m_nextScene = "";
-        public float m_disableDistance;
         public float m_idealDistance = 1.5f;
-        private bool m_hasGivenReward = false;
+        public UnityEvent m_result;
         
         private Interactable m_myInteractLogic;
 
@@ -51,16 +51,7 @@ namespace ActorSystem.AI.Users
         {
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
-            m_myBrain.m_myOutline.SetEnabled(!m_hasGivenReward);
-
-            if (m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
-            {
-                m_myBrain.enabled = false;
-            }
-            else if (!m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) < m_disableDistance)
-            {
-                m_myBrain.enabled = true;
-            }
+            m_myBrain.m_myOutline.SetEnabled(true);
 
             if (m_showUI)
             {
@@ -73,19 +64,11 @@ namespace ActorSystem.AI.Users
         public void Interact()
         {
             DialogManager.Instance.LoadDialog(m_dialog);
-            if (!m_hasGivenReward)
-            {
-                DialogManager.Instance.m_interact = new UnityEngine.Events.UnityEvent();
-                DialogManager.Instance.m_interact.AddListener(LoadNextScene);
-            }
+
+            DialogManager.Instance.m_interact = m_result;
+
             GetComponentInChildren<Interactable>().m_isReady = false;
             DialogManager.Instance.Show();
-        }
-
-        private void LoadNextScene()
-        {
-            DialogManager.Instance.Hide();
-            LevelManager.Instance.LoadNewLevel(m_nextScene, LevelManager.Transition.CROSSFADE);
         }
 
         private void UpdateDisplay()
