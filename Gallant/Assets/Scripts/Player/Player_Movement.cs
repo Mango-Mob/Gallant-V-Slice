@@ -324,7 +324,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.animator.SetFloat("Vertical", 0);
             }
 
-            if (playerController.playerResources.m_stamina >= m_rollCost && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
+            if (!playerController.playerResources.m_isExhausted && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 playerController.playerResources.ChangeStamina(-m_rollCost);
                 //playerController.playerAudioAgent.PlayRoll(); // Audio
