@@ -43,7 +43,7 @@ public class ProjectileObject : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
-            player.DamagePlayer(m_damage, gameObject);
+            player.DamagePlayer(m_damage, CombatSystem.DamageType.Physical, gameObject);
             AttackData.ApplyEffect(player, transform, m_damageDetails.effectAfterwards, m_damageDetails.effectPower);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
 

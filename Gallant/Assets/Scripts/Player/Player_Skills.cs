@@ -82,10 +82,10 @@ public class Player_Skills : MonoBehaviour
 
         switch (skillID)
         {
-            case "abilDefence":
+            case "abilDefence": // Added 
                 m_magicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "defenceIncrease":
+            case "defenceIncrease": // Added
                 m_physicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 m_magicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
@@ -104,20 +104,20 @@ public class Player_Skills : MonoBehaviour
             case "moveSpeedIncrease": // Added
                 m_moveSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "outOfCombatSpeedIncrease":
+            case "outOfCombatSpeedIncrease": // Added
                 m_outOfCombatSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "phyDefence":
+            case "phyDefence": // Added
                 m_physicalDefenceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "rollDistance": // Added
+            case "rollDistanceIncrease": // Added
                 m_rollDistanceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
-            case "stunDecrease":
+            case "stunDecrease": // Added
                 m_stunDecrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
             default:
-                Debug.LogWarning($"No case for the skill named {_skill}.");
+                Debug.LogWarning($"No case for the skill named {skillID}.");
                 break;
         }
     }

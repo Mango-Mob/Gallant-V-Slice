@@ -95,7 +95,7 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
-            playerController.DamagePlayer(Time.deltaTime * m_lavaDamage);
+            playerController.DamagePlayer(Time.deltaTime * m_lavaDamage, CombatSystem.DamageType.True);
         }
 
         if (m_currentTarget != null && (m_currentTarget.m_myBrain.IsDead || Vector3.Distance(m_currentTarget.transform.position, transform.position) > m_maxDistance * 1.1f))
@@ -268,7 +268,7 @@ public class Player_Movement : MonoBehaviour
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
 
-            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed; // Player movement speed
+            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed * (GameManager.Instance.IsInCombat ? 1.0f : playerController.playerSkills.m_outOfCombatSpeedIncrease); // Player movement speed
             if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.BOG)) // If the player is walking in bog.
             {
                 speed *= m_bogSlow;
