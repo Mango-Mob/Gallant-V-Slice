@@ -31,4 +31,30 @@ public class Player_CombatAnimator : MonoBehaviour
             }
         }
     }
+
+    public void SetIdleAnimation(Weapon _weapon, Hand _hand)
+    {
+        int layerIndex = 0;
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                layerIndex = playerController.animator.GetLayerIndex("IdleArmL");
+                break;
+            case Hand.RIGHT:
+                layerIndex = playerController.animator.GetLayerIndex("IdleArmR");
+                break;
+            default:
+                return;
+        }
+
+        switch (_weapon)
+        {
+            case Weapon.CROSSBOW:
+                playerController.animator.Play("Crossbow", layerIndex);
+                break;
+            default:
+                playerController.animator.Play("Default", layerIndex);
+                break;
+        }
+    }
 }
