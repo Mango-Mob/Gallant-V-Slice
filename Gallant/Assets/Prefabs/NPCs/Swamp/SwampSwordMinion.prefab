@@ -40,6 +40,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4270193608614243774}
+  - component: {fileID: 4349093711658983717}
+  - component: {fileID: 4002047568166539089}
+  - component: {fileID: 6834822858393117018}
   m_Layer: 0
   m_Name: MeleeFish_RLegThigh
   m_TagString: Untagged
@@ -62,6 +65,82 @@ Transform:
   m_Father: {fileID: 8706873047306712518}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 31.893515, y: -147.49173, z: 36.98948}
+--- !u!136 &4349093711658983717
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146730142728215746}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.22086881
+  m_Height: 0.73622936
+  m_Direction: 0
+  m_Center: {x: -0.36811468, y: 0, z: 0}
+--- !u!54 &4002047568166539089
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146730142728215746}
+  serializedVersion: 2
+  m_Mass: 2.8125
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &6834822858393117018
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146730142728215746}
+  m_ConnectedBody: {fileID: 7095115876763943305}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.02855804, y: 0.077866815, z: -0.24431583}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -27.21222
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 70
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 30
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &172427015095088576
 GameObject:
   m_ObjectHideFlags: 0
@@ -380,6 +459,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6176066085091533288}
+  - component: {fileID: 565542788655170374}
+  - component: {fileID: 8115359857020142770}
+  - component: {fileID: 3494966156789080342}
   m_Layer: 0
   m_Name: MeleeFish_RLegCalf
   m_TagString: Untagged
@@ -402,6 +484,82 @@ Transform:
   m_Father: {fileID: 4270193608614243774}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -8.622292, y: -0.000000055879354, z: 0.000012327917}
+--- !u!136 &565542788655170374
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937161349341248381}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.13010162
+  m_Height: 0.79
+  m_Direction: 0
+  m_Center: {x: -0.4, y: 0, z: 0}
+--- !u!54 &8115359857020142770
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937161349341248381}
+  serializedVersion: 2
+  m_Mass: 2.8125
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &3494966156789080342
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937161349341248381}
+  m_ConnectedBody: {fileID: 4002047568166539089}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.73622936, y: 0.00000017508857, z: 0.000000119209275}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -80
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 23.878302
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &1989094956715952872
 GameObject:
   m_ObjectHideFlags: 0
@@ -533,6 +691,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4022716788576758006}
+  - component: {fileID: 6420407580883993128}
+  - component: {fileID: 2850141277236469202}
+  - component: {fileID: 153339414577452684}
   m_Layer: 0
   m_Name: MeleeFish_Spine2
   m_TagString: Untagged
@@ -555,6 +716,81 @@ Transform:
   m_Father: {fileID: 3468547991546065000}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -0.66764057, y: -2.2024078, z: 14.524727}
+--- !u!65 &6420407580883993128
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856558313691321656}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.61463267, y: 0.51272154, z: 0.91390383}
+  m_Center: {x: -0.3742914, y: 0.114988446, z: -0.01972072}
+--- !u!54 &2850141277236469202
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856558313691321656}
+  serializedVersion: 2
+  m_Mass: 4.6875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &153339414577452684
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856558313691321656}
+  m_ConnectedBody: {fileID: 7095115876763943305}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: -1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.32405603, y: 0.058823653, z: -0.00000018253925}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -20
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 60.388264
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 14.2453
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &2940852853598319736
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,6 +891,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2083320253533247500}
+  - component: {fileID: 6724004581227677183}
+  - component: {fileID: 1198812702484512163}
+  - component: {fileID: 9073200141986126346}
   m_Layer: 0
   m_Name: MeleeFish_LUpperarm
   m_TagString: Untagged
@@ -677,6 +916,82 @@ Transform:
   m_Father: {fileID: 332323695138440952}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 32.55, y: 18.49136, z: -31.220697}
+--- !u!136 &6724004581227677183
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3530934234277023514}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15381633
+  m_Height: 0.6152653
+  m_Direction: 0
+  m_Center: {x: -0.30763265, y: 0, z: 0}
+--- !u!54 &1198812702484512163
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3530934234277023514}
+  serializedVersion: 2
+  m_Mass: 1.875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &9073200141986126346
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3530934234277023514}
+  m_ConnectedBody: {fileID: 2850141277236469202}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 1, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.67008716, y: 0.22997645, z: 0.5198576}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -70
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 10
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 50
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &3578724800930822363
 GameObject:
   m_ObjectHideFlags: 0
@@ -902,6 +1217,7 @@ GameObject:
   - component: {fileID: 7378222569827468964}
   - component: {fileID: 3105296694972116084}
   - component: {fileID: 589233638014362617}
+  - component: {fileID: 5162823478083337063}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -1070,6 +1386,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   animEvents: []
+--- !u!114 &5162823478083337063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4099159000412528372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc22afd361354c4191956a7e6c332ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_mainCollider: {fileID: 7044049595638228744}
 --- !u!1 &4461248479752950073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,6 +1408,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1478953764016320307}
+  - component: {fileID: 8803206250473476556}
+  - component: {fileID: 2793771349757017960}
+  - component: {fileID: 3877283074898768173}
   m_Layer: 0
   m_Name: MeleeFish_Head
   m_TagString: Untagged
@@ -1101,6 +1433,81 @@ Transform:
   m_Father: {fileID: 2825144538938164088}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0.0000026844646, y: 0.000008611331, z: 66.22466}
+--- !u!135 &8803206250473476556
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461248479752950073}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.36
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2793771349757017960
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461248479752950073}
+  serializedVersion: 2
+  m_Mass: 1.875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &3877283074898768173
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461248479752950073}
+  m_ConnectedBody: {fileID: 2850141277236469202}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: -1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.75509864, y: 0.7531365, z: 0.00000006206148}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -21.207193
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 39.31567
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 42.45456
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &4480507580374985426
 GameObject:
   m_ObjectHideFlags: 0
@@ -1301,6 +1708,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 858946651547772521}
+  - component: {fileID: 6726369876370858811}
+  - component: {fileID: 7161857369343965628}
+  - component: {fileID: 3960391970056831755}
   m_Layer: 0
   m_Name: MeleeFish_RLegFoot
   m_TagString: Untagged
@@ -1325,6 +1735,82 @@ Transform:
   m_Father: {fileID: 6176066085091533288}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 9.55014, y: -30.583187, z: -83.26722}
+--- !u!136 &6726369876370858811
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694893517635327205}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12
+  m_Height: 0.5
+  m_Direction: 0
+  m_Center: {x: -0.34, y: 0, z: 0}
+--- !u!54 &7161857369343965628
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694893517635327205}
+  serializedVersion: 2
+  m_Mass: 1.82
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &3960391970056831755
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694893517635327205}
+  m_ConnectedBody: {fileID: 8115359857020142770}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.7604186, y: 0.00000005960481, z: -0.00000005215405}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -72.34381
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 25.791986
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 3
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &4833529831914722773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1334,6 +1820,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1774565330151557642}
+  - component: {fileID: 611037243733956930}
+  - component: {fileID: 1493629017538254650}
+  - component: {fileID: 6199278336537399431}
   m_Layer: 0
   m_Name: MeleeFish_LThigh
   m_TagString: Untagged
@@ -1356,6 +1845,82 @@ Transform:
   m_Father: {fileID: 8706873047306712518}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -17.466497, y: -160.16452, z: -62.78747}
+--- !u!136 &611037243733956930
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4833529831914722773}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.22086872
+  m_Height: 0.73622906
+  m_Direction: 0
+  m_Center: {x: -0.36811453, y: 0, z: 0}
+--- !u!54 &1493629017538254650
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4833529831914722773}
+  serializedVersion: 2
+  m_Mass: 2.8125
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &6199278336537399431
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4833529831914722773}
+  m_ConnectedBody: {fileID: 7095115876763943305}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.02855807, y: 0.077866815, z: 0.24431586}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -36.268097
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 70
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 30
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &4872670066827537054
 GameObject:
   m_ObjectHideFlags: 0
@@ -1659,6 +2224,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4635396847205493226}
+  - component: {fileID: 5525569356374512963}
+  - component: {fileID: 2773424402645933701}
+  - component: {fileID: 5657677031400038123}
   m_Layer: 0
   m_Name: MeleeFish_LFoot
   m_TagString: Untagged
@@ -1683,6 +2251,82 @@ Transform:
   m_Father: {fileID: 5082076776647570295}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 9.835264, y: -10.976632, z: -83.31149}
+--- !u!136 &5525569356374512963
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5502192915206186478}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.12
+  m_Height: 0.5
+  m_Direction: 0
+  m_Center: {x: -0.34, y: 0, z: 0}
+--- !u!54 &2773424402645933701
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5502192915206186478}
+  serializedVersion: 2
+  m_Mass: 1.82
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &5657677031400038123
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5502192915206186478}
+  m_ConnectedBody: {fileID: 4076393269644885929}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.76041853, y: 0.00000026822033, z: -0.000000096857526}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -61.93819
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 23.117273
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 3
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &5791295388566159574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,6 +2428,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 528579005488018497}
+  - component: {fileID: 8786587877816487478}
+  - component: {fileID: 6849456441267821122}
+  - component: {fileID: 2168321964042678364}
   m_Layer: 0
   m_Name: MeleeFish_RArmUpperarm
   m_TagString: Untagged
@@ -1806,6 +2453,82 @@ Transform:
   m_Father: {fileID: 4234382314326302239}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -14.921101, y: -42.69526, z: -42.98389}
+--- !u!136 &8786587877816487478
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6193630755145558133}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15381636
+  m_Height: 0.6152654
+  m_Direction: 0
+  m_Center: {x: -0.3076327, y: 0, z: 0}
+--- !u!54 &6849456441267821122
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6193630755145558133}
+  serializedVersion: 2
+  m_Mass: 1.875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &2168321964042678364
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6193630755145558133}
+  m_ConnectedBody: {fileID: 2850141277236469202}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 1, y: 0, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.68160766, y: 0.20130129, z: -0.50558555}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -70
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 10
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 50
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &6339148052526116509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1815,6 +2538,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5082076776647570295}
+  - component: {fileID: 1015237427353641840}
+  - component: {fileID: 4076393269644885929}
+  - component: {fileID: 8727861971677046664}
   m_Layer: 0
   m_Name: MeleeFish_LCalf
   m_TagString: Untagged
@@ -1837,6 +2563,82 @@ Transform:
   m_Father: {fileID: 1774565330151557642}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 6.1009126, y: 3.8411453, z: 67.49494}
+--- !u!136 &1015237427353641840
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339148052526116509}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.13010162
+  m_Height: 0.75
+  m_Direction: 0
+  m_Center: {x: -0.4, y: 0, z: 0}
+--- !u!54 &4076393269644885929
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339148052526116509}
+  serializedVersion: 2
+  m_Mass: 2.8125
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &8727861971677046664
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339148052526116509}
+  m_ConnectedBody: {fileID: 1493629017538254650}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 0, z: 1}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.73622906, y: 0.00000035390235, z: -0.00000011920926}
+  serializedVersion: 2
+  m_SwingAxis: {x: 0, y: 1, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -80
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: 31.949121
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &6384107190227035040
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,6 +2802,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8706873047306712518}
+  - component: {fileID: 7044049595638228744}
+  - component: {fileID: 7095115876763943305}
   m_Layer: 0
   m_Name: MeleeFish_Pelvis
   m_TagString: Untagged
@@ -2025,6 +2829,35 @@ Transform:
   m_Father: {fileID: 3722493132808340558}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -5.9385176, y: -113.53597, z: -103.3604}
+--- !u!65 &7044049595638228744
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857819100544403928}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.36392918, y: 0.51272154, z: 0.9060473}
+  m_Center: {x: -0.18196598, y: 0.16622838, z: -0.013523789}
+--- !u!54 &7095115876763943305
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6857819100544403928}
+  serializedVersion: 2
+  m_Mass: 4.6875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &6953960464152344270
 GameObject:
   m_ObjectHideFlags: 0
@@ -2187,6 +3020,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 368791904862523895}
+  - component: {fileID: 576134496410488764}
+  - component: {fileID: 1151436299998362057}
+  - component: {fileID: 3121514815328250710}
   m_Layer: 0
   m_Name: MeleeFish_LForearm
   m_TagString: Untagged
@@ -2209,6 +3045,82 @@ Transform:
   m_Father: {fileID: 2083320253533247500}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -9.064395, y: 15.734477, z: -2.7381542}
+--- !u!136 &576134496410488764
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7789967645997422589}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.19438578
+  m_Height: 0.9
+  m_Direction: 0
+  m_Center: {x: -0.48596445, y: 0, z: 0}
+--- !u!54 &1151436299998362057
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7789967645997422589}
+  serializedVersion: 2
+  m_Mass: 1.875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &3121514815328250710
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7789967645997422589}
+  m_ConnectedBody: {fileID: 1198812702484512163}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 1, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.6152653, y: -0.00000008940695, z: -0.00000026822067}
+  serializedVersion: 2
+  m_SwingAxis: {x: 1, y: 0, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -126.23251
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: -57.131012
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 54.036415
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
 --- !u!1 &7796402796332445760
 GameObject:
   m_ObjectHideFlags: 0
@@ -2523,6 +3435,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 784117355677161929}
+  - component: {fileID: 6378673496456257763}
+  - component: {fileID: 6967227006707379147}
+  - component: {fileID: 3211714121776721133}
   m_Layer: 0
   m_Name: MeleeFish_RArmForearm
   m_TagString: Untagged
@@ -2545,6 +3460,82 @@ Transform:
   m_Father: {fileID: 528579005488018497}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 3.7198334, y: -4.5958366, z: -73.161835}
+--- !u!54 &6378673496456257763
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097895768446273699}
+  serializedVersion: 2
+  m_Mass: 1.875
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!144 &6967227006707379147
+CharacterJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097895768446273699}
+  m_ConnectedBody: {fileID: 6849456441267821122}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0, y: 0, z: 0}
+  m_Axis: {x: 0, y: 1, z: 0}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: -0.6152654, y: 0.00000007450582, z: 0.00000005960452}
+  serializedVersion: 2
+  m_SwingAxis: {x: 1, y: 0, z: 0}
+  m_TwistLimitSpring:
+    spring: 0
+    damper: 0
+  m_LowTwistLimit:
+    limit: -130.95152
+    bounciness: 0
+    contactDistance: 0
+  m_HighTwistLimit:
+    limit: -43.772583
+    bounciness: 0
+    contactDistance: 0
+  m_SwingLimitSpring:
+    spring: 0
+    damper: 0
+  m_Swing1Limit:
+    limit: 51.037086
+    bounciness: 0
+    contactDistance: 0
+  m_Swing2Limit:
+    limit: 0
+    bounciness: 0
+    contactDistance: 0
+  m_EnableProjection: 0
+  m_ProjectionDistance: 0.1
+  m_ProjectionAngle: 180
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 0
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!136 &3211714121776721133
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8097895768446273699}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.19438578
+  m_Height: 0.9
+  m_Direction: 0
+  m_Center: {x: -0.48596445, y: 0, z: 0}
 --- !u!1 &8225972500344605240
 GameObject:
   m_ObjectHideFlags: 0
