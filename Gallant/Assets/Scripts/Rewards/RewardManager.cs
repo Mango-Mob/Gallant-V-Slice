@@ -28,6 +28,9 @@ public class RewardManager : Singleton<RewardManager>
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
 
+    public InfoDisplay m_leftHand;
+    public InfoDisplay m_rightHand;
+
     private const float probFirstWeapon = 1.0f;
     private const float probSecondWeapon = 0.6666f;
     private const float probThirdWeapon = 0.05f;
@@ -59,13 +62,15 @@ public class RewardManager : Singleton<RewardManager>
     {
         EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
 
+        if(m_window.activeInHierarchy)
+            m_player.m_isDisabledInput = true;
+
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
             Show(1);
         }
 #endif
-
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.Instance.isInGamepadMode && m_select != -1);
 
@@ -106,10 +111,13 @@ public class RewardManager : Singleton<RewardManager>
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_window.SetActive(true);
+        m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
+        m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
+
+        m_player.m_isDisabledInput = true;
+
         if (level >= 0)
         {
-            m_player.m_isDisabledInput = true;
-
             //Generate a random selection of rewards
             List<ScriptableObject> rewards = new List<ScriptableObject>();
             switch (type)
@@ -166,7 +174,7 @@ public class RewardManager : Singleton<RewardManager>
 
             for (int i = 0; i < m_rewardSlots.Length; i++)
             {
-
+                m_rewardSlots[i].GetComponent<Button>().interactable = true;
                 if (rewards[i].GetType() == typeof(WeaponData))
                 {
                     m_rewardSlots[i].LoadWeapon(rewards[i] as WeaponData);
@@ -210,40 +218,72 @@ public class RewardManager : Singleton<RewardManager>
     }
 
     public void Hover(int id)
-    {        
-        if (m_rewardSlots[id].IsAWeapon)
-        {
-            m_abilityImage.gameObject.SetActive(true);
+    {
+        ScriptableObject data;
 
-            m_abilityImage.sprite = m_rewardSlots[id].m_weaponData.abilityData.abilityIcon;
-            m_abilityDescription.text = AbilityData.EvaluateDescription(m_rewardSlots[id].m_weaponData.abilityData);
-
-            if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+        switch(id)
             {
-                m_abilityCooldownHeader.text = "Cooldown:";
-                m_abilityCooldownText.text = m_rewardSlots[id].m_weaponData.abilityData.cooldownTime.ToString() + "s";
+            case 0: case 1: case 2:
+                if(m_rewardSlots[id].IsAWeapon)
+                    data = m_rewardSlots[id].m_weaponData;
+                else
+                    data = m_rewardSlots[id].m_itemData;
+                break;
+            default:
+            case 3:
+                data = m_leftHand.m_weaponData;
+                break;
+            case 4:
+                data = m_rightHand.m_weaponData;
+                break;
+        }
+
+        if(data is WeaponData)
+        {
+            WeaponData wData = data as WeaponData;
+            if(wData.abilityData != null)
+            {
+                m_abilityImage.gameObject.SetActive(true);
+                m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
+                m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
+
+                if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+                {
+                    m_abilityCooldownHeader.text = "Cooldown:";
+                }
+                else
+                {
+                    m_abilityCooldownHeader.text = "";
+                    m_abilityCooldownText.text = "";
+                }
             }
             else
             {
+                m_abilityImage.gameObject.SetActive(false);
+                m_abilityDescription.text = "";
                 m_abilityCooldownHeader.text = "";
                 m_abilityCooldownText.text = "";
             }
         }
-        else
+        else if(data is ItemData)
         {
+            ItemData iData = data as ItemData;
             m_abilityImage.sprite = m_rewardSlots[id].m_itemData.itemIcon;
             m_abilityCooldownHeader.text = "";
             m_abilityCooldownText.text = "";
+            m_abilityDescription.text = iData.description;
         }
     }
 
     public void Select(int item)
     {      
-        m_select = item;
-
-        for (int i = 0; i < m_rewardSlots.Length; i++)
+        if(m_select != item)
         {
-            m_rewardSlots[i].GetComponentInParent<Button>().interactable = i != item;
+            m_select = item;
+            for (int i = 0; i < m_rewardSlots.Length; i++)
+            {
+                m_rewardSlots[i].Select(i == item);
+            }
         }
     }
 
@@ -257,7 +297,8 @@ public class RewardManager : Singleton<RewardManager>
     public void Hide()
     {
         m_window.SetActive(false);
-        
+        m_player.m_isDisabledInput = false;
+        m_select = -1;
     }
 
     public bool IsUniqueWeapon(List<ScriptableObject> list, WeaponData data)

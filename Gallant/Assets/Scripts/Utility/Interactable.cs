@@ -12,17 +12,17 @@ public class Interactable : MonoBehaviour
 
     public Image m_timeDisplay;
     private float m_timer = 0.0f;
-
+    private Player_Controller m_player;
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(m_isReady && m_interactFunction != null)
+        if(m_isReady && m_interactFunction != null && !m_player.m_isDisabledInput)
         {
             if(InputManager.Instance.IsBindPressed("Interact", InputManager.Instance.GetAnyGamePad()))
             {

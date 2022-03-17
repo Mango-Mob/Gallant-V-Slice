@@ -26,6 +26,7 @@ namespace ActorSystem.AI.Components
         public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
+        public Actor_Ragdoll m_ragDoll { get; private set; }
         public Outline m_myOutline { get; private set; }
         #endregion
 
@@ -60,6 +61,7 @@ namespace ActorSystem.AI.Components
             m_audioAgent = GetComponent<Actor_AudioAgent>();
             m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
+            m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
 
             if(m_myOutline != null)

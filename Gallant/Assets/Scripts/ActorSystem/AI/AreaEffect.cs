@@ -19,6 +19,11 @@ public class AreaEffect: MonoBehaviour
     {
         timer += Time.deltaTime;
 
+        foreach (var item in GetComponentsInChildren<SpriteRenderer>())
+        {
+            item.color = new Color(item.color.r, item.color.g, item.color.b, timer/delay);
+        }
+
         if(timer > delay)
         {
             ApplyEffect();
