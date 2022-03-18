@@ -2,7 +2,9 @@ using ActorSystem.AI;
 using ActorSystem.AI.Users;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -18,10 +20,17 @@ public class TutorialManager : MonoBehaviour
     public ClassData m_hunter;
 
     public Room m_combatSection;
+
+    public Transform m_respawn;
+    private Image m_fade;
+
     private int current = 0;
+    private bool m_isRespawning = false;
     // Start is called before the first frame update
     void Start()
     {
+        m_fade = GetComponentInChildren<Image>();
+        m_fade.enabled = false;
         if (GameManager.m_firstTime)
         {
             GameManager.Instance.m_player.transform.position = transform.position;
@@ -33,6 +42,9 @@ public class TutorialManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (m_guide == null)
+            return;
+
         if(Vector3.Distance(m_guide.transform.position, m_tutorialPositions[current].position) < 0.5f)
         {
             m_guide.SetTargetOrientaion(m_tutorialPositions[current].position + m_tutorialPositions[current].forward);
@@ -49,6 +61,11 @@ public class TutorialManager : MonoBehaviour
             m_guide.SetTargetLocation(m_tutorialPositions[current].position);
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
+        }
+
+        if(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerResources.m_dead && !m_isRespawning)
+        {
+            StartCoroutine(RespawnPlayer());
         }
     }
 
@@ -88,6 +105,32 @@ public class TutorialManager : MonoBehaviour
         }
     }
 
+    private IEnumerator RespawnPlayer()
+    {
+        m_isRespawning = true;
+        float timeIn = 3.0f;
+        float timeOut = 1.0f;
+        m_fade.enabled = true;
+        GameObject player = GameManager.Instance.m_player;
+        while (timeIn > 0.0f)
+        {
+            timeIn -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+            m_fade.color = new Color(0, 0, 0, 1.0f - timeIn / 3.0f);
+        }       
+        player.GetComponent<Player_Controller>().RespawnPlayerTo(m_respawn.position, true);
+        player.GetComponent<Player_Controller>().m_isDisabledInput = true;
+        while (timeOut > 0.0f)
+        {
+            timeOut -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+            m_fade.color = new Color(0, 0, 0, timeOut / 1.0f);
+        }
+        player.GetComponent<Player_Controller>().m_isDisabledInput = false;
+        m_isRespawning = false;
+        yield return null;
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -100,6 +143,7 @@ public class TutorialManager : MonoBehaviour
             Gizmos.DrawSphere(m_tutorialPositions[i].position, 0.5f);
             Gizmos.DrawLine(m_tutorialPositions[i].position, m_tutorialPositions[i].position + m_tutorialPositions[i].forward);
         }
-        
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(m_respawn.position, 0.5f);
     }
 }

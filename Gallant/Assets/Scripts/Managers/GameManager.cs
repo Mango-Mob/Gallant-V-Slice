@@ -18,10 +18,11 @@ public class GameManager : Singleton<GameManager>
     public GameObject m_player;
     public Camera m_activeCamera;
     public bool enableTimer = false;
-
+    public bool m_sceneHasTutorial = false;
     public bool IsInCombat { get { return ActorManager.Instance.m_activeSpawnners.Count > 0; } }
 
     public AtmosphereScript music { get; private set; }
+    public float m_deathDelay = 1.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +39,15 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         int gamepadID = InputManager.Instance.GetAnyGamePad();
+        
+        if(!m_sceneHasTutorial && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
+        {
+            m_deathDelay -= Time.deltaTime;
+            if(m_deathDelay <= 0)
+            {
+                LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
+            }
+        }
     }
 
     private void OnLevelWasLoaded(int level)
