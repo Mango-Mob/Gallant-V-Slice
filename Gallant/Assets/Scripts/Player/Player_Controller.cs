@@ -553,10 +553,9 @@ public class Player_Controller : MonoBehaviour
             playerResources.FullHeal();
         }
 
-        //if (GameManager.Instance.is)
-        {
-
-        }
+        animator.SetTrigger("RespawnPlayer");
+        animator.SetFloat("Vertical", 0.0f);
+        animator.SetFloat("Horizontal", 0.0f);
     }
 
     public void RespawnPlayerToGround(bool _isFullHP = false)
