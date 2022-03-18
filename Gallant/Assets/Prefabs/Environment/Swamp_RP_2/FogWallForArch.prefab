@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 59414218552924256}
   - component: {fileID: 59414218552924270}
   - component: {fileID: 59414218552924271}
+  - component: {fileID: 8524749621538017105}
+  - component: {fileID: 4137075868605046828}
   m_Layer: 0
   m_Name: FogWallForArch
   m_TagString: Untagged
@@ -4816,3 +4818,32 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!65 &8524749621538017105
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59414218552924257}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5000.627, y: 351.90607, z: 10.897247}
+  m_Center: {x: 317.9182, y: -4.626255, z: 0.27694795}
+--- !u!208 &4137075868605046828
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59414218552924257}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2500.3135, y: 175.95305, z: 5.448625}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 317.9182, y: -4.626255, z: 0.2769479}
+  m_TimeToStationary: 0.5

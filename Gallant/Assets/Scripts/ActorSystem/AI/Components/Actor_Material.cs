@@ -58,6 +58,8 @@ namespace ActorSystem.AI.Components
         public override void SetEnabled(bool status)
         {
             this.enabled = status;
+            if(status)
+                m_timer = 0.0f;
         }
 
         public void StartDisolve()

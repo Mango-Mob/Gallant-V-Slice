@@ -37,6 +37,14 @@ namespace ActorSystem.AI.Components
             {
                 collider.enabled = m_enabledRag && status;
             }
+            foreach (var body in m_bodies)
+            {
+                body.isKinematic = m_enabledRag && status;
+            }
+            if(!status)
+            {
+                m_enabledRag = false;
+            }
         }
 
         public void EnableRagdoll()
