@@ -39,7 +39,10 @@ public abstract class WeaponBase : MonoBehaviour
     public void TriggerWeapon(bool _active)
     {
         if (_active)
+        {
+            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             WeaponFunctionality();
+        }
         else
             WeaponRelease();
     }

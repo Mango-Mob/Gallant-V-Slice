@@ -129,7 +129,6 @@ public class Player_Controller : MonoBehaviour
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
-        Debug.Log(standArmWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), standArmWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), standArmWeight);
 
@@ -173,9 +172,15 @@ public class Player_Controller : MonoBehaviour
             bool leftWeaponAttack = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
 
             if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
+            {
+                animator.SetBool("DualAttacking", true);
                 m_dualWieldBonus = m_dualWieldSpeed;
+            }
             else
+            {
+                animator.SetBool("DualAttacking", false);
                 m_dualWieldBonus = 1.0f;
+            }
 
             // Weapon attacks
             if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)

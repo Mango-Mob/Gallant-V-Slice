@@ -300,8 +300,7 @@ public class Player_Movement : MonoBehaviour
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                 {
                     playerController.animator.SetFloat("Horizontal", 0.0f);
-                    playerController.animator.SetFloat("Vertical", _move.magnitude
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Vertical", _move.magnitude); // Decrease if player is attacking.
                 }
                 else
                 {
@@ -311,11 +310,9 @@ public class Player_Movement : MonoBehaviour
                     rotationVector += normalizedMove.z * playerModel.transform.right;
                     rotationVector += normalizedMove.x * playerModel.transform.forward;
 
-                    playerController.animator.SetFloat("Horizontal", rotationVector.z
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Horizontal", rotationVector.z); // Decrease if player is attacking.
 
-                    playerController.animator.SetFloat("Vertical", rotationVector.x
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Vertical", rotationVector.x); // Decrease if player is attacking.
                 }
             }
             else
