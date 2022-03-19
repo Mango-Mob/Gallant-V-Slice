@@ -356,7 +356,7 @@ public class Player_Controller : MonoBehaviour
     {
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
-    private Vector2 GetPlayerMovementVector()
+    public Vector2 GetPlayerMovementVector(bool _rawInput = false)
     {
         if (InputManager.Instance.isInGamepadMode) // If using gamepad
         {
@@ -371,6 +371,10 @@ public class Player_Controller : MonoBehaviour
             movement.y += (InputManager.Instance.IsBindPressed("Move_Forward") ? 1.0f : 0.0f);
             movement.y -= (InputManager.Instance.IsBindPressed("Move_Backward") ? 1.0f : 0.0f);
             movement.Normalize();
+
+            if (_rawInput)
+                return movement;
+
             m_currentVelocity = Vector3.SmoothDamp(m_currentVelocity, movement, ref m_movementVelocity, 0.1f);
             return m_currentVelocity;
         }

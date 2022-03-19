@@ -52,6 +52,7 @@ public class Player_Movement : MonoBehaviour
     [Header("Foot Transforms")]
     [SerializeField] private Transform m_leftFoot;
     [SerializeField] private Transform m_rightFoot;
+    private bool m_isMoving = false;
 
     [Header("Targeting")]
     public Actor m_currentTarget;
@@ -255,6 +256,7 @@ public class Player_Movement : MonoBehaviour
         }
 
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp);
+        m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
         if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
@@ -473,7 +475,7 @@ public class Player_Movement : MonoBehaviour
 
     public void Footstep(bool _left)
     {
-        if (!characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
+        if ((playerController.GetPlayerMovementVector(true).magnitude <= 0.0f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
             return;
 
         Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;

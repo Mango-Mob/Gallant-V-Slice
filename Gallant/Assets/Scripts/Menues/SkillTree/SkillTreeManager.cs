@@ -24,14 +24,12 @@ public class SkillTreeManager : MonoBehaviour
             m_linePrefab = Resources.Load<GameObject>("UI/SkillTree/SkillButtonLink");
 
         m_buttons = GetComponentsInChildren<SkillButton>();
-    }
-    private void Start()
-    {
+
         foreach (var button in m_buttons)
         {
             button.CreateDepencencyLinks();
         }
-        
+
         foreach (var button in m_buttons)
         {
             if (button.m_skillData)
@@ -39,6 +37,9 @@ public class SkillTreeManager : MonoBehaviour
             else
                 Debug.Log($"{button} does not have skill data attached.");
         }
+    }
+    private void Start()
+    {
     }
     public void RefundTree()
     {
