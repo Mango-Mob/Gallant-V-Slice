@@ -44,7 +44,7 @@ public class Ability_Barrier : AbilityBase
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_projectilePrefab,
-                modelTransform.position + 0.5f * modelTransform.forward + transform.up,
+                m_handTransform.position + 0.5f * modelTransform.forward,
                 modelTransform.rotation);
 
             projectile.GetComponent<BarrierProjectile>().m_barrierValue = playerController.playerResources.m_barrier;

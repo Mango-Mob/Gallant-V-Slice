@@ -89,8 +89,11 @@ public class UI_StatsMenu : UI_Element
             bool foundEffect = false;
             foreach (var effect in playerStats.m_effects)
             {
-                foundEffect = true;
-                continue;
+                if (rune.m_effect == effect.Key)
+                {
+                    foundEffect = true;
+                    continue;
+                }
             }
             if (!foundEffect)
             {
@@ -99,8 +102,8 @@ public class UI_StatsMenu : UI_Element
         }
         foreach (var item in removeList)
         {
-            m_runeList.Remove(item);
             Destroy(item.gameObject);
+            m_runeList.Remove(item);
         }
 
 

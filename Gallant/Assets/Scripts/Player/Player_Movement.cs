@@ -49,6 +49,10 @@ public class Player_Movement : MonoBehaviour
     private float m_rollCDTimer = 0.0f;
     public float m_rollCD = 1.0f;
 
+    [Header("Foot Transforms")]
+    [SerializeField] private Transform m_leftFoot;
+    [SerializeField] private Transform m_rightFoot;
+
     [Header("Targeting")]
     public Actor m_currentTarget;
     [SerializeField] private float m_maxAngle = 60.0f;
@@ -121,6 +125,8 @@ public class Player_Movement : MonoBehaviour
                 Physics.Raycast(transform.position + transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
                 Physics.Raycast(transform.position - transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
             {
+                Debug.Log((transform.position - m_lastGroundedPosition).magnitude / Time.fixedDeltaTime);
+
                 m_lastGroundedPosition = transform.position;
                 m_lastGroundedVelocity = characterController.velocity;
             }
@@ -465,7 +471,16 @@ public class Player_Movement : MonoBehaviour
         m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
+    public void Footstep(bool _left)
+    {
+        if (!characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
+            return;
 
+        Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;
+
+
+        playerController.playerAudioAgent.PlayBasicFootstep();
+    }
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);

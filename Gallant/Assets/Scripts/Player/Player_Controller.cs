@@ -51,12 +51,21 @@ public class Player_Controller : MonoBehaviour
     private bool m_godMode = false;
     [SerializeField] private GameObject m_damageVFXPrefab;
 
+    // Zoom
+    [Header("Camera Zoom")]
+    private float m_zoomLerp = 0.0f;
+    private bool m_zoomed = false;
+    private float m_startZoom = 60.0f;
+    public float m_maxZoom = 30.0f;
+    public float m_zoomSpeed = 5.0f;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
 
         playerCamera = Camera.main;
+        m_startZoom = playerCamera.fieldOfView;
         animatorCamera = playerCamera.GetComponent<Animator>();
 
         playerMovement = GetComponent<Player_Movement>();
@@ -276,6 +285,15 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
+        // Camera zoom;
+        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
+        {
+            m_zoomed = !m_zoomed;
+        }
+        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
+        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
+        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
+
 #if UNITY_EDITOR
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
@@ -328,6 +346,8 @@ public class Player_Controller : MonoBehaviour
         }
 #endif
     }
+
+
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.
      * @author : William de Beer

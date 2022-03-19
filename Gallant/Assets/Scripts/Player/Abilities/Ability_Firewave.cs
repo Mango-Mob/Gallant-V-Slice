@@ -31,7 +31,7 @@ public class Ability_Firewave : AbilityBase
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_wavePrefab,
-                modelTransform.position + 0.5f * modelTransform.forward + transform.up,
+                modelTransform.position + 0.5f * modelTransform.forward,
                 modelTransform.rotation);
 
             projectile.GetComponent<FirewaveProjectile>().m_data = m_data;

@@ -243,6 +243,7 @@ public class InputManager : SingletonPersistent<InputManager>
         m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
+        m_binds.Add("Toggle_Zoom", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Z), new Bind(typeof(ButtonType), (int)ButtonType.LS) });
         SaveBinds();
     }
 
