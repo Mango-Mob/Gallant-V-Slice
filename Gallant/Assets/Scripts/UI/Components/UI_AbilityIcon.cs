@@ -23,6 +23,7 @@ public class UI_AbilityIcon : UI_Element
     [SerializeField] private Image m_cooldown;
     [SerializeField] private GameObject[] m_stars;
     [SerializeField] private TextMeshProUGUI m_text;
+    [SerializeField] private TextMeshProUGUI m_textshad;
 
     [Header("Frames")]
     [SerializeField] private GameObject m_activeFrame;
@@ -37,8 +38,9 @@ public class UI_AbilityIcon : UI_Element
     {
         m_cooldown.fillAmount = _fill;
         m_text.text = (_fill * _maxCooldown).ToString("0.0");
-
+        m_textshad.text = (_fill * _maxCooldown).ToString("0.0");
         m_text.enabled = _fill > 0.0f;
+        m_textshad.enabled = _fill > 0.0f;
     }
 
     /*******************
