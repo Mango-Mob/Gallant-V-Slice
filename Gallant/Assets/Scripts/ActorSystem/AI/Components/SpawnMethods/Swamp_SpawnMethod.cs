@@ -41,7 +41,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             //}
             //
             ////Play animation
-            
+            GetComponent<Actor_Brain>().m_ragDoll?.SetEnabled(false);
             m_timer = m_spawnDelay;
             m_hasResentlySpawnned = true;
             //m_spawnning = true;
