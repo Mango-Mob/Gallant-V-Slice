@@ -31,7 +31,7 @@ public class Ability_SandMissile : AbilityBase
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_missilePrefab,
-                modelTransform.position + 0.5f * modelTransform.forward + transform.up,
+                m_handTransform.position + 0.5f * modelTransform.forward,
                 modelTransform.rotation);
 
             projectile.GetComponent<SandmissileProjectile>().m_data = m_data;
