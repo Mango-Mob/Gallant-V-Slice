@@ -21,11 +21,13 @@ public abstract class AbilityBase : MonoBehaviour
 {
     [Header("Ability Information")]
     public AbilityData m_data;
-    public Hand m_attachedHand; 
+    public Hand m_attachedHand;
+    public Transform m_handTransform;
     public bool m_isPassive { get; protected set; } = false;
     public bool m_canUse { get; private set; } = true;
     public float m_cooldownTimer { get; private set; } = 0.0f;
     protected Player_Controller playerController;
+
 
     [Header("Double Synergy")]
     public AbilityData m_synergyData;
@@ -38,6 +40,11 @@ public abstract class AbilityBase : MonoBehaviour
     protected void Start()
     {
         m_cooldownTimer = m_data.lastCooldown;
+
+        if (m_attachedHand == Hand.LEFT)
+            m_handTransform = playerController.playerAttack.m_leftHandTransform;
+        else
+            m_handTransform = playerController.playerAttack.m_rightHandTransform;
     }
     public void Update()
     {

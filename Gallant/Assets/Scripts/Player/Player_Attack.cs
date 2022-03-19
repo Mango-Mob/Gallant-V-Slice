@@ -130,7 +130,6 @@ public class Player_Attack : MonoBehaviour
 
         animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
-        playerController.playerAudioAgent.PlayWeaponSwing(thisWeapon.m_weaponData.weaponType);
         //playerController.animator.SetBool(animatorTriggerName, true);
         playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
         //playerController.animator.CrossFade(animatorTriggerName, 0.1f);

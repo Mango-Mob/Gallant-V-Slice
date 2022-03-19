@@ -141,6 +141,7 @@ public class Player_Resources : MonoBehaviour
     {
         m_adrenaline = m_startingAdrenaline;
         m_health = m_maxHealth * playerController.playerStats.m_maximumHealth;
+        m_dead = false;
     }
 
     /*******************

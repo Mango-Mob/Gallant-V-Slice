@@ -51,10 +51,10 @@ public class Player_Abilities : MonoBehaviour
     void Update()
     {
         if (m_leftAbilityIcon != null && m_leftAbility != null)
-            m_leftAbilityIcon.SetCooldownFill(m_leftAbility.GetCooldownTime());
+            m_leftAbilityIcon.SetCooldown(m_leftAbility.GetCooldownTime(), m_leftAbility.m_data.cooldownTime);
 
         if (m_rightAbilityIcon != null && m_rightAbility != null)
-            m_rightAbilityIcon.SetCooldownFill(m_rightAbility.GetCooldownTime());
+            m_rightAbilityIcon.SetCooldown(m_rightAbility.GetCooldownTime(), m_rightAbility.m_data.cooldownTime);
 
         if (m_leftHandGlobalTimer > 0.0f)
             m_leftHandGlobalTimer -= Time.deltaTime;
@@ -181,7 +181,7 @@ public class Player_Abilities : MonoBehaviour
                 m_leftAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
 
                 if (m_leftAbility == null)
-                    m_leftAbilityIcon.SetCooldownFill(0.0f);
+                    m_leftAbilityIcon.SetCooldown(0.0f, 1.0f);
                 break;
             case Hand.RIGHT:
                 Destroy(m_rightAbility);
@@ -195,7 +195,7 @@ public class Player_Abilities : MonoBehaviour
                 m_rightAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
 
                 if (m_rightAbility == null)
-                    m_rightAbilityIcon.SetCooldownFill(0.0f);
+                    m_rightAbilityIcon.SetCooldown(0.0f, 1.0f);
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");

@@ -51,13 +51,18 @@ public class Player_Controller : MonoBehaviour
     private bool m_godMode = false;
     [SerializeField] private GameObject m_damageVFXPrefab;
 
+    // Zoom
+    [Header("Camera Zoom")]
+    private float m_zoomLerp = 0.0f;
+    private bool m_zoomed = false;
+    private float m_startZoom = 60.0f;
+    public float m_maxZoom = 30.0f;
+    public float m_zoomSpeed = 5.0f;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
-
-        playerCamera = Camera.main;
-        animatorCamera = playerCamera.GetComponent<Animator>();
 
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
@@ -74,6 +79,9 @@ public class Player_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerCamera = Camera.main;
+        m_startZoom = playerCamera.fieldOfView;
+        animatorCamera = playerCamera.GetComponent<Animator>();
         LoadPlayerInfo();
     }
 
@@ -129,7 +137,6 @@ public class Player_Controller : MonoBehaviour
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
-        Debug.Log(standArmWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), standArmWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), standArmWeight);
 
@@ -173,9 +180,15 @@ public class Player_Controller : MonoBehaviour
             bool leftWeaponAttack = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
 
             if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
+            {
+                animator.SetBool("DualAttacking", true);
                 m_dualWieldBonus = m_dualWieldSpeed;
+            }
             else
+            {
+                animator.SetBool("DualAttacking", false);
                 m_dualWieldBonus = 1.0f;
+            }
 
             // Weapon attacks
             if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
@@ -271,6 +284,15 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
+        // Camera zoom;
+        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
+        {
+            m_zoomed = !m_zoomed;
+        }
+        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
+        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
+        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
+
 #if UNITY_EDITOR
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
@@ -323,6 +345,8 @@ public class Player_Controller : MonoBehaviour
         }
 #endif
     }
+
+
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.
      * @author : William de Beer
@@ -332,7 +356,7 @@ public class Player_Controller : MonoBehaviour
     {
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
-    private Vector2 GetPlayerMovementVector()
+    public Vector2 GetPlayerMovementVector(bool _rawInput = false)
     {
         if (InputManager.Instance.isInGamepadMode) // If using gamepad
         {
@@ -347,6 +371,10 @@ public class Player_Controller : MonoBehaviour
             movement.y += (InputManager.Instance.IsBindPressed("Move_Forward") ? 1.0f : 0.0f);
             movement.y -= (InputManager.Instance.IsBindPressed("Move_Backward") ? 1.0f : 0.0f);
             movement.Normalize();
+
+            if (_rawInput)
+                return movement;
+
             m_currentVelocity = Vector3.SmoothDamp(m_currentVelocity, movement, ref m_movementVelocity, 0.1f);
             return m_currentVelocity;
         }
@@ -547,6 +575,10 @@ public class Player_Controller : MonoBehaviour
         {
             playerResources.FullHeal();
         }
+
+        animator.SetTrigger("RespawnPlayer");
+        animator.SetFloat("Vertical", 0.0f);
+        animator.SetFloat("Horizontal", 0.0f);
     }
 
     public void RespawnPlayerToGround(bool _isFullHP = false)
