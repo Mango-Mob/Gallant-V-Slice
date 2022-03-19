@@ -17,12 +17,20 @@ public class SkillTreeObject : MonoBehaviour
         playerController = FindObjectOfType<Player_Controller>();
         m_skillTreeCamera.enabled = false;
         m_skillTreeDisplayControl.SetActive(false);
+        m_interactable = GetComponentInChildren<Interactable>();
     }
 
     // Update is called once per frame
     void Update()
     {
         m_useButton.SetActive(m_interactable.m_isReady);
+        if (m_skillTreeDisplayControl.activeSelf)
+        {
+            if (InputManager.Instance.IsBindDown("Roll"))
+            {
+                CloseSkillTree();
+            }
+        }
     }
 
     public void OpenSkillTree()
