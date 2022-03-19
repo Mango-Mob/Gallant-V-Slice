@@ -64,10 +64,6 @@ public class Player_Controller : MonoBehaviour
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
 
-        playerCamera = Camera.main;
-        m_startZoom = playerCamera.fieldOfView;
-        animatorCamera = playerCamera.GetComponent<Animator>();
-
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
         playerAttack = GetComponent<Player_Attack>();
@@ -83,6 +79,9 @@ public class Player_Controller : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerCamera = Camera.main;
+        m_startZoom = playerCamera.fieldOfView;
+        animatorCamera = playerCamera.GetComponent<Animator>();
         LoadPlayerInfo();
     }
 
