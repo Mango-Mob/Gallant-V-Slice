@@ -333,7 +333,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_SEVEN))
         {
-            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_EIGHT))
         {
@@ -535,7 +535,8 @@ public class Player_Controller : MonoBehaviour
 
     public void StorePlayerInfo()
     {
-        GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, m_inkmanClass);
+        GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
+            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect);
     }
     public void LoadPlayerInfo()
     {
@@ -555,6 +556,9 @@ public class Player_Controller : MonoBehaviour
             playerStats.EvaluateEffects();
         }
         playerSkills.EvaluateSkills();
+
+        playerAttack.m_leftWeaponEffect = GameManager.RetrieveWeaponEffect(Hand.LEFT);
+        playerAttack.m_rightWeaponEffect = GameManager.RetrieveWeaponEffect(Hand.RIGHT);
 
         playerAttack.ApplyWeaponData(Hand.LEFT);
         playerAttack.ApplyWeaponData(Hand.RIGHT);
