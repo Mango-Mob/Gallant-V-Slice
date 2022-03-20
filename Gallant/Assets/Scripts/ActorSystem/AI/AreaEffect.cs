@@ -42,7 +42,7 @@ public class AreaEffect: MonoBehaviour
                 Player_Controller player = hit.GetComponent<Player_Controller>();
                 if (player != null)
                 {
-                    player.DamagePlayer(damage);
+                    player.DamagePlayer(damage, CombatSystem.DamageType.Ability);
                     AttackData.ApplyEffect(player, transform, m_data.effectAfterwards, m_data.effectPower);
                 }
             }

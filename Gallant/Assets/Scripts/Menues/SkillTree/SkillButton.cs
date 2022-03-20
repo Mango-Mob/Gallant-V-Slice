@@ -152,8 +152,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
             m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
             
-           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 5.0f);
-           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 5.0f);
+           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 20.0f);
+           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 20.0f);
         }
     }
     public void SetUpgradeLevel(int _level)

@@ -138,6 +138,10 @@ public class SimpleCameraController : MonoBehaviour
         {
             translation *= 10.0f;
         }
+        if (InputManager.Instance.IsKeyPressed(KeyType.L_CTRL))
+        {
+            translation *= 5.0f;
+        }
 
         m_TargetCameraState.Translate(translation * Time.deltaTime);
 

@@ -424,12 +424,14 @@ public class Player_Attack : MonoBehaviour
                         Debug.LogWarning("Weapon icon not set");
 
                     playerController.playerAbilities.SetAbility(m_leftWeaponData.abilityData, Hand.LEFT);
+                    playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.LEFT);
                 }
                 else
                 {
                     if (m_leftWeaponIcon != null)
                         m_leftWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
+                    playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.LEFT, m_leftWeaponData);
@@ -457,12 +459,14 @@ public class Player_Attack : MonoBehaviour
                         Debug.LogWarning("Weapon icon not set");
 
                     playerController.playerAbilities.SetAbility(m_rightWeaponData.abilityData, Hand.RIGHT);
+                    playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.RIGHT);
                 }
                 else
                 {
                     if (m_rightWeaponIcon != null)
                         m_rightWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
+                    playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);

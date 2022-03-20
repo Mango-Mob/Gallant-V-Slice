@@ -38,11 +38,11 @@ public class KillPlane : MonoBehaviour
                 if (canRespawnColliders)
                 {
                     other.GetComponent<Player_Controller>().RespawnPlayerToGround(false);
-                    other.GetComponent<Player_Controller>().DamagePlayer(damageOnHit, null, true);
+                    other.GetComponent<Player_Controller>().DamagePlayer(damageOnHit,CombatSystem.DamageType.True, null, true);
                 }
                 else
                 {
-                    other.GetComponent<Player_Controller>().DamagePlayer(999999999, null, true);
+                    other.GetComponent<Player_Controller>().DamagePlayer(999999999, CombatSystem.DamageType.True, null, true);
                 }
             }
         }
