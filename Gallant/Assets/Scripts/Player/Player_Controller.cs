@@ -333,7 +333,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_SEVEN))
         {
-            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_EIGHT))
         {

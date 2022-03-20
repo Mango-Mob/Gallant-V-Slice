@@ -126,7 +126,7 @@ public class Player_Movement : MonoBehaviour
                 Physics.Raycast(transform.position + transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
                 Physics.Raycast(transform.position - transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
             {
-                Debug.Log((transform.position - m_lastGroundedPosition).magnitude / Time.fixedDeltaTime);
+                //Debug.Log((transform.position - m_lastGroundedPosition).magnitude / Time.fixedDeltaTime);
 
                 m_lastGroundedPosition = transform.position;
                 m_lastGroundedVelocity = characterController.velocity;

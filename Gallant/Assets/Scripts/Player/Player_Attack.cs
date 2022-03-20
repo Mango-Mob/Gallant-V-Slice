@@ -88,6 +88,11 @@ public class Player_Attack : MonoBehaviour
     private void Update()
     {
         m_attackedThisFrame = false;
+
+        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded)
+        {
+            SwapWeapons();
+        }
     }
 
     /*******************
@@ -475,7 +480,7 @@ public class Player_Attack : MonoBehaviour
             if (m_leftWeaponData.isTwoHanded)
                 playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.RIGHT);
         }
-        else
+        else if (m_rightWeaponData != null && !m_rightWeaponData.isTwoHanded)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
         }
@@ -486,7 +491,7 @@ public class Player_Attack : MonoBehaviour
             if (m_rightWeaponData.isTwoHanded)
                 playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
         }
-        else
+        else if(m_leftWeaponData != null && !m_leftWeaponData.isTwoHanded)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
         }
