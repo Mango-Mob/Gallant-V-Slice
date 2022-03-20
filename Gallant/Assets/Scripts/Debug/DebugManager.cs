@@ -50,6 +50,7 @@ namespace Exceed.Debug
         [SerializeField] private Slider m_timeSlider;
         [SerializeField] private Toggle m_timeCheck;
         [SerializeField] private Toggle m_HudCheck;
+        [SerializeField] private Slider m_cameraSensitivity;
 
         [Header("Other Content")]
         [SerializeField] private Toggle m_showRooms;
@@ -85,6 +86,9 @@ namespace Exceed.Debug
             m_toggleSelectedButtons[0].interactable = false;
             m_toggleSelectedButtons[1].interactable = false;
             m_killOneBtn.interactable = false;
+            m_cameraSensitivity.minValue = 1f;
+            m_cameraSensitivity.maxValue = 10f;
+            m_cameraSensitivity.SetValueWithoutNotify(1.0f);
             OnLevelLoad();
         }
 
@@ -150,6 +154,7 @@ namespace Exceed.Debug
                 Cursor.lockState = CursorLockMode.Locked;
                 m_freeCamera.enabled = true;
             }
+            m_freeCamera.GetComponent<SimpleCameraController>().rotationMultiplier = m_cameraSensitivity.value;
 
             if (!m_timeCheck.isOn)
             {

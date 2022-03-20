@@ -52,6 +52,9 @@ public class SimpleCameraController : MonoBehaviour
     [Tooltip("Time it takes to interpolate camera position 99% of the way to the target."), Range(0.001f, 1f)]
     public float positionLerpTime = 0.2f;
 
+    [Range(1, 10f)]
+    public float rotationMultiplier = 1f;
+
     [Header("Rotation Settings")]
     [Tooltip("X = Change in mouse position.\nY = Multiplicative factor for camera rotation.")]
     public AnimationCurve mouseSensitivityCurve = new AnimationCurve(new Keyframe(0f, 0.5f, 0f, 5f), new Keyframe(1f, 2.5f, 0f, 0f));
@@ -124,13 +127,11 @@ public class SimpleCameraController : MonoBehaviour
         // Rotation
         Vector2 delta = InputManager.Instance.GetMouseDelta();
         var mouseMovement = new Vector2(delta.x, delta.y * (invertY ? 1 : -1));
-        
-        var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude * 0.5f);
-        
-        m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
-        m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch + mouseMovement.y * mouseSensitivityFactor, -89.9f, 89.9f);
-        
+
+
+
         // Translation
+        var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude * 0.005f) * rotationMultiplier;
         translation = GetInputTranslationDirection();
 
         // Speed up movement when shift key held
@@ -142,7 +143,9 @@ public class SimpleCameraController : MonoBehaviour
         {
             translation *= 5.0f;
         }
-
+        
+        m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
+        m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch + mouseMovement.y * mouseSensitivityFactor, -89.9f, 89.9f);
         m_TargetCameraState.Translate(translation * Time.deltaTime);
 
         // Framerate-independent interpolation
