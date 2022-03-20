@@ -16,7 +16,8 @@ namespace ActorSystem.AI.Users
         public float m_disableDistance;
         public float m_idealDistance = 1.5f;
         private bool m_hasGivenReward = false;
-        
+        public int m_requiresAllRooms = 0;
+
         private Interactable m_myInteractLogic;
 
         private UI_Text m_keyboardInput;
@@ -67,7 +68,6 @@ namespace ActorSystem.AI.Users
                 UpdateDisplay();
                 m_myInteractLogic.m_isReady = m_showUI;
             }
-                
         }
 
         public void Interact()
@@ -84,8 +84,11 @@ namespace ActorSystem.AI.Users
 
         private void LoadNextScene()
         {
-            DialogManager.Instance.Hide();
-            LevelManager.Instance.LoadNewLevel(m_nextScene, LevelManager.Transition.CROSSFADE);
+            if (GameManager.Instance.clearedArenas >= m_requiresAllRooms)
+            {
+                DialogManager.Instance.Hide();
+                LevelManager.Instance.LoadNewLevel(m_nextScene, LevelManager.Transition.CROSSFADE);
+            }
         }
 
         private void UpdateDisplay()

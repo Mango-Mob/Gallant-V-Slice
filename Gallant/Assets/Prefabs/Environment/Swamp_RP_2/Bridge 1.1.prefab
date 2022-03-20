@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 5733842406184627584}
   - component: {fileID: 2219262250209395822}
   - component: {fileID: 2944103327912489376}
-  - component: {fileID: 5873693858113810153}
+  - component: {fileID: 4079629013112832278}
   m_Layer: 11
   m_Name: Damaged_Railing
   m_TagString: Untagged
@@ -244,8 +244,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5873693858113810153
-BoxCollider:
+--- !u!64 &4079629013112832278
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -254,9 +254,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 6.001663, y: 2.3192909, z: 1.3763161}
-  m_Center: {x: -0.0008276701, y: 0.24670348, z: -0.40117502}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -53505836918075115, guid: a1b52b38582c99647ad4307821cc3f46, type: 3}
 --- !u!1 &932468132867832090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1934,7 +1935,7 @@ GameObject:
   - component: {fileID: 9080849530686099578}
   m_Layer: 11
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Envir_wood
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

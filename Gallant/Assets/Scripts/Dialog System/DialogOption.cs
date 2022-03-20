@@ -32,7 +32,7 @@ public class DialogOption
                 return;
             case "INTERACT":
                 result = DialogResult.INTERACT;
-                nextDialog = -1;
+                nextDialog = currentScene + 1;
                 return;
             case "TRANSFER":
                 result = DialogResult.TRANSFER;

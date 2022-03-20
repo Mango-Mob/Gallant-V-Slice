@@ -20,6 +20,10 @@ public class RoomData : ScriptableObject
     public float CalculateCost()
     {
         float cost = 0;
+
+        if (m_waveInformation == null)
+            return 0;
+
         foreach (var wave in m_waveInformation)
         {
             if(wave.actor != null)

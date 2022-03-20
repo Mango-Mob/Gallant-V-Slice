@@ -480,9 +480,39 @@ public class Player_Movement : MonoBehaviour
 
         Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;
 
-
-        playerController.playerAudioAgent.PlayBasicFootstep();
+        RaycastHit hit;
+        Collider[] waterCheck = Physics.OverlapSphere(footPosition, 0.25f, 1 << LayerMask.NameToLayer("Water")); 
+        if(waterCheck.Length > 0)
+        {
+            playerController.playerAudioAgent.PlayBasicFootstep(3);
+            return;
+        }
+        if (Physics.Raycast(footPosition, Vector3.down, out hit, 1f, 1 << LayerMask.NameToLayer("Environment")))
+        {
+            if(hit.collider.tag == "Envir_stone")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(1);
+            }
+            else if (hit.collider.tag == "Envir_dirt")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(2);
+            }
+            else if (hit.collider.tag == "Envir_wood")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(0);
+            }
+            else
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(0);
+            }
+            return;
+        }
+        else
+        {
+            playerController.playerAudioAgent.PlayBasicFootstep(0);
+        }
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);
