@@ -158,7 +158,7 @@ namespace ActorSystem.Spawning
                  if (m_waves.Count == 0)
                  {
                      Stop();
-                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
                      GameManager.Advance();
                  }
                  else

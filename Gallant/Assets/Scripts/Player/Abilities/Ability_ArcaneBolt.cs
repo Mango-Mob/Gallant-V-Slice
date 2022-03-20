@@ -30,7 +30,7 @@ public class Ability_ArcaneBolt : AbilityBase
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_boltPrefab,
-                modelTransform.position + 0.5f * modelTransform.forward + transform.up,
+                m_handTransform.position + 0.5f * modelTransform.forward,
                 modelTransform.rotation);
 
             projectile.GetComponent<ArcaneboltProjectile>().m_data = m_data;

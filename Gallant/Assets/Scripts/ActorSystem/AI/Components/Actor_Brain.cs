@@ -96,7 +96,7 @@ namespace ActorSystem.AI.Components
             this.enabled = status;
             foreach (var item in GetComponentsInChildren<Actor_Component>())
             {
-                if (item == this)
+                if (item == this && item != m_ragDoll)
                     continue;
 
                 item.SetEnabled(status);

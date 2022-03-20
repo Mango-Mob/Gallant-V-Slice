@@ -40,13 +40,13 @@ public class Player_Attack : MonoBehaviour
     [Header("Hand Transforms")]
     public Transform m_leftHandTransform;
     public WeaponData m_leftWeaponData;
-    private ItemEffect m_leftWeaponEffect;
+    public ItemEffect m_leftWeaponEffect;
     public WeaponBase m_leftWeapon { private set; get; }
     private bool m_leftWeaponInUse = false;
 
     public Transform m_rightHandTransform;
     public WeaponData m_rightWeaponData;
-    private ItemEffect m_rightWeaponEffect;
+    public ItemEffect m_rightWeaponEffect;
     public WeaponBase m_rightWeapon { private set; get; }
     private bool m_rightWeaponInUse = false;
 
@@ -88,6 +88,11 @@ public class Player_Attack : MonoBehaviour
     private void Update()
     {
         m_attackedThisFrame = false;
+
+        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded)
+        {
+            SwapWeapons();
+        }
     }
 
     /*******************
@@ -130,7 +135,6 @@ public class Player_Attack : MonoBehaviour
 
         animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
-        playerController.playerAudioAgent.PlayWeaponSwing(thisWeapon.m_weaponData.weaponType);
         //playerController.animator.SetBool(animatorTriggerName, true);
         playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
         //playerController.animator.CrossFade(animatorTriggerName, 0.1f);
@@ -424,14 +428,13 @@ public class Player_Attack : MonoBehaviour
                         Debug.LogWarning("Weapon icon not set");
 
                     playerController.playerAbilities.SetAbility(m_leftWeaponData.abilityData, Hand.LEFT);
-                    playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.LEFT);
                 }
                 else
                 {
                     if (m_leftWeaponIcon != null)
                         m_leftWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
-                    playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
+                    m_leftWeaponEffect = ItemEffect.NONE;
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.LEFT, m_leftWeaponData);
@@ -459,19 +462,42 @@ public class Player_Attack : MonoBehaviour
                         Debug.LogWarning("Weapon icon not set");
 
                     playerController.playerAbilities.SetAbility(m_rightWeaponData.abilityData, Hand.RIGHT);
-                    playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.RIGHT);
                 }
                 else
                 {
                     if (m_rightWeaponIcon != null)
                         m_rightWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
-                    playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
+                    m_rightWeaponEffect = ItemEffect.NONE;
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);
                 break;
         }
+
+        // Set idle animations
+        if (m_leftWeaponData != null)
+        {
+            playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.LEFT);
+            if (m_leftWeaponData.isTwoHanded)
+                playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.RIGHT);
+        }
+        else if (m_rightWeaponData != null && !m_rightWeaponData.isTwoHanded)
+        {
+            playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
+        }
+
+        if (m_rightWeaponData != null)
+        {
+            playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.RIGHT);
+            if (m_rightWeaponData.isTwoHanded)
+                playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
+        }
+        else if(m_leftWeaponData != null && !m_leftWeaponData.isTwoHanded)
+        {
+            playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
+        }
+
 
         m_leftWeaponIcon.SetDisabledState(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
         m_rightWeaponIcon.SetDisabledState(m_leftWeaponData && m_leftWeaponData.isTwoHanded);

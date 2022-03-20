@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 /****************
  * UI_AbilityIcon: Description
  * @author : William de Beer
@@ -21,19 +22,28 @@ public class UI_AbilityIcon : UI_Element
     [SerializeField] private Image m_icon;
     [SerializeField] private Image m_cooldown;
     [SerializeField] private GameObject[] m_stars;
+    [SerializeField] private TextMeshProUGUI m_text;
 
     [Header("Frames")]
     [SerializeField] private GameObject m_activeFrame;
     [SerializeField] private GameObject m_passiveFrame;
 
     /*******************
-     * SetCooldownFill : Sets the value of resource fill
+     * SetCooldown : Sets the value of resource fill and text
      * @author : William de Beer
-     * @param : (float) Value to be set
+     * @param : (float) Fill value for bar, (float) Max cooldown for ability.
      */
-    public void SetCooldownFill(float _fill)
+    public void SetCooldown(float _fill, float _maxCooldown)
     {
+        if (_fill > 0.0f)
+        {
+            Debug.Log("Hello");
+        }
+
         m_cooldown.fillAmount = _fill;
+        m_text.text = (_fill * _maxCooldown).ToString("0.0");
+
+        m_text.enabled = _fill > 0.0f;
     }
 
     /*******************
