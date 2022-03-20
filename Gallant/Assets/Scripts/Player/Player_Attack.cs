@@ -40,13 +40,13 @@ public class Player_Attack : MonoBehaviour
     [Header("Hand Transforms")]
     public Transform m_leftHandTransform;
     public WeaponData m_leftWeaponData;
-    private ItemEffect m_leftWeaponEffect;
+    public ItemEffect m_leftWeaponEffect;
     public WeaponBase m_leftWeapon { private set; get; }
     private bool m_leftWeaponInUse = false;
 
     public Transform m_rightHandTransform;
     public WeaponData m_rightWeaponData;
-    private ItemEffect m_rightWeaponEffect;
+    public ItemEffect m_rightWeaponEffect;
     public WeaponBase m_rightWeapon { private set; get; }
     private bool m_rightWeaponInUse = false;
 
@@ -434,6 +434,7 @@ public class Player_Attack : MonoBehaviour
                     if (m_leftWeaponIcon != null)
                         m_leftWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
+                    m_leftWeaponEffect = ItemEffect.NONE;
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.LEFT, m_leftWeaponData);
@@ -467,6 +468,7 @@ public class Player_Attack : MonoBehaviour
                     if (m_rightWeaponIcon != null)
                         m_rightWeaponIcon.SetIconSprite(null);
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
+                    m_rightWeaponEffect = ItemEffect.NONE;
                 }
 
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);
