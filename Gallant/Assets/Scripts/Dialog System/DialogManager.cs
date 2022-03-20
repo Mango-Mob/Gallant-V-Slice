@@ -87,8 +87,9 @@ public class DialogManager : Singleton<DialogManager>
                     LoadScene(result.nextDialog - 1);
                     break;
                 case DialogResult.INTERACT:
+                    m_currentScene = result.nextDialog;
+                    LoadScene(result.nextDialog);
                     m_interact.Invoke();
-                    Hide();
                     break;
                 case DialogResult.END:
                     Hide();
@@ -124,6 +125,11 @@ public class DialogManager : Singleton<DialogManager>
     {
         if (m_file != null)
         {
+            if (m_file.m_list.Count <= index)
+            {
+                Hide();
+                return;
+            }
             int bodyId = m_file.m_list[index].bodyID;
             int faceID = m_file.m_list[index].faceID;
 

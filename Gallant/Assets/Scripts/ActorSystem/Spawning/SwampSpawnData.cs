@@ -141,5 +141,10 @@ namespace ActorSystem.Spawning
                 }
             }
         }
+
+        public override SpawnData GetASpawnPoint()
+        {
+            return new SpawnData();
+        }
     }
 }
