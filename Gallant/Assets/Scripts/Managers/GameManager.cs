@@ -79,7 +79,10 @@ public class GameManager : Singleton<GameManager>
         public AbilityData m_rightAbility;
 
         public ClassData m_classData;
-         
+
+        public ItemEffect m_leftWeaponEffect;
+        public ItemEffect m_rightWeaponEffect;
+
         //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
     }
@@ -117,7 +120,7 @@ public class GameManager : Singleton<GameManager>
 
         Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
     {
         if (_leftWeapon != null)
         {
@@ -140,6 +143,9 @@ public class GameManager : Singleton<GameManager>
             m_playerInfo.m_rightWeapon = null;
             m_playerInfo.m_rightAbility = null;
         }
+
+        m_playerInfo.m_leftWeaponEffect = _leftWeaponEffect;
+        m_playerInfo.m_rightWeaponEffect = _rightWeaponEffect;
 
         //if (_rightWeapon != null)
         //{
@@ -230,6 +236,19 @@ public class GameManager : Singleton<GameManager>
                 return null;
         }
         return data;
+    }
+    
+    public static ItemEffect RetrieveWeaponEffect(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                return m_playerInfo.m_leftWeaponEffect;
+            case Hand.RIGHT:
+                return m_playerInfo.m_rightWeaponEffect;
+            default:
+                return ItemEffect.NONE;
+        }
     }
 
     public static Dictionary<EffectData, int> RetrieveEffectsDictionary()

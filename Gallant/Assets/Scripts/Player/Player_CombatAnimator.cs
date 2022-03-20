@@ -6,6 +6,7 @@ public class Player_CombatAnimator : MonoBehaviour
 {
     public Player_Controller playerController { private set; get; }
     public float m_durationTransition = 0.4f;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -51,6 +52,9 @@ public class Player_CombatAnimator : MonoBehaviour
         {
             case Weapon.CROSSBOW:
                 playerController.animator.Play("Crossbow", layerIndex);
+                break;
+            case Weapon.SPEAR:
+                playerController.animator.Play("Spear", layerIndex);
                 break;
             default:
                 playerController.animator.Play("Default", layerIndex);

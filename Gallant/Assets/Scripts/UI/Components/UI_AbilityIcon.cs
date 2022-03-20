@@ -36,6 +36,11 @@ public class UI_AbilityIcon : UI_Element
      */
     public void SetCooldown(float _fill, float _maxCooldown)
     {
+        if (_fill > 0.0f)
+        {
+            Debug.Log("Hello");
+        }
+
         m_cooldown.fillAmount = _fill;
         m_text.text = (_fill * _maxCooldown).ToString("0.0");
         m_textshad.text = (_fill * _maxCooldown).ToString("0.0");
