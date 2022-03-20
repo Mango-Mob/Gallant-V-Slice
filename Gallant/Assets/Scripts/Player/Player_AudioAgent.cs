@@ -117,8 +117,23 @@ public class Player_AudioAgent : MultiAudioAgent
     }
     #endregion
 
-    public void PlayBasicFootstep()
+    public void PlayBasicFootstep(int state)
     {
-        base.PlayOnce("PlayerFootstepBasic", false, Random.Range(0.95f, 1.05f));
+        switch (state)
+        {
+            default:
+            case 0://Wood
+                base.PlayOnce("PlayerFootstepBasic", false, Random.Range(0.95f, 1.05f));
+                break;
+            case 1://Stone
+                base.PlayOnce("PlayerFootstepStone", false, Random.Range(0.95f, 1.05f));
+                break;
+            case 2: //Dirt
+                base.PlayOnce("PlayerFootstepDirt", false, Random.Range(0.95f, 1.05f));
+                break;
+            case 3://Water
+                base.PlayOnce("PlayerFootstepWater", false, Random.Range(0.95f, 1.05f));
+                break;
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace ActorSystem.Spawning
          * @author : Michael Jordan
          */
         protected abstract Task GenerateSpawnPoints();
-
+        public abstract SpawnData GetASpawnPoint(); 
         //MonoBehaviour
         public virtual void OnDrawGizmos()
         {

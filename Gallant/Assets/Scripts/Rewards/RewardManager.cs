@@ -267,22 +267,22 @@ public class RewardManager : Singleton<RewardManager>
                 m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
                 m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
 
-                if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
-                {
-                    m_abilityCooldownHeader.text = "Cooldown:";
-                }
-                else
-                {
-                    m_abilityCooldownHeader.text = "";
-                    m_abilityCooldownText.text = "";
-                }
+                //if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+                //{
+                //    m_abilityCooldownHeader.text = "Cooldown:";
+                //}
+                //else
+                //{
+                //    m_abilityCooldownHeader.text = "";
+                //    m_abilityCooldownText.text = "";
+                //}
             }
             else
             {
                 m_abilityImage.gameObject.SetActive(false);
-                m_abilityDescription.text = "";
-                m_abilityCooldownHeader.text = "";
-                m_abilityCooldownText.text = "";
+                //m_abilityDescription.text = "";
+                //m_abilityCooldownHeader.text = "";
+                //m_abilityCooldownText.text = "";
             }
         }
         else if(data is ItemData)
