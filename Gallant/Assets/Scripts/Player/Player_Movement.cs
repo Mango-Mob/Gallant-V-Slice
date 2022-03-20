@@ -49,6 +49,10 @@ public class Player_Movement : MonoBehaviour
     private float m_rollCDTimer = 0.0f;
     public float m_rollCD = 1.0f;
 
+    [Header("Dodge Destructible")]
+    public float m_detectDistance = 0.7f;
+    public float m_explodeForce = 5.0f;
+
     [Header("Foot Transforms")]
     [SerializeField] private Transform m_leftFoot;
     [SerializeField] private Transform m_rightFoot;
@@ -165,6 +169,17 @@ public class Player_Movement : MonoBehaviour
 
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
+            }
+
+            Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
+
+            foreach (var item in destruct)
+            {
+                Destructible dest = item.GetComponent<Destructible>();
+                if (dest != null && dest.m_letRollDestroy)
+                {
+                    dest.ExplodeObject(transform.position, m_explodeForce, 5.0f);
+                }
             }
         }
         else

@@ -6,6 +6,7 @@ public class Destructible : MonoBehaviour
     public GameObject crackedObject;
     public AudioClip m_soundClip;
     public bool m_letPlayerDestroy = true;
+    public bool m_letRollDestroy = true;
 
     public void CrackObject()
     {
@@ -31,4 +32,5 @@ public class Destructible : MonoBehaviour
 
         Destroy(gameObject);
     }
+
 }
