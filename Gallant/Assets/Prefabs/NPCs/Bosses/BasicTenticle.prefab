@@ -575,6 +575,8 @@ GameObject:
   - component: {fileID: 4334076525128619282}
   - component: {fileID: 2695535844105113941}
   - component: {fileID: 1165860633712495569}
+  - component: {fileID: 3769122964767734331}
+  - component: {fileID: 2267369148534030779}
   m_Layer: 9
   m_Name: BasicTenticle
   m_TagString: Untagged
@@ -629,6 +631,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38dc7ec72d5284b4a9f428d052914872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_activeStateText: 
+  m_myFaction: 0
+  m_toReserveOnLoad: 0
+  m_myLevel: 0
+  m_name: 
+  m_selfTargetTransform: {fileID: 0}
+  m_HurtVFXPrefab: {fileID: 0}
+  m_myData: {fileID: 0}
   m_acceleration: 12
   m_stoppingDist: 0
   isLantern: 0
@@ -700,3 +710,35 @@ CapsuleCollider:
   m_Height: 6
   m_Direction: 1
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &3769122964767734331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_canBeTarget: 1
+  m_forceShowUI: 0
+  m_agility: 0
+  m_currHealth: 0
+  m_currPhyResist: 0
+  m_currAbilResist: 0
+  m_target: {fileID: 0}
+--- !u!114 &2267369148534030779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4a381ba0220754196ce9c1d784d9ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setDelay: 0

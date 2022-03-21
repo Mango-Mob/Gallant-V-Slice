@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ActorSystem.AI.Other
 {
-    public class Tentacle_AI : MonoBehaviour
+    public class Tentacle_AI : Boss_Actor
     {
         public float m_acceleration = 12f;
         public float m_stoppingDist = 0f;
@@ -17,10 +17,8 @@ namespace ActorSystem.AI.Other
 
         private Vector3 m_velocity;
         
-        private Animator m_myAnimator;
         private void Awake()
         {
-            m_myAnimator = GetComponent<Animator>();
             m_idealLocation = transform.position;
 
             if (emergeOnAwake)
@@ -41,14 +39,14 @@ namespace ActorSystem.AI.Other
 
         public void Emerge()
         {
-            m_myAnimator.SetBool("Visible", true);
+            m_myBrain.m_animator.SetBool("Visible", true);
             m_idealLocation = transform.position;
             m_velocity = Vector3.zero;
         }
 
         public void Submerge()
         {
-            m_myAnimator.SetBool("Visible", false);
+            m_myBrain.m_animator.SetBool("Visible", false);
         }
 
         public void TeleportToIdeal()

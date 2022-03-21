@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2548110410166618610}
   - component: {fileID: 7475678339017479965}
   - component: {fileID: 3128767273985561155}
+  - component: {fileID: 4900066921316497751}
+  - component: {fileID: 1640644735925064857}
   m_Layer: 9
   m_Name: HoldingTenticle
   m_TagString: Untagged
@@ -66,6 +68,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38dc7ec72d5284b4a9f428d052914872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_activeStateText: 
+  m_myFaction: 0
+  m_toReserveOnLoad: 0
+  m_myLevel: 0
+  m_name: 
+  m_selfTargetTransform: {fileID: 0}
+  m_HurtVFXPrefab: {fileID: 0}
+  m_myData: {fileID: 0}
   m_acceleration: 12
   m_stoppingDist: 0
   isLantern: 0
@@ -123,6 +133,38 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   animEvents: []
+--- !u!114 &4900066921316497751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423905290196004071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_canBeTarget: 1
+  m_forceShowUI: 0
+  m_agility: 0
+  m_currHealth: 0
+  m_currPhyResist: 0
+  m_currAbilResist: 0
+  m_target: {fileID: 0}
+--- !u!114 &1640644735925064857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423905290196004071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4a381ba0220754196ce9c1d784d9ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setDelay: 0
 --- !u!1 &1548294908804033665
 GameObject:
   m_ObjectHideFlags: 0

@@ -260,6 +260,8 @@ GameObject:
   - component: {fileID: 4508837339375232747}
   - component: {fileID: 3626508731828100027}
   - component: {fileID: 7473522537975490883}
+  - component: {fileID: 3347486705654722044}
+  - component: {fileID: 2357108439377232165}
   m_Layer: 9
   m_Name: LanternTentacle
   m_TagString: Untagged
@@ -316,6 +318,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38dc7ec72d5284b4a9f428d052914872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_activeStateText: 
+  m_myFaction: 0
+  m_toReserveOnLoad: 0
+  m_myLevel: 0
+  m_name: 
+  m_selfTargetTransform: {fileID: 0}
+  m_HurtVFXPrefab: {fileID: 0}
+  m_myData: {fileID: 0}
   m_acceleration: 12
   m_stoppingDist: 0
   isLantern: 1
@@ -373,6 +383,38 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   animEvents: []
+--- !u!114 &3347486705654722044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3626508731828100028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_canBeTarget: 1
+  m_forceShowUI: 0
+  m_agility: 0
+  m_currHealth: 0
+  m_currPhyResist: 0
+  m_currAbilResist: 0
+  m_target: {fileID: 0}
+--- !u!114 &2357108439377232165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3626508731828100028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4a381ba0220754196ce9c1d784d9ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setDelay: 0
 --- !u!1 &3771844940074724461
 GameObject:
   m_ObjectHideFlags: 0
