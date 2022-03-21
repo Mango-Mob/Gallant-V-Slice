@@ -41,7 +41,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             //}
             //
             ////Play animation
-            GetComponent<Actor_Brain>().m_ragDoll?.SetEnabled(false);
+            GetComponent<Actor_Brain>().m_ragDoll?.DisableRagdoll();
             m_timer = m_spawnDelay;
             m_hasResentlySpawnned = true;
             //m_spawnning = true;
@@ -55,6 +55,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             if(m_hasResentlySpawnned && m_timer <= 0 && !GetComponent<Actor_Brain>().m_animator.enabled)
             {
                 transform.position = m_spawn.transform.position;
+                transform.rotation = Quaternion.LookRotation((GetComponent<Actor_Brain>().m_target.transform.position - transform.position).normalized, Vector3.up);
                 GetComponent<Actor_Brain>().m_animator.SetEnabled(true);
                 GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", true);
                 GetComponent<Actor_Brain>().m_animator.PlayAnimation("Spawn_Loop");

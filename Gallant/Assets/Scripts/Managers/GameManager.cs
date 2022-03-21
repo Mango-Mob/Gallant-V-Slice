@@ -20,6 +20,7 @@ public class GameManager : Singleton<GameManager>
     public bool enableTimer = false;
     public bool m_sceneHasTutorial = false;
     public bool IsInCombat { get { return ActorManager.Instance.m_activeSpawnners.Count > 0; } }
+    public int clearedArenas = 0;
 
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
@@ -64,6 +65,7 @@ public class GameManager : Singleton<GameManager>
     public static void Advance()
     {
         currentLevel += deltaLevel;
+        GameManager.Instance.clearedArenas++;
     }
 
     #region Player Info Storage

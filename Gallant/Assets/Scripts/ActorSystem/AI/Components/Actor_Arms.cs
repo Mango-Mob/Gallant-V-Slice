@@ -68,7 +68,7 @@ namespace ActorSystem.AI.Components
 
         public void Invoke(Collider target, Actor_ProjectileSource _source = null)
         {
-            if (m_activeAttack != null)
+            if (m_activeAttack != null && target != null)
             {
                 for (int i = 0; i < m_myData[m_activeAttack.Value].instancesPerAttack; i++)
                 {

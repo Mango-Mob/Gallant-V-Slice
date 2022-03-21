@@ -31,6 +31,11 @@ namespace ActorSystem.AI.Components
             m_hasPivot = (HasParameter("Pivot"));
         }
 
+        public bool IsCurrentStatePlaying(int layer, string name)
+        {
+            return m_animator.GetCurrentAnimatorStateInfo(layer).IsName(name);
+        }
+
         public bool PlayAnimation(string animID)
         {
             //Play Anim

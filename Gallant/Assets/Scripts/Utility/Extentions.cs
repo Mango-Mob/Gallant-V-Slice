@@ -33,6 +33,11 @@ public static class Extentions
 
        return sphere;
     }
+    public static Vector3 MidPoint(Vector3 A, Vector3 B)
+    {
+        return new Vector3( (A.x + B.x) / 2f, (A.y + B.y) / 2f, (A.z + B.z) / 2f);
+    }
+
     public static void GizmosDrawCircle(Vector3 point, float radius)
     {
         Gizmos.matrix = Matrix4x4.TRS(point, Quaternion.identity, new Vector3(1f, 0f, 1f));
