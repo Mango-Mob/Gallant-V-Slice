@@ -8,7 +8,13 @@ namespace ActorSystem.AI.Other
     {
         public float m_acceleration = 12f;
         public float m_stoppingDist = 0f;
+        public bool isLantern = false;
+        public bool emergeOnAwake = true;
+
         public Vector3 m_idealLocation { get; set; }
+
+        public bool isVisible = false;
+
         private Vector3 m_velocity;
         
         private Animator m_myAnimator;
@@ -16,6 +22,9 @@ namespace ActorSystem.AI.Other
         {
             m_myAnimator = GetComponent<Animator>();
             m_idealLocation = transform.position;
+
+            if (emergeOnAwake)
+                Emerge();
         }
 
         // Start is called before the first frame update
@@ -36,11 +45,20 @@ namespace ActorSystem.AI.Other
             m_idealLocation = transform.position;
             m_velocity = Vector3.zero;
         }
+
         public void Submerge()
         {
             m_myAnimator.SetBool("Visible", false);
-            m_idealLocation = transform.position;
-            m_velocity = Vector3.zero;
+        }
+
+        public void TeleportToIdeal()
+        {
+            transform.position = m_idealLocation;
+        }
+
+        public void SetVisible(bool status)
+        {
+            isVisible = status;
         }
 
         private void OnDrawGizmos()
@@ -51,6 +69,9 @@ namespace ActorSystem.AI.Other
 
         private void FixedUpdate()
         {
+            if (!isVisible)
+                return;
+
             Vector3 direction = m_idealLocation - transform.position;
             direction.y = 0;
 
@@ -70,7 +91,7 @@ namespace ActorSystem.AI.Other
             if(direction.magnitude < 0.25f)
             {
                 m_velocity = Vector3.zero;
-                transform.position = m_idealLocation;
+                TeleportToIdeal();
             }
 
             transform.position += m_velocity * Time.fixedDeltaTime;
