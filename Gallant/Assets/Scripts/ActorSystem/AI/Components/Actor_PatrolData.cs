@@ -12,10 +12,7 @@ namespace ActorSystem.AI.Components
         public List<Transform> m_targetOrientations = new List<Transform>();
         public void Awake()
         {
-            foreach (var item in m_targetOrientations)
-            {
-                item.SetParent(null);
-            }
+            
         }
         
         public void DrawGizmos()
