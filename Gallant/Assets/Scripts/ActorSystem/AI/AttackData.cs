@@ -57,7 +57,7 @@ namespace ActorSystem.AI
 
         public AttackType attackType;
         public HitBox attackHitbox;
-        public HitBox damageHitbox;
+        public HitBox[] damageHitboxes;
         public Effect effectAfterwards;
         public float effectPower;
 
@@ -65,9 +65,9 @@ namespace ActorSystem.AI
         {
             return GetOverlappingColliders(attackHitbox, user, targetLayer);
         }
-        public List<Collider> GetDamagingOverlaping(Transform user, int targetLayer)
+        public List<Collider> GetDamagingOverlaping(Transform user, int targetLayer, int hitboxID = 0)
         {
-            return GetOverlappingColliders(damageHitbox, user, targetLayer);
+            return GetOverlappingColliders(damageHitboxes[hitboxID], user, targetLayer);
         }
 
         private List<Collider> GetOverlappingColliders(HitBox box, Transform user, int targetLayer)
@@ -107,8 +107,12 @@ namespace ActorSystem.AI
 
             Gizmos.color = Color.yellow;
             DrawHitbox(attackHitbox);
+
             Gizmos.color = Color.red;
-            DrawHitbox(damageHitbox);
+            foreach (var item in damageHitboxes)
+            {
+                DrawHitbox(item);
+            }
 
             Gizmos.matrix = Matrix4x4.identity;
         }

@@ -26,6 +26,7 @@ namespace ActorSystem.AI
             }
 
         }
+
         protected override void Start()
         {
             //Don't start statemachine

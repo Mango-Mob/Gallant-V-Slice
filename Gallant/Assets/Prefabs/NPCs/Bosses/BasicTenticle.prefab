@@ -591,6 +591,7 @@ GameObject:
   - component: {fileID: 1165860633712495569}
   - component: {fileID: 3769122964767734331}
   - component: {fileID: 2267369148534030779}
+  - component: {fileID: 6800129612680544971}
   m_Layer: 9
   m_Name: BasicTenticle
   m_TagString: Untagged
@@ -658,6 +659,12 @@ MonoBehaviour:
   isLantern: 0
   emergeOnAwake: 0
   isVisible: 0
+  m_headPhaseAttacks:
+  - {fileID: 11400000, guid: ce8b918bdf7f07a4dbc7cfd8df904eec, type: 2}
+  m_tentaclePhaseAttacks:
+  - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}
+  - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
+  m_oilPhaseAttacks: []
 --- !u!114 &2695535844105113941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,13 +709,49 @@ MonoBehaviour:
         m_CallState: 2
   eventThree:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3769122964767734331}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_Brain, Assembly-CSharp
+        m_MethodName: InvokeAttack
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   eventFour:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3769122964767734331}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_Brain, Assembly-CSharp
+        m_MethodName: InvokeAttack
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   eventFive:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3769122964767734331}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_Brain, Assembly-CSharp
+        m_MethodName: EndAttack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   animEvents: []
 --- !u!136 &1165860633712495569
 CapsuleCollider:
@@ -756,3 +799,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_setDelay: 0
+--- !u!114 &6800129612680544971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ba88271ad89ef43ab5daa42968e60d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_targetMask:
+    serializedVersion: 2
+    m_Bits: 4352
+  m_baseDamageMod: 1
+  m_lastAttackName: 
+  m_myData:
+  - {fileID: 11400000, guid: ce8b918bdf7f07a4dbc7cfd8df904eec, type: 2}
+  - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
+  - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}

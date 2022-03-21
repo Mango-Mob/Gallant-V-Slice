@@ -9,6 +9,8 @@ namespace ActorSystem.AI.Bosses
     public class Boss_Swamp : Boss_Actor
     {
         public GameObject m_myModel;
+        public int m_amountOfAttacks = 2;
+        public List<Tentacle_AI> m_currentlyAttacking { get; private set; } = new List<Tentacle_AI>();
 
         [Header("External Tentacles")]
         public Tentacle_AI m_tentacleL;
@@ -21,7 +23,7 @@ namespace ActorSystem.AI.Bosses
         private Transform m_restingTransformR;
 
         public enum Phase { HEAD, TENTACLE, INK}
-        private Phase m_mode = Phase.HEAD;
+        public Phase m_mode { get; private set; } = Phase.HEAD;
 
         public int m_currentOrient = 0;
 
@@ -63,6 +65,11 @@ namespace ActorSystem.AI.Bosses
                 return;
 
             m_mode = phase;
+
+            m_tentacleL.UpdateAttacks();
+            m_tentacleR.UpdateAttacks();
+            m_tentacleO.UpdateAttacks();
+            m_tentacleI.UpdateAttacks();
 
             if (isCompletelySubmerged)
                 SelectRandomOrientation();

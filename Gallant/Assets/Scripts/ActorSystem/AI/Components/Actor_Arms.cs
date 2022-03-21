@@ -51,17 +51,21 @@ namespace ActorSystem.AI.Components
 
         public AttackData Begin(int id)
         {
-            m_activeAttack = id;
-            m_cooldowns[id] = m_myData[id].cooldown;
-            m_lastAttackName = m_myData[id].animID;
-            return m_myData[id];
+            if(m_myData[id] != null)
+            {
+                m_activeAttack = id;
+                m_cooldowns[id] = m_myData[id].cooldown;
+                m_lastAttackName = m_myData[id].animID;
+                return m_myData[id];
+            }
+            return null;
         }
 
-        public Collider[] GetOverlapping()
+        public Collider[] GetOverlapping(int damageId)
         {
             if(m_activeAttack != null)
             {
-                return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask).ToArray();
+                return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask, damageId).ToArray();
             }
             return null;
         }
@@ -103,6 +107,9 @@ namespace ActorSystem.AI.Components
         {
             for (int i = 0; i < m_myData.Count; i++)
             {
+                if (m_myData[i] == null)
+                    continue;
+
                 if(m_cooldowns[i] <= 0 && m_myData[i].GetAttackOverlaping(transform, m_targetMask).Count > 0)
                 {
                     return i;
@@ -115,7 +122,8 @@ namespace ActorSystem.AI.Components
         {
             foreach (var attack in m_myData)
             {
-                attack.DrawGizmos(transform);
+                if(attack != null)
+                    attack.DrawGizmos(transform);
             }
         }
     }
