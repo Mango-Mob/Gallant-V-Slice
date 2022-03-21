@@ -21,6 +21,7 @@ namespace ActorSystem.AI
             else
             {
                 ActorManager.Instance.Subscribe(this);
+                m_myBrain.LoadData(m_myData);
                 m_myBrain.enabled = true;
             }
 

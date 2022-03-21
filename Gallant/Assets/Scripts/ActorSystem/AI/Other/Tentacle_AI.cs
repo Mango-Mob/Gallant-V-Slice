@@ -44,6 +44,9 @@ namespace ActorSystem.AI.Other
 
         public void Emerge()
         {
+            if (m_myBrain.IsDead)
+                return;
+
             m_myBrain.m_animator.SetBool("Visible", true);
             m_idealLocation = transform.position;
             m_velocity = Vector3.zero;
@@ -83,6 +86,9 @@ namespace ActorSystem.AI.Other
                     {
                         collider.enabled = false;
                     }
+                    m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
+                    m_myBrain.m_material.StartDisolve(2f);
+                    Submerge();
                     return;
                 }
                 else
@@ -108,6 +114,9 @@ namespace ActorSystem.AI.Other
                     {
                         collider.enabled = false;
                     }
+                    m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
+                    m_myBrain.m_material.StartDisolve(2f);
+                    Submerge();
                     return;
                 }
                 else
