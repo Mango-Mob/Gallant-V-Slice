@@ -32,6 +32,7 @@ namespace ActorSystem.AI.Components
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
         public bool m_canBeTarget = true;
+        public bool m_forceShowUI = false;
 
         [Header("Preview")]
         public float m_agility;
@@ -83,7 +84,7 @@ namespace ActorSystem.AI.Components
             m_refreshTimer?.Update();
             if(m_canBeTarget && m_ui != null && m_myOutline != null)
             {
-                m_ui.SetEnabled(m_myOutline.enabled);
+                m_ui.SetEnabled(m_myOutline.enabled || m_forceShowUI);
             }
             if(m_trackingTarget && m_target != null && m_legs != null)
             {

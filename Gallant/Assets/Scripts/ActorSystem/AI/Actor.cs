@@ -19,6 +19,7 @@ namespace ActorSystem.AI
         public string m_name = "";
         public Transform m_selfTargetTransform;
         public GameObject m_HurtVFXPrefab;
+
         [SerializeField] protected ActorData m_myData;
 
         public GameObject m_target { get { return m_myBrain.m_target; }}
@@ -154,6 +155,7 @@ namespace ActorSystem.AI
                 }
             }
         }
+
         public void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
