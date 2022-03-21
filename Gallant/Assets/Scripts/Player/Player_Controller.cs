@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class Player_Controller : MonoBehaviour
 {
     public Camera playerCamera { private set; get; }
+    public Animator animatorCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -45,7 +46,6 @@ public class Player_Controller : MonoBehaviour
     private bool m_isAiming = false;
     private bool m_hasSwappedTarget = false;
 
-    private Animator animatorCamera;
     [HideInInspector] public UI_StatsMenu m_statsMenu;
 
     private bool m_godMode = false;
