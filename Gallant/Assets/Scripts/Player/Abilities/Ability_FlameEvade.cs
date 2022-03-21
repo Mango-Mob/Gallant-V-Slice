@@ -57,13 +57,13 @@ public class Ability_FlameEvade : AbilityBase
             if (m_lastProjectile.GetComponent<Flamepath>() != null)
             {
                 m_lastProjectile.GetComponent<Flamepath>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
-                m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(transform.position);
+                m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(playerController.GetFloorPosition());
             }
         }
     }
     public override void AbilityWhileRolling()
     {
-        m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(transform.position);
+        m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(playerController.GetFloorPosition());
     }
     public override void AbilityOnEndRoll()
     {

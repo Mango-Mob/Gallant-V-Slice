@@ -57,13 +57,13 @@ public class Ability_FrostEvade : AbilityBase
             if (m_lastProjectile.GetComponent<Frostpath>() != null)
             {
                 m_lastProjectile.GetComponent<Frostpath>().m_data = (m_synergyData != null) ? m_synergyData : m_data;
-                m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(GetFloorPosition());
+                m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(playerController.GetFloorPosition());
             }
         }
     }
     public override void AbilityWhileRolling()
     {
-        m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(GetFloorPosition());
+        m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(playerController.GetFloorPosition());
     }
     public override void AbilityOnEndRoll()
     {
