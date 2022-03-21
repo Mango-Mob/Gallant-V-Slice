@@ -132,7 +132,8 @@ namespace ActorSystem.Spawning
                 for (int i = 0; i < wave.m_waveInformation[selectUnit].count; i++)
                 {
                     int selectSpawn = Random.Range(0, m_generator.m_spawnPoints.Count);
-                    
+                    SpawnData spawnData = m_generator.GetASpawnPoint();
+
                     //Get/Create actor in the reserves
                     Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].actor.ActorName);
                     m_myActors.Add(spawn);
@@ -140,7 +141,7 @@ namespace ActorSystem.Spawning
                     spawn.m_lastSpawner = this;
 
                     //Start Spawn animation
-                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), m_generator.m_spawnPoints[selectSpawn].startPoint, m_generator.m_spawnPoints[selectSpawn].endPoint, m_generator.m_spawnPoints[selectSpawn].navPoint);
+                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnData.startPoint, spawnData.endPoint, spawnData.navPoint);
 
                     count--;
                 }
@@ -158,7 +159,7 @@ namespace ActorSystem.Spawning
                  if (m_waves.Count == 0)
                  {
                      Stop();
-                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
                      GameManager.Advance();
                  }
                  else

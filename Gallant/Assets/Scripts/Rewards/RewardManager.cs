@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -41,6 +42,8 @@ public class RewardManager : Singleton<RewardManager>
     private int m_select = -1;
     private float m_timer = 0.0f;
 
+    private UnityAction<int> m_onResult;
+
     public enum RewardType
     {
         STANDARD,   //One weapon garenteed
@@ -71,6 +74,7 @@ public class RewardManager : Singleton<RewardManager>
             Show(1);
         }
 #endif
+
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.Instance.isInGamepadMode && m_select != -1);
 
@@ -108,6 +112,21 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
+    public void Show(WeaponData data1, WeaponData data2, WeaponData data3, UnityAction<int> onResult = null)
+    {
+        m_window.SetActive(true);
+        m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
+        m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
+        m_player.m_isDisabledInput = true;
+
+        m_rewardSlots[0].LoadWeapon(data1);
+        m_rewardSlots[1].LoadWeapon(data2);
+        m_rewardSlots[2].LoadWeapon(data3);
+        m_onResult = onResult;
+
+        EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].gameObject);
+    }
+
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_window.SetActive(true);
@@ -115,6 +134,7 @@ public class RewardManager : Singleton<RewardManager>
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
 
         m_player.m_isDisabledInput = true;
+        m_onResult = GiveReward;
 
         if (level >= 0)
         {
@@ -247,22 +267,22 @@ public class RewardManager : Singleton<RewardManager>
                 m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
                 m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
 
-                if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
-                {
-                    m_abilityCooldownHeader.text = "Cooldown:";
-                }
-                else
-                {
-                    m_abilityCooldownHeader.text = "";
-                    m_abilityCooldownText.text = "";
-                }
+                //if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
+                //{
+                //    m_abilityCooldownHeader.text = "Cooldown:";
+                //}
+                //else
+                //{
+                //    m_abilityCooldownHeader.text = "";
+                //    m_abilityCooldownText.text = "";
+                //}
             }
             else
             {
                 m_abilityImage.gameObject.SetActive(false);
-                m_abilityDescription.text = "";
-                m_abilityCooldownHeader.text = "";
-                m_abilityCooldownText.text = "";
+                //m_abilityDescription.text = "";
+                //m_abilityCooldownHeader.text = "";
+                //m_abilityCooldownText.text = "";
             }
         }
         else if(data is ItemData)
@@ -289,9 +309,18 @@ public class RewardManager : Singleton<RewardManager>
 
     public void Confirm()
     {
-        m_rewardSlots[m_select].GiveReward();
+        if(m_onResult != null)
+        {
+            m_onResult.Invoke(m_select);
+            m_select = -1;
+        }
         m_player.m_isDisabledInput = false;
-        m_select = -1;
+        Hide();
+    }
+
+    public void GiveReward(int selected)
+    {
+        m_rewardSlots[selected].GiveReward();
     }
 
     public void Hide()

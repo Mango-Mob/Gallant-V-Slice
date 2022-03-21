@@ -2,6 +2,7 @@
 using ActorSystem.AI;
 using ActorSystem.Spawning;
 using Exceed.Debug;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class Room : MonoBehaviour
     private Renderer m_debugRenderer;
 
     public ActorSpawner m_mySpawnner { get; private set; }
+    public RewardManager.RewardType m_rewardType = RewardManager.RewardType.STANDARD;
     // Start is called before the first frame update
     protected virtual void Awake()
     {
@@ -58,6 +60,11 @@ public class Room : MonoBehaviour
                 }
             }
         }
+    }
+
+    public bool IsComplete()
+    {
+        return m_mySpawnner.m_waves.Count == 0;
     }
 
     private void OnTriggerEnter(Collider other)

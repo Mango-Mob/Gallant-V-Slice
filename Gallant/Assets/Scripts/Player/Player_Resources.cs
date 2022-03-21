@@ -141,6 +141,7 @@ public class Player_Resources : MonoBehaviour
     {
         m_adrenaline = m_startingAdrenaline;
         m_health = m_maxHealth * playerController.playerStats.m_maximumHealth;
+        m_dead = false;
     }
 
     /*******************
@@ -174,7 +175,6 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
-            LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
@@ -243,5 +243,6 @@ public class Player_Resources : MonoBehaviour
     public void FullHeal()
     {
         m_health = m_maxHealth;
+        m_dead = false;
     }
 }

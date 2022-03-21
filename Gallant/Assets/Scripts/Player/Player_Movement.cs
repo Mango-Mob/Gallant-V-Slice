@@ -49,6 +49,15 @@ public class Player_Movement : MonoBehaviour
     private float m_rollCDTimer = 0.0f;
     public float m_rollCD = 1.0f;
 
+    [Header("Dodge Destructible")]
+    public float m_detectDistance = 0.7f;
+    public float m_explodeForce = 5.0f;
+
+    [Header("Foot Transforms")]
+    [SerializeField] private Transform m_leftFoot;
+    [SerializeField] private Transform m_rightFoot;
+    private bool m_isMoving = false;
+
     [Header("Targeting")]
     public Actor m_currentTarget;
     [SerializeField] private float m_maxAngle = 60.0f;
@@ -121,6 +130,8 @@ public class Player_Movement : MonoBehaviour
                 Physics.Raycast(transform.position + transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
                 Physics.Raycast(transform.position - transform.right * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask))
             {
+                //Debug.Log((transform.position - m_lastGroundedPosition).magnitude / Time.fixedDeltaTime);
+
                 m_lastGroundedPosition = transform.position;
                 m_lastGroundedVelocity = characterController.velocity;
             }
@@ -158,6 +169,17 @@ public class Player_Movement : MonoBehaviour
 
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
+            }
+
+            Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
+
+            foreach (var item in destruct)
+            {
+                Destructible dest = item.GetComponent<Destructible>();
+                if (dest != null && dest.m_letRollDestroy)
+                {
+                    dest.ExplodeObject(transform.position, m_explodeForce, 5.0f);
+                }
             }
         }
         else
@@ -249,6 +271,7 @@ public class Player_Movement : MonoBehaviour
         }
 
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp);
+        m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
         if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
@@ -300,8 +323,7 @@ public class Player_Movement : MonoBehaviour
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                 {
                     playerController.animator.SetFloat("Horizontal", 0.0f);
-                    playerController.animator.SetFloat("Vertical", _move.magnitude
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Vertical", _move.magnitude); // Decrease if player is attacking.
                 }
                 else
                 {
@@ -311,11 +333,9 @@ public class Player_Movement : MonoBehaviour
                     rotationVector += normalizedMove.z * playerModel.transform.right;
                     rotationVector += normalizedMove.x * playerModel.transform.forward;
 
-                    playerController.animator.SetFloat("Horizontal", rotationVector.z
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Horizontal", rotationVector.z); // Decrease if player is attacking.
 
-                    playerController.animator.SetFloat("Vertical", rotationVector.x
-                        * ((playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE) ? m_attackMoveSpeed : 1.0f)); // Decrease if player is attacking.
+                    playerController.animator.SetFloat("Vertical", rotationVector.x); // Decrease if player is attacking.
                 }
             }
             else
@@ -468,6 +488,45 @@ public class Player_Movement : MonoBehaviour
         m_currentTarget.m_myBrain.SetOutlineEnabled(true);
     }
 
+    public void Footstep(bool _left)
+    {
+        if ((playerController.GetPlayerMovementVector(true).magnitude <= 0.0f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
+            return;
+
+        Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;
+
+        RaycastHit hit;
+        Collider[] waterCheck = Physics.OverlapSphere(footPosition, 0.25f, 1 << LayerMask.NameToLayer("Water")); 
+        if(waterCheck.Length > 0)
+        {
+            playerController.playerAudioAgent.PlayBasicFootstep(3);
+            return;
+        }
+        if (Physics.Raycast(footPosition, Vector3.down, out hit, 1f, 1 << LayerMask.NameToLayer("Environment")))
+        {
+            if(hit.collider.tag == "Envir_stone")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(1);
+            }
+            else if (hit.collider.tag == "Envir_dirt")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(2);
+            }
+            else if (hit.collider.tag == "Envir_wood")
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(0);
+            }
+            else
+            {
+                playerController.playerAudioAgent.PlayBasicFootstep(0);
+            }
+            return;
+        }
+        else
+        {
+            playerController.playerAudioAgent.PlayBasicFootstep(0);
+        }
+    }
 
     private void OnDrawGizmos()
     {

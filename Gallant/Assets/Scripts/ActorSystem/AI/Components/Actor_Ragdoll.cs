@@ -20,22 +20,26 @@ namespace ActorSystem.AI.Components
         {
             m_parentCollider = GetComponentInParent<Collider>();
             m_colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-            foreach (var collider in m_colliders)
-            {
-                collider.enabled = m_enabledRag;
-            }
             m_bodies = new List<Rigidbody>(GetComponentsInChildren<Rigidbody>());
-            foreach (var body in m_bodies)
-            {
-                body.isKinematic = true;
-            }
+            DisableRagdoll();
         }
 
         public override void SetEnabled(bool status)
         {
+            
+        }
+
+        public void DisableRagdoll()
+        {
+            m_enabledRag = false;
+            m_parentCollider.enabled = true;
             foreach (var collider in m_colliders)
             {
-                collider.enabled = m_enabledRag && status;
+                collider.enabled = m_enabledRag;
+            }
+            foreach (var body in m_bodies)
+            {
+                body.isKinematic = !m_enabledRag;
             }
         }
 
@@ -49,7 +53,7 @@ namespace ActorSystem.AI.Components
             }
             foreach (var body in m_bodies)
             {
-                body.isKinematic = false;
+                body.isKinematic = !m_enabledRag;
             }
         }
     }
