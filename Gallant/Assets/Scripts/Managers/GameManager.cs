@@ -83,6 +83,9 @@ public class GameManager : Singleton<GameManager>
         public ItemEffect m_leftWeaponEffect;
         public ItemEffect m_rightWeaponEffect;
 
+        public Color m_leftOutlineColor;
+        public Color m_rightOutlineColor;
+
         //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
     }
@@ -126,6 +129,8 @@ public class GameManager : Singleton<GameManager>
         {
             m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon);
             m_playerInfo.m_leftAbility = _leftWeapon.abilityData;
+            if (m_playerInfo.m_leftAbility)
+                m_playerInfo.m_leftOutlineColor = m_playerInfo.m_leftAbility.droppedEnergyColor;
         }
         else
         {
@@ -137,6 +142,8 @@ public class GameManager : Singleton<GameManager>
         {
             m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon);
             m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+            if (m_playerInfo.m_rightAbility)
+                m_playerInfo.m_rightOutlineColor = m_playerInfo.m_rightAbility.droppedEnergyColor;
         }
         else
         {
@@ -248,6 +255,18 @@ public class GameManager : Singleton<GameManager>
                 return m_playerInfo.m_rightWeaponEffect;
             default:
                 return ItemEffect.NONE;
+        }
+    }
+    public static Color RetrieveOutlineColor(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                return m_playerInfo.m_leftOutlineColor;
+            case Hand.RIGHT:
+                return m_playerInfo.m_rightOutlineColor;
+            default:
+                return Color.clear;
         }
     }
 

@@ -87,6 +87,9 @@ public class SkillTreeDisplayControl : MonoBehaviour
 
         int tabChange = (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, gamepadID) ? 1 : 0) - (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, gamepadID) ? 1 : 0);
 
+        // REMOVE AFTER ALPHA
+        tabChange = 0;
+
         if (tabChange != 0)
         {
             int m_selectedIndex = (int)m_selectedTree + tabChange;
@@ -116,10 +119,12 @@ public class SkillTreeDisplayControl : MonoBehaviour
             //}
         }
 
+#if UNITY_EDITOR
         if (InputManager.Instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
         {
             m_selectedTreeManager.RefundTree();
         }
+#endif
 
         m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
     }

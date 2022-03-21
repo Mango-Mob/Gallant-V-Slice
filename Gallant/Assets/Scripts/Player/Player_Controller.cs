@@ -59,6 +59,8 @@ public class Player_Controller : MonoBehaviour
     public float m_maxZoom = 30.0f;
     public float m_zoomSpeed = 5.0f;
 
+    public LayerMask m_waterLayer;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
@@ -309,7 +311,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, transform.up * 80.0f);
+            StunPlayer(0.2f, transform.up * 5.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
@@ -546,9 +548,17 @@ public class Player_Controller : MonoBehaviour
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
             if (playerAttack.m_leftWeaponData)
+            {
                 playerAttack.m_leftWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.LEFT);
+                if (playerAttack.m_leftWeaponData.abilityData)
+                    playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
+            }
             if (playerAttack.m_rightWeaponData)
+            {
                 playerAttack.m_rightWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.RIGHT);
+                if (playerAttack.m_rightWeaponData.abilityData)
+                    playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
+            }
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();
@@ -626,5 +636,17 @@ public class Player_Controller : MonoBehaviour
     public void SetGodMode(bool _active)
     {
         m_godMode = _active;
+    }
+
+    public Vector3 GetFloorPosition()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up * 2.0f, Vector3.down, 2.0f, m_waterLayer);
+        Debug.Log(hits.Length);
+        if (hits.Length > 0)
+        {
+            return hits[0].point + Vector3.up * 0.2f;
+        }
+
+        return transform.position;
     }
 }

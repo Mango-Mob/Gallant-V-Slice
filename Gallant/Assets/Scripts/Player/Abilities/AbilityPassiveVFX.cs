@@ -18,6 +18,7 @@ public class AbilityPassiveVFX : MonoBehaviour
     [SerializeField] private Material m_barrierMaterial;
     [SerializeField] private Material m_thornsMaterial;
     [SerializeField] private Material m_flameRollMaterial;
+    [SerializeField] private Material m_rockRollMaterial;
 
     // Start is called before the first frame update
     void Start()
@@ -60,6 +61,9 @@ public class AbilityPassiveVFX : MonoBehaviour
                 break;
             case Ability.FLAME_ROLL:
                 SetButtonMaterial(_hand, m_flameRollMaterial);
+                break;
+            case Ability.ROLL_BASH:
+                SetButtonMaterial(_hand, m_rockRollMaterial);
                 break;
             default:
                 SetButtonMaterial(_hand);

@@ -8,6 +8,7 @@ using UnityEngine;
  * @year : 2021
  */
 [CreateAssetMenu(fileName = "abilityData", menuName = "Game Data/Ability Data", order = 1)]
+[System.Serializable]
 public class AbilityData : ScriptableObject
 {
     [Header("Ability Information")]

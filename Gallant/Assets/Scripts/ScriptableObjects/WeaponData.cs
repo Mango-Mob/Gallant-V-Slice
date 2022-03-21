@@ -38,7 +38,7 @@ public class SerializedWeapon
         data.m_knockback = _weapon.m_knockback;
         data.m_projectileSpeed = _weapon.m_projectileSpeed;
         data.weaponModelPrefab = Resources.Load<GameObject>("Weapons/Held Weapons/" + _weapon.m_weaponModel);
-       
+
         return data;
     }
 }
