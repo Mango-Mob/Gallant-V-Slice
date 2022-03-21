@@ -23,7 +23,7 @@ namespace ActorSystem.AI.Bosses
         public enum Phase { HEAD, TENTACLE, INK}
         private Phase m_mode = Phase.HEAD;
 
-        private int m_currentOrient = 0;
+        public int m_currentOrient = 0;
 
         private bool m_visible = false; //Animation controlled variable if the boss is visible.
 
@@ -50,8 +50,6 @@ namespace ActorSystem.AI.Bosses
         public void Emerge()
         {
             m_myBrain.m_animator.SetBool("Visible", true);
-            m_myModel.transform.position = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].position;
-            m_myModel.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].rotation;
         }
 
         public void SetVisible(bool status)
@@ -77,10 +75,12 @@ namespace ActorSystem.AI.Bosses
             {
                 case Phase.HEAD:
                     Emerge();
-
+                    m_myModel.transform.position = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].position;
+                    m_myModel.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].rotation;
                     m_tentacleL.m_idealLocation = m_restingTransformL.position;
                     m_tentacleR.m_idealLocation = m_restingTransformR.position;
-
+                    m_tentacleL.transform.localRotation = Quaternion.identity;
+                    m_tentacleR.transform.localRotation = Quaternion.identity;
                     m_tentacleO.m_idealLocation = opposingTransform.position + opposingTransform.forward * 4.5f;
                     m_tentacleO.transform.rotation = opposingTransform.rotation;
 
@@ -95,6 +95,8 @@ namespace ActorSystem.AI.Bosses
                     }
                     break;
                 case Phase.TENTACLE:
+                    m_myModel.transform.position = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].position;
+                    m_myModel.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].rotation;
                     switch (select)
                     {
                         case 0:
@@ -104,15 +106,15 @@ namespace ActorSystem.AI.Bosses
                             m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[3].rotation;
                             break;
                         case 1:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position - m_myModel.transform.forward * 4.5f;
+                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position + m_myModel.transform.forward * 4.5f;
                             m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[2].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position - m_myModel.transform.forward * 4.5f;
+                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position + m_myModel.transform.forward * 4.5f;
                             m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[1].rotation;
                             break;
                         case 2:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position - m_myModel.transform.forward * 4.5f;
+                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position + m_myModel.transform.forward * 4.5f;
                             m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[2].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position - m_myModel.transform.forward * 4.5f;
+                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position + m_myModel.transform.forward * 4.5f;
                             m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[1].rotation;
                             break;
                         case 3:

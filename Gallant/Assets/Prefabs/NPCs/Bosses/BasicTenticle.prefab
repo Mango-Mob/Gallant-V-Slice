@@ -195,6 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4334076523917631728}
   - component: {fileID: 4334076523917631729}
+  - component: {fileID: 6563666387792671516}
   m_Layer: 0
   m_Name: tentacle:Tent
   m_TagString: Untagged
@@ -283,6 +284,19 @@ SkinnedMeshRenderer:
     m_Center: {x: -5.1395283, y: -1.4435441, z: 0.86258376}
     m_Extent: {x: 5.308117, y: 2.7672956, z: 2.275577}
   m_DirtyAABB: 0
+--- !u!114 &6563666387792671516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076523917631735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8f79a1eeb4ef34c961f26725ca5724, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_hitMaterial: {fileID: 2100000, guid: a35d7d69d7d41924a890a7b42459b975, type: 2}
 --- !u!1 &4334076524110517781
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,6 +589,8 @@ GameObject:
   - component: {fileID: 4334076525128619282}
   - component: {fileID: 2695535844105113941}
   - component: {fileID: 1165860633712495569}
+  - component: {fileID: 3769122964767734331}
+  - component: {fileID: 2267369148534030779}
   m_Layer: 9
   m_Name: BasicTenticle
   m_TagString: Untagged
@@ -629,6 +645,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38dc7ec72d5284b4a9f428d052914872, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_activeStateText: 
+  m_myFaction: 0
+  m_toReserveOnLoad: 0
+  m_myLevel: 0
+  m_name: 
+  m_selfTargetTransform: {fileID: 0}
+  m_HurtVFXPrefab: {fileID: 0}
+  m_myData: {fileID: 11400000, guid: d21e69251dbe7934ab9586e716a4fa18, type: 2}
   m_acceleration: 12
   m_stoppingDist: 0
   isLantern: 0
@@ -700,3 +724,35 @@ CapsuleCollider:
   m_Height: 6
   m_Direction: 1
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &3769122964767734331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_canBeTarget: 1
+  m_forceShowUI: 0
+  m_agility: 0
+  m_currHealth: 0
+  m_currPhyResist: 0
+  m_currAbilResist: 0
+  m_target: {fileID: 0}
+--- !u!114 &2267369148534030779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4a381ba0220754196ce9c1d784d9ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_setDelay: 0

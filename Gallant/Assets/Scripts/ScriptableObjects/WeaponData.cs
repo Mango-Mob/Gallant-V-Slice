@@ -306,7 +306,7 @@ public class WeaponData : ScriptableObject
             case Weapon.AXE:
                 return "One hand, Melee";
             case Weapon.STAFF:
-                return "One hand, Melee, Arcane";
+                return "One hand, Melee";
             case Weapon.GREATSWORD:
                 return "Two hands, Melee";
             case Weapon.BOW:
