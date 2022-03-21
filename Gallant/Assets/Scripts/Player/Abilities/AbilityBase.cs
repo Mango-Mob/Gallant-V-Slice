@@ -75,6 +75,22 @@ public abstract class AbilityBase : MonoBehaviour
 
     public float GetCooldownTime()
     {
+        if (m_data.isPassive)
+            return 0.0f;
+
         return m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD);
+    }
+
+    protected Vector3 GetFloorPosition()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up * 2.0f, Vector3.down, 2.0f, LayerMask.NameToLayer("Water"));
+
+        //if (hits.Length > 0 && hits[0].collider.tag == "Envir_water")
+        if (hits.Length > 0)
+        {
+            return hits[0].point + Vector3.up * 0.05f;
+        }
+
+        return transform.position;
     }
 }

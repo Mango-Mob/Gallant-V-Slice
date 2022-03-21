@@ -309,7 +309,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, transform.up * 80.0f);
+            StunPlayer(0.2f, transform.up * 5.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {

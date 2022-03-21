@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UI_StatsMenu : UI_Element
 {
@@ -11,6 +12,7 @@ public class UI_StatsMenu : UI_Element
     private CanvasGroup m_canvasGroup;
 
     [SerializeField] private Image m_background;
+    [SerializeField] private TextMeshProUGUI m_currencyText;
 
     [Header("Rune Info")]
     public Transform m_runeGroup;
@@ -42,6 +44,8 @@ public class UI_StatsMenu : UI_Element
     // Update is called once per frame
     void Update()
     {
+        m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+
         if (InputManager.Instance.IsKeyDown(KeyType.TAB) || InputManager.Instance.IsGamepadButtonDown(ButtonType.SELECT, InputManager.Instance.GetAnyGamePad()))
             ToggleActive();
 

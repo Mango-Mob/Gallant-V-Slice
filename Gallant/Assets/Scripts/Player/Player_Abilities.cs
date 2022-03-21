@@ -51,10 +51,10 @@ public class Player_Abilities : MonoBehaviour
     void Update()
     {
         if (m_leftAbilityIcon != null && m_leftAbility != null)
-            m_leftAbilityIcon.SetCooldown(m_leftAbility.GetCooldownTime(), m_leftAbility.m_data.cooldownTime * (1.0f - playerController.playerStats.m_abilityCD));
+            m_leftAbilityIcon.SetCooldown(m_leftAbility.GetCooldownTime(), m_leftAbility.m_data.isPassive ? 1.0f : m_leftAbility.m_data.cooldownTime * (1.0f - playerController.playerStats.m_abilityCD));
 
         if (m_rightAbilityIcon != null && m_rightAbility != null)
-            m_rightAbilityIcon.SetCooldown(m_rightAbility.GetCooldownTime(), m_rightAbility.m_data.cooldownTime * (playerController.playerStats.m_abilityCD));
+            m_rightAbilityIcon.SetCooldown(m_rightAbility.GetCooldownTime(), m_rightAbility.m_data.isPassive ? 1.0f : m_rightAbility.m_data.cooldownTime * (1.0f - playerController.playerStats.m_abilityCD));
 
         if (m_leftHandGlobalTimer > 0.0f)
             m_leftHandGlobalTimer -= Time.deltaTime;
