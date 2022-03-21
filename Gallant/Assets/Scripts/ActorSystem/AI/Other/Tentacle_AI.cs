@@ -1,3 +1,4 @@
+using ActorSystem.AI.Bosses;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,25 +17,29 @@ namespace ActorSystem.AI.Other
         public bool isVisible = false;
 
         private Vector3 m_velocity;
-        
-        private void Awake()
+        private Boss_Swamp m_octoBrain;
+
+        protected override void Awake()
         {
+            base.Awake();
+
             m_idealLocation = transform.position;
+            m_octoBrain = GetComponentInParent<Boss_Swamp>();
+        }
+
+        // Start is called before the first frame update
+        protected override void Start()
+        {
+            base.Start();
 
             if (emergeOnAwake)
                 Emerge();
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
         // Update is called once per frame
-        private void Update()
+        protected override void Update()
         {
-
+            base.Update();
         }
 
         public void Emerge()
@@ -58,6 +63,61 @@ namespace ActorSystem.AI.Other
         {
             isVisible = status;
         }
+
+        public override void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
+        {
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                m_mySpawn.StopSpawning();
+            }
+            if (!m_myBrain.IsDead)
+            {
+                m_myBrain.m_material?.ShowHit();
+                float before = m_myBrain.m_currHealth;
+                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                {
+                     if (m_HurtVFXPrefab != null)
+                        Instantiate(m_HurtVFXPrefab, m_selfTargetTransform.position, Quaternion.identity);
+
+                    foreach (var collider in GetComponentsInChildren<Collider>())
+                    {
+                        collider.enabled = false;
+                    }
+                    return;
+                }
+                else
+                {
+                    float after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamage(before-after, _type, _from, _damageLoc);
+                }
+            }
+        }
+
+        public override void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        {
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                m_mySpawn.StopSpawning();
+            }
+            if (!m_myBrain.IsDead)
+            {
+                float before = m_myBrain.m_currHealth;
+                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false))
+                {
+                    foreach (var collider in GetComponentsInChildren<Collider>())
+                    {
+                        collider.enabled = false;
+                    }
+                    return;
+                }
+                else
+                {
+                    float after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamageSilent(before - after, _type);
+                }
+            }
+        }
+
 
         private void OnDrawGizmos()
         {
