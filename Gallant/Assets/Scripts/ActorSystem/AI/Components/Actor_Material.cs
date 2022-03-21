@@ -14,7 +14,7 @@ namespace ActorSystem.AI.Components
         private Material m_myMaterial;
 
         private float m_timer = 0.0f;
-
+        private float m_disolveTime = 7.5f;
         public Color m_default { get; protected set; }
 
         private Coroutine m_hit;
@@ -40,7 +40,7 @@ namespace ActorSystem.AI.Components
             if (m_isDisolving && m_myMesh != null)
             {
                 m_timer += Time.deltaTime;
-                float maxTime = 7.5f;
+                float maxTime = m_disolveTime;
                 float disolveVal = 1.0f - m_timer / maxTime;
 
                 if (m_hit == null)
@@ -62,8 +62,9 @@ namespace ActorSystem.AI.Components
                 m_timer = 0.0f;
         }
 
-        public void StartDisolve()
+        public void StartDisolve(float time = 7.5f)
         {
+            m_disolveTime = time;
             if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = true;

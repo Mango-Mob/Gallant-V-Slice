@@ -289,7 +289,6 @@ namespace ActorSystem.AI.Components
                 m_audioAgent?.PlayHurt();
             }
 
-            m_ui.enabled = !IsDead;
             return IsDead;
         }
 
