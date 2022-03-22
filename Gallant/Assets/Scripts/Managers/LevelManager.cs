@@ -62,6 +62,17 @@ public class LevelManager : SingletonPersistent<LevelManager>
     {
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().name));
     }
+
+    public void LoadHubWorld(bool _playerDied = false)
+    {
+        if (_playerDied)
+            GameManager.ClearPlayerInfoFromFile();
+        else
+            GameManager.SavePlayerInfoToFile();
+
+        LoadNewLevel("HUB");
+    }
+
     public void LoadNextLevel()
     {
         loadingNextArea = true;
