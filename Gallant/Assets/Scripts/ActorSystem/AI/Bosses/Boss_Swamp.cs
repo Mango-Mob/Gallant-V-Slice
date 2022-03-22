@@ -373,5 +373,9 @@ namespace ActorSystem.AI.Bosses
         {
             LevelManager.Instance.LoadNextLevel();
         }
+        public void Slam()
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>();
+        }
     }
 }

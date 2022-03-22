@@ -10,8 +10,8 @@ using UnityEngine;
 public class CharacterData : ScriptableObject
 {
     public string m_name;
-    public Texture2D[] m_characterBody;
-    public Texture2D[] m_characterFace;
+    public Sprite[] m_characterBody;
+    public Sprite[] m_characterFace;
     public Vector2[] m_faceAnchor;
 
 
@@ -19,8 +19,8 @@ public class CharacterData : ScriptableObject
     {
         if (bodyID < m_characterBody.Length && faceID < m_characterFace.Length)
         {
-            Texture body = m_characterBody[bodyID];
-            Texture face = m_characterFace[faceID];
+            Texture body = m_characterBody[bodyID].texture;
+            Texture face = m_characterFace[faceID].texture;
 
             Vector2 anchor = Vector2.zero;
             if (bodyID < m_faceAnchor.Length)
@@ -38,8 +38,8 @@ public class CharacterData : ScriptableObject
     {
         if (bodyID < m_characterBody.Length && faceID < m_characterFace.Length)
         {
-            Texture body = m_characterBody[bodyID];
-            Texture face = m_characterFace[faceID];
+            Texture body = m_characterBody[bodyID].texture;
+            Texture face = m_characterFace[faceID].texture;
 
             Vector2 anchor = Vector2.zero;
             if (bodyID < m_faceAnchor.Length)

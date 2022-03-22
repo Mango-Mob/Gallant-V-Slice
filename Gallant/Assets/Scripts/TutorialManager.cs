@@ -37,7 +37,7 @@ public class TutorialManager : MonoBehaviour
         m_fade.enabled = false;
         if (GameManager.m_firstTime)
         {
-            GameManager.Instance.m_player.transform.position = transform.position;
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
             GameManager.Instance.m_player.transform.forward = transform.forward;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
 
@@ -74,7 +74,8 @@ public class TutorialManager : MonoBehaviour
         if(m_combatSection.IsComplete() && !GameManager.Instance.IsInCombat && current == 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            //m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            m_guide.transform.position = m_tutorialPositions[current].position;
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         }
@@ -97,8 +98,9 @@ public class TutorialManager : MonoBehaviour
         if (current < 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
-            m_guide.m_myBrain.m_myOutline.enabled = false;
+            //m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            //m_guide.m_myBrain.m_myOutline.enabled = false;
+            m_guide.transform.position = m_tutorialPositions[current].position;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
         }
 
