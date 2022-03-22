@@ -50,7 +50,7 @@ public class MainMenu : MonoBehaviour
         if (!isNew)
             GameManager.LoadPlayerInfoFromFile();
         else
-            GameManager.SavePlayerInfoToFile();
+            GameManager.ClearPlayerInfoFromFile();
 
 
         EndScreenMenu.Restart();
