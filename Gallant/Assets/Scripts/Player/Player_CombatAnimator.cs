@@ -50,8 +50,42 @@ public class Player_CombatAnimator : MonoBehaviour
 
         switch (_weapon)
         {
+            case Weapon.GREATSWORD:
+                playerController.animator.Play("Spear", layerIndex);
+                break;
+            case Weapon.BOW:
+                playerController.animator.Play("Crossbow", layerIndex);
+                break;
             case Weapon.CROSSBOW:
                 playerController.animator.Play("Crossbow", layerIndex);
+                break;
+            case Weapon.SPEAR:
+                playerController.animator.Play("Spear", layerIndex);
+                break;
+            default:
+                playerController.animator.Play("Default", layerIndex);
+                break;
+        }
+    }
+    public void SetRunAnimation(Weapon _weapon, Hand _hand)
+    {
+        int layerIndex = 0;
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                layerIndex = playerController.animator.GetLayerIndex("RunArmL");
+                break;
+            case Hand.RIGHT:
+                layerIndex = playerController.animator.GetLayerIndex("RunArmR");
+                break;
+            default:
+                return;
+        }
+
+        switch (_weapon)
+        {
+            case Weapon.GREATSWORD:
+                playerController.animator.Play("Spear", layerIndex);
                 break;
             case Weapon.SPEAR:
                 playerController.animator.Play("Spear", layerIndex);

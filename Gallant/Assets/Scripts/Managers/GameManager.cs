@@ -83,6 +83,9 @@ public class GameManager : Singleton<GameManager>
         public ItemEffect m_leftWeaponEffect;
         public ItemEffect m_rightWeaponEffect;
 
+        public Color m_leftOutlineColor;
+        public Color m_rightOutlineColor;
+
         //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
     }
@@ -98,8 +101,23 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
+    public static void ClearPlayerInfoFromFile()
+    {
+        m_playerInfo = new PlayerInfo();
+        m_containsPlayerInfo = false;
+
+        string json = JsonUtility.ToJson(m_playerInfo);
+        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+    }
+
     public static void SavePlayerInfoToFile()
     {
+        if (Instance?.m_player == null)
+        {
+            Debug.LogError("Save player info should not be called here. Only if there is a player in the scene. Contact William de Beer for more info.");
+            return;
+        }
+
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
 
         string json = JsonUtility.ToJson(m_playerInfo);
@@ -118,7 +136,8 @@ public class GameManager : Singleton<GameManager>
             m_containsPlayerInfo = true;
         }
 
-        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+        if (Instance?.m_player != null)
+            Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
     {
@@ -126,10 +145,12 @@ public class GameManager : Singleton<GameManager>
         {
             m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon);
             m_playerInfo.m_leftAbility = _leftWeapon.abilityData;
+            if (m_playerInfo.m_leftAbility)
+                m_playerInfo.m_leftOutlineColor = m_playerInfo.m_leftAbility.droppedEnergyColor;
         }
         else
         {
-            m_playerInfo.m_leftWeapon = null;
+            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
             m_playerInfo.m_leftAbility = null;
         }
 
@@ -137,10 +158,12 @@ public class GameManager : Singleton<GameManager>
         {
             m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon);
             m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+            if (m_playerInfo.m_rightAbility)
+                m_playerInfo.m_rightOutlineColor = m_playerInfo.m_rightAbility.droppedEnergyColor;
         }
         else
         {
-            m_playerInfo.m_rightWeapon = null;
+            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon); ;
             m_playerInfo.m_rightAbility = null;
         }
 
@@ -248,6 +271,18 @@ public class GameManager : Singleton<GameManager>
                 return m_playerInfo.m_rightWeaponEffect;
             default:
                 return ItemEffect.NONE;
+        }
+    }
+    public static Color RetrieveOutlineColor(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                return m_playerInfo.m_leftOutlineColor;
+            case Hand.RIGHT:
+                return m_playerInfo.m_rightOutlineColor;
+            default:
+                return Color.clear;
         }
     }
 

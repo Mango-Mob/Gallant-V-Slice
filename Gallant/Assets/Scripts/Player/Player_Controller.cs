@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class Player_Controller : MonoBehaviour
 {
     public Camera playerCamera { private set; get; }
+    public Animator animatorCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -45,7 +46,6 @@ public class Player_Controller : MonoBehaviour
     private bool m_isAiming = false;
     private bool m_hasSwappedTarget = false;
 
-    private Animator animatorCamera;
     [HideInInspector] public UI_StatsMenu m_statsMenu;
 
     private bool m_godMode = false;
@@ -58,6 +58,8 @@ public class Player_Controller : MonoBehaviour
     private float m_startZoom = 60.0f;
     public float m_maxZoom = 30.0f;
     public float m_zoomSpeed = 5.0f;
+
+    public LayerMask m_waterLayer;
 
     private void Awake()
     {
@@ -105,13 +107,13 @@ public class Player_Controller : MonoBehaviour
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
-        float swordRunWeight = 0.0f;
-        if (playerAttack.m_leftWeaponData != null)
-            swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
-        if (playerAttack.m_rightWeaponData != null)
-            swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
+        //float swordRunWeight = 0.0f;
+        //if (playerAttack.m_leftWeaponData != null)
+        //    swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
+        //if (playerAttack.m_rightWeaponData != null)
+        //    swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
 
-        animator.SetFloat("SwordRunWeight", swordRunWeight);
+        //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
@@ -139,6 +141,9 @@ public class Player_Controller : MonoBehaviour
 
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (standArmWeight));
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (standArmWeight));
+
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight));
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
@@ -309,7 +314,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, transform.up * 80.0f);
+            StunPlayer(0.2f, transform.up * 5.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
@@ -546,9 +551,17 @@ public class Player_Controller : MonoBehaviour
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
             if (playerAttack.m_leftWeaponData)
+            {
                 playerAttack.m_leftWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.LEFT);
+                if (playerAttack.m_leftWeaponData.abilityData)
+                    playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
+            }
             if (playerAttack.m_rightWeaponData)
+            {
                 playerAttack.m_rightWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.RIGHT);
+                if (playerAttack.m_rightWeaponData.abilityData)
+                    playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
+            }
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();
@@ -626,5 +639,16 @@ public class Player_Controller : MonoBehaviour
     public void SetGodMode(bool _active)
     {
         m_godMode = _active;
+    }
+
+    public Vector3 GetFloorPosition()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up * 2.0f, Vector3.down, 2.0f, m_waterLayer);
+        if (hits.Length > 0)
+        {
+            return hits[0].point + Vector3.up * 0.2f;
+        }
+
+        return transform.position;
     }
 }

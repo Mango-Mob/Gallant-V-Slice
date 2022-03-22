@@ -23,10 +23,10 @@ public class SkillTreeObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_useButton.SetActive(m_interactable.m_isReady);
+        m_useButton.SetActive(m_interactable.m_isReady && !m_skillTreeDisplayControl.activeSelf);
         if (m_skillTreeDisplayControl.activeSelf)
         {
-            if (InputManager.Instance.IsBindDown("Roll"))
+            if (InputManager.Instance.IsBindDown("Skill_Back"))
             {
                 CloseSkillTree();
             }
@@ -40,14 +40,26 @@ public class SkillTreeObject : MonoBehaviour
 
         playerController.playerCamera.enabled = false;
         m_skillTreeCamera.enabled = true;
+
+        if (HUDManager.Instance != null)
+            HUDManager.Instance.gameObject.SetActive(false);
     }
 
     public void CloseSkillTree()
     {
         m_skillTreeDisplayControl.SetActive(false);
-        playerController.m_isDisabledInput = false;
+        StartCoroutine(DelayControl());
 
         playerController.playerCamera.enabled = true;
         m_skillTreeCamera.enabled = false;
+
+        if (HUDManager.Instance != null)
+            HUDManager.Instance.gameObject.SetActive(true);
+    }
+
+    IEnumerator DelayControl()
+    {
+        yield return new WaitForEndOfFrame();
+        playerController.m_isDisabledInput = false;
     }
 }
