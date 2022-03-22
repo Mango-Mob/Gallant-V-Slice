@@ -297,6 +297,11 @@ namespace ActorSystem.AI.Components
         {
             m_currHealth = m_startHealth;
             m_material?.RefreshColor();
+
+            foreach (var item in GetComponentsInChildren<Collider>())
+            {
+                item.enabled = true;
+            }
         }
 
         public void DropOrbs(int amount)

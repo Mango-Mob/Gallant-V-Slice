@@ -8,7 +8,7 @@ namespace ActorSystem.AI.Components
     {
         public enum SoundEffectType { Hurt, Death, Other}
 
-        protected MultiAudioAgent m_myAgent;
+        public MultiAudioAgent m_myAgent { get; protected set; }
 
         protected List<AudioClip> m_hurtClips;
         protected List<AudioClip> m_deathClips;
@@ -37,8 +37,6 @@ namespace ActorSystem.AI.Components
 
         public void Finalise()
         {
-            m_myAgent.audioClips.Clear();
-
             if (m_hurtClips != null)
                 m_myAgent.audioClips.AddRange(m_hurtClips);
 

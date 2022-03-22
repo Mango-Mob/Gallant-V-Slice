@@ -316,6 +316,7 @@ namespace ActorSystem.AI.Bosses
                     Submerge();
                     return;
                 }
+
                 if (m_mode == Phase.HEAD)
                 {
                     m_headphaseHealth -= _damage;
@@ -373,9 +374,10 @@ namespace ActorSystem.AI.Bosses
         {
             LevelManager.Instance.LoadNextLevel();
         }
+
         public void Slam()
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>();
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("HeavyShake");
         }
     }
 }
