@@ -30,7 +30,7 @@ public class MeshFader : MonoBehaviour
         m_collidersSaved.Clear();
         foreach (var hit in hits)
         {
-            if (player.distance > hit.distance && hit.collider.GetComponent<MeshFade>() != null)
+            if (player.distance > hit.distance && hit.collider.GetComponentInParent<MeshFade>() != null)
             {
                 //Found valid
                 m_collidersSaved.Add(hit.collider);
@@ -41,7 +41,7 @@ public class MeshFader : MonoBehaviour
                 else
                 {
                     //Start Fade Out
-                    hit.collider.GetComponent<MeshFade>().FadeOut();
+                    hit.collider.GetComponentInParent<MeshFade>().FadeOut();
                 }
             }
         }
@@ -49,7 +49,7 @@ public class MeshFader : MonoBehaviour
         foreach (var old in toRemove)
         {
             //Start Fade In
-            old.GetComponent<MeshFade>().FadeIn();
+            old.GetComponentInParent<MeshFade>().FadeIn();
         }
     }
 }
