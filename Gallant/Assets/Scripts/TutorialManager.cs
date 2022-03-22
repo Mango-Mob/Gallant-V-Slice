@@ -30,12 +30,13 @@ public class TutorialManager : MonoBehaviour
     private int current = 0;
     private bool m_isRespawning = false;
     private bool m_playerHasDied = false;
+
     // Start is called before the first frame update
     void Start()
     {
         m_fade = GetComponentInChildren<Image>();
         m_fade.enabled = false;
-        if (GameManager.m_firstTime)
+        if (PlayerPrefs.GetInt("NewPlayer", 1) == 1)
         {
             GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
             GameManager.Instance.m_player.transform.forward = transform.forward;
@@ -45,6 +46,7 @@ public class TutorialManager : MonoBehaviour
             {
                 item.SetActive(false);
             }
+            PlayerPrefs.SetInt("NewPlayer", 0);
         }
         else
         {
@@ -90,6 +92,19 @@ public class TutorialManager : MonoBehaviour
         {
             (m_guide as LoreKeeper).m_dialog = m_playerDeathDialog;
             m_playerHasDied = false;
+        }
+
+        if(InputManager.Instance.IsKeyDown(KeyType.P))
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
+            GameManager.Instance.m_player.transform.forward = transform.forward;
+            (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
+
+            foreach (var item in m_mainGameObject)
+            {
+                item.SetActive(false);
+            }
+            PlayerPrefs.SetInt("NewPlayer", 0);
         }
     }
 

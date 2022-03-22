@@ -43,9 +43,9 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(bool isNew = false)
     {
+        PlayerPrefs.SetInt("NewPlayer", 1);
         GameManager.currentLevel = 0;
         GameManager.ResetPlayerInfo();
-        GameManager.m_firstTime = isNew;
         EndScreenMenu.Restart();
         LevelManager.Instance.LoadNewLevel("HubWorld");
     }
