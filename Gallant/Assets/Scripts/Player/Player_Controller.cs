@@ -142,8 +142,8 @@ public class Player_Controller : MonoBehaviour
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (standArmWeight));
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (standArmWeight));
 
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight) * (GetPlayerMovementVector().magnitude));
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight) * (GetPlayerMovementVector().magnitude));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight));
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
@@ -644,7 +644,6 @@ public class Player_Controller : MonoBehaviour
     public Vector3 GetFloorPosition()
     {
         RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up * 2.0f, Vector3.down, 2.0f, m_waterLayer);
-        Debug.Log(hits.Length);
         if (hits.Length > 0)
         {
             return hits[0].point + Vector3.up * 0.2f;

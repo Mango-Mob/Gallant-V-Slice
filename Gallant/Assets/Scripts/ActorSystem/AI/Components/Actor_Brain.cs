@@ -201,17 +201,18 @@ namespace ActorSystem.AI.Components
             m_animator.ResetTrigger("Cancel");
             if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
-                m_arms.Begin(id);
-
-                if (m_arms.m_myData[m_arms.m_activeAttack.Value].canAttackMove)
+                if(m_arms.Begin(id) != null)
                 {
-                    m_legs.SetTargetLocation(m_target.transform.position);
+                    if (m_arms.m_myData[m_arms.m_activeAttack.Value].canAttackMove)
+                    {
+                        m_legs?.SetTargetLocation(m_target.transform.position);
+                    }
+                    else
+                    {
+                        m_legs?.Halt();
+                    }
+                    m_trackingTarget = m_arms.m_myData[m_arms.m_activeAttack.Value].canTrackTarget;
                 }
-                else
-                {
-                    m_legs.Halt();
-                }
-                m_trackingTarget = m_arms.m_myData[m_arms.m_activeAttack.Value].canTrackTarget;
             }
         }
 
@@ -220,12 +221,12 @@ namespace ActorSystem.AI.Components
             m_trackingTarget = false;
         }
 
-        public void InvokeAttack()
+        public void InvokeAttack(int damageID = 0)
         {
             if (m_arms == null)
                 return;
 
-            Collider[] hits = m_arms.GetOverlapping();
+            Collider[] hits = m_arms.GetOverlapping(damageID);
 
             if (hits == null)
                 return;
@@ -295,6 +296,7 @@ namespace ActorSystem.AI.Components
         public void Refresh()
         {
             m_currHealth = m_startHealth;
+            m_material?.RefreshColor();
         }
 
         public void DropOrbs(int amount)

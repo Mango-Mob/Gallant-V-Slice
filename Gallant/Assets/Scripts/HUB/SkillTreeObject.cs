@@ -26,7 +26,7 @@ public class SkillTreeObject : MonoBehaviour
         m_useButton.SetActive(m_interactable.m_isReady && !m_skillTreeDisplayControl.activeSelf);
         if (m_skillTreeDisplayControl.activeSelf)
         {
-            if (InputManager.Instance.IsBindDown("Roll"))
+            if (InputManager.Instance.IsBindDown("Skill_Back"))
             {
                 CloseSkillTree();
             }
