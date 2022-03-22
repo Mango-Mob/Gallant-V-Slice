@@ -50,6 +50,12 @@ public class Player_CombatAnimator : MonoBehaviour
 
         switch (_weapon)
         {
+            case Weapon.GREATSWORD:
+                playerController.animator.Play("Spear", layerIndex);
+                break;
+            case Weapon.BOW:
+                playerController.animator.Play("Crossbow", layerIndex);
+                break;
             case Weapon.CROSSBOW:
                 playerController.animator.Play("Crossbow", layerIndex);
                 break;
@@ -78,6 +84,9 @@ public class Player_CombatAnimator : MonoBehaviour
 
         switch (_weapon)
         {
+            case Weapon.GREATSWORD:
+                playerController.animator.Play("Spear", layerIndex);
+                break;
             case Weapon.SPEAR:
                 playerController.animator.Play("Spear", layerIndex);
                 break;

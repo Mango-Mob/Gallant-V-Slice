@@ -74,6 +74,7 @@ public class Player_Movement : MonoBehaviour
     private bool m_wasOnIce = false;
     public List<GroundSurface.SurfaceType> m_touchedSurfaces = new List<GroundSurface.SurfaceType>();
     private Vector3 m_slideVelocity = Vector3.zero;
+    private bool m_steppedThisFrame = false;
 
     //Respawn Code
     public Vector3 m_lastGroundedPosition { get; private set; }
@@ -102,6 +103,8 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        m_steppedThisFrame = false;
+
         if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage, CombatSystem.DamageType.True);
@@ -490,9 +493,11 @@ public class Player_Movement : MonoBehaviour
 
     public void Footstep(bool _left)
     {
-        if ((playerController.GetPlayerMovementVector(true).magnitude <= 0.0f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
+        if (m_steppedThisFrame || (playerController.GetPlayerMovementVector(true).magnitude <= 0.3f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
             return;
 
+
+        m_steppedThisFrame = true;
         Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;
 
         RaycastHit hit;

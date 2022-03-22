@@ -479,23 +479,33 @@ public class Player_Attack : MonoBehaviour
         if (m_leftWeaponData != null)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.LEFT);
+            playerController.playerCombatAnimator.SetRunAnimation(m_leftWeaponData.weaponType, Hand.LEFT);
             if (m_leftWeaponData.isTwoHanded)
+            {
                 playerController.playerCombatAnimator.SetIdleAnimation(m_leftWeaponData.weaponType, Hand.RIGHT);
+                playerController.playerCombatAnimator.SetRunAnimation(m_leftWeaponData.weaponType, Hand.RIGHT);
+            }
         }
         else if (m_rightWeaponData != null && !m_rightWeaponData.isTwoHanded)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
+            playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.LEFT);
         }
 
         if (m_rightWeaponData != null)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.RIGHT);
+            playerController.playerCombatAnimator.SetRunAnimation(m_rightWeaponData.weaponType, Hand.RIGHT);
             if (m_rightWeaponData.isTwoHanded)
+            {
                 playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
+                playerController.playerCombatAnimator.SetRunAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
+            }
         }
         else if(m_leftWeaponData != null && !m_leftWeaponData.isTwoHanded)
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
+            playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.RIGHT);
         }
 
 
