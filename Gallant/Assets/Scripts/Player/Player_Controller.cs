@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 public class Player_Controller : MonoBehaviour
 {
     public Camera playerCamera { private set; get; }
+    public Animator animatorCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -45,7 +46,6 @@ public class Player_Controller : MonoBehaviour
     private bool m_isAiming = false;
     private bool m_hasSwappedTarget = false;
 
-    private Animator animatorCamera;
     [HideInInspector] public UI_StatsMenu m_statsMenu;
 
     private bool m_godMode = false;
@@ -107,13 +107,13 @@ public class Player_Controller : MonoBehaviour
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
-        float swordRunWeight = 0.0f;
-        if (playerAttack.m_leftWeaponData != null)
-            swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
-        if (playerAttack.m_rightWeaponData != null)
-            swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
+        //float swordRunWeight = 0.0f;
+        //if (playerAttack.m_leftWeaponData != null)
+        //    swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
+        //if (playerAttack.m_rightWeaponData != null)
+        //    swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
 
-        animator.SetFloat("SwordRunWeight", swordRunWeight);
+        //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
@@ -141,6 +141,9 @@ public class Player_Controller : MonoBehaviour
 
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (standArmWeight));
         animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (standArmWeight));
+
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight) * (GetPlayerMovementVector().magnitude));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight) * (GetPlayerMovementVector().magnitude));
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
