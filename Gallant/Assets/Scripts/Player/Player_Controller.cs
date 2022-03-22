@@ -107,13 +107,13 @@ public class Player_Controller : MonoBehaviour
         animator.SetBool("RightAttackHeld", rightAttackHeld);
         animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
-        float swordRunWeight = 0.0f;
-        if (playerAttack.m_leftWeaponData != null)
-            swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
-        if (playerAttack.m_rightWeaponData != null)
-            swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
+        //float swordRunWeight = 0.0f;
+        //if (playerAttack.m_leftWeaponData != null)
+        //    swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
+        //if (playerAttack.m_rightWeaponData != null)
+        //    swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
 
-        animator.SetFloat("SwordRunWeight", swordRunWeight);
+        //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
