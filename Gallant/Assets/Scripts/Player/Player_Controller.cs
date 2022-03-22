@@ -641,7 +641,6 @@ public class Player_Controller : MonoBehaviour
     public Vector3 GetFloorPosition()
     {
         RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up * 2.0f, Vector3.down, 2.0f, m_waterLayer);
-        Debug.Log(hits.Length);
         if (hits.Length > 0)
         {
             return hits[0].point + Vector3.up * 0.2f;

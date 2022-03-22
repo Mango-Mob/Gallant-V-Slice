@@ -296,6 +296,7 @@ namespace ActorSystem.AI.Components
         public void Refresh()
         {
             m_currHealth = m_startHealth;
+            m_material?.RefreshColor();
         }
 
         public void DropOrbs(int amount)

@@ -63,14 +63,27 @@ namespace ActorSystem.AI
 
         public List<Collider> GetAttackOverlaping(Transform user, int targetLayer)
         {
-            return GetOverlappingColliders(attackHitbox, user, targetLayer);
+            List<Collider> colliders = GetOverlappingColliders(attackHitbox, user, targetLayer);
+            for (int i = colliders.Count - 1; i >= 0; i--)
+            {
+                if (attackType == AttackType.Ranged)
+                {
+                    Quaternion lookAt = Quaternion.LookRotation((colliders[i].transform.position - user.position).normalized, Vector3.up);
+                    if (Mathf.Abs(Quaternion.Angle(user.rotation, lookAt)) > requiredAngle)
+                    {
+                        colliders.RemoveAt(i);
+                    }
+                }
+            }
+            return colliders;
         }
+
         public List<Collider> GetDamagingOverlaping(Transform user, int targetLayer, int hitboxID = 0)
         {
             return GetOverlappingColliders(damageHitboxes[hitboxID], user, targetLayer);
         }
 
-        private List<Collider> GetOverlappingColliders(HitBox box, Transform user, int targetLayer)
+        public static List<Collider> GetOverlappingColliders(HitBox box, Transform user, int targetLayer)
         {
             List<Collider> colliders = new List<Collider>();
             Vector3 start = user.position + user.TransformVector(box.start);
@@ -87,17 +100,6 @@ namespace ActorSystem.AI
                     colliders.AddRange(Physics.OverlapCapsule(start, end, box.size, targetLayer));
                     break;
             }
-            for (int i = colliders.Count - 1; i >= 0; i--)
-            {
-                if (attackType == AttackType.Ranged)
-                {
-                    Quaternion lookAt = Quaternion.LookRotation((colliders[i].transform.position - user.position).normalized, Vector3.up);
-                    if (Mathf.Abs(Quaternion.Angle(user.rotation, lookAt)) > requiredAngle)
-                    {
-                        colliders.RemoveAt(i);
-                    }
-                }
-            }
             return colliders;
         }
 
@@ -113,11 +115,11 @@ namespace ActorSystem.AI
             {
                 DrawHitbox(item);
             }
-
+            
             Gizmos.matrix = Matrix4x4.identity;
         }
 
-        private void DrawHitbox(HitBox box)
+        public static void DrawHitbox(HitBox box)
         {
             if (box.size == 0)
                 return;
