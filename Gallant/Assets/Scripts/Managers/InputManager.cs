@@ -244,6 +244,11 @@ public class InputManager : SingletonPersistent<InputManager>
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
         m_binds.Add("Toggle_Zoom", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Z), new Bind(typeof(ButtonType), (int)ButtonType.LS) });
+
+        //SkillTree
+        m_binds.Add("Skill_Select", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
+        m_binds.Add("Skill_Back", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Q), new Bind(typeof(ButtonType), (int)ButtonType.EAST) });
+        m_binds.Add("Skill_Reset", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.R), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         SaveBinds();
     }
 
