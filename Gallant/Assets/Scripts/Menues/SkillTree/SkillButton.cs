@@ -88,6 +88,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             
             SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
+        SelectSkill();
     }
     public void RefundSkill()
     {
