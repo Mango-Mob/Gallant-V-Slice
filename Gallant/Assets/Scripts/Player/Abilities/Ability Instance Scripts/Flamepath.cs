@@ -15,6 +15,7 @@ public class Flamepath : MonoBehaviour
 
     private float m_lifeTimer = 0.0f;
 
+    private bool m_hasStartPosition = false;
     private Vector3 m_startPos;
     private Vector3 m_endPos;
     private float m_startAlpha = 1.0f;
@@ -67,6 +68,12 @@ public class Flamepath : MonoBehaviour
     }
     public void SetEdgePoint(Vector3 _pos)
     {
+        if (!m_hasStartPosition)
+        {
+            m_startPos = _pos;
+            m_hasStartPosition = true;
+        }
+
         m_endPos = _pos;
         transform.position = (m_startPos + _pos) / 2;
 
@@ -83,12 +90,13 @@ public class Flamepath : MonoBehaviour
         VisualEffect vfx = gameObject.GetComponentInChildren<VisualEffect>();
         vfx.SetFloat("life time", m_data.lifetime);
 
-        ParticleSystem particleSystem = gameObject.GetComponentInChildren<ParticleSystem>();
-        if (particleSystem != null)
+        ParticleSystem[] particleSystems = gameObject.GetComponentsInChildren<ParticleSystem>();
+        foreach (var particle in particleSystems)
         {
-            ParticleSystem.MainModule mainModule = particleSystem.main;
+            particle.Stop();
+            ParticleSystem.MainModule mainModule = particle.main;
             mainModule.duration = m_data.lifetime;
-            particleSystem.Play();
+            particle.Play();
         }
     }
     private void OnTriggerStay(Collider other)

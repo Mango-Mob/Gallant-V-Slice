@@ -15,6 +15,7 @@ public class Frostpath : MonoBehaviour
 
     private float m_lifeTimer = 0.0f;
 
+    private bool m_hasStartPosition = false;
     private Vector3 m_startPos;
     private Vector3 m_endPos;
     private float m_startAlpha = 1.0f;
@@ -26,10 +27,7 @@ public class Frostpath : MonoBehaviour
         //frostParticles = GetComponentInChildren<ParticleSystem>();
 
         m_startAlpha = meshRenderer.material.color.a;
-
-        m_startPos = transform.position;
-
-        
+                
     }
     void FixedUpdate()
     {
@@ -68,6 +66,11 @@ public class Frostpath : MonoBehaviour
     }
     public void SetEdgePoint(Vector3 _pos)
     {
+        if (!m_hasStartPosition)
+        {
+            m_startPos = _pos;
+            m_hasStartPosition = true;
+        }
         m_endPos = _pos;
         transform.position = (m_startPos + _pos) / 2;
 
