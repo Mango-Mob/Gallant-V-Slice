@@ -133,11 +133,8 @@ public class DialogManager : Singleton<DialogManager>
             int bodyId = m_file.m_list[index].bodyID;
             int faceID = m_file.m_list[index].faceID;
 
-            Rect recBody = new Rect(0, 0, m_activeCharacter.m_characterBody[bodyId].width, m_activeCharacter.m_characterBody[bodyId].height);
-            Rect recFace = new Rect(0, 0, m_activeCharacter.m_characterFace[bodyId].width, m_activeCharacter.m_characterFace[bodyId].height);
-
-            m_characterBody.sprite = Sprite.Create(m_activeCharacter.m_characterBody[bodyId], recBody, new Vector2(0.5f, 0.5f));
-            m_characterFace.sprite = Sprite.Create(m_activeCharacter.m_characterFace[faceID], recFace, new Vector2(0.5f, 0.5f));
+            m_characterBody.sprite = m_activeCharacter.m_characterBody[bodyId];
+            m_characterFace.sprite = m_activeCharacter.m_characterFace[faceID];
 
             m_dialog.text = m_file.m_list[index].m_dialog;
 

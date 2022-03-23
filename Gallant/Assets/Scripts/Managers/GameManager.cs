@@ -13,7 +13,6 @@ public class GameManager : Singleton<GameManager>
     public static float deltaLevel = 1/2f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
-    public static bool m_firstTime = false;
 
     public GameObject m_player;
     public Camera m_activeCamera;
@@ -101,23 +100,8 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
-    public static void ClearPlayerInfoFromFile()
-    {
-        m_playerInfo = new PlayerInfo();
-        m_containsPlayerInfo = false;
-
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
-    }
-
     public static void SavePlayerInfoToFile()
     {
-        if (Instance?.m_player == null)
-        {
-            Debug.LogError("Save player info should not be called here. Only if there is a player in the scene. Contact William de Beer for more info.");
-            return;
-        }
-
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
 
         string json = JsonUtility.ToJson(m_playerInfo);
@@ -136,8 +120,7 @@ public class GameManager : Singleton<GameManager>
             m_containsPlayerInfo = true;
         }
 
-        if (Instance?.m_player != null)
-            Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
     {
@@ -150,7 +133,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
+            m_playerInfo.m_leftWeapon = null;
             m_playerInfo.m_leftAbility = null;
         }
 
@@ -163,7 +146,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon); ;
+            m_playerInfo.m_rightWeapon = null;
             m_playerInfo.m_rightAbility = null;
         }
 

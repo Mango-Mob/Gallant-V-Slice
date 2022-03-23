@@ -62,17 +62,6 @@ public class LevelManager : SingletonPersistent<LevelManager>
     {
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().name));
     }
-
-    public void LoadHubWorld(bool _playerDied = false)
-    {
-        if (_playerDied)
-            GameManager.ClearPlayerInfoFromFile();
-        else
-            GameManager.SavePlayerInfoToFile();
-
-        LoadNewLevel("HUB");
-    }
-
     public void LoadNextLevel()
     {
         loadingNextArea = true;
@@ -129,21 +118,20 @@ public class LevelManager : SingletonPersistent<LevelManager>
         transition.speed = 0.0f;
 
         // Loading screen
+        AsyncOperation gameLoad = SceneManager.LoadSceneAsync(_name);
         Slider loadingBar = Instantiate(loadingBarPrefab, transition.transform).GetComponent<Slider>();
         loadingBar.transform.SetAsLastSibling();
-        AsyncOperation gameLoad = SceneManager.LoadSceneAsync(_name);
 
         while (!gameLoad.isDone)
         {
             float progress = Mathf.Clamp01(gameLoad.progress / 0.9f);
-            Debug.Log(gameLoad.progress);
 
             if (loadingBar)
             {
                 loadingBar.value = progress;
             }
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForEndOfFrame();
         }
 
         transition.speed = 1.0f / timeMult;

@@ -12,7 +12,7 @@ public class Timer
     public bool m_unscaled = false;
     public UnityEvent onFinish = new UnityEvent();
 
-    private bool m_started = true;
+    private bool m_started = false;
 
     public void Start(float initial)
     {
@@ -23,6 +23,7 @@ public class Timer
     public void Stop()
     {
         m_started = false;
+        m_timeRemaining = 0f;
     }
 
     public void Update()
@@ -30,7 +31,7 @@ public class Timer
         if(m_started)
             m_timeRemaining -= (m_unscaled) ? Time.unscaledDeltaTime: Time.deltaTime;
 
-        if (m_timeRemaining <= 0)
+        if (m_started && m_timeRemaining <= 0)
         {
             m_started = false;
             onFinish.Invoke();

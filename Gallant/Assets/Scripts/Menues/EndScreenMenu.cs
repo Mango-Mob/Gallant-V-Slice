@@ -64,10 +64,6 @@ public class EndScreenMenu : MonoBehaviour
     {
         LevelManager.Instance.LoadNewLevel(m_menuSceneName);
     }
-    public void BackToHUB()
-    {
-        LevelManager.Instance.LoadHubWorld(true);
-    }
 
     private string CalculateDamage()
     {

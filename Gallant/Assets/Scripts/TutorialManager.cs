@@ -30,14 +30,15 @@ public class TutorialManager : MonoBehaviour
     private int current = 0;
     private bool m_isRespawning = false;
     private bool m_playerHasDied = false;
+
     // Start is called before the first frame update
     void Start()
     {
         m_fade = GetComponentInChildren<Image>();
         m_fade.enabled = false;
-        if (GameManager.m_firstTime)
+        if (PlayerPrefs.GetInt("NewPlayer", 1) == 1)
         {
-            GameManager.Instance.m_player.transform.position = transform.position;
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
             GameManager.Instance.m_player.transform.forward = transform.forward;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
 
@@ -45,6 +46,7 @@ public class TutorialManager : MonoBehaviour
             {
                 item.SetActive(false);
             }
+            PlayerPrefs.SetInt("NewPlayer", 0);
         }
         else
         {
@@ -74,7 +76,8 @@ public class TutorialManager : MonoBehaviour
         if(m_combatSection.IsComplete() && !GameManager.Instance.IsInCombat && current == 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            //m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            m_guide.transform.position = m_tutorialPositions[current].position;
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         }
@@ -90,6 +93,19 @@ public class TutorialManager : MonoBehaviour
             (m_guide as LoreKeeper).m_dialog = m_playerDeathDialog;
             m_playerHasDied = false;
         }
+
+        if(InputManager.Instance.IsKeyDown(KeyType.P))
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
+            GameManager.Instance.m_player.transform.forward = transform.forward;
+            (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
+
+            foreach (var item in m_mainGameObject)
+            {
+                item.SetActive(false);
+            }
+            PlayerPrefs.SetInt("NewPlayer", 0);
+        }
     }
 
     public void AdvanceTutorial()
@@ -97,8 +113,9 @@ public class TutorialManager : MonoBehaviour
         if (current < 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
-            m_guide.m_myBrain.m_myOutline.enabled = false;
+            //m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            //m_guide.m_myBrain.m_myOutline.enabled = false;
+            m_guide.transform.position = m_tutorialPositions[current].position;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
         }
 
