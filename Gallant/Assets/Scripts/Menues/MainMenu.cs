@@ -46,7 +46,7 @@ public class MainMenu : MonoBehaviour
         if (isNew)
         {
             GameManager.ResetPlayerInfo();
-            PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
+            TutorialManager.isNewPlayer = isNew;
             PlayerPrefs.SetInt("SwampLevel", 0);
             PlayerPrefs.SetInt("CastleLevel", 0);
             PlayerPrefs.SetInt("FrostLevel", 0);

@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager>
 
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {

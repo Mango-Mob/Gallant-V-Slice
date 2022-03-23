@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static bool isNewPlayer = false;
     public Actor m_guide;
 
     public Transform[] m_tutorialPositions;
@@ -37,23 +38,24 @@ public class TutorialManager : MonoBehaviour
         m_fade = GetComponentInChildren<Image>();
         m_fade.enabled = false;
 
-        if (PlayerPrefs.GetInt("NewPlayer", 1) == 1)
+        if (isNewPlayer)
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
-            GameManager.Instance.m_player.transform.forward = transform.forward;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
+            player.transform.forward = transform.forward;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
 
             foreach (var item in m_mainGameObject)
             {
                 item.SetActive(false);
             }
-            PlayerPrefs.SetInt("NewPlayer", 0);
+            isNewPlayer = false;
         }
         else
         {
             foreach (var item in m_mainGameObject)
             {
-                item.SetActive(true);
+                item.SetActive(false);
             }
         }
     }
