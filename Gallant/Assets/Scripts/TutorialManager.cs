@@ -1,5 +1,6 @@
 using ActorSystem.AI;
 using ActorSystem.AI.Users;
+using ActorSystem.Spawning;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ public class TutorialManager : MonoBehaviour
 {
     public static bool isNewPlayer = false;
     public Actor m_guide;
+    public ActorSpawner m_spawner;
 
     public Transform[] m_tutorialPositions;
     public TextAsset[] m_tutorialDialog;
@@ -83,12 +85,15 @@ public class TutorialManager : MonoBehaviour
         {
             StartCoroutine(RespawnPlayer());
             m_playerHasDied = true;
+            m_spawner.ForceEnd();
+            m_spawner.Restart();
         }
 
         if(m_playerHasDied)
         {
             (m_guide as LoreKeeper).m_dialog = m_playerDeathDialog;
             m_playerHasDied = false;
+
         }
 
         if(InputManager.Instance.IsKeyDown(KeyType.P))
