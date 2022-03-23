@@ -189,6 +189,8 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleO.Kill(); m_tentacleO.Submerge(false);
                     m_tentacleI.Kill(); m_tentacleI.Submerge(false);
 
+                    m_myBrain.DropOrbs(Random.Range(5, 10), GameManager.Instance.m_player.transform.position);
+
                     foreach (var hold in m_holdingTentacles)
                     {
                         hold.StartDisolve(5f);
