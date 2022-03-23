@@ -87,7 +87,7 @@ namespace ActorSystem.AI.Users
         private void Reward()
         {
             DialogManager.Instance.Hide();
-            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), m_myShopType);
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.Instance.currentLevel), m_myShopType);
             DialogManager.Instance.m_interact = null;
             m_hasGivenReward = true;
         }

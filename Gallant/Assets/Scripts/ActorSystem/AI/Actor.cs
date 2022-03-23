@@ -59,7 +59,7 @@ namespace ActorSystem.AI
             }
             else
             {
-                m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
+                m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.Instance.currentLevel));
                 m_myBrain.SetEnabled(true);
             }
 
