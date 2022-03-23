@@ -155,7 +155,7 @@ public class Player_Controller : MonoBehaviour
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.Instance.IsMouseButtonDown(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonDown(ButtonType.LEFT, gamepadID))
+            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -169,7 +169,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Right hand pickup
-            if (InputManager.Instance.IsMouseButtonDown(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonDown(ButtonType.RIGHT, gamepadID))
+            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)

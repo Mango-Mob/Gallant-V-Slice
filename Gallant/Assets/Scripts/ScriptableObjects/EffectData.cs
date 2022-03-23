@@ -81,7 +81,7 @@ public class RandomScript_Editor : Editor
 
         EditorGUILayout.Space(20.0f);
         EditorGUILayout.LabelField("Graph", EditorStyles.boldLabel);
-        m_graphWidth = EditorGUILayout.IntField("Graph Size", m_graphWidth);
+        m_graphWidth = EditorGUILayout.IntField("Graph Size", Mathf.Clamp(m_graphWidth, 0, 50));
         m_curve = AnimationCurve.Linear(0, script.m_default, m_graphWidth, script.GetEffectValue(m_graphWidth));
 
         m_curve = EditorGUILayout.CurveField("Value Graph", m_curve);
