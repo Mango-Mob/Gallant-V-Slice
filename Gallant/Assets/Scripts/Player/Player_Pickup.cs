@@ -33,7 +33,7 @@ public class Player_Pickup : MonoBehaviour
     {
         if (weaponsInRange.Count < 1) // Check if there are no weapons in range
         {
-            Debug.Log("No weapon close enough to be picked up");
+            //Debug.Log("No weapon close enough to be picked up");
             return null;
         }
         // Set first weapon index as the default

@@ -74,6 +74,8 @@ public class GameManager : Singleton<GameManager>
     [Serializable]
     private struct PlayerInfo
     {
+        public bool m_validSave;
+
         public SerializedWeapon m_leftWeapon;
         public AbilityData m_leftAbility;
 
@@ -103,9 +105,25 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
+    public static void ClearPlayerInfoFromFile()
+    {
+        m_playerInfo = new PlayerInfo();
+        m_containsPlayerInfo = false;
+        m_playerInfo.m_validSave = false;
+
+        string json = JsonUtility.ToJson(m_playerInfo);
+        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+    }
     public static void SavePlayerInfoToFile()
     {
+        if (Instance?.m_player == null)
+        {
+            Debug.LogError("Save player info should not be called here. Only if there is a player in the scene. Contact William de Beer for more info.");
+            return;
+        }
+
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+        m_playerInfo.m_validSave = true;
 
         string json = JsonUtility.ToJson(m_playerInfo);
         File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
@@ -123,7 +141,8 @@ public class GameManager : Singleton<GameManager>
             m_containsPlayerInfo = true;
         }
 
-        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+        if (Instance?.m_player != null)
+            Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
     {
@@ -136,7 +155,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_leftWeapon = null;
+            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
             m_playerInfo.m_leftAbility = null;
         }
 
@@ -149,7 +168,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_rightWeapon = null;
+            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon); ;
             m_playerInfo.m_rightAbility = null;
         }
 
@@ -193,6 +212,10 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = true;
     }
 
+    public static bool RetrieveValidSaveState()
+    {
+        return m_playerInfo.m_validSave;
+    }
     public static WeaponData RetrieveWeaponData(Hand _hand)
     {
         WeaponData data = null;
