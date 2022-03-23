@@ -56,7 +56,10 @@ namespace ActorSystem.Spawning
                 if(m_hasStarted)
                     ActorManager.Instance.m_activeSpawnners.Add(this);
 
-                if(m_myActors.Count != 0)
+                if(m_myActors == null)
+                    m_myActors = new List<Actor>();
+
+                if (m_myActors.Count != 0)
                 {
                     foreach (var actor in m_myActors)
                     {
@@ -86,6 +89,16 @@ namespace ActorSystem.Spawning
             m_waves.RemoveAt(0);
 
             SpawnWave(wave);
+        }
+
+        public void ForceEnd()
+        {
+            for (int i = m_myActors.Count - 1; i >= 0; i--)
+            {
+                m_myActors[i].DestroySelf();
+            }
+            m_myActors.Clear();
+            Stop();
         }
 
         /*******************

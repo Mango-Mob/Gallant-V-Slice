@@ -58,12 +58,14 @@ public class UI_CollectionList : UI_Element
 
     public void PreviousPage()
     {
-        ShowItem(m_currentCollectable, m_currentPage - 1);
+        if(m_currentPage > 0)
+            ShowItem(m_currentCollectable, m_currentPage - 1);
     }
 
     public void NextPage()
     {
-        ShowItem(m_currentCollectable, m_currentPage + 1);
+        if(m_currentCollectable.descriptions.Count > m_currentPage + 1)
+            ShowItem(m_currentCollectable, m_currentPage + 1);
     }
 
     public override bool IsContainingVector(Vector2 _pos)

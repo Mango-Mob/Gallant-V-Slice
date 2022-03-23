@@ -229,7 +229,6 @@ public class InputManager : SingletonPersistent<InputManager>
 
         //Attack
         m_binds.Add("Aim", new Bind[] { new Bind(typeof(StickType), (int)StickType.RIGHT) });
-        m_binds.Add("Toggle_Aim", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_SHIFT), new Bind(typeof(KeyType), (int)KeyType.L_CTRL) });
         m_binds.Add("Toggle_Lockon", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_ALT), new Bind(typeof(ButtonType), (int)ButtonType.RS) });
         m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.LB) });
         m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });

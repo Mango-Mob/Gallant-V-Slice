@@ -112,7 +112,6 @@ public class UI_StatsMenu : UI_Element
             m_runeList.Remove(item);
         }
 
-
         foreach (var effect in playerStats.m_effects)
         {
             bool runeInfoExists = false;
