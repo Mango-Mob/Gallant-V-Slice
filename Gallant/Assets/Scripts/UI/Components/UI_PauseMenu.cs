@@ -62,6 +62,11 @@ public class UI_PauseMenu : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
+    public void ReturnToHub()
+    {
+        //LevelManager.Instance.
+    }
+
     public void Quit()
     {
         isPaused = false;

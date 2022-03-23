@@ -89,7 +89,7 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length);
+        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length - 3);
         ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;

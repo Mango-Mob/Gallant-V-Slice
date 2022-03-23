@@ -109,7 +109,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             {
                 SelectSkillButton(null);
             }
-            if (m_currentlyDisplayedButton == null)
+            if (m_currentlyDisplayedButton == null && eventSystem.currentSelectedGameObject.name != "BackButton")
             {
                 SelectSkillButton(m_selectedTreeManager.m_rootSkill);
             }
@@ -134,8 +134,10 @@ public class SkillTreeDisplayControl : MonoBehaviour
         {
             m_currentlyDisplayedButton = null;
             m_upgradeInfoObject.SetActive(false);
+            Debug.Log("Null button");
             return;
         }
+        Debug.Log($"{_button.m_skillData.skillName} button");
 
         m_skillCost.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
         m_upgradeButtonSprite.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
