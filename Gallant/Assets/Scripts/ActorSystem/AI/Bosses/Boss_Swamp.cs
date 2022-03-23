@@ -187,6 +187,7 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleR.Kill(); m_tentacleR.Submerge(false);
                     m_tentacleO.Kill(); m_tentacleO.Submerge(false);
                     m_tentacleI.Kill(); m_tentacleI.Submerge(false);
+                    PlayerPrefs.SetInt("SwampLevel", 1);
                     m_gameOverTimer.Start(6f);
                     break;
                 default:
@@ -294,7 +295,6 @@ namespace ActorSystem.AI.Bosses
                             {
                                 TransitionToPhase(Phase.TENTACLE);
                             }
-                            
                         }
                     }
                 }

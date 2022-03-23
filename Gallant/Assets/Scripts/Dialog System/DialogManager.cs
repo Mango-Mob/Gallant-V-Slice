@@ -133,8 +133,8 @@ public class DialogManager : Singleton<DialogManager>
             int bodyId = m_file.m_list[index].bodyID;
             int faceID = m_file.m_list[index].faceID;
 
-            m_characterBody.sprite = m_activeCharacter.m_characterBody[bodyId];
-            m_characterFace.sprite = m_activeCharacter.m_characterFace[faceID];
+            m_characterBody.sprite = m_activeCharacter.m_characterBody[Mathf.Min(bodyId, m_activeCharacter.m_characterBody.Length - 1)];
+            m_characterFace.sprite = m_activeCharacter.m_characterFace[Mathf.Min(faceID, m_activeCharacter.m_characterFace.Length - 1)];
 
             m_dialog.text = m_file.m_list[index].m_dialog;
 
