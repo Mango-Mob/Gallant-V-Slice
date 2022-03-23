@@ -59,8 +59,7 @@ public class GameManager : Singleton<GameManager>
 
     public void FinishLevel()
     {
-        //TODO
-        Debug.Log("Game over");
+        LevelManager.Instance.LoadHubWorld(false);
     }
 
     public static void Advance()
