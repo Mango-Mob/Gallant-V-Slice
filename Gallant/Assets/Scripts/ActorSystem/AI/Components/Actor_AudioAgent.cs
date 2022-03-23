@@ -37,11 +37,20 @@ namespace ActorSystem.AI.Components
 
         public void Finalise()
         {
-            if (m_hurtClips != null)
-                m_myAgent.audioClips.AddRange(m_hurtClips);
-
-            if (m_deathClips != null)
-                m_myAgent.audioClips.AddRange(m_deathClips);
+            foreach (var item in m_hurtClips)
+            {
+                if(!m_myAgent.audioClips.Contains(item))
+                {
+                    m_myAgent.audioClips.Add(item);
+                }
+            }
+            foreach (var item in m_deathClips)
+            {
+                if (!m_myAgent.audioClips.Contains(item))
+                {
+                    m_myAgent.audioClips.Add(item);
+                }
+            }
 
             m_myAgent.UpdateList();
         }
