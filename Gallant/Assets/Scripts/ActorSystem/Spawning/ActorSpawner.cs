@@ -60,7 +60,7 @@ namespace ActorSystem.Spawning
                 {
                     foreach (var actor in m_myActors)
                     {
-                        actor.SetLevel((uint)Mathf.FloorToInt(GameManager.Instance.currentLevel));
+                        actor.SetLevel((uint)Mathf.FloorToInt(GameManager.currentLevel));
                         actor.SetTarget(GameManager.Instance.m_player);
                     }
                 }
@@ -141,7 +141,7 @@ namespace ActorSystem.Spawning
                     spawn.m_lastSpawner = this;
 
                     //Start Spawn animation
-                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.Instance.currentLevel), spawnData.startPoint, spawnData.endPoint, spawnData.navPoint);
+                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnData.startPoint, spawnData.endPoint, spawnData.navPoint);
 
                     count--;
                 }
@@ -159,7 +159,7 @@ namespace ActorSystem.Spawning
                  if (m_waves.Count == 0)
                  {
                      Stop();
-                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.Instance.currentLevel), GetComponentInParent<Room>().m_rewardType);
+                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
                      GameManager.Advance();
                  }
                  else

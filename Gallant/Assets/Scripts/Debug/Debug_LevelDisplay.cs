@@ -10,7 +10,7 @@ namespace Exceed.Debug
         // Update is called once per frame
         void Update()
         {
-            GetComponent<Text>().text = GameManager.Instance.currentLevel.ToString();
+            GetComponent<Text>().text = GameManager.currentLevel.ToString();
         }
     }
 

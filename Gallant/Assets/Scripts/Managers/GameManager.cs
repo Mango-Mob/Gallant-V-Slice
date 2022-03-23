@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
-    public float currentLevel = 0;
-    public float deltaLevel = 1/2f;
+    public static float currentLevel = 0;
+    public static float deltaLevel = 1/2f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
@@ -63,9 +63,9 @@ public class GameManager : Singleton<GameManager>
 
     public static void Advance()
     {
-        GameManager.Instance.currentLevel += GameManager.Instance.deltaLevel;
+        GameManager.currentLevel += GameManager.deltaLevel;
         GameManager.Instance.clearedArenas++;
-        PlayerPrefs.SetFloat("Level", GameManager.Instance.currentLevel);
+        PlayerPrefs.SetFloat("Level", GameManager.currentLevel);
     }
 
     #region Player Info Storage
