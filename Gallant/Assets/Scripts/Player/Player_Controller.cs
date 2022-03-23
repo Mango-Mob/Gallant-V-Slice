@@ -399,18 +399,20 @@ public class Player_Controller : MonoBehaviour
         }
         else // If using mouse
         {
-            //if(InputManager.Instance.IsBindDown("Toggle_Aim"))
-            //{
-            //    m_isAiming = !m_isAiming;
-            //}
-
-            // Raycast to find raycast point
-            RaycastHit hit;
-            Ray ray = playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
-            if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
+            if(InputManager.Instance.IsBindDown("Toggle_Aim"))
             {
-                // Return direction from player to hit point
-                Vector3 aim = hit.point - transform.position;
+                m_isAiming = !m_isAiming;
+            }
+
+            if (m_isAiming)
+            {
+                // Raycast to find raycast point
+                RaycastHit hit;
+                Ray ray = playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
+                if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
+                {
+                    // Return direction from player to hit point
+                    Vector3 aim = hit.point - transform.position;
 
                 Vector3 normalizedAim = Vector3.zero;
                 normalizedAim += aim.z * -transform.right;
