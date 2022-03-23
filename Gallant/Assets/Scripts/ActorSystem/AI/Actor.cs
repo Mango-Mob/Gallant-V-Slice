@@ -149,7 +149,7 @@ namespace ActorSystem.AI
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
                     return;
                 }
@@ -170,7 +170,7 @@ namespace ActorSystem.AI
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
                     return;
                 }
