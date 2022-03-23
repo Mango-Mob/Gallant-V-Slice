@@ -238,8 +238,6 @@ public class InputManager : SingletonPersistent<InputManager>
 
         //Other
         m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
-        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.R), new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
-        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.F), new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
         m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
