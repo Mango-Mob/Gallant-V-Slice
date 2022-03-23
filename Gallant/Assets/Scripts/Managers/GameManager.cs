@@ -151,7 +151,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
+            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
             m_playerInfo.m_leftAbility = null;
         }
 
