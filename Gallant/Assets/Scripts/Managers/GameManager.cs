@@ -23,11 +23,12 @@ public class GameManager : Singleton<GameManager>
 
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
-        m_activeCamera = m_player.GetComponentInChildren<Camera>();
+        m_activeCamera = Camera.main;
         music = GetComponentInChildren<AtmosphereScript>();
 
         for (int i = 0; i < 31; i++)
@@ -53,6 +54,7 @@ public class GameManager : Singleton<GameManager>
     private void OnLevelWasLoaded(int level)
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
+        m_activeCamera = Camera.main;
     }
 
     public void FinishLevel()
@@ -63,8 +65,9 @@ public class GameManager : Singleton<GameManager>
 
     public static void Advance()
     {
-        currentLevel += deltaLevel;
+        GameManager.currentLevel += GameManager.deltaLevel;
         GameManager.Instance.clearedArenas++;
+        PlayerPrefs.SetFloat("Level", GameManager.currentLevel);
     }
 
     #region Player Info Storage
@@ -304,6 +307,8 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo.m_classData = null;
 
         m_containsPlayerInfo = false;
+
+        PlayerPrefs.SetFloat("Level", 0);
     }
 
     #endregion

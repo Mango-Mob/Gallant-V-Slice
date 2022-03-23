@@ -46,12 +46,12 @@ public class InfoDisplay : MonoBehaviour
 
     [Header("Drop Information")]
     [SerializeField] private GameObject m_leftHand;
-    [SerializeField] private Text m_leftKeyboard;
+    [SerializeField] private Image m_leftKeyboard;
     [SerializeField] private Image m_leftController;
     [SerializeField] private Image m_leftBar;
 
     [SerializeField] private GameObject m_rightHand;
-    [SerializeField] private Text m_rightKeyboard;
+    [SerializeField] private Image m_rightKeyboard;
     [SerializeField] private Image m_rightController;
     [SerializeField] private Image m_rightBar;
 
@@ -87,9 +87,7 @@ public class InfoDisplay : MonoBehaviour
         if(IsADrop)
         {
             m_leftKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-            m_leftKeyboard.text = InputManager.Instance.GetBindString("Left_Pickup");
             m_rightKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-            m_rightKeyboard.text = InputManager.Instance.GetBindString("Right_Pickup");
             m_leftController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
             m_leftController.sprite = InputManager.Instance.GetBindImage("Left_Pickup");
             m_rightController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);

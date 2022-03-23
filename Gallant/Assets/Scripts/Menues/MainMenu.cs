@@ -43,12 +43,21 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(bool isNew = false)
     {
-        PlayerPrefs.SetInt("NewPlayer", 1);
-        GameManager.currentLevel = 0;
-        GameManager.ResetPlayerInfo();
+        if (isNew)
+        {
+            GameManager.ResetPlayerInfo();
+            TutorialManager.isNewPlayer = isNew;
+            PlayerPrefs.SetInt("SwampLevel", 0);
+            PlayerPrefs.SetInt("CastleLevel", 0);
+            PlayerPrefs.SetInt("FrostLevel", 0);
+            PlayerPrefs.SetInt("MagmaLevel", 0);
+        }
+
+        GameManager.currentLevel = PlayerPrefs.GetFloat("Level", 0f);
         EndScreenMenu.Restart();
         LevelManager.Instance.LoadNewLevel("HubWorld");
     }
+
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);
