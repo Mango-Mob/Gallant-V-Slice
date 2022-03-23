@@ -43,12 +43,17 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(bool isNew = false)
     {
-        PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
-        GameManager.Instance.currentLevel = 0;
-        GameManager.ResetPlayerInfo();
+        if (isNew)
+        {
+            GameManager.ResetPlayerInfo();
+            PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
+        }
+
+        GameManager.Instance.currentLevel = PlayerPrefs.GetFloat("Level", 0f);
         EndScreenMenu.Restart();
         LevelManager.Instance.LoadNewLevel("HubWorld");
     }
+
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);
