@@ -46,11 +46,16 @@ public class MainMenu : MonoBehaviour
         if (isNew)
         {
             GameManager.ResetPlayerInfo();
+            GameManager.ClearPlayerInfoFromFile();
             TutorialManager.isNewPlayer = isNew;
             PlayerPrefs.SetInt("SwampLevel", 0);
             PlayerPrefs.SetInt("CastleLevel", 0);
             PlayerPrefs.SetInt("FrostLevel", 0);
             PlayerPrefs.SetInt("MagmaLevel", 0);
+        }
+        else
+        {
+            GameManager.LoadPlayerInfoFromFile();
         }
 
         GameManager.currentLevel = PlayerPrefs.GetFloat("Level", 0f);

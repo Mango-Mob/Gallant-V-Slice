@@ -17,6 +17,12 @@ public class SerializedWeapon
     public static SerializedWeapon SerializeWeapon(WeaponData _data)
     {
         SerializedWeapon weapon = new SerializedWeapon();
+        if (_data == null)
+        {
+            Debug.Log("No weapon to store");
+            weapon.m_level = -2;
+            return weapon;
+        }
         weapon.weaponType = _data.weaponType;
 
         weapon.m_level = _data.m_level;
@@ -31,6 +37,9 @@ public class SerializedWeapon
 
     public static WeaponData DeserializeWeapon(SerializedWeapon _weapon)
     {
+        if (_weapon.m_level == -2)
+            return null;
+
         WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1);
 
         data.m_damage = _weapon.m_damage;
