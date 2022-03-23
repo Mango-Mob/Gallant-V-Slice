@@ -49,7 +49,7 @@ public class MainMenu : MonoBehaviour
             PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
         }
 
-        GameManager.Instance.currentLevel = PlayerPrefs.GetFloat("Level", 0f);
+        GameManager.currentLevel = PlayerPrefs.GetFloat("Level", 0f);
         EndScreenMenu.Restart();
         LevelManager.Instance.LoadNewLevel("HubWorld");
     }
