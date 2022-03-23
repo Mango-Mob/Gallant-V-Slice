@@ -137,7 +137,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
             Debug.Log("Null button");
             return;
         }
-        Debug.Log($"{_button.m_skillData.skillName} button");
+        //Debug.Log($"{_button.m_skillData.skillName} button");
 
         m_skillCost.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
         m_upgradeButtonSprite.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);

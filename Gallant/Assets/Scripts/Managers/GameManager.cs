@@ -74,6 +74,8 @@ public class GameManager : Singleton<GameManager>
     [Serializable]
     private struct PlayerInfo
     {
+        public bool m_validSave;
+
         public SerializedWeapon m_leftWeapon;
         public AbilityData m_leftAbility;
 
@@ -107,6 +109,7 @@ public class GameManager : Singleton<GameManager>
     {
         m_playerInfo = new PlayerInfo();
         m_containsPlayerInfo = false;
+        m_playerInfo.m_validSave = false;
 
         string json = JsonUtility.ToJson(m_playerInfo);
         File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
@@ -120,6 +123,7 @@ public class GameManager : Singleton<GameManager>
         }
 
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+        m_playerInfo.m_validSave = true;
 
         string json = JsonUtility.ToJson(m_playerInfo);
         File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
@@ -208,6 +212,10 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = true;
     }
 
+    public static bool RetrieveValidSaveState()
+    {
+        return m_playerInfo.m_validSave;
+    }
     public static WeaponData RetrieveWeaponData(Hand _hand)
     {
         WeaponData data = null;

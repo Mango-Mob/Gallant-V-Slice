@@ -13,6 +13,8 @@ public class MainMenu : MonoBehaviour
     //public GameObject m_settingDisplay;
 
     public Button m_firstSelectedButton;
+    public Button m_loadButton;
+    public Image m_loadStrikeOut;
 
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
@@ -24,6 +26,10 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         MainDisplay();
+
+        GameManager.LoadPlayerInfoFromFile();
+        m_loadButton.interactable = GameManager.RetrieveValidSaveState();
+        m_loadStrikeOut.enabled = !GameManager.RetrieveValidSaveState();
     }
     // Update is called once per frame
     void Update()
@@ -47,6 +53,7 @@ public class MainMenu : MonoBehaviour
         {
             GameManager.ResetPlayerInfo();
             GameManager.ClearPlayerInfoFromFile();
+            SkillTreeReader.instance.EmptyAllTrees();
             TutorialManager.isNewPlayer = isNew;
             PlayerPrefs.SetInt("SwampLevel", 0);
             PlayerPrefs.SetInt("CastleLevel", 0);

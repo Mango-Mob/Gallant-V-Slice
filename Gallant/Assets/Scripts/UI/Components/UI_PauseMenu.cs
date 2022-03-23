@@ -64,11 +64,13 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void ReturnToHub()
     {
+        GameManager.SavePlayerInfoToFile();
         LevelManager.Instance.LoadHubWorld();
     }
 
     public void Quit()
     {
+        GameManager.SavePlayerInfoToFile();
         isPaused = false;
         SetPause(false);
         ActorManager.Instance.ClearActors();
