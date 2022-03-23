@@ -48,10 +48,6 @@ public class Room : MonoBehaviour
 
         if (m_mySpawnner.m_waves.Count == 0 && !m_mySpawnner.m_hasStarted)
         {
-            foreach (var gate in m_gates)
-            {
-                gate.SetActive(false);
-            }
             if(m_finalRoom)
             {
                 if(!RewardManager.isShowing)
@@ -59,6 +55,10 @@ public class Room : MonoBehaviour
                     GameManager.Instance.FinishLevel();
                 }
             }
+        }
+        foreach (var gate in m_gates)
+        {
+            gate.SetActive(m_mySpawnner.m_hasStarted);
         }
     }
 
