@@ -207,7 +207,7 @@ namespace ActorSystem.AI
             return null;
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             if(!m_myBrain.IsDead)
                 m_myBrain.HandleDamage(float.MaxValue, CombatSystem.DamageType.True);

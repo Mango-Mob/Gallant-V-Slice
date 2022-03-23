@@ -13,6 +13,7 @@ public class UI_StatsMenu : UI_Element
 
     [SerializeField] private Image m_background;
     [SerializeField] private TextMeshProUGUI m_currencyText;
+    [SerializeField] private TextMeshProUGUI m_currencyTextShad;
 
     [Header("Rune Info")]
     public Transform m_runeGroup;
@@ -45,6 +46,7 @@ public class UI_StatsMenu : UI_Element
     void Update()
     {
         m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+        m_currencyTextShad.text = $"{PlayerPrefs.GetInt("Player Balance")}";
 
         if (InputManager.Instance.IsKeyDown(KeyType.TAB) || InputManager.Instance.IsGamepadButtonDown(ButtonType.SELECT, InputManager.Instance.GetAnyGamePad()))
             ToggleActive();

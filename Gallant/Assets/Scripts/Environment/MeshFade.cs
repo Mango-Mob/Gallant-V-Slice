@@ -59,7 +59,7 @@ public class MeshFade : MonoBehaviour
     }
 
     public void FadeOut()
-    {
+    { 
         m_isFadingOut = true;
         m_beenSet = DateTime.Now;
         m_renderer.material = m_fade;

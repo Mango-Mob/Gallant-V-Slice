@@ -158,9 +158,28 @@ namespace ActorSystem.AI.Components
         * @param : (string) name of the boolean parameter in the animator.
         * @param : (bool) status of the boolean parameter.
         */
-        public void SetBool(string name, bool status)
+        public void SetBool(string name, bool status, float delay = 0)
         {
-            m_animator.SetBool(name, status);
+            if (delay <= 0)
+                m_animator.SetBool(name, status);
+            else
+                StartCoroutine(SetBoolDelayed(name, status, delay));
+        }
+
+        /*******************
+        * SetBoolDelayed : sets a bool variable after a delay.
+        * @author : Michael Jordan
+        * @param : (string) name of the float value stored in the animator.
+        * @param : (bool) final status.
+        * @param : (float) time (in seconds) for blending the current values to the new one provided.
+        */
+        private IEnumerator SetBoolDelayed(string valueName, bool status, float delayInSeconds)
+        {
+            yield return new WaitForSecondsRealtime(delayInSeconds);
+
+            m_animator.SetBool(valueName, status);
+
+            yield return null;
         }
 
         /*******************

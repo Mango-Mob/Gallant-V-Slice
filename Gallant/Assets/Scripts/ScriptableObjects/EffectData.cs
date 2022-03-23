@@ -43,7 +43,10 @@ public class EffectData : ScriptableObject
                 }
                 break;
             case StackCalculation.CURVE_TO_EXTREME:
-                value = m_default * ((1.0f - m_extremeValue) * Mathf.Pow(1.0f / m_stackStrength, -_stackCount) + m_extremeValue);
+                if (_stackCount != 0)
+                    value = m_default * ((1.0f - m_extremeValue) * Mathf.Pow(1.0f / m_stackStrength, -_stackCount) + m_extremeValue);
+                else
+                    value = m_default;
                 break;
             default:
                 break;
@@ -57,6 +60,9 @@ public class EffectData : ScriptableObject
 [CustomEditor(typeof(EffectData))]
 public class RandomScript_Editor : Editor
 {
+    public AnimationCurve m_curve = AnimationCurve.Linear(0, 0, 10, 1); // DO NOT TOUCH - WILLY
+    private int m_graphWidth = 40;
+    private int m_graphHeight = 5;
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector(); 
@@ -70,6 +76,20 @@ public class RandomScript_Editor : Editor
         else if (script.m_stackCalculation == EffectData.StackCalculation.DIMINISHING)
         {
             script.m_diminishingValue = EditorGUILayout.FloatField("Diminishing Value", script.m_diminishingValue);
+        }
+
+
+        EditorGUILayout.Space(20.0f);
+        EditorGUILayout.LabelField("Graph", EditorStyles.boldLabel);
+        m_graphWidth = EditorGUILayout.IntField("Graph Size", Mathf.Clamp(m_graphWidth, 0, 50));
+        m_curve = AnimationCurve.Linear(0, script.m_default, m_graphWidth, script.GetEffectValue(m_graphWidth));
+
+        m_curve = EditorGUILayout.CurveField("Value Graph", m_curve);
+        for (int i = 0; i <= m_graphWidth; i++)
+        {
+            Keyframe keyframe = new Keyframe(i, script.GetEffectValue(i));
+            Debug.Log($"{keyframe.time}, {keyframe.value}");
+            m_curve.AddKey(keyframe);
         }
     }
 }

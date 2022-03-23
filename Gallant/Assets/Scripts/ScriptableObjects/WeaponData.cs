@@ -23,7 +23,6 @@ public class SerializedWeapon
             weapon.m_level = -2;
             return weapon;
         }
-
         weapon.weaponType = _data.weaponType;
 
         weapon.m_level = _data.m_level;
@@ -48,7 +47,7 @@ public class SerializedWeapon
         data.m_knockback = _weapon.m_knockback;
         data.m_projectileSpeed = _weapon.m_projectileSpeed;
         data.weaponModelPrefab = Resources.Load<GameObject>("Weapons/Held Weapons/" + _weapon.m_weaponModel);
-        
+
         return data;
     }
 }
@@ -99,7 +98,7 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length);
+        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length - 3);
         ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;

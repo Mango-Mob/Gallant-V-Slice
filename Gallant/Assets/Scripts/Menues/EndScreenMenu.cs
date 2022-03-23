@@ -68,7 +68,6 @@ public class EndScreenMenu : MonoBehaviour
     {
         LevelManager.Instance.LoadHubWorld(true);
     }
-
     private string CalculateDamage()
     {
         int multiples = 0;

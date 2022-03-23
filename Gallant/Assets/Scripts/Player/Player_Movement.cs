@@ -80,12 +80,16 @@ public class Player_Movement : MonoBehaviour
     public Vector3 m_lastGroundedPosition { get; private set; }
     public Vector3 m_lastGroundedVelocity { get; private set; }
 
+    private void Awake()
+    {
+        characterController = GetComponent<CharacterController>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         playerController = GetComponent<Player_Controller>();
-        characterController = GetComponent<CharacterController>();
-
+        
         // Skill implementation.
         m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
         m_rollDistanceMult *= playerController.playerSkills.m_rollDistanceIncrease;

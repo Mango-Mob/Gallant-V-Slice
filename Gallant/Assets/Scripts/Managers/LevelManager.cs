@@ -13,6 +13,7 @@ public class LevelManager : SingletonPersistent<LevelManager>
     public enum Transition
     {
         CROSSFADE,
+        CROSSFADE_SPLIT,
         YOUDIED,
         YOUWIN
     }
@@ -62,7 +63,6 @@ public class LevelManager : SingletonPersistent<LevelManager>
     {
         StartCoroutine(LoadLevel(SceneManager.GetActiveScene().name));
     }
-
     public void LoadHubWorld(bool _playerDied = false)
     {
         if (_playerDied)
@@ -70,9 +70,8 @@ public class LevelManager : SingletonPersistent<LevelManager>
         else
             GameManager.SavePlayerInfoToFile();
 
-        LoadNewLevel("HUB");
+        LoadNewLevel("HubWorld", Transition.CROSSFADE_SPLIT);
     }
-
     public void LoadNextLevel()
     {
         loadingNextArea = true;
@@ -107,6 +106,11 @@ public class LevelManager : SingletonPersistent<LevelManager>
         {
             case Transition.CROSSFADE:
                 transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
+                break;
+            case Transition.CROSSFADE_SPLIT:
+                transition = Instantiate(transitionPrefab, transform).GetComponent<Animator>();
+                Time.timeScale = 1.0f;
+                timeMult = 0.1f;
                 break;
             case Transition.YOUDIED:
                 transition = Instantiate(youdiedPrefab, transform).GetComponent<Animator>();
@@ -143,8 +147,11 @@ public class LevelManager : SingletonPersistent<LevelManager>
                 loadingBar.value = progress;
             }
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForEndOfFrame();
         }
+
+        if (_transition == Transition.CROSSFADE_SPLIT)
+            timeMult = 1.0f;
 
         transition.speed = 1.0f / timeMult;
 

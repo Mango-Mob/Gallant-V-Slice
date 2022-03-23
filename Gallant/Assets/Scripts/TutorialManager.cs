@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+    public static bool isNewPlayer = false;
     public Actor m_guide;
 
     public Transform[] m_tutorialPositions;
@@ -30,51 +31,50 @@ public class TutorialManager : MonoBehaviour
     private int current = 0;
     private bool m_isRespawning = false;
     private bool m_playerHasDied = false;
+
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
         m_fade = GetComponentInChildren<Image>();
         m_fade.enabled = false;
-        if (GameManager.m_firstTime)
+
+        if (isNewPlayer)
         {
-            GameManager.Instance.m_player.transform.position = transform.position;
-            GameManager.Instance.m_player.transform.forward = transform.forward;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
+            player.transform.forward = transform.forward;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
 
             foreach (var item in m_mainGameObject)
             {
                 item.SetActive(false);
             }
+            isNewPlayer = false;
         }
         else
         {
             foreach (var item in m_mainGameObject)
             {
-                item.SetActive(true);
+                item.SetActive(false);
             }
         }
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         if (m_guide == null)
             return;
 
         if(Vector3.Distance(m_guide.transform.position, m_tutorialPositions[current].position) < 0.5f)
         {
-            m_guide.SetTargetOrientaion(m_tutorialPositions[current].position + m_tutorialPositions[current].forward);
             m_guide.m_myBrain.m_myOutline.enabled = true;
-        }
-        else
-        {
-            m_guide.SetTargetOrientaion(m_guide.transform.position + m_guide.m_myBrain.m_legs.velocity.normalized);
         }
 
         if(m_combatSection.IsComplete() && !GameManager.Instance.IsInCombat && current == 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            m_guide.transform.position = m_tutorialPositions[current].position;
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         }
@@ -90,6 +90,19 @@ public class TutorialManager : MonoBehaviour
             (m_guide as LoreKeeper).m_dialog = m_playerDeathDialog;
             m_playerHasDied = false;
         }
+
+        if(InputManager.Instance.IsKeyDown(KeyType.P))
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
+            GameManager.Instance.m_player.transform.forward = transform.forward;
+            (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
+
+            foreach (var item in m_mainGameObject)
+            {
+                item.SetActive(false);
+            }
+            PlayerPrefs.SetInt("NewPlayer", 0);
+        }
     }
 
     public void AdvanceTutorial()
@@ -97,8 +110,7 @@ public class TutorialManager : MonoBehaviour
         if (current < 3)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
-            m_guide.m_myBrain.m_myOutline.enabled = false;
+            m_guide.transform.position = m_tutorialPositions[current].position;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
         }
 
@@ -110,7 +122,7 @@ public class TutorialManager : MonoBehaviour
         if(current == 4)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            m_guide.transform.position = m_tutorialPositions[current].position;
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         }

@@ -226,6 +226,7 @@ public class RewardManager : Singleton<RewardManager>
 
         return weapon;
     }
+
     public ItemData GenerateItem(List<ScriptableObject> currentList)
     {
         int select;

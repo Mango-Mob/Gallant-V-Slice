@@ -29,6 +29,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     private Button m_button;
     private CanvasGroup m_canvasGroup;
 
+    [SerializeField] private bool m_permaLocked = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -88,6 +90,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             
             SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
+        SelectSkill();
     }
     public void RefundSkill()
     {
@@ -120,6 +123,9 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     }
     public bool IsAvailable()
     {
+        if (m_permaLocked)
+            return false;
+
         if (m_unlockDependencies.Count == 0)
             return true;
 

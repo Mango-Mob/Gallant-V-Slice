@@ -35,7 +35,7 @@ public class GroundSurface : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (!m_inPlayerVector)
+        if (!m_inPlayerVector && other.GetComponent<Player_Movement>())
         {
             m_inPlayerVector = true;
             playerMovement = other.GetComponent<Player_Movement>();
@@ -59,7 +59,7 @@ public class GroundSurface : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (m_inPlayerVector)
+        if (m_inPlayerVector && playerMovement)
         {
             m_inPlayerVector = false;
             playerMovement.m_touchedSurfaces.Remove(m_surfaceType);
@@ -68,7 +68,7 @@ public class GroundSurface : MonoBehaviour
 
     private void OnDisable()
     {
-        if (m_inPlayerVector)
+        if (m_inPlayerVector && playerMovement)
         {
             m_inPlayerVector = false;
             playerMovement.m_touchedSurfaces.Remove(m_surfaceType);
