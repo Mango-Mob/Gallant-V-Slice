@@ -43,7 +43,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(bool isNew = false)
     {
-        PlayerPrefs.SetInt("NewPlayer", 1);
+        PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
         GameManager.currentLevel = 0;
         GameManager.ResetPlayerInfo();
         EndScreenMenu.Restart();
