@@ -12,7 +12,7 @@ namespace ActorSystem.AI.Bosses
         public GameObject m_myModel;
         public int m_amountOfAttacks = 2;
         public float m_tentaclePhaseDuration = 5f;
-        public float m_inkAttackDuration = 8f;
+        public float m_inkAttackDuration = 5f;
         public List<Tentacle_AI> m_currentlyAttacking { get; private set; } = new List<Tentacle_AI>();
         public List<GameObject> m_inkSplatter = new List<GameObject>();
         public GameObject m_inkBallVFX;
@@ -382,7 +382,7 @@ namespace ActorSystem.AI.Bosses
 
         private void End()
         {
-            LevelManager.Instance.LoadNextLevel();
+            GameManager.Instance.FinishLevel();
         }
 
         public void Slam()
