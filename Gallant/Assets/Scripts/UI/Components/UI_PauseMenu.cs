@@ -64,7 +64,7 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void ReturnToHub()
     {
-        //LevelManager.Instance.
+        LevelManager.Instance.LoadHubWorld();
     }
 
     public void Quit()
