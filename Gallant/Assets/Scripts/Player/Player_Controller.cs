@@ -18,6 +18,7 @@ public class Player_Controller : MonoBehaviour
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
+    public bool m_isDisabledAttacks = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
     public ClassData m_inkmanClass { private set; get; }
@@ -123,7 +124,7 @@ public class Player_Controller : MonoBehaviour
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
         // Set avatar mask to be used
-        if (animator.GetFloat("Horizontal") != 0.0f || animator.GetFloat("Vertical") != 0.0f)
+        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.05f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.05f)
         {
             armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
             standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
@@ -154,7 +155,7 @@ public class Player_Controller : MonoBehaviour
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
             // Left hand pickup
-            if (InputManager.Instance.IsBindPressed("Left_Pickup", gamepadID))
+            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -168,7 +169,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // Right hand pickup
-            if (InputManager.Instance.IsBindPressed("Right_Pickup", gamepadID))
+            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID))
             {
                 DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                 if (droppedWeapon != null)
@@ -195,38 +196,41 @@ public class Player_Controller : MonoBehaviour
                 m_dualWieldBonus = 1.0f;
             }
 
-            // Weapon attacks
-            if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
+            if (!m_isDisabledAttacks)
             {
-                if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                // Weapon attacks
+                if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
                 {
-                    if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
+                    if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
                     {
-                        playerAttack.StartUsing(Hand.LEFT);
+                        if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
+                        {
+                            playerAttack.StartUsing(Hand.LEFT);
+                        }
+                        else
+                        {
+                            playerAttack.StartUsing(Hand.RIGHT);
+                        }
                     }
-                    else
+                    else if (rightWeaponAttack)
                     {
                         playerAttack.StartUsing(Hand.RIGHT);
                     }
+                    else if (leftWeaponAttack)
+                    {
+                        playerAttack.StartUsing(Hand.LEFT);
+                    }
                 }
-                else if (rightWeaponAttack)
-                {
-                    playerAttack.StartUsing(Hand.RIGHT);
-                }
-                else if (leftWeaponAttack)
-                {
-                    playerAttack.StartUsing(Hand.LEFT);
-                }
-            }
 
-            // Ability attacks
-            if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
-            {
-                playerAbilities.StartUsing(Hand.RIGHT);
-            }
-            if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID))
-            {
-                playerAbilities.StartUsing(Hand.LEFT);
+                // Ability attacks
+                if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
+                {
+                    playerAbilities.StartUsing(Hand.RIGHT);
+                }
+                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID))
+                {
+                    playerAbilities.StartUsing(Hand.LEFT);
+                }
             }
         }
 

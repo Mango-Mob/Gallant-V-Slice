@@ -13,7 +13,6 @@ public class GameManager : Singleton<GameManager>
     public static float deltaLevel = 1/2f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
-    public static bool m_firstTime = false;
 
     public GameObject m_player;
     public Camera m_activeCamera;
@@ -24,11 +23,12 @@ public class GameManager : Singleton<GameManager>
 
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
+
     // Start is called before the first frame update
     void Start()
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
-        m_activeCamera = m_player.GetComponentInChildren<Camera>();
+        m_activeCamera = Camera.main;
         music = GetComponentInChildren<AtmosphereScript>();
 
         for (int i = 0; i < 31; i++)
@@ -54,6 +54,7 @@ public class GameManager : Singleton<GameManager>
     private void OnLevelWasLoaded(int level)
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
+        m_activeCamera = Camera.main;
     }
 
     public void FinishLevel()
@@ -64,14 +65,17 @@ public class GameManager : Singleton<GameManager>
 
     public static void Advance()
     {
-        currentLevel += deltaLevel;
+        GameManager.currentLevel += GameManager.deltaLevel;
         GameManager.Instance.clearedArenas++;
+        PlayerPrefs.SetFloat("Level", GameManager.currentLevel);
     }
 
     #region Player Info Storage
     [Serializable]
     private struct PlayerInfo
     {
+        public bool m_validSave;
+
         public SerializedWeapon m_leftWeapon;
         public AbilityData m_leftAbility;
 
@@ -101,9 +105,25 @@ public class GameManager : Singleton<GameManager>
     static public bool m_containsPlayerInfo = false;
     static private PlayerInfo m_playerInfo;
 
+    public static void ClearPlayerInfoFromFile()
+    {
+        m_playerInfo = new PlayerInfo();
+        m_containsPlayerInfo = false;
+        m_playerInfo.m_validSave = false;
+
+        string json = JsonUtility.ToJson(m_playerInfo);
+        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+    }
     public static void SavePlayerInfoToFile()
     {
+        if (Instance?.m_player == null)
+        {
+            Debug.LogError("Save player info should not be called here. Only if there is a player in the scene. Contact William de Beer for more info.");
+            return;
+        }
+
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+        m_playerInfo.m_validSave = true;
 
         string json = JsonUtility.ToJson(m_playerInfo);
         File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
@@ -121,7 +141,8 @@ public class GameManager : Singleton<GameManager>
             m_containsPlayerInfo = true;
         }
 
-        Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
+        if (Instance?.m_player != null)
+            Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
     {
@@ -134,7 +155,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_leftWeapon = null;
+            m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
             m_playerInfo.m_leftAbility = null;
         }
 
@@ -147,7 +168,7 @@ public class GameManager : Singleton<GameManager>
         }
         else
         {
-            m_playerInfo.m_rightWeapon = null;
+            m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon); ;
             m_playerInfo.m_rightAbility = null;
         }
 
@@ -191,6 +212,10 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = true;
     }
 
+    public static bool RetrieveValidSaveState()
+    {
+        return m_playerInfo.m_validSave;
+    }
     public static WeaponData RetrieveWeaponData(Hand _hand)
     {
         WeaponData data = null;
@@ -305,6 +330,8 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo.m_classData = null;
 
         m_containsPlayerInfo = false;
+
+        PlayerPrefs.SetFloat("Level", 0);
     }
 
     #endregion

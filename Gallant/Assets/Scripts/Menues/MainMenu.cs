@@ -13,6 +13,8 @@ public class MainMenu : MonoBehaviour
     //public GameObject m_settingDisplay;
 
     public Button m_firstSelectedButton;
+    public Button m_loadButton;
+    public Image m_loadStrikeOut;
 
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
@@ -24,6 +26,10 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         MainDisplay();
+
+        GameManager.LoadPlayerInfoFromFile();
+        m_loadButton.interactable = GameManager.RetrieveValidSaveState();
+        m_loadStrikeOut.enabled = !GameManager.RetrieveValidSaveState();
     }
     // Update is called once per frame
     void Update()
@@ -43,12 +49,27 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame(bool isNew = false)
     {
-        GameManager.currentLevel = 0;
-        GameManager.ResetPlayerInfo();
-        GameManager.m_firstTime = isNew;
+        if (isNew)
+        {
+            GameManager.ResetPlayerInfo();
+            GameManager.ClearPlayerInfoFromFile();
+            SkillTreeReader.instance.EmptyAllTrees();
+            TutorialManager.isNewPlayer = isNew;
+            PlayerPrefs.SetInt("SwampLevel", 0);
+            PlayerPrefs.SetInt("CastleLevel", 0);
+            PlayerPrefs.SetInt("FrostLevel", 0);
+            PlayerPrefs.SetInt("MagmaLevel", 0);
+        }
+        else
+        {
+            GameManager.LoadPlayerInfoFromFile();
+        }
+
+        GameManager.currentLevel = PlayerPrefs.GetFloat("Level", 0f);
         EndScreenMenu.Restart();
         LevelManager.Instance.LoadNewLevel("HubWorld");
     }
+
     public void MainDisplay()
     {
         m_settingsMenu.gameObject.SetActive(false);

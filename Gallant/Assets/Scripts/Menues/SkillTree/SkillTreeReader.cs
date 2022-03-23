@@ -191,6 +191,13 @@ public class SkillTreeReader : MonoBehaviour
 
         SaveSkillTree(_class);
     }
+    public void EmptyAllTrees()
+    {
+        foreach (var playerClass in System.Enum.GetValues(typeof(InkmanClass)))
+        {
+            EmptySkillTree((InkmanClass)playerClass);
+        }
+    }
 
     //public bool CanSkillBeUnlocked(int id_skill)
     //{

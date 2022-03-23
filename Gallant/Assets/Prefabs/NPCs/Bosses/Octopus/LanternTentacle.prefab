@@ -263,6 +263,8 @@ GameObject:
   - component: {fileID: 3347486705654722044}
   - component: {fileID: 2357108439377232165}
   - component: {fileID: 152689108542766574}
+  - component: {fileID: 685559651287876917}
+  - component: {fileID: 1074828084351662728}
   m_Layer: 9
   m_Name: LanternTentacle
   m_TagString: Untagged
@@ -327,6 +329,9 @@ MonoBehaviour:
   m_selfTargetTransform: {fileID: 0}
   m_HurtVFXPrefab: {fileID: 0}
   m_myData: {fileID: 11400000, guid: d21e69251dbe7934ab9586e716a4fa18, type: 2}
+  m_inkSlamDamage: 40
+  m_rotationDeg: 40
+  m_rotationSpeed: 5
   m_acceleration: 12
   m_stoppingDist: 0
   isLantern: 1
@@ -335,6 +340,11 @@ MonoBehaviour:
   m_headPhaseAttacks: []
   m_tentaclePhaseAttacks: []
   m_oilPhaseAttacks: []
+  m_inkSlam:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 0
+    size: 0
 --- !u!114 &7473522537975490883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,6 +447,36 @@ MonoBehaviour:
   m_baseDamageMod: 0
   m_lastAttackName: 
   m_myData: []
+--- !u!114 &685559651287876917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3626508731828100028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013d2f1b59b0f71408bb9ba816659dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: 773852b37dbe1494a90e9579ddfd5f98, type: 3}
+  audioPlayersCount: 5
+  channel: 1
+--- !u!114 &1074828084351662728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3626508731828100028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3771844940074724461
 GameObject:
   m_ObjectHideFlags: 0

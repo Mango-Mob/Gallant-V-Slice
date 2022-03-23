@@ -19,6 +19,11 @@ public class Player_Pickup : MonoBehaviour
         playerController = GetComponentInParent<Player_Controller>();
     }
 
+    public void Update()
+    {
+        playerController.m_isDisabledAttacks = weaponsInRange.Count > 0;
+    }
+
     /*******************
      * FunctionName : Gets the closest weapon to the player inside the trigger box
      * @author : William de Beer
@@ -28,7 +33,7 @@ public class Player_Pickup : MonoBehaviour
     {
         if (weaponsInRange.Count < 1) // Check if there are no weapons in range
         {
-            Debug.Log("No weapon close enough to be picked up");
+            //Debug.Log("No weapon close enough to be picked up");
             return null;
         }
         // Set first weapon index as the default

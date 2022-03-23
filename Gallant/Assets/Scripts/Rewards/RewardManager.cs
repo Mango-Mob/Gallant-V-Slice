@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class RewardManager : Singleton<RewardManager>
 {
+    public static bool giveRewardUponLoad = false;
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
     public GameObject m_window;
@@ -60,6 +61,14 @@ public class RewardManager : Singleton<RewardManager>
         Hide();
     }
 
+    protected void OnLevelWasLoaded(int level)
+    {
+        if(giveRewardUponLoad)
+        {
+            Show(Mathf.FloorToInt(GameManager.currentLevel));
+            giveRewardUponLoad = false;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -226,6 +235,7 @@ public class RewardManager : Singleton<RewardManager>
 
         return weapon;
     }
+
     public ItemData GenerateItem(List<ScriptableObject> currentList)
     {
         int select;

@@ -132,7 +132,7 @@ public class Player_AudioAgent : MultiAudioAgent
                 base.PlayOnce("PlayerFootstepDirt", false, Random.Range(0.95f, 1.05f));
                 break;
             case 3://Water
-                base.PlayOnce("PlayerFootstepWater", false, Random.Range(0.95f, 1.05f));
+                base.PlayOnce("PlayerFootstepWater", false, Random.Range(0.8f, 1.2f));
                 break;
         }
     }

@@ -592,6 +592,8 @@ GameObject:
   - component: {fileID: 3769122964767734331}
   - component: {fileID: 2267369148534030779}
   - component: {fileID: 6800129612680544971}
+  - component: {fileID: 2098726697452933951}
+  - component: {fileID: 1494381621860711093}
   m_Layer: 9
   m_Name: BasicTenticle
   m_TagString: Untagged
@@ -654,6 +656,7 @@ MonoBehaviour:
   m_selfTargetTransform: {fileID: 0}
   m_HurtVFXPrefab: {fileID: 0}
   m_myData: {fileID: 11400000, guid: d21e69251dbe7934ab9586e716a4fa18, type: 2}
+  m_inkSlamDamage: 40
   m_rotationDeg: 40
   m_rotationSpeed: 5
   m_acceleration: 6
@@ -667,6 +670,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}
   - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
   m_oilPhaseAttacks: []
+  m_inkSlam:
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    type: 0
+    size: 0
 --- !u!114 &2695535844105113941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -754,7 +762,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  animEvents: []
+  animEvents:
+  - _name: Shake
+    _event:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!136 &1165860633712495569
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -822,3 +834,34 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ce8b918bdf7f07a4dbc7cfd8df904eec, type: 2}
   - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
   - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}
+--- !u!114 &2098726697452933951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013d2f1b59b0f71408bb9ba816659dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  audioClips:
+  - {fileID: 8300000, guid: dca7f11d79d23364399435d4bac0af93, type: 3}
+  - {fileID: 8300000, guid: 6dc448241cc31ad4ab33954e47a93681, type: 3}
+  audioPlayersCount: 5
+  channel: 1
+--- !u!114 &1494381621860711093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

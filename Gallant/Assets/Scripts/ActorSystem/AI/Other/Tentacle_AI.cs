@@ -295,5 +295,22 @@ namespace ActorSystem.AI.Other
 
             transform.position += m_velocity * Time.fixedDeltaTime;
         }
+
+        public void PlaySlam()
+        {
+            if(isLantern)
+            {
+                m_myBrain.m_audioAgent.m_myAgent.Play("TentacleLanternSlam", false, Random.Range(0.90f, 1.1f));
+            }
+            else
+            {
+                m_myBrain.m_audioAgent.m_myAgent.Play("TentacleSlam", false, Random.Range(0.90f, 1.1f));
+            }
+        }
+
+        public void PlaySwipe()
+        {
+            m_myBrain.m_audioAgent.m_myAgent.Play("TentacleSwipe", false, Random.Range(0.90f, 1.1f));
+        }
     }
 }
