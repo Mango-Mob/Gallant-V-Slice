@@ -188,6 +188,8 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleO.Kill(); m_tentacleO.Submerge(false);
                     m_tentacleI.Kill(); m_tentacleI.Submerge(false);
                     PlayerPrefs.SetInt("SwampLevel", 1);
+                    RewardManager.giveRewardUponLoad = true;
+                    GameManager.currentLevel++;
                     m_gameOverTimer.Start(6f);
                     break;
                 default:
