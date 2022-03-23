@@ -47,6 +47,10 @@ public class MainMenu : MonoBehaviour
         {
             GameManager.ResetPlayerInfo();
             PlayerPrefs.SetInt("NewPlayer", (isNew) ? 1 : 0);
+            PlayerPrefs.SetInt("SwampLevel", 0);
+            PlayerPrefs.SetInt("CastleLevel", 0);
+            PlayerPrefs.SetInt("FrostLevel", 0);
+            PlayerPrefs.SetInt("MagmaLevel", 0);
         }
 
         GameManager.currentLevel = PlayerPrefs.GetFloat("Level", 0f);

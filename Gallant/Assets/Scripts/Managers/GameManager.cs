@@ -27,7 +27,7 @@ public class GameManager : Singleton<GameManager>
     void Start()
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
-        m_activeCamera = m_player.GetComponentInChildren<Camera>();
+        m_activeCamera = Camera.main;
         music = GetComponentInChildren<AtmosphereScript>();
 
         for (int i = 0; i < 31; i++)
@@ -53,6 +53,7 @@ public class GameManager : Singleton<GameManager>
     private void OnLevelWasLoaded(int level)
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
+        m_activeCamera = Camera.main;
     }
 
     public void FinishLevel()
@@ -306,7 +307,6 @@ public class GameManager : Singleton<GameManager>
 
         m_containsPlayerInfo = false;
 
-        PlayerPrefs.SetInt("SwampLevel", 0);
         PlayerPrefs.SetFloat("Level", 0);
     }
 

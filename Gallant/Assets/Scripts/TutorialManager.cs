@@ -32,7 +32,7 @@ public class TutorialManager : MonoBehaviour
     private bool m_playerHasDied = false;
 
     // Start is called before the first frame update
-    public void Awake()
+    public void Start()
     {
         m_fade = GetComponentInChildren<Image>();
         m_fade.enabled = false;
@@ -120,7 +120,7 @@ public class TutorialManager : MonoBehaviour
         if(current == 4)
         {
             current++;
-            m_guide.SetTargetLocation(m_tutorialPositions[current].position);
+            m_guide.transform.position = m_tutorialPositions[current].position;
             m_guide.m_myBrain.m_myOutline.enabled = false;
             (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         }

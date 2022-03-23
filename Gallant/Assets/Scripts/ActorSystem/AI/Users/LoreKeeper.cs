@@ -55,9 +55,10 @@ namespace ActorSystem.AI.Users
             if (m_showUI)
             {
                 UpdateDisplay();
-                m_myInteractLogic.m_isReady = m_showUI;
             }
-                
+
+            m_myInteractLogic.m_isReady = m_showUI && Vector3.Distance(transform.position, m_player.transform.position) <= 1.5f;
+
         }
 
         public void Interact()
