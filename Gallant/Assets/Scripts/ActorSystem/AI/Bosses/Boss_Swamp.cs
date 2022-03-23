@@ -372,6 +372,7 @@ namespace ActorSystem.AI.Bosses
             target.SetActive(true);
             yield return null;
         }
+
         private void End()
         {
             LevelManager.Instance.LoadNextLevel();
