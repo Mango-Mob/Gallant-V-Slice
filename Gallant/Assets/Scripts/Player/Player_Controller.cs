@@ -124,7 +124,7 @@ public class Player_Controller : MonoBehaviour
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
         // Set avatar mask to be used
-        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.5f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.5f)
+        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.05f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.05f)
         {
             armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
             standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
