@@ -653,12 +653,14 @@ public class Player_Attack : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
-                m_leftWeapon.SetInUse(false);
-                m_leftWeapon.m_weaponObject.SetActive(true);
+                m_leftWeapon?.SetInUse(false);
+                if (m_leftWeapon?.m_weaponObject)
+                    m_leftWeapon?.m_weaponObject.SetActive(true);
                 break;
             case Hand.RIGHT:
-                m_rightWeapon.SetInUse(false);
-                m_rightWeapon.m_weaponObject.SetActive(true);
+                m_rightWeapon?.SetInUse(false);
+                if (m_rightWeapon?.m_weaponObject)
+                    m_rightWeapon?.m_weaponObject.SetActive(true);
                 break;
             default:
                 Debug.Log("If you got here, I don't know what to tell you. You must have a third hand or something");
