@@ -14,7 +14,6 @@ public class Player_Controller : MonoBehaviour
 {
     public GameObject testObject;
     public Camera playerCamera { private set; get; }
-    public Animator animatorCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -91,7 +90,6 @@ public class Player_Controller : MonoBehaviour
     {
         playerCamera = Camera.main;
         m_startZoom = playerCamera.fieldOfView;
-        animatorCamera = playerCamera.GetComponent<Animator>();
         LoadPlayerInfo();
     }
 
