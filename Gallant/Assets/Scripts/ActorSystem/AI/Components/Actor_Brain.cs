@@ -235,6 +235,7 @@ namespace ActorSystem.AI.Components
             {
                 m_arms.Invoke(hit, m_projSource);
             }
+            m_arms.PostInvoke();
         }
 
         public void EndAttack()
@@ -304,9 +305,9 @@ namespace ActorSystem.AI.Components
             }
         }
 
-        public void DropOrbs(int amount)
+        public void DropOrbs(int amount, Vector3 position)
         {
-            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, transform.position, m_adrenalineGain.GetRandom() / amount);
+            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, m_adrenalineGain.GetRandom() / amount);
         }
 
         public void DrawGizmos()
