@@ -242,5 +242,9 @@ namespace ActorSystem.AI
                 Debug.LogError("TODO");
             }
         }
+        public virtual void Slam()
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("Shake");
+        }
     }
 }

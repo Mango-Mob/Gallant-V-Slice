@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActorSystem.AI.Components
@@ -124,6 +125,16 @@ namespace ActorSystem.AI.Components
             {
                 if(attack != null)
                     attack.DrawGizmos(transform);
+            }
+        }
+
+        public void PostInvoke()
+        {
+            if (m_myData[m_activeAttack.Value].vfxSpawn != null)
+            {
+                Vector3 hitloc = transform.TransformPoint(AttackData.GetHitLocation(m_myData[m_activeAttack.Value].damageHitboxes[0]));
+                GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].vfxSpawn, hitloc, Quaternion.identity);
+                vfx.transform.forward = transform.forward;
             }
         }
     }

@@ -66,7 +66,6 @@ namespace ActorSystem.AI.Other
                     m_isAttacking = true;
                     m_canRotate = false;
                     m_myBrain.BeginAttack(nextAttack);
-                    m_myBrain.EndAttack();
                 }
             }
 

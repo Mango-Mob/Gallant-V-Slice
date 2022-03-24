@@ -387,7 +387,7 @@ namespace ActorSystem.AI.Bosses
             GameManager.Instance.FinishLevel();
         }
 
-        public void Slam()
+        public override void Slam()
         {
             GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("HeavyShake");
         }
