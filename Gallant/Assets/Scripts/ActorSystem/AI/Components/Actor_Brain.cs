@@ -235,6 +235,7 @@ namespace ActorSystem.AI.Components
             {
                 m_arms.Invoke(hit, m_projSource);
             }
+            m_arms.PostInvoke();
         }
 
         public void EndAttack()
