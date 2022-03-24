@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Controller : MonoBehaviour
 {
+    public GameObject testObject;
     public Camera playerCamera { private set; get; }
     public Animator animatorCamera { private set; get; }
     public Animator animator;
@@ -116,13 +117,13 @@ public class Player_Controller : MonoBehaviour
 
         //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
-        if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.ToggleBlock(false);
-        if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
+        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
 
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
+        float runArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("RunArmL"));
+        float idleWeight = animator.GetLayerWeight(animator.GetLayerIndex("IdleArmL"));
         // Set avatar mask to be used
         if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.05f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.05f)
         {
@@ -135,16 +136,30 @@ public class Player_Controller : MonoBehaviour
             standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
 
+        // Set avatar mask to be used
+        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
+        {
+            runArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            idleWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
+        else
+        {
+            runArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            idleWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
+
         armWeight = Mathf.Clamp(armWeight, 0.0f, 1.0f);
         standArmWeight = Mathf.Clamp(standArmWeight, 0.0f, 1.0f);
+        runArmWeight = Mathf.Clamp(runArmWeight, 0.0f, 1.0f);
+        idleWeight = Mathf.Clamp(idleWeight, 0.0f, 1.0f);
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (standArmWeight));
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (standArmWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (idleWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (idleWeight));
 
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight));
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (runArmWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (runArmWeight));
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
@@ -306,7 +321,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            DamagePlayer(20.0f, CombatSystem.DamageType.True, FindObjectOfType<Actor>().gameObject, false);
+            DamagePlayer(20.0f, CombatSystem.DamageType.True, testObject, false);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -399,32 +414,27 @@ public class Player_Controller : MonoBehaviour
         }
         else // If using mouse
         {
-            if(InputManager.Instance.IsBindDown("Toggle_Aim"))
+            //if(InputManager.Instance.IsBindDown("Toggle_Aim"))
+            //{
+            //    m_isAiming = !m_isAiming;
+            //}
+
+            // Raycast to find raycast point
+            RaycastHit hit;
+            Ray ray = playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
+            if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
             {
-                m_isAiming = !m_isAiming;
+                // Return direction from player to hit point
+                Vector3 aim = hit.point - transform.position;
+
+                Vector3 normalizedAim = Vector3.zero;
+                normalizedAim += aim.z * -transform.right;
+                normalizedAim += aim.x * transform.forward;
+                normalizedAim *= -1;
+                m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
             }
 
-            if (m_isAiming)
-            {
-                // Raycast to find raycast point
-                RaycastHit hit;
-                Ray ray = playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
-                if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
-                {
-                    // Return direction from player to hit point
-                    Vector3 aim = hit.point - transform.position;
-
-                    Vector3 normalizedAim = Vector3.zero;
-                    normalizedAim += aim.z * -transform.right;
-                    normalizedAim += aim.x * transform.forward;
-                    normalizedAim *= -1;
-                    m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
-                }
-            }
-            else
-            {
-                m_lastAimDirection = new Vector2(0.0f, 0.0f);
-            }
+            //m_lastAimDirection = new Vector2(0.0f, 0.0f);
             return m_lastAimDirection;
         }
     }
@@ -516,6 +526,7 @@ public class Player_Controller : MonoBehaviour
 
         if (playerAttack.m_isBlocking && _attacker != null)
         {
+            Debug.Log("MISSED BLOCK");
             if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
             {
                 // PLAY BLOCK SOUND
