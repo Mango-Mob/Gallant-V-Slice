@@ -244,7 +244,7 @@ namespace ActorSystem.AI.Components
             m_trackingTarget = false;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true)
+        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)
         {
             if (IsDead)
                 return true;
@@ -273,7 +273,7 @@ namespace ActorSystem.AI.Components
             }
 
             //Hit animation
-            if (_damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
+            if (hitIndicator && _damageLoc.HasValue && m_animator != null && m_animator.m_hasHit)
             {
                 m_animator.SetTrigger("Hit");
                 m_animator.SetVector3("HitHorizontal", "", "HitVertical", transform.TransformVector(transform.position.DirectionTo(_damageLoc.Value)).normalized);
@@ -281,11 +281,12 @@ namespace ActorSystem.AI.Components
 
             //Internal
             m_currHealth -= damage;
+            EndScreenMenu.damageDealt += damage;
 
             if (playAudio && IsDead)
             {
                 m_audioAgent?.PlayDeath();
-                m_legs.Halt();
+                m_legs?.Halt();
             }
             else if (playAudio)
             {

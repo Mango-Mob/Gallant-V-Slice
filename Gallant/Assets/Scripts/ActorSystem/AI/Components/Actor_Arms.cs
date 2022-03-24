@@ -133,8 +133,12 @@ namespace ActorSystem.AI.Components
             if (m_myData[m_activeAttack.Value].vfxSpawn != null)
             {
                 Vector3 hitloc = transform.TransformPoint(AttackData.GetHitLocation(m_myData[m_activeAttack.Value].damageHitboxes[0]));
-                GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].vfxSpawn, hitloc, Quaternion.identity);
-                vfx.transform.forward = transform.forward;
+                RaycastHit hit;
+                if(Physics.Raycast(hitloc, Vector3.down, out hit, 15f, 1 << LayerMask.NameToLayer("Environment")))
+                {
+                    GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].vfxSpawn, hit.point, Quaternion.identity);
+                    vfx.transform.forward = transform.forward;
+                }
             }
         }
     }

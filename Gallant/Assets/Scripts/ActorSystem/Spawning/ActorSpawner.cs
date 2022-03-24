@@ -177,6 +177,7 @@ namespace ActorSystem.Spawning
                      Stop();
                      RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
                      GameManager.Advance();
+                     EndScreenMenu.roomsCleared++;
                  }
                  else
                  {

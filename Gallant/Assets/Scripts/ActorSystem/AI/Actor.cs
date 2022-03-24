@@ -164,7 +164,7 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false))
+                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
@@ -244,7 +244,7 @@ namespace ActorSystem.AI
         }
         public virtual void Slam()
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(8, 0.3f);
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(6, 0.2f);
         }
     }
 }

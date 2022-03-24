@@ -12,7 +12,11 @@ namespace ActorSystem.AI
         {
             m_myBrain = GetComponent<Actor_Brain>();
             m_mySpawn = GetComponent<Actor_SpawnMethod>();
+        }
 
+        protected override void Start()
+        {
+            //Don't start statemachine
             if (m_toReserveOnLoad)
             {
                 ActorManager.Instance.ReserveMe(this);
@@ -24,12 +28,6 @@ namespace ActorSystem.AI
                 m_myBrain.LoadData(m_myData);
                 m_myBrain.enabled = true;
             }
-
-        }
-
-        protected override void Start()
-        {
-            //Don't start statemachine
         }
 
         protected override void Update()

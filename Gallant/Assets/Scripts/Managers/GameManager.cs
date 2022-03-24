@@ -109,7 +109,7 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo = new PlayerInfo();
         m_containsPlayerInfo = false;
         m_playerInfo.m_validSave = false;
-
+        currentLevel = 0;
         string json = JsonUtility.ToJson(m_playerInfo);
         File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
     }
