@@ -89,6 +89,11 @@ public class UI_StatsMenu : UI_Element
 
     public void UpdateList()
     {
+        if (playerStats == null)
+            playerStats = FindObjectOfType<Player_Stats>();
+        if (playerStats == null)
+            return;
+
         List<RuneInfo> removeList = new List<RuneInfo>();
         foreach (var rune in m_runeList)
         {

@@ -121,6 +121,12 @@ namespace Exceed.Debug
             m_freeCamera.SetTarget(m_mainCamera.transform);
         }
 
+        public void ToggleHUD()
+        {
+            if (HUDManager.Instance != null)
+                HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
+        }
+
         private void OnLevelWasLoaded(int level)
         {
             m_player = FindObjectOfType<Player_Controller>();
@@ -165,9 +171,6 @@ namespace Exceed.Debug
             int count = ActorManager.Instance.m_subscribed.Count;
             m_ActorCountTxt.text = count.ToString();
             m_killAllBtn.interactable = count > 0;
-
-            //if (HUDManager.Instance != null)
-            //    HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
 
             DebugManager.showRoomLocations = m_showRooms.isOn;
         }
