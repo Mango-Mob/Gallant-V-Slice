@@ -63,6 +63,12 @@ public class Player_Controller : MonoBehaviour
 
     public LayerMask m_waterLayer;
 
+    [Header("Camera Shake")]
+    private float m_shake = 0.0f;
+    private float m_shakeIntensityMult = 1.0f;
+    [SerializeField] private float m_shakeAmount = 0.7f;
+    [SerializeField] private float m_shakeDecreaseSpeed = 1.0f;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
@@ -89,9 +95,25 @@ public class Player_Controller : MonoBehaviour
         LoadPlayerInfo();
     }
 
+    private void FixedUpdate()
+    {
+        if (m_shake > 0.0f)
+        {
+            playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+            m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+
+        }
+        else
+        {
+            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+            m_shake = 0.0f;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
             return;
 
@@ -549,10 +571,16 @@ public class Player_Controller : MonoBehaviour
         if (m_damageVFXPrefab != null)
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
 
-        if (animatorCamera)
-            animatorCamera.SetTrigger("Shake");
+        //if (animatorCamera)
+        //    animatorCamera.SetTrigger("Shake");
+        ScreenShake(5.0f);
     }
 
+    public void ScreenShake(float _intensity, float _shake = 0.3f)
+    {
+        m_shakeIntensityMult = _intensity;
+        m_shake = _shake;
+    }
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
