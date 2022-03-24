@@ -389,7 +389,7 @@ namespace ActorSystem.AI.Bosses
 
         public void Slam()
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("HeavyShake");
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(10.0f);
         }
     }
 }
