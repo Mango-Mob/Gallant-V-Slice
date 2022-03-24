@@ -103,6 +103,20 @@ namespace ActorSystem.AI
             return colliders;
         }
 
+        public static Vector3 GetHitLocation(HitBox box)
+        {
+            switch (box.type)
+            {
+                case HitBox.HitType.Box:
+                    return box.start;
+                default:
+                case HitBox.HitType.Sphere:
+                    return box.start;
+                case HitBox.HitType.Capsule:
+                    return Extentions.MidPoint(box.start, box.end);
+            }
+        }
+
         public void DrawGizmos(Transform user)
         {
             Gizmos.matrix = user.localToWorldMatrix;

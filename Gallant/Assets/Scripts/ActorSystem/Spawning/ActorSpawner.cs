@@ -128,6 +128,9 @@ namespace ActorSystem.Spawning
          */
         public void SpawnWave(RoomData wave)
         {
+            if (wave == null)
+                return;
+
             if(m_generator.m_spawnPoints == null || m_generator.m_spawnPoints.Count == 0)
             {
                 Debug.LogError("Spawner doesn't have any valid spawn points.");
