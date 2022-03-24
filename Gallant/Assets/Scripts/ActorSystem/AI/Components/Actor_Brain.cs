@@ -285,6 +285,7 @@ namespace ActorSystem.AI.Components
             if (playAudio && IsDead)
             {
                 m_audioAgent?.PlayDeath();
+                m_legs.Halt();
             }
             else if (playAudio)
             {

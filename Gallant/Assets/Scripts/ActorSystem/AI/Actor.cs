@@ -244,7 +244,7 @@ namespace ActorSystem.AI
         }
         public virtual void Slam()
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("Shake");
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(8, 0.3f);
         }
     }
 }
