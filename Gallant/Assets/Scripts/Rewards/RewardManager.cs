@@ -58,17 +58,18 @@ public class RewardManager : Singleton<RewardManager>
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
         m_pressDurationImage.fillAmount = 0.0f;
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
-        Hide();
-    }
 
-    protected void OnLevelWasLoaded(int level)
-    {
-        if(giveRewardUponLoad)
+        if (giveRewardUponLoad)
         {
             Show(Mathf.FloorToInt(GameManager.currentLevel));
             giveRewardUponLoad = false;
         }
+        else
+        {
+            Hide();
+        }
     }
+
     // Update is called once per frame
     void Update()
     {

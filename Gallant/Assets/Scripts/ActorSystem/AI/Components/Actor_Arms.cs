@@ -18,7 +18,7 @@ namespace ActorSystem.AI.Components
         public bool hasCancel { 
             get 
             {
-                if (m_activeAttack.HasValue)
+                if (m_activeAttack.HasValue && m_myData[m_activeAttack.Value] != null)
                 {
                     return m_myData[m_activeAttack.Value].canBeCanceled;
                 }
@@ -64,7 +64,7 @@ namespace ActorSystem.AI.Components
 
         public Collider[] GetOverlapping(int damageId)
         {
-            if(m_activeAttack != null)
+            if(m_activeAttack != null && m_myData[m_activeAttack.Value] != null)
             {
                 return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask, damageId).ToArray();
             }

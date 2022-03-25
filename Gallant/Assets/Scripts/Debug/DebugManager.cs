@@ -237,6 +237,7 @@ namespace Exceed.Debug
 
         public void LoadScene()
         {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
             SceneManager.LoadScene(m_sceneList.value);
         }
 
