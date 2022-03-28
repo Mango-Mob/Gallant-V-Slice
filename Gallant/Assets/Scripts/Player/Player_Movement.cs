@@ -270,7 +270,14 @@ public class Player_Movement : MonoBehaviour
 
         if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.LEFT)
         {
-            m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed;
+            if (playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
+            }
+            else
+            {
+                m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed;
+            }
         }
         else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)
         {

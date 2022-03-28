@@ -6,6 +6,7 @@ public class Weapon_Sword : WeaponBase
 {
     new private void Awake()
     {
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangProjectile");
         base.Awake();
     }
 
@@ -25,4 +26,9 @@ public class Weapon_Sword : WeaponBase
         MeleeAttack(m_weaponData, transform.position);
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+        ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
+    }
+    public override void WeaponAltRelease() { }
 }

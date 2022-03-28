@@ -21,4 +21,6 @@ public class Weapon_Axe : Weapon_Sword
         base.Update();
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality() { }
+    public override void WeaponAltRelease() { }
 }

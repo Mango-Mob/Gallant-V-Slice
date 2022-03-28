@@ -26,4 +26,8 @@ public class Weapon_Shield : WeaponBase
         BeginBlock();
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+    }
+    public override void WeaponAltRelease() { }
 }
