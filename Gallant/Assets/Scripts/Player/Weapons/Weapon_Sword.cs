@@ -28,7 +28,11 @@ public class Weapon_Sword : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
-        ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
+        MeleeAttack(m_weaponData, transform.position);
+        Transform modelTransform = playerController.playerMovement.playerModel.transform;
+        playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed, m_weaponData.m_dashDuration, modelTransform.forward);
+
+        //ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }
 }

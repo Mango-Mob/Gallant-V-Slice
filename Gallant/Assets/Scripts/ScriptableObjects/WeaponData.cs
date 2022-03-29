@@ -83,6 +83,9 @@ public class WeaponData : ScriptableObject
     public float m_knockback = 1;
     public float m_projectileSpeed = 0;
     public float m_attackMoveSpeed = 0.5f;
+    public float m_attackAltMoveSpeed = 0.5f;
+    public float m_dashSpeed = 1.0f;
+    public float m_dashDuration = 0.3f;
 
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;

@@ -53,6 +53,11 @@ public class Player_Movement : MonoBehaviour
     public float m_detectDistance = 0.7f;
     public float m_explodeForce = 5.0f;
 
+    [Header("Dash Movement")]
+    private Vector3 m_dashVelocity = Vector3.zero;
+    private float m_dashTimer = 0.0f;
+    private Vector3 m_dashFaceDirection = Vector3.zero;
+
     [Header("Foot Transforms")]
     [SerializeField] private Transform m_leftFoot;
     [SerializeField] private Transform m_rightFoot;
@@ -147,6 +152,7 @@ public class Player_Movement : MonoBehaviour
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
         RollUpdate();
+        DashUpdate();
         StunUpdate(); 
     }
 
@@ -197,6 +203,39 @@ public class Player_Movement : MonoBehaviour
             m_isRollInvincible = false;
         }
     }
+
+
+    /*******************
+     * DashUpdate : Updates dash movement if active.
+     * @author : William de Beer
+     */
+    private void DashUpdate()
+    {
+        if (m_dashTimer > 0.0f)
+        {
+            if (m_dashFaceDirection == Vector3.zero)
+            {
+                RotateToFaceDirection(new Vector3(m_dashFaceDirection.x, 0, m_dashFaceDirection.z));
+            }
+
+            // Move player in stored direction while dash is active
+            characterController.Move(m_dashVelocity * Time.fixedDeltaTime);
+
+            m_dashTimer -= Time.fixedDeltaTime;
+        }
+    }
+
+    /*******************
+     * ApplyDashMovement : Apply dash movement to player.
+     * @author : William de Beer
+     */
+    public void ApplyDashMovement(Vector3 _velocity, float _duration, Vector3 _facingDirection = default(Vector3))
+    {
+        m_dashVelocity = _velocity;
+        m_dashTimer = _duration;
+        m_dashFaceDirection = _facingDirection;
+    }
+
     /*******************
      * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
      * @author : William de Beer
@@ -212,7 +251,8 @@ public class Player_Movement : MonoBehaviour
         m_knockbackVelocity = _knockbackVelocity;
         m_knockbackVelocity.y = 0;
         m_yVelocity = _knockbackVelocity.y;
-        
+        m_dashTimer = 0.0f;
+
         if (_stunDuration != 0.0f)
         {
             m_isRolling = false;
@@ -272,11 +312,11 @@ public class Player_Movement : MonoBehaviour
         {
             if (playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded)
             {
-                m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
+                m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackAltMoveSpeed;
             }
             else
             {
-                m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackMoveSpeed;
+                m_attackMoveSpeed = playerController.playerAttack.m_leftWeapon.m_weaponData.m_attackAltMoveSpeed;
             }
         }
         else if (playerController.playerAttack.GetCurrentAttackingHand() == Hand.RIGHT)

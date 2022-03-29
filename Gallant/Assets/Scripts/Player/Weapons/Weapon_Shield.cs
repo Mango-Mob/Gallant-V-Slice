@@ -6,6 +6,7 @@ public class Weapon_Shield : WeaponBase
 {
     new private void Awake()
     {
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/ShieldProjectile");
         base.Awake();
     }
 
@@ -22,12 +23,13 @@ public class Weapon_Shield : WeaponBase
     }
     public override void WeaponFunctionality()
     {
-        MeleeAttack(m_weaponData, transform.position);
-        BeginBlock();
+        ThrowShield(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
+        MeleeAttack(m_weaponData, transform.position);
+        BeginBlock();
     }
     public override void WeaponAltRelease() { }
 }
