@@ -31,8 +31,6 @@ public class Weapon_Sword : WeaponBase
         MeleeAttack(m_weaponData, transform.position);
         Transform modelTransform = playerController.playerMovement.playerModel.transform;
         playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed, m_weaponData.m_dashDuration, modelTransform.forward);
-
-        //ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }
 }

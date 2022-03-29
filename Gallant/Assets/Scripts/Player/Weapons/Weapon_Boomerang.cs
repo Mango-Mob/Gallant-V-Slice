@@ -26,6 +26,9 @@ public class Weapon_Boomerang : WeaponBase
         ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
-    public override void WeaponAltFunctionality() { }
+    public override void WeaponAltFunctionality()
+    {
+        WeaponFunctionality();
+    }
     public override void WeaponAltRelease() { }
 }

@@ -47,6 +47,12 @@ public class Weapon_Bow : WeaponBase
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand, m_charge, true);
         m_charge = 0.0f;
     }
-    public override void WeaponAltFunctionality() { }
-    public override void WeaponAltRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+        WeaponFunctionality();
+    }
+    public override void WeaponAltRelease() 
+    {
+        WeaponRelease();
+    }
 }

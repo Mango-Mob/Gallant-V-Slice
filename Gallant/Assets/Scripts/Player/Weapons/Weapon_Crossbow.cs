@@ -25,7 +25,10 @@ public class Weapon_Crossbow : WeaponBase
     {
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
-    public override void WeaponRelease() { }
+    public override void WeaponRelease()
+    {
+        WeaponFunctionality();
+    }
     public override void WeaponAltFunctionality() { }
     public override void WeaponAltRelease() { }
 }
