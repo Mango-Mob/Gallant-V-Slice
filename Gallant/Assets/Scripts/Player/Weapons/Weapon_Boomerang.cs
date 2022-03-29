@@ -7,6 +7,7 @@ public class Weapon_Boomerang : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangProjectile");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangAltProjectile");
         base.Awake();
     }
 
@@ -26,4 +27,9 @@ public class Weapon_Boomerang : WeaponBase
         ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+        SpawnProjectileInTransform(Vector3.zero, m_weaponData, m_hand);
+    }
+    public override void WeaponAltRelease() { }
 }

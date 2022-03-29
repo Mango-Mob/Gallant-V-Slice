@@ -86,6 +86,16 @@ public class WeaponData : ScriptableObject
     public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public float m_attackMoveSpeed = 0.5f;
+    public float m_dashSpeed = 1.0f;
+    public float m_dashDuration = 0.3f;
+
+    [Header("Alt Attack Stats")]
+    public float m_altDamageMult = 1.0f;
+    public float m_altSpeedMult = 1.0f;
+    public float m_altKnockbackMult = 1.0f;
+    public float m_attackAltMoveSpeed = 0.5f;
+    public float altHitCenterOffset = 0.75f;
+    public float altHitSize = 1.0f;
 
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
@@ -219,8 +229,8 @@ public class WeaponData : ScriptableObject
             case Weapon.BRICK:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/brickData"));
                 break;
-            case Weapon.AXE:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/axeData"));
+            case Weapon.HAMMER:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/hammerData"));
                 break;
             case Weapon.STAFF:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/staffData"));
@@ -315,7 +325,7 @@ public class WeaponData : ScriptableObject
                 return "One hand, Melee";
             case Weapon.CROSSBOW:
                 return "One hand, Ranged";
-            case Weapon.AXE:
+            case Weapon.HAMMER:
                 return "One hand, Melee";
             case Weapon.STAFF:
                 return "One hand, Melee";
@@ -369,5 +379,14 @@ public class WeaponData : ScriptableObject
         this.m_knockback = other.m_knockback;
         this.m_projectileSpeed = other.m_projectileSpeed;
         this.m_attackMoveSpeed = other.m_attackMoveSpeed;
+        this.m_dashSpeed = other.m_dashSpeed;
+        this.m_dashDuration = other.m_dashDuration;
+
+        this.m_altDamageMult = other.m_altDamageMult;
+        this.m_altSpeedMult = other.m_altSpeedMult;
+        this.m_altKnockbackMult = other.m_altKnockbackMult;
+        this.m_attackAltMoveSpeed = other.m_attackAltMoveSpeed;
+        this.altHitCenterOffset = other.altHitCenterOffset;
+        this.altHitSize = other.altHitSize;
     }
 }

@@ -10,7 +10,7 @@ public enum Weapon
     BOOMERANG,
     SHIELD,
     CROSSBOW,
-    AXE,
+    HAMMER,
     STAFF,
     GREATSWORD,
     BOW,
@@ -108,6 +108,17 @@ public class Player_Attack : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT: // Left hand weapon
+                if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+                {
+                    if (m_rightWeaponInUse)
+                        return;
+
+                    // Set weapon information for twohanded.
+                    thisWeapon = m_rightWeapon;
+                    animatorTriggerName += "Left";
+                    break;
+                }
+
                 if (m_leftWeaponInUse)
                     return;
                 // Set weapon information
@@ -154,8 +165,14 @@ public class Player_Attack : MonoBehaviour
 
         if (_left)
         {
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                if (m_rightWeapon)
+                    m_rightWeapon.TriggerWeaponAlt(true);
+                Debug.Log("SUCCESS");
+            }
             if (m_leftWeapon)
-                m_leftWeapon.TriggerWeapon(true);
+                m_leftWeapon.TriggerWeaponAlt(true);
         }
         else
         {
@@ -215,7 +232,7 @@ public class Player_Attack : MonoBehaviour
         if (_left)
         {
             if (m_leftWeapon)
-                m_leftWeapon.TriggerWeapon(false);
+                m_leftWeapon.TriggerWeaponAlt(false);
         }
         else
         {
@@ -531,8 +548,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Spear>();
             case Weapon.BRICK:
                 return gameObject.AddComponent<Weapon_Brick>();
-            case Weapon.AXE:
-                return gameObject.AddComponent<Weapon_Axe>();
+            case Weapon.HAMMER:
+                return gameObject.AddComponent<Weapon_Hammer>();
             case Weapon.STAFF:
                 return gameObject.AddComponent<Weapon_Staff>();
             case Weapon.BOW:

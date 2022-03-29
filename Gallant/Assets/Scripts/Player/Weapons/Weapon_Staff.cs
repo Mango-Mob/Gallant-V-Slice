@@ -27,4 +27,6 @@ public class Weapon_Staff : Weapon_Sword
         base.Update();
     }
     public override void WeaponRelease() { }
+    // public override void WeaponAltFunctionality() { }
+    public override void WeaponAltRelease() { }
 }
