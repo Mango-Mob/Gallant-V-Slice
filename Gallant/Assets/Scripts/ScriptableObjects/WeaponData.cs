@@ -11,6 +11,7 @@ public class SerializedWeapon
     public int m_damage = 10;
     public float m_speed = 1;
     public float m_knockback = 1;
+    public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public string m_weaponModel;
 
@@ -29,6 +30,7 @@ public class SerializedWeapon
         weapon.m_damage = _data.m_damage;
         weapon.m_speed = _data.m_speed;
         weapon.m_knockback = _data.m_knockback;
+        weapon.m_piercing = _data.m_piercing;
         weapon.m_projectileSpeed = _data.m_projectileSpeed;
         weapon.m_weaponModel = _data.weaponModelPrefab.name;
 
@@ -81,6 +83,7 @@ public class WeaponData : ScriptableObject
     public int m_damage = 10; 
     public float m_speed = 1;
     public float m_knockback = 1;
+    public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public float m_attackMoveSpeed = 0.5f;
 
