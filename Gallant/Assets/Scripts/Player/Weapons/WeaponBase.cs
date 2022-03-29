@@ -76,6 +76,31 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
+    private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders)
+    {
+        List<GameObject> hitList = new List<GameObject>();
+        foreach (var collider in colliders)
+        {
+            if (hitList.Contains(collider.gameObject))
+                continue;
+
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));
+            Actor actor = collider.GetComponentInParent<Actor>();
+            if (actor != null && !hitList.Contains(collider.gameObject))
+            {
+                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
+                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));
+            }
+            hitList.Add(collider.gameObject);
+
+            playerController.playerAttack.CreateVFX(collider, _source);
+        }
+        if (hitList.Count != 0)
+            playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
+
+        return hitList;
+    }
+
     /*******************
      * MeleeAttack : Create sphere attack detection and damages enemies in it.
      * @author : William de Beer
@@ -83,55 +108,29 @@ public abstract class WeaponBase : MonoBehaviour
      */
     protected void MeleeAttack(WeaponData _data, Vector3 _source)
     {
-        List<GameObject> hitList = new List<GameObject>();
-        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset,
-            _data.hitSize, playerController.playerAttack.m_attackTargets);
-        foreach (var collider in colliders)
-        {
-            if (hitList.Contains(collider.gameObject))
-                continue;
+        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
+            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage, _data.m_knockback);
-            Actor actor = collider.GetComponentInParent<Actor>();
-            if (actor != null && !hitList.Contains(collider.gameObject))
-            {
-                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
-                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
-            }
-            hitList.Add(collider.gameObject);
-
-            playerController.playerAttack.CreateVFX(collider, _source);
-        }
-        if (hitList.Count != 0)
-            playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
+        DamageColliders(_data, _source, colliders);
     }
 
     protected void LongMeleeAttack(WeaponData _data, Vector3 _source)
     {
-        List<GameObject> hitList = new List<GameObject>();
+        Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset);
+        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize,
+            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-        Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * _data.hitCenterOffset;
-        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize, 
-            _data.hitSize, playerController.playerAttack.m_attackTargets);
+        
+        DamageColliders(_data, _source, colliders);
+    }
+    protected void GroundSlam(WeaponData _data, Vector3 _source)
+    {
+        Debug.Log(m_hand);
 
-        foreach (var collider in colliders)
-        {
-            if (hitList.Contains(collider.gameObject))
-                continue;
+        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
+            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage, _data.m_knockback);
-            Actor actor = collider.GetComponentInParent<Actor>();
-            if (actor != null && !hitList.Contains(collider.gameObject))
-            {
-                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage);
-                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback);
-            }
-            hitList.Add(collider.gameObject);
-
-            playerController.playerAttack.CreateVFX(collider, _source);
-        }
-        if (hitList.Count != 0)
-            playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
+        DamageColliders(_data, _source, colliders);
     }
 
     protected void BeginBlock()
@@ -155,7 +154,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     /*******************
-     * ThrowBoomerang : Launches projectile from specified hand.
+     * ThrowShield : Launches projectile from specified hand.
      * @author : William de Beer
      * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
      */

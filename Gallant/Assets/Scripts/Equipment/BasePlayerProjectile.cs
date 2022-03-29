@@ -96,9 +96,9 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     }
     protected void ProjectileCollide(Collider other)
     {
-        Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge);
+        Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
-        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge, m_weaponData.m_knockback * m_charge);
+        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge, m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
         m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
 

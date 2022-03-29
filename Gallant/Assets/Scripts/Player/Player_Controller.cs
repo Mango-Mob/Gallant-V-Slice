@@ -120,7 +120,9 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed));
+        if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
+            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult);
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
         animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
         bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID); 

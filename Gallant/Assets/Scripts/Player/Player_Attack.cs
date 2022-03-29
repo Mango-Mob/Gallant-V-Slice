@@ -10,7 +10,7 @@ public enum Weapon
     BOOMERANG,
     SHIELD,
     CROSSBOW,
-    AXE,
+    HAMMER,
     STAFF,
     GREATSWORD,
     BOW,
@@ -548,8 +548,8 @@ public class Player_Attack : MonoBehaviour
                 return gameObject.AddComponent<Weapon_Spear>();
             case Weapon.BRICK:
                 return gameObject.AddComponent<Weapon_Brick>();
-            case Weapon.AXE:
-                return gameObject.AddComponent<Weapon_Axe>();
+            case Weapon.HAMMER:
+                return gameObject.AddComponent<Weapon_Hammer>();
             case Weapon.STAFF:
                 return gameObject.AddComponent<Weapon_Staff>();
             case Weapon.BOW:
