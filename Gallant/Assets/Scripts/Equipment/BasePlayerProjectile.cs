@@ -31,7 +31,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
-        GetComponent<SphereCollider>().radius = m_weaponData.hitSize;
+        GetComponentInChildren<SphereCollider>().radius = m_weaponData.hitSize;
     }
     protected void ApplyWeaponModel()
     {
@@ -110,5 +110,34 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             hitList.Add(other.gameObject);
             actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
         }
+    }
+    public void Destruct()
+    {
+        m_projectileUser.CatchProjectile(m_hand);
+
+        foreach (var effect in m_effects)
+        {
+            effect.transform.SetParent(null);
+            if (effect.GetComponent<VFXTimerScript>() != null)
+                effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
+
+            if (effect.GetComponent<ParticleSystem>() != null)
+                effect.GetComponent<ParticleSystem>().Stop();
+        }
+
+        Destroy(gameObject);
+    }
+
+    /*******************
+     * SetReturnInfo : Sets the information of the user who threw the boomerang and who it should be returned to.
+     * @author : William de Beer
+     * @param : (Player_Attack) The Player_Attack component of player, (WeaponData) The data of weapon, (Hand) The hand it originated from.
+     * @return : (type) 
+     */
+    public void SetReturnInfo(Player_Attack _user, WeaponData _data, Hand _hand)
+    {
+        m_projectileUser = _user;
+        m_weaponData = _data;
+        m_hand = _hand;
     }
 }

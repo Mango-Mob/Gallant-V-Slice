@@ -175,4 +175,14 @@ public abstract class WeaponBase : MonoBehaviour
         projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data, _charge, _canCharge);
     }
 
+    protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
+    {
+        GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, transform);
+        projectile.transform.position += Vector3.up * playerController.playerAttack.m_swingHeight + _pos;
+        projectile.transform.rotation = Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up);
+        projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand);
+
+        m_weaponObject.SetActive(false);
+        m_isInUse = true;
+    }
 }

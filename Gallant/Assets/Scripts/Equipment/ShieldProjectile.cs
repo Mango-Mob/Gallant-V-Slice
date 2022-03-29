@@ -16,17 +16,16 @@ public class ShieldProjectile : BasePlayerProjectile
 
     private float m_rotateSpeed = 1000.0f;
 
-    private Actor[] m_actors;
-
     // Start is called before the first frame update
     new private void Start()
     {
         base.Start();
+
+        ApplyWeaponModel();
+
         m_projectileSpeed = m_projectileSpeed * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
         m_rotateSpeed = 100.0f * m_projectileSpeed;
         m_throwDuration = 10.0f / (m_projectileSpeed);
-
-        m_actors = FindObjectsOfType<Actor>();
     }
 
     // Update is called once per frame
@@ -93,18 +92,6 @@ public class ShieldProjectile : BasePlayerProjectile
         }
     }
 
-    /*******************
-     * SetReturnInfo : Sets the information of the user who threw the boomerang and who it should be returned to.
-     * @author : William de Beer
-     * @param : (Player_Attack) The Player_Attack component of player, (WeaponData) The data of weapon, (Hand) The hand it originated from.
-     * @return : (type) 
-     */
-    public void SetReturnInfo(Player_Attack _user, WeaponData _data, Hand _hand)
-    {
-        m_projectileUser = _user;
-        m_weaponData = _data;
-        m_hand = _hand;
-    }
 
     private void OnDrawGizmosSelected()
     {

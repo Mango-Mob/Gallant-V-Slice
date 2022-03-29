@@ -9,8 +9,9 @@ using UnityEngine;
  * @file : BoomerangProjectile.cs
  * @year : 2021
  */
-public class BoomerangProjectile : BasePlayerProjectile
+public class BoomerangAltProjectile : BasePlayerProjectile
 {
+    private Animator m_animator;
     private float m_rotateSpeed = 1000.0f;
 
     // Start is called before the first frame update
@@ -20,18 +21,19 @@ public class BoomerangProjectile : BasePlayerProjectile
 
         ApplyWeaponModel();
 
+        m_animator = GetComponentInChildren<Animator>();
+
         m_projectileSpeed = m_projectileSpeed * m_weaponData.m_speed * m_projectileUser.playerController.playerStats.m_attackSpeed;
-        m_rotateSpeed = 100.0f * m_projectileSpeed;
-        m_throwDuration = 10.0f / (m_projectileSpeed);
+        m_animator.speed = m_projectileSpeed / 20.0f;
+
+        //m_rotateSpeed = -100.0f * m_projectileSpeed;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         // Rotate model as it moves
-        m_modelTransform.Rotate(new Vector3(0, (m_hand == Hand.LEFT ? 1.0f : -1.0f) * m_rotateSpeed * Time.fixedDeltaTime, 0));
-
-        ProjectileReturnUpdate();
+       // m_modelTransform.Rotate(new Vector3(0, (m_hand == Hand.LEFT ? 1.0f : -1.0f) * m_rotateSpeed * Time.fixedDeltaTime, 0));
     }
     private void OnTriggerEnter(Collider other)
     {

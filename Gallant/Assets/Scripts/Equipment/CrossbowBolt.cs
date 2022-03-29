@@ -47,21 +47,6 @@ public class CrossbowBolt : BasePlayerProjectile
         m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
     }
 
-    private void Destruct()
-    {
-        foreach (var effect in m_effects)
-        {
-            effect.transform.SetParent(null);
-            if (effect.GetComponent<VFXTimerScript>() != null)
-                effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
-
-            if (effect.GetComponent<ParticleSystem>() != null)
-                effect.GetComponent<ParticleSystem>().Stop();
-        }
-
-        Destroy(gameObject);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
