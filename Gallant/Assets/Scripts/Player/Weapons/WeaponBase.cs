@@ -84,7 +84,7 @@ public abstract class WeaponBase : MonoBehaviour
             if (hitList.Contains(collider.gameObject))
                 continue;
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f), _data.m_piercing);
             Actor actor = collider.GetComponentInParent<Actor>();
             if (actor != null && !hitList.Contains(collider.gameObject))
             {

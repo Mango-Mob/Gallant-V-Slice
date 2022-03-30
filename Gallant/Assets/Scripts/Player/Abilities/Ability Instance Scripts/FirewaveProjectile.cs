@@ -43,7 +43,7 @@ public class FirewaveProjectile : MonoBehaviour
             if (actor != null && !m_hitList.Contains(actor))
             {
                 Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
-                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
+                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
                 m_hitList.Add(actor);
             }
 

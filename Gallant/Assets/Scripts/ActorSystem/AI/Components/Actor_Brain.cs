@@ -244,7 +244,7 @@ namespace ActorSystem.AI.Components
             m_trackingTarget = false;
         }
 
-        public bool HandleDamage(float damage, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)
+        public bool HandleDamage(float damage, float piercingVal, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)
         {
             if (IsDead)
                 return true;
@@ -253,13 +253,13 @@ namespace ActorSystem.AI.Components
             {
                 default:
                 case CombatSystem.DamageType.Physical:
-                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currPhyResist)); 
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currPhyResist, piercingVal)); 
                     break;
                 case CombatSystem.DamageType.Ability:
-                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currAbilResist)); 
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currAbilResist, piercingVal)); 
                     break;
                 case CombatSystem.DamageType.True:
-                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, 0)); 
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, 0, 0)); 
                     break;
             }
 

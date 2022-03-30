@@ -7,18 +7,12 @@
         True
     }
 
-    public enum Faction
-    {
-        Passive, //Ignore all
-        Neutral, //Ignore until hurt
-        Player, //Player's faction
-        Actor, //Actor's faction
-    }
-
     private CombatSystem() { }
 
-    public static float CalculateDamageNegated(DamageType type, float resistVal)
+    public static float CalculateDamageNegated(DamageType type, float resistVal, float piercing)
     {
+        resistVal *= (100f / (100f + piercing));
+
         switch (type)
         {
             case DamageType.Physical:

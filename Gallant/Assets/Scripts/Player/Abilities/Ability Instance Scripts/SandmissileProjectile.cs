@@ -127,7 +127,7 @@ public class SandmissileProjectile : MonoBehaviour
                 if (actor.m_myBrain.IsDead)
                     return;
 
-                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
+                actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
                 DetonateProjectile();
             }
         }

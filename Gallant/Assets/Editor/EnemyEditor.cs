@@ -94,10 +94,10 @@ public class ActorEditor : Editor
         EditorGUILayout.LabelField($"Damage Modifer: {m_data.m_damageModifier + m_data.deltaDamageMod * testLevel}", EditorStyles.label);
         EditorGUILayout.LabelField($"Speed: {m_data.baseSpeed + m_data.deltaSpeed * testLevel}", EditorStyles.label);
 
-        float PhyResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Physical, m_data.phyResist + m_data.deltaPhyResist * testLevel);
+        float PhyResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Physical, m_data.phyResist + m_data.deltaPhyResist * testLevel, 0);
         EditorGUILayout.LabelField($"Physical Resist: {m_data.phyResist + m_data.deltaPhyResist * testLevel} ({Mathf.FloorToInt((PhyResistPercent * 100)).ToString()}%)", EditorStyles.label);
 
-        float AbilResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Ability, m_data.abilResist + m_data.deltaAbilResist * testLevel);
+        float AbilResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Ability, m_data.abilResist + m_data.deltaAbilResist * testLevel, 0);
         EditorGUILayout.LabelField($"Ability Resist: {m_data.abilResist + m_data.deltaAbilResist * testLevel} ({Mathf.FloorToInt((AbilResistPercent * 100)).ToString()}%)", EditorStyles.label);
 
         EditorGUILayout.Space();
