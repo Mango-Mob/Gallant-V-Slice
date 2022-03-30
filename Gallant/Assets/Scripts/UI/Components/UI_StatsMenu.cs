@@ -82,9 +82,11 @@ public class UI_StatsMenu : UI_Element
                 break;
         }
     }
+
     public void ToggleActive()
     {
         m_active = !m_active;
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = m_active;
     }
 
     public void UpdateList()

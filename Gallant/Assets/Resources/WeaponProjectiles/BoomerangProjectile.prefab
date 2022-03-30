@@ -48,6 +48,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -153,7 +154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7577901913644953722}
   m_Layer: 0
-  m_Name: BoomerangPivot
+  m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -231,6 +232,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -255,6 +257,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2590526074239762665
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +306,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -444,11 +448,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d439d42619ab40b45aafc2ffc2336638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_modelTransform: {fileID: 7577901913644953722}
-  m_weaponModel: {fileID: 0}
   m_effects:
   - {fileID: 2590526074239762665}
   - {fileID: 301349415416972547}
+  m_modelTransform: {fileID: 7577901913644953722}
+  m_weaponModel: {fileID: 0}
+  m_projectileSpeed: 20
   m_weaponData: {fileID: 0}
 --- !u!135 &542621080200503571
 SphereCollider:

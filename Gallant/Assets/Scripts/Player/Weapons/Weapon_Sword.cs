@@ -6,6 +6,7 @@ public class Weapon_Sword : WeaponBase
 {
     new private void Awake()
     {
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangProjectile");
         base.Awake();
     }
 
@@ -25,4 +26,11 @@ public class Weapon_Sword : WeaponBase
         MeleeAttack(m_weaponData, transform.position);
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+        MeleeAttack(m_weaponData, transform.position);
+        Transform modelTransform = playerController.playerMovement.playerModel.transform;
+        playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed * m_weaponData.m_speed * m_weaponData.m_altSpeedMult, m_weaponData.m_dashDuration / (m_weaponData.m_speed * m_weaponData.m_altSpeedMult), modelTransform.forward);
+    }
+    public override void WeaponAltRelease() { }
 }

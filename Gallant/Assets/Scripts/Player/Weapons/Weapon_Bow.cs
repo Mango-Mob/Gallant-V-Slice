@@ -44,7 +44,15 @@ public class Weapon_Bow : WeaponBase
 
         m_chargingShot = false;
         m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_charge, true);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand, m_charge, true);
         m_charge = 0.0f;
+    }
+    public override void WeaponAltFunctionality()
+    {
+        WeaponFunctionality();
+    }
+    public override void WeaponAltRelease() 
+    {
+        WeaponRelease();
     }
 }
