@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Weapon_Staff : Weapon_Sword
+public class Weapon_Staff : WeaponBase
 {
     new private void Awake()
     {
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/StaffArcaneBolt");
+        //m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/WispProjectile");
         base.Awake();
     }
 
@@ -26,7 +28,11 @@ public class Weapon_Staff : Weapon_Sword
     {
         base.Update();
     }
+    public override void WeaponFunctionality()
+    {
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+    }
     public override void WeaponRelease() { }
-    // public override void WeaponAltFunctionality() { }
+    public override void WeaponAltFunctionality() { }
     public override void WeaponAltRelease() { }
 }

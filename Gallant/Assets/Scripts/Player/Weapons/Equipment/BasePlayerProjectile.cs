@@ -31,7 +31,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
-        GetComponentInChildren<SphereCollider>().radius = m_weaponData.hitSize;
+        GetComponentInChildren<SphereCollider>().radius = m_hand == Hand.LEFT ? m_weaponData.altHitSize : m_weaponData.hitSize;
     }
     protected void ApplyWeaponModel()
     {
@@ -94,11 +94,11 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             }
         }
     }
-    protected void ProjectileCollide(Collider other)
+    protected bool ProjectileCollide(Collider other)
     {
         Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
-        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge, m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
+        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altKnockbackMult : 1.0f));
 
         m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
 
@@ -107,9 +107,14 @@ public abstract class BasePlayerProjectile : MonoBehaviour
         Actor actor = other.GetComponentInParent<Actor>();
         if (actor != null)
         {
+            if (actor.m_myBrain.IsDead)
+                return false;
+
             hitList.Add(other.gameObject);
             actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
+            return true;
         }
+        return false;
     }
     public void Destruct()
     {
@@ -118,11 +123,11 @@ public abstract class BasePlayerProjectile : MonoBehaviour
         foreach (var effect in m_effects)
         {
             effect.transform.SetParent(null);
-            if (effect.GetComponent<VFXTimerScript>() != null)
-                effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
+            if (effect.GetComponentInChildren<VFXTimerScript>() != null)
+                effect.GetComponentInChildren<VFXTimerScript>().m_startedTimer = true;
 
-            if (effect.GetComponent<ParticleSystem>() != null)
-                effect.GetComponent<ParticleSystem>().Stop();
+            if (effect.GetComponentInChildren<ParticleSystem>() != null)
+                effect.GetComponentInChildren<ParticleSystem>().Stop();
         }
 
         Destroy(gameObject);
@@ -134,10 +139,14 @@ public abstract class BasePlayerProjectile : MonoBehaviour
      * @param : (Player_Attack) The Player_Attack component of player, (WeaponData) The data of weapon, (Hand) The hand it originated from.
      * @return : (type) 
      */
-    public void SetReturnInfo(Player_Attack _user, WeaponData _data, Hand _hand)
+    public void SetReturnInfo(Player_Attack _user, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
     {
         m_projectileUser = _user;
         m_weaponData = _data;
         m_hand = _hand;
+
+        m_charge = _charge;
+
+        m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
     }
 }

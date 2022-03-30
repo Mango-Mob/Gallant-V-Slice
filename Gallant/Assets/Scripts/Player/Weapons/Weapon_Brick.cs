@@ -37,7 +37,7 @@ public class Weapon_Brick : WeaponBase
                 LongMeleeAttack(m_weaponData, transform.position);
                 break;
             case 2:
-                ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
+                ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
                 break;
             default:
                 MeleeAttack(m_weaponData, transform.position);

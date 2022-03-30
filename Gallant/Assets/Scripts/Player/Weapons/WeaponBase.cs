@@ -139,30 +139,15 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     /*******************
-     * ThrowBoomerang : Launches projectile from specified hand.
+     * ThrowWeapon : Launches weapon from specified hand.
      * @author : William de Beer
      * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
      */
-    protected void ThrowBoomerang(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected void ThrowWeapon(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         // Create projectile
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        projectile.GetComponent<BoomerangProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand); // Set the information of the user to return to
-
-        m_weaponObject.SetActive(false);
-        m_isInUse = true;
-    }
-
-    /*******************
-     * ThrowShield : Launches projectile from specified hand.
-     * @author : William de Beer
-     * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
-     */
-    protected void ThrowShield(Vector3 _pos, WeaponData _data, Hand _hand)
-    {
-        // Create projectile
-        GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        projectile.GetComponent<ShieldProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand); // Set the information of the user to return to
+        projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand); // Set the information of the user to return to
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
@@ -172,7 +157,7 @@ public abstract class WeaponBase : MonoBehaviour
     protected void ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        projectile.GetComponent<CrossbowBolt>().SetProjectileData(playerController.playerAttack, _data, _charge, _canCharge);
+        projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand, _charge, _canCharge);
     }
 
     protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)

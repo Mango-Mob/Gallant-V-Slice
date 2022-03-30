@@ -109,7 +109,7 @@ namespace ActorSystem.AI
             m_phyDisplay.m_myText = m_phyResist.ToString();
             m_abilDisplay.m_myText = m_abiResist.ToString();
 
-            m_damageDisplay.m_myText = $"{m_lastHitStat} ({m_damageStat}/s)";
+            m_damageDisplay.m_myText = $"{m_lastHitStat} ({m_damageStat.ToString("0.0")}/s)";
         }
 
         private void LateUpdate()

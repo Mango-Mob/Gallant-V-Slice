@@ -23,7 +23,7 @@ public class Weapon_Shield : WeaponBase
     }
     public override void WeaponFunctionality()
     {
-        ThrowShield(m_weaponObject.transform.position, m_weaponData, m_hand);
+        ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()

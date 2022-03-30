@@ -18,8 +18,6 @@ public class CrossbowBolt : BasePlayerProjectile
     {
         base.Start();
 
-        GetComponent<SphereCollider>().radius = m_weaponData.hitSize;
-
         if (m_weaponData != null)
         {
             m_projectileSpeed = m_projectileSpeed * m_weaponData.m_projectileSpeed; 
@@ -38,15 +36,6 @@ public class CrossbowBolt : BasePlayerProjectile
             Destruct();
         }
     }
-    public void SetProjectileData(Player_Attack _user, WeaponData _data, float _charge, bool _canCharge = false)
-    {
-        m_projectileUser = _user;
-        m_weaponData = _data;
-        m_charge = _charge;
-
-        m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))

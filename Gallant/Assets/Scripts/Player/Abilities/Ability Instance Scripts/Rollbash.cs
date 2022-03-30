@@ -5,6 +5,8 @@ using ActorSystem.AI;
 
 public class Rollbash : MonoBehaviour
 {
+    List<GameObject> m_hitList = new List<GameObject>();
+
     [HideInInspector] public Player_Controller playerController;
     [HideInInspector] public AbilityData m_data;
     [SerializeField] public GameObject m_explodeVFX;
@@ -36,6 +38,8 @@ public class Rollbash : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (m_hitList.Contains(other.gameObject))
+
         if (playerController.playerAttack.m_attackTargets == (playerController.playerAttack.m_attackTargets | (1 << other.gameObject.layer)))
         {
             playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, m_data.effectiveness);
@@ -43,6 +47,7 @@ public class Rollbash : MonoBehaviour
             if (actor != null)
             {
                 actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_data.effectiveness);
+                m_hitList.Add(actor.gameObject);
             }
 
             playerController.playerAttack.CreateVFX(other, transform.position);
