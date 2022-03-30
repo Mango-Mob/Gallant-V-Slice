@@ -275,12 +275,12 @@ namespace ActorSystem.AI.Bosses
             m_currentOrient = Random.Range(0, m_myBrain.m_patrol.m_targetOrientations.Count);
         }
 
-        public override void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
+        public override void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (!m_myBrain.IsDead)
             {
                 m_myBrain.m_material?.ShowHit();
-                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                     if (m_HurtVFXPrefab != null)
                         Instantiate(m_HurtVFXPrefab, m_selfTargetTransform.position, Quaternion.identity);
@@ -316,7 +316,7 @@ namespace ActorSystem.AI.Bosses
         {
             if (!m_myBrain.IsDead)
             {
-                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false))
+                if (m_myBrain.HandleDamage(_damage, 0, _type, transform.position, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {

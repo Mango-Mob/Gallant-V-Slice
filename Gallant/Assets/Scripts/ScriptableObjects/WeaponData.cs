@@ -42,7 +42,7 @@ public class SerializedWeapon
         if (_weapon.m_level == -2)
             return null;
 
-        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1);
+        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Substring(0, 6) == "Wooden"));
 
         data.m_damage = _weapon.m_damage;
         data.m_speed = _weapon.m_speed;
@@ -77,6 +77,11 @@ public class WeaponData : ScriptableObject
     public ItemEffect itemEffect; // Only for weapons with passives.
 
     public string overrideAnimation = "";
+
+    [Header("Alt Attack Info")]
+    public string m_altAttackName = "None";
+    [TextArea(10, 15)]
+    public string m_altAttackDesc;
 
     [Header("Base Weapon Stats")]
     public int m_level = 0;
@@ -169,11 +174,11 @@ public class WeaponData : ScriptableObject
         return data;
     }
 
-    public static WeaponData GenerateSpecificWeapon(int _weaponLevel, Weapon _weaponType, Ability _abilityType, int _powerLevel)
+    public static WeaponData GenerateSpecificWeapon(int _weaponLevel, Weapon _weaponType, Ability _abilityType, int _powerLevel, bool _wooden = false)
     {
         WeaponData data = CreateInstance<WeaponData>();
 
-        ApplyWeaponData(data, _weaponType);
+        ApplyWeaponData(data, _weaponType, _wooden);
         if (data == null)
         {
             Debug.LogWarning("Could not create weapon due to inavlid weapon type randomised.");
@@ -206,13 +211,16 @@ public class WeaponData : ScriptableObject
         //Return new weapon.
         return data;
     }
-    private static void ApplyWeaponData(WeaponData _data, Weapon _weaponType)
+    private static void ApplyWeaponData(WeaponData _data, Weapon _weaponType, bool _wooden = false)
     {
         // Weapon type.
         switch (_weaponType)
         {
             case Weapon.SWORD:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                if (!_wooden)
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                else
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/woodenSwordData"));
                 break;
             case Weapon.SHIELD:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/shieldData"));
@@ -221,7 +229,10 @@ public class WeaponData : ScriptableObject
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/boomerangData"));
                 break;
             case Weapon.CROSSBOW:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/crossbowData"));
+                if (!_wooden)
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/crossbowData"));
+                else
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/woodenCrossbowData"));
                 break;
             case Weapon.SPEAR:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/spearData"));
@@ -233,7 +244,10 @@ public class WeaponData : ScriptableObject
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/hammerData"));
                 break;
             case Weapon.STAFF:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/staffData"));
+                if (!_wooden)
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/staffData"));
+                else
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/woodenStaffData"));
                 break;
             case Weapon.GREATSWORD:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/greatswordData"));
@@ -357,6 +371,39 @@ public class WeaponData : ScriptableObject
                 return null;
         }
     }
+    public static string EvaluateDescription(WeaponData data)
+    {
+        string description = data.m_altAttackDesc;
+        int nextIndex = description.IndexOf('%');
+
+        if (nextIndex == -1)
+            return description;
+
+        //Loop through all instances of %, while extending up the string
+        for (int i = nextIndex; i < description.Length && i != -1; i = nextIndex)
+        {
+            string before = description.Substring(0, i);
+            string insert = "";
+            int indexOfDecimal = -1;
+            string after = description.Substring(i + 2);
+            switch (description[i + 1])
+            {
+                case 'd': //%d = damage
+                    insert = Mathf.FloorToInt(data.m_damage * data.m_altDamageMult).ToString();
+                    break;
+                case '%':
+                    insert = "%";
+                    break;
+                default:
+                    Debug.LogError($"Evaluation Description: Char not supported: {description[i + 1]}");
+                    break;
+            }
+            description = string.Concat(before, insert, after);
+            nextIndex = description.IndexOf('%', nextIndex + insert.Length);
+        }
+
+        return description;
+    }
 
     public void Clone(WeaponData other)
     {
@@ -372,6 +419,9 @@ public class WeaponData : ScriptableObject
         this.itemEffect = other.itemEffect;
 
         this.overrideAnimation = other.overrideAnimation;
+
+        this.m_altAttackName = other.m_altAttackName;
+        this.m_altAttackDesc = other.m_altAttackDesc;
 
         this.m_level = other.m_level;
         this.m_damage = other.m_damage;

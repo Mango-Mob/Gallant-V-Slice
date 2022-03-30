@@ -543,7 +543,7 @@ public class Player_Controller : MonoBehaviour
         {
             resistance += playerSkills.m_physicalDefenceIncrease;
         }
-        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f));
+        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f, 0f));
 
 
         if (playerAttack.m_isBlocking && _attacker != null)
