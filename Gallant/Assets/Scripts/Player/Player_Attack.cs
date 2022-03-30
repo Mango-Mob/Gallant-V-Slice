@@ -592,7 +592,7 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
-    public void DamageTarget(GameObject _target, float _damage, float _knockbackForce = 5.0f, Vector3 _damageSource = default(Vector3))
+    public void DamageTarget(GameObject _target, float _damage, float _knockbackForce = 5.0f, float _piercingVal = 0, Vector3 _damageSource = default(Vector3))
     {
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
@@ -600,7 +600,7 @@ public class Player_Attack : MonoBehaviour
         Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
         {
-            actor.DealDamage(_damage, CombatSystem.DamageType.Physical, CombatSystem.Faction.Player, transform.position);
+            actor.DealDamage(_damage, CombatSystem.DamageType.Physical, _piercingVal, transform.position);
         }
 
         Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);

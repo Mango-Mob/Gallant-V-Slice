@@ -60,7 +60,7 @@ public class BarrierProjectile : MonoBehaviour
                 if (actor.m_myBrain.IsDead)
                     return;
 
-                actor.DealDamage(m_data.damage * m_barrierValue / 50.0f, CombatSystem.DamageType.Ability, CombatSystem.Faction.Player);
+                actor.DealDamage(m_data.damage * m_barrierValue / 50.0f, CombatSystem.DamageType.Ability);
                 Detonate();
             }
         }
