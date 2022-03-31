@@ -95,6 +95,7 @@ public class WeaponData : ScriptableObject
     public float m_dashDuration = 0.3f;
 
     [Header("Alt Attack Stats")]
+    public Sprite altAttackIcon;
     public float m_altDamageMult = 1.0f;
     public float m_altSpeedMult = 1.0f;
     public float m_altKnockbackMult = 1.0f;
@@ -432,6 +433,7 @@ public class WeaponData : ScriptableObject
         this.m_dashSpeed = other.m_dashSpeed;
         this.m_dashDuration = other.m_dashDuration;
 
+        this.altAttackIcon = other.altAttackIcon;
         this.m_altDamageMult = other.m_altDamageMult;
         this.m_altSpeedMult = other.m_altSpeedMult;
         this.m_altKnockbackMult = other.m_altKnockbackMult;
