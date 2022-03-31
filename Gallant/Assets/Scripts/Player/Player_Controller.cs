@@ -537,11 +537,11 @@ public class Player_Controller : MonoBehaviour
         float resistance = 0;
         if (_damageType == CombatSystem.DamageType.Ability)
         {
-            resistance += playerSkills.m_magicalDefenceIncrease;
+            resistance += playerSkills.m_magicalDefenceIncrease + playerStats.m_abilityDefence;
         }
-        else if (_damageType == CombatSystem.DamageType.Ability)
+        else if (_damageType == CombatSystem.DamageType.Physical)
         {
-            resistance += playerSkills.m_physicalDefenceIncrease;
+            resistance += playerSkills.m_physicalDefenceIncrease + playerStats.m_physicalDefence;
         }
         float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f, 0f));
 

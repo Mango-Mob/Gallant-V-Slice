@@ -8,6 +8,6 @@ public class Flamepath : BaseAbilityPath
 {
     protected override void AddStatusEffect(StatusEffectContainer _container)
     {
-        _container.AddStatusEffect(new BurnStatus(m_data.damage, m_data.duration));
+        _container.AddStatusEffect(new BurnStatus(m_data.damage * playerController.playerStats.m_abilityDamage, m_data.duration));
     }
 }

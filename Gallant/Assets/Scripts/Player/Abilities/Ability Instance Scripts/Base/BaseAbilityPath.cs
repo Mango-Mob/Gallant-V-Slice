@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 
 public abstract class BaseAbilityPath : MonoBehaviour
 {
+    [HideInInspector] public Player_Controller playerController;
     public AbilityData m_data;
     public MeshRenderer meshRenderer { get; private set; }
     [SerializeField] private GameObject m_prefabVFX;
@@ -23,8 +24,8 @@ public abstract class BaseAbilityPath : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        playerController = FindObjectOfType<Player_Controller>();
         meshRenderer = GetComponent<MeshRenderer>();
-        //frostParticles = GetComponentInChildren<ParticleSystem>();
 
         m_startAlpha = meshRenderer.material.color.a;
 
@@ -33,12 +34,6 @@ public abstract class BaseAbilityPath : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        //Color color = new Color(meshRenderer.material.color.r, meshRenderer.material.color.g, meshRenderer.material.color.b,
-        //    Mathf.Clamp((m_lifeTimer < 1.0f) ? m_lifeTimer * 3.0f * m_startAlpha : (m_data.lifetime - m_lifeTimer) * m_startAlpha, 0.0f, m_startAlpha));
-
-        //meshRenderer.material.color = color;
-
         if (m_beganLife)
         {
             m_lifeTimer += Time.fixedDeltaTime;

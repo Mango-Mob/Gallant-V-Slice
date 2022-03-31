@@ -24,7 +24,7 @@ public class FirewaveProjectile : BaseAbilityProjectile
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
             {
-                status.AddStatusEffect(new BurnStatus(m_data.effectiveness, m_data.duration));
+                status.AddStatusEffect(new BurnStatus(m_data.effectiveness * playerController.playerStats.m_abilityDamage, m_data.duration));
             }
         }
     }

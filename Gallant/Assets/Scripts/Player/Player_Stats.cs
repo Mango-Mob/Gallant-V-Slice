@@ -7,8 +7,12 @@ public enum ItemEffect
     MOVE_SPEED,
     ABILITY_CD,
     ATTACK_SPEED,
-    DAMAGE_RESISTANCE,
     MAX_HEALTH_INCREASE,
+    PHYSICAL_DAMAGE,
+    ABILITY_DAMAGE,
+    PHYSICAL_DEFENCE,
+    ABILITY_DEFENCE,
+    DAMAGE_RESISTANCE,
 }
 /****************
  * Player_Stats: Manages the stats of the player including effects
@@ -20,26 +24,15 @@ public class Player_Stats : MonoBehaviour
 {
     public Player_Controller playerController { private set; get; }
 
-    [Header("Movement Speed")]
     public float m_movementSpeed = 1.0f;
-    public float m_movementSpeedItemStrength = 0.2f;
-
-    [Header("Attack Speed")]
     public float m_attackSpeed = 1.0f;
-    public float m_attackSpeedItemStrength = 0.1f;
-
-    [Header("Ability Cooldown")]
     public float m_abilityCD = 1.0f;
-    public float m_minimumCDPercentage = 0.3f;
-    public float m_abilityCDItemStrength = 1.5f;
-
-    [Header("Damage Resistance")]
     public float m_damageResistance = 0.0f;
-    public float m_damageResistanceStrength = 0.3f;
-
-    [Header("Maximum Health Multiplier")]
     public float m_maximumHealth = 1.0f;
-    public float m_maximumHealthStrength = 0.1f;
+    public float m_physicalDamage = 1.0f;
+    public float m_abilityDamage = 1.0f;
+    public float m_physicalDefence = 1.0f;
+    public float m_abilityDefence = 1.0f;
 
     public Dictionary<EffectData, int> m_effects = new Dictionary<EffectData, int>();
 
@@ -89,6 +82,18 @@ public class Player_Stats : MonoBehaviour
                     break;
                 case ItemEffect.MAX_HEALTH_INCREASE:
                     data = Resources.Load<EffectData>("Data/Effects/healthIncrease");
+                    break;
+                case ItemEffect.PHYSICAL_DAMAGE:
+                    data = Resources.Load<EffectData>("Data/Effects/physicalDamage");
+                    break;
+                case ItemEffect.ABILITY_DAMAGE:
+                    data = Resources.Load<EffectData>("Data/Effects/abilityDamage");
+                    break;
+                case ItemEffect.PHYSICAL_DEFENCE:
+                    data = Resources.Load<EffectData>("Data/Effects/physicalDefence");
+                    break;
+                case ItemEffect.ABILITY_DEFENCE:
+                    data = Resources.Load<EffectData>("Data/Effects/abilityDefence");
                     break;
                 default:
                     break;
@@ -171,6 +176,18 @@ public class Player_Stats : MonoBehaviour
 
                     if (healAmount > 0.0f)
                         playerController.playerResources.ChangeHealth(healAmount);
+                    break;
+                case ItemEffect.PHYSICAL_DAMAGE:
+                    m_physicalDamage = effect.Key.GetEffectValue(effect.Value);
+                    break;
+                case ItemEffect.ABILITY_DAMAGE:
+                    m_abilityDamage = effect.Key.GetEffectValue(effect.Value);
+                    break;
+                case ItemEffect.PHYSICAL_DEFENCE:
+                    m_physicalDefence = effect.Key.GetEffectValue(effect.Value);
+                    break;
+                case ItemEffect.ABILITY_DEFENCE:
+                    m_abilityDefence = effect.Key.GetEffectValue(effect.Value);
                     break;
                 default:
                     Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);

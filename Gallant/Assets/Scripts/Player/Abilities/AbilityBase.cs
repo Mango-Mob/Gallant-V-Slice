@@ -27,6 +27,7 @@ public abstract class AbilityBase : MonoBehaviour
     public bool m_canUse { get; private set; } = true;
     public float m_cooldownTimer { get; private set; } = 0.0f;
     protected Player_Controller playerController;
+    protected GameObject m_lastProjectile;
 
 
     [Header("Double Synergy")]

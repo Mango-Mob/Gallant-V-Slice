@@ -259,6 +259,7 @@ public class Player_Movement : MonoBehaviour
             m_isRollInvincible = false;
 
             playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.END_ROLL);
+
             playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
         }
     }

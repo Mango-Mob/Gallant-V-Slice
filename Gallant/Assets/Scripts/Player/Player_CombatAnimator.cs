@@ -56,6 +56,9 @@ public class Player_CombatAnimator : MonoBehaviour
             case Weapon.BOW:
                 playerController.animator.Play("Crossbow", layerIndex);
                 break;
+            case Weapon.HAMMER:
+                playerController.animator.Play("Crossbow", layerIndex);
+                break;
             case Weapon.CROSSBOW:
                 playerController.animator.Play("Crossbow", layerIndex);
                 break;

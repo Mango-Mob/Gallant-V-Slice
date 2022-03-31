@@ -11,7 +11,7 @@ using UnityEngine;
  */
 public class BoomerangProjectile : BasePlayerProjectile
 {
-    private float m_rotateSpeed = 1000.0f;
+    private float m_rotateSpeed = 500.0f;
 
     // Start is called before the first frame update
     new private void Start()

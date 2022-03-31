@@ -15,6 +15,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     public float m_projectileSpeed = 10.0f;
     public WeaponData m_weaponData;
 
+
     protected Hand m_hand; // Hand to return to
     protected Transform m_handTransform;
 
@@ -26,12 +27,28 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
     protected List<GameObject> hitList = new List<GameObject>();
 
+    private bool m_spawning = true;
+    private float m_scaleLerp = 0.0f;
+    public float m_thrownScale = 1.0f;
+    private Vector3 m_startScale;
+
     // Start is called before the first frame update
     protected void Start()
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
         GetComponentInChildren<SphereCollider>().radius = m_hand == Hand.LEFT ? m_weaponData.altHitSize : m_weaponData.hitSize;
+        m_startScale = transform.localScale;
+
+        StartCoroutine(Spawning());
+    }
+    private void Update()
+    {
+        if (m_spawning)
+        {
+            m_scaleLerp += Time.deltaTime * 4.0f;
+            transform.localScale = Vector3.Lerp(m_startScale, m_startScale * m_thrownScale, m_scaleLerp);
+        }
     }
     protected void ApplyWeaponModel()
     {
@@ -78,7 +95,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             transform.position += m_projectileSpeed * direction * Time.fixedDeltaTime; // Move projectile
                                                                                        //transform.rotation = Quaternion.LookRotation(direction, transform.up); // Face projectile towards player
             if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), // Check distance between player and projectile
-                new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < 0.2f)
+                new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < 0.2f * m_projectileSpeed / 20.0f)
             {
                 // "Catch" the projectile when close enough to player.
                 m_projectileUser.CatchProjectile(m_hand);
@@ -98,7 +115,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     {
         Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
-        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altKnockbackMult : 1.0f));
+        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altKnockbackMult : 1.0f), 0, CombatSystem.DamageType.Physical);
 
         m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
 
@@ -147,6 +164,12 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         m_charge = _charge;
 
-        m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
+        if (_canCharge)
+            m_effects[0].SetActive(_canCharge && _charge >= 1.0f);
+    }
+    IEnumerator Spawning()
+    {
+        yield return new WaitForSecondsRealtime(1.5f);
+        m_spawning = false;
     }
 }

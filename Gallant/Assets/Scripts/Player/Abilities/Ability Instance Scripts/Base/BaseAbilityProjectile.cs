@@ -48,14 +48,17 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
     protected abstract void DetonateProjectile(bool hitTarget = false);
     protected bool ProjectileCollide(Collider other)
     {
+        playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability);
+
         Actor actor = other.GetComponentInParent<Actor>();
         if (actor != null && !m_hitList.Contains(actor))
         {
             if (actor.m_myBrain.IsDead)
                 return false;
 
-            Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
-            actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
+            //Debug.Log("Hit " + other.name + " with " + m_data.damage + " for " + m_data.damage);
+            //actor.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
+            //playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability);
             m_hitList.Add(actor);
             return true;
         }

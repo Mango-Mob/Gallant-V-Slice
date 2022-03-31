@@ -11,7 +11,6 @@ using UnityEngine;
 public class Ability_FrostEvade : AbilityBase
 {
     public GameObject m_pathPrefab;
-    private GameObject m_lastProjectile;
 
     new private void Awake()
     {
@@ -63,11 +62,13 @@ public class Ability_FrostEvade : AbilityBase
     }
     public override void AbilityWhileRolling()
     {
-        m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(playerController.GetFloorPosition());
+        if (m_lastProjectile != null)
+            m_lastProjectile.GetComponent<Frostpath>().SetEdgePoint(playerController.GetFloorPosition());
     }
     public override void AbilityOnEndRoll()
     {
-        m_lastProjectile?.GetComponent<Frostpath>()?.StartLife();
+        if (m_lastProjectile != null)
+            m_lastProjectile?.GetComponent<Frostpath>()?.StartLife();
     }
 }
 

@@ -11,6 +11,7 @@ using UnityEngine;
 public class DroppedWeapon : MonoBehaviour
 {
     public WeaponData m_weaponData; // Data of contained weapon
+    [ColorUsage(true, true)] public Color m_defaultColor;
 
     [Header("Floating Object")]
     public GameObject m_defaultModel;
@@ -62,14 +63,14 @@ public class DroppedWeapon : MonoBehaviour
                 mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
 
                 m_particleSystem.Play();
-
-                foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
-                {
-                    Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
-                    outlineScript.OutlineColor = newColor;
-                    outlineScript.OutlineWidth = 3.0f;
-                    outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
-                }
+            }
+            foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
+            {
+                Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
+                //outlineScript.OutlineColor = newColor;m_defaultColor
+                outlineScript.OutlineColor = m_defaultColor;
+                outlineScript.OutlineWidth = 2.5f;
+                outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
             }
         }
         ToggleDisplay(false);
