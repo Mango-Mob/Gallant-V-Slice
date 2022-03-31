@@ -188,10 +188,10 @@ public class Player_Movement : MonoBehaviour
 
             foreach (var item in destruct)
             {
-                Destructible dest = item.GetComponent<Destructible>();
+                Destructible dest = item.GetComponentInParent<Destructible>();
                 if (dest != null && dest.m_letRollDestroy)
                 {
-                    dest.ExplodeObject(transform.position, m_explodeForce, 5.0f);
+                    dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
                 }
             }
         }

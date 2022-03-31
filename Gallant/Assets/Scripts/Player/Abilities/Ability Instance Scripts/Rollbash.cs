@@ -39,6 +39,7 @@ public class Rollbash : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (m_hitList.Contains(other.gameObject))
+            return;
 
         if (playerController.playerAttack.m_attackTargets == (playerController.playerAttack.m_attackTargets | (1 << other.gameObject.layer)))
         {
