@@ -1,5 +1,6 @@
 ﻿using ActorSystem.AI;
 using ActorSystem.AI.Components;
+using ActorSystem.Data;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;

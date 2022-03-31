@@ -182,7 +182,11 @@ namespace ActorSystem.AI.Bosses
                     break;
                 case Phase.DEAD:
                     Submerge();
-                    m_myBrain.m_material.StartDisolve(5f);
+                    foreach (var material in m_myBrain.m_materials)
+                    {
+                        material.StartDisolve(5f);
+                    }
+
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     m_tentacleL.Kill(); m_tentacleL.Submerge(false);
                     m_tentacleR.Kill(); m_tentacleR.Submerge(false);
@@ -279,7 +283,7 @@ namespace ActorSystem.AI.Bosses
         {
             if (!m_myBrain.IsDead)
             {
-                m_myBrain.m_material?.ShowHit();
+                m_myBrain.ShowHit();
                 if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                     if (m_HurtVFXPrefab != null)
@@ -323,7 +327,10 @@ namespace ActorSystem.AI.Bosses
                         collider.enabled = false;
                     }
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
-                    m_myBrain.m_material.StartDisolve(2f);
+                    foreach (var material in m_myBrain.m_materials)
+                    {
+                        material.StartDisolve(2f);
+                    }
                     Submerge();
                     return;
                 }

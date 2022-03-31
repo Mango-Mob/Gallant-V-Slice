@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ActorSystem.Data;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace ActorSystem.AI.Components
     public class Actor_Arms : Actor_Component
     {
         public LayerMask m_targetMask;
+        public GameObject m_attackSource;
 
         [Header("Preview")]
         public float m_baseDamageMod;
@@ -62,38 +64,13 @@ namespace ActorSystem.AI.Components
             return null;
         }
 
-        public Collider[] GetOverlapping(int damageId)
+        public bool Invoke(uint id = 0)
         {
-            if(m_activeAttack != null && m_myData[m_activeAttack.Value] != null)
+            if (m_activeAttack != null)
             {
-                return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask, damageId).ToArray();
+                return m_myData[m_activeAttack.Value].InvokeAttack(transform, m_attackSource, m_targetMask, id, m_baseDamageMod);
             }
-            return null;
-        }
-
-        public void Invoke(Collider target, Actor_ProjectileSource _source = null)
-        {
-            if (m_activeAttack != null && target != null)
-            {
-                for (int i = 0; i < m_myData[m_activeAttack.Value].instancesPerAttack; i++)
-                {
-                    switch (m_myData[m_activeAttack.Value].attackType)
-                    {
-                        case AttackData.AttackType.Melee:
-                            DealDamage(target, m_myData[m_activeAttack.Value].damageType);
-                            AttackData.ApplyEffect(target.GetComponent<Player_Controller>(), transform, m_myData[m_activeAttack.Value].effectAfterwards, m_myData[m_activeAttack.Value].effectPower);
-                            break;
-                        case AttackData.AttackType.Ranged:
-                            _source?.CreateProjectile(m_myData[m_activeAttack.Value], target, m_baseDamageMod);
-                            break;
-                        case AttackData.AttackType.Instant:
-                            _source?.CreateProjectileInstantly(m_myData[m_activeAttack.Value], target, m_baseDamageMod);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
+            return false;
         }
 
         private void DealDamage(Collider _target, CombatSystem.DamageType _type)
@@ -111,7 +88,7 @@ namespace ActorSystem.AI.Components
                 if (m_myData[i] == null)
                     continue;
 
-                if(m_cooldowns[i] <= 0 && m_myData[i].GetAttackOverlaping(transform, m_targetMask).Count > 0)
+                if(m_cooldowns[i] <= 0 && m_myData[i].HasDetectedCollider(transform, m_targetMask))
                 {
                     return i;
                 }
@@ -123,20 +100,20 @@ namespace ActorSystem.AI.Components
         {
             foreach (var attack in m_myData)
             {
-                if(attack != null)
+                if(attack != null && attack.debugShow)
                     attack.DrawGizmos(transform);
             }
         }
 
-        public void PostInvoke()
+        public void PostInvoke(uint id)
         {
-            if (m_myData[m_activeAttack.Value].vfxSpawn != null)
+            if (m_myData[m_activeAttack.Value].postVFXPrefab != null)
             {
-                Vector3 hitloc = transform.TransformPoint(AttackData.GetHitLocation(m_myData[m_activeAttack.Value].damageHitboxes[0]));
+                Vector3 hitloc = m_myData[m_activeAttack.Value].GetHitLocation(transform, id);
                 RaycastHit hit;
                 if(Physics.Raycast(hitloc, Vector3.down, out hit, 15f, 1 << LayerMask.NameToLayer("Environment")))
                 {
-                    GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].vfxSpawn, hit.point, Quaternion.identity);
+                    GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].postVFXPrefab, hit.point, Quaternion.identity);
                     vfx.transform.forward = transform.forward;
                 }
             }

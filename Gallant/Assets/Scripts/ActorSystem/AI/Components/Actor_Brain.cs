@@ -20,8 +20,7 @@ namespace ActorSystem.AI.Components
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
-        public Actor_ProjectileSource m_projSource { get; private set; } //Projectile Creator
-        public Actor_Material m_material { get; private set; } //Core texture of the actor (the renderer)
+        public Actor_Material[] m_materials { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
         public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
@@ -51,13 +50,23 @@ namespace ActorSystem.AI.Components
         private bool m_trackingTarget = false;
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
+        public bool m_isDisolving { 
+            get {
+                foreach (var material in m_materials)
+                {
+                    if (material.m_isDisolving)
+                        return true;
+                }
+                return false;
+            } 
+        }
+
         protected virtual void Awake()
         {
             m_arms = GetComponentInChildren<Actor_Arms>();
             m_legs = GetComponentInChildren<Actor_Legs>();
             m_animator = GetComponentInChildren<Actor_Animator>();
-            m_projSource = GetComponentInChildren<Actor_ProjectileSource>();
-            m_material = GetComponentInChildren<Actor_Material>();
+            m_materials = GetComponentsInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponent<Actor_AudioAgent>();
             m_myOutline = GetComponentInChildren<Outline>();
@@ -109,7 +118,7 @@ namespace ActorSystem.AI.Components
             if(m_animator != null && m_animator.m_hasVelocity)
             {
                 m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
-                m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.localVelocity.normalized : Vector3.zero);
+                m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.scaledVelocity : Vector3.zero);
             }
             if (m_animator != null && m_animator.m_hasPivot)
             {
@@ -148,7 +157,10 @@ namespace ActorSystem.AI.Components
             //projScource
 
             //Material
-            m_material?.RefreshColor();
+            foreach (var material in m_materials)
+            {
+                material.RefreshColor();
+            }
 
             //UI
 
@@ -221,21 +233,19 @@ namespace ActorSystem.AI.Components
             m_trackingTarget = false;
         }
 
-        public void InvokeAttack(int damageID = 0)
+        public void InvokeAttack(uint id = 0)
         {
             if (m_arms == null)
                 return;
 
-            Collider[] hits = m_arms.GetOverlapping(damageID);
-
-            if (hits == null)
-                return;
-
-            foreach (var hit in hits)
+            if(m_arms.Invoke(id))
             {
-                m_arms.Invoke(hit, m_projSource);
+                m_arms.PostInvoke(id);
             }
-            m_arms.PostInvoke();
+            else
+            {
+                EndAttack();
+            }
         }
 
         public void EndAttack()
@@ -299,7 +309,10 @@ namespace ActorSystem.AI.Components
         public void Refresh()
         {
             m_currHealth = m_startHealth;
-            m_material?.RefreshColor();
+            foreach (var material in m_materials)
+            {
+                material.RefreshColor();
+            }
 
             foreach (var item in GetComponentsInChildren<Collider>())
             {
@@ -319,6 +332,14 @@ namespace ActorSystem.AI.Components
             GetComponentInChildren<Actor_Arms>()?.DrawGizmos();
             GetComponentInChildren<Actor_Legs>()?.DrawGizmos();
             GetComponentInChildren<Actor_PatrolData>()?.DrawGizmos();
+        }
+
+        public void ShowHit()
+        {
+            foreach (var material in m_materials)
+            {
+                material.ShowHit();
+            }
         }
     }
 }

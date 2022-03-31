@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI.Components;
+using ActorSystem.Data;
 using ActorSystem.Spawning;
 using System.Collections.Generic;
 using UnityEngine;
@@ -138,7 +139,7 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                m_myBrain.m_material?.ShowHit();
+                m_myBrain.ShowHit();
                 if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                     if(m_HurtVFXPrefab != null)
