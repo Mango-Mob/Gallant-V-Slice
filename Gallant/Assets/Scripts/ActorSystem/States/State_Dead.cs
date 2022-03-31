@@ -28,15 +28,18 @@ public class State_Dead : State
             m_myActor.m_myBrain.m_animator.SetEnabled(false);
             m_myActor.m_myBrain.m_ragDoll.EnableRagdoll();
         }
-        
-        m_myActor.m_myBrain.m_material.StartDisolve();
+
+        foreach (var material in m_myActor.m_myBrain.m_materials)
+        {
+            material.StartDisolve();
+        }
     }
 
     public override void Update()
     {
         m_timer += Time.deltaTime;
         m_myActor.Kill();
-        if (m_myActor.m_myBrain.m_material != null && !m_myActor.m_myBrain.m_material.m_isDisolving)
+        if (!m_myActor.m_myBrain.m_isDisolving)
         {
             m_myActor.DestroySelf();
         }
