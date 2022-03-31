@@ -12,8 +12,6 @@ public class RewardManager : Singleton<RewardManager>
 
     public GameObject m_window;
     public InfoDisplay[] m_rewardSlots;
-    public GameObject m_weaponRewardOption;
-    public GameObject m_itemRewardOption;
 
     [Header("Ability Description")]
     public Image m_abilityImage;

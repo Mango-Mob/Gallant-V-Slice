@@ -11,7 +11,6 @@ public class StatusEffectContainer : MonoBehaviour
     public bool IsImmuneToFrost = false;
     public bool IsImmuneToFlame = false;
     public bool IsImmuneToStun = false;
-    public bool IsImmuneToPin = false;
     public bool IsImmuneToWeaken = false;
 
     private Actor m_actor = null;
@@ -72,6 +71,15 @@ public class StatusEffectContainer : MonoBehaviour
      */
     public void AddStatusEffect(StatusEffect effect)
     {
+        if (IsImmuneToFlame && effect is BurnStatus)
+            return;
+        if (IsImmuneToFrost && effect is SlowStatus)
+            return;
+        if (IsImmuneToWeaken && effect is WeakenStatus)
+            return;
+        if (IsImmuneToStun && effect is StunStatus)
+            return;
+
         foreach (var current in m_currentEffects)
         {
             if (current.effect.ReactTo(effect))
