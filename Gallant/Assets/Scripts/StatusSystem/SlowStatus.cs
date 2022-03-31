@@ -67,7 +67,10 @@ public class SlowStatus : StatusEffect
         if (_actor.m_myBrain.m_legs != null)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f;
 
-        _actor.m_myBrain?.m_material?.RefreshColor();
+        foreach (var material in _actor.m_myBrain.m_materials)
+        {
+            material.RefreshColor();
+        }
     }
 
     public override void EndPlayer(Player_Controller _player)

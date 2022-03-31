@@ -27,6 +27,7 @@ namespace ActorSystem.AI.Components
         //External Accessors
         public Vector3 velocity { get { return (m_isKnocked) ? Vector3.zero : m_agent.velocity; } }
         public Vector3 localVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity; } }
+        public Vector3 scaledVelocity { get { return localVelocity / m_agent.speed; } }
 
         //Statistics:
         public float m_rotationAccel = 5f;
@@ -223,7 +224,7 @@ namespace ActorSystem.AI.Components
         public void DrawGizmos()
         {
             Gizmos.color = Color.white;
-            Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().radius + GetComponent<NavMeshAgent>().stoppingDistance);
+            Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().stoppingDistance);
 
             Gizmos.color = Color.cyan;
             if (m_agent != null)
