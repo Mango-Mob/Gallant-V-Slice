@@ -22,9 +22,9 @@ namespace ActorSystem.Data
             {
                 if (item.gameObject.layer == LayerMask.NameToLayer("Player"))
                 {
-                    Quaternion lookAt = Quaternion.LookRotation((item.transform.position - source.transform.position).normalized, Vector3.up);
+                    Quaternion lookAt = Quaternion.LookRotation((item.transform.position - parent.transform.position).normalized, Vector3.up);
 
-                    if (Mathf.Abs(Quaternion.Angle(source.transform.rotation, lookAt)) <= requiredAngle)
+                    if (Mathf.Abs(Quaternion.Angle(parent.transform.rotation, lookAt)) <= requiredAngle)
                     {
                         i--;
 
@@ -32,7 +32,7 @@ namespace ActorSystem.Data
                         GameObject prefabInWorld = GameObject.Instantiate(projPrefab, source.transform.position, Quaternion.LookRotation(source.transform.forward, Vector3.up));
                         ProjectileObject projInWorld = prefabInWorld.GetComponent<ProjectileObject>();
                         projInWorld.m_damageDetails = this;
-                        projInWorld.m_velocity = ((item.transform.position + Vector3.up * 0.5f) - source.transform.position).normalized * projSpeed;
+                        projInWorld.m_velocity = ((item.transform.position + Vector3.up * 1.0f) - source.transform.position).normalized * projSpeed;
                         projInWorld.m_damage = damageMod * baseDamage;
                         projInWorld.m_duration = projLifeTime;
 

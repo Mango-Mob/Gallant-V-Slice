@@ -223,6 +223,11 @@ namespace ActorSystem.AI
             //Restart Statemachine
             SetState(m_myData.m_initialState);
             m_myBrain.SetEnabled(false);
+            foreach (var material in m_myBrain.m_materials)
+            {
+                material.RefreshColor();
+            }
+            m_myBrain.m_ragDoll?.DisableRagdoll();
         }
 
         public void Respawn(bool fullRefresh = false)

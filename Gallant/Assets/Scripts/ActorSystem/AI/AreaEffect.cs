@@ -25,7 +25,7 @@ public class AreaEffect: MonoBehaviour
             item.color = new Color(item.color.r, item.color.g, item.color.b, timer/delay);
         }
 
-        if(timer > delay)
+        if(timer >= delay)
         {
             ApplyEffect();
             Destroy(gameObject);

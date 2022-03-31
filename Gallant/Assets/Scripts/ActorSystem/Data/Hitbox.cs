@@ -21,7 +21,7 @@ namespace ActorSystem.Data
                     return Physics.OverlapBox(parent.position + parent.TransformVector(center), size / 2f, parent.rotation, filterLayer);
                 default:
                 case HitType.Sphere:
-                    return Physics.OverlapSphere(parent.position + parent.TransformVector(start), radius, filterLayer);
+                    return Physics.OverlapSphere(parent.position + parent.TransformVector(center), radius, filterLayer);
                 case HitType.Capsule:
                     return Physics.OverlapCapsule(parent.position + parent.TransformVector(start), parent.position + parent.TransformVector(end), radius, filterLayer);
             }

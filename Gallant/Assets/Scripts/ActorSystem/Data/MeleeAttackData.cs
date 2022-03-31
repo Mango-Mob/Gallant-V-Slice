@@ -18,7 +18,9 @@ namespace ActorSystem.Data
                 if (item.gameObject.layer == LayerMask.NameToLayer("Player"))
                 {
                     i--;
-                    item.GetComponentInParent<Player_Controller>().DamagePlayer(baseDamage * damageMod, damageType, source, ignoreIFrames);
+                    Player_Controller player = item.GetComponentInParent<Player_Controller>();
+                    player.DamagePlayer(baseDamage * damageMod, damageType, source, ignoreIFrames);
+                    ApplyEffect(player, parent, onHitEffect, effectPower);
                     if (i <= 0) return true;
                 }
                 else if (item.gameObject.layer == LayerMask.NameToLayer("Destructible"))

@@ -224,7 +224,7 @@ namespace ActorSystem.AI.Components
         public void DrawGizmos()
         {
             Gizmos.color = Color.white;
-            Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().radius + GetComponent<NavMeshAgent>().stoppingDistance);
+            Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().stoppingDistance);
 
             Gizmos.color = Color.cyan;
             if (m_agent != null)

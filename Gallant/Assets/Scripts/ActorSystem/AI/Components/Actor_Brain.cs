@@ -233,14 +233,14 @@ namespace ActorSystem.AI.Components
             m_trackingTarget = false;
         }
 
-        public void InvokeAttack(uint id = 0)
+        public void InvokeAttack(int id = 0)
         {
             if (m_arms == null)
                 return;
 
-            if(m_arms.Invoke(id))
+            if(m_arms.Invoke((uint)id))
             {
-                m_arms.PostInvoke(id);
+                m_arms.PostInvoke((uint)id);
             }
             else
             {
