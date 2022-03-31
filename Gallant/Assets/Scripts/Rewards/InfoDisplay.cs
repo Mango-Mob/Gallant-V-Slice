@@ -45,9 +45,9 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private GameObject m_tagLoc;
 
     [Header("Back Information")]
-    [SerializeField] private Text m_altTitle;
-    [SerializeField] private Text m_altDescription;
-    [SerializeField] private Text m_abilityTitle;
+    [SerializeField] private TMP_Text m_altTitle;
+    [SerializeField] private TMP_Text m_altDescription;
+    [SerializeField] private TMP_Text m_abilityTitle;
     [SerializeField] private TMP_Text m_abilityDescription;
     [SerializeField] private Image m_abilityBackImageLoc;
 
@@ -170,8 +170,8 @@ public class InfoDisplay : MonoBehaviour
             m_abilityBackImageLoc.sprite = data.abilityData.abilityIcon;
             m_abilityTitle.text = data.abilityData.abilityName;
             m_abilityDescription.SetText(AbilityData.EvaluateDescription(data.abilityData));
-            m_abilityImageLoc.gameObject.SetActive(true);
-            m_abilityBackImageLoc.gameObject.SetActive(true);
+            m_abilityImageLoc?.gameObject.SetActive(true);
+            m_abilityBackImageLoc?.gameObject.SetActive(true);
             m_abilityImageLoc.transform.parent.gameObject.SetActive(true);
 
             for (int i = 0; i < m_abilityStars.Length; i++)
@@ -181,8 +181,8 @@ public class InfoDisplay : MonoBehaviour
         }
         else
         {
-            m_abilityImageLoc.gameObject.SetActive(false);
-            m_abilityBackImageLoc.gameObject.SetActive(false);
+            m_abilityImageLoc?.gameObject.SetActive(false);
+            m_abilityBackImageLoc?.gameObject.SetActive(false);
             m_abilityImageLoc.transform.parent.gameObject.SetActive(false);
             m_abilityTitle.text = "No ability";
             m_abilityDescription.SetText("");
