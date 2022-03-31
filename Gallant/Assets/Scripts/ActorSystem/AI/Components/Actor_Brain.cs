@@ -30,9 +30,10 @@ namespace ActorSystem.AI.Components
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
+        public bool IsStunned = false;
         public bool m_canBeTarget = true;
         public bool m_forceShowUI = false;
-
+        
         [Header("Preview")]
         public float m_agility;
         public float m_currHealth;
@@ -88,6 +89,12 @@ namespace ActorSystem.AI.Components
 
         public void Update()
         {
+            if (IsStunned || IsDead)
+            {
+                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 0.0f);
+                return;
+            }
+
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();

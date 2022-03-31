@@ -729,6 +729,7 @@ GameObject:
   - component: {fileID: 2098726697452933951}
   - component: {fileID: 1494381621860711093}
   - component: {fileID: 6232114292092991291}
+  - component: {fileID: 3450740905111738071}
   m_Layer: 9
   m_Name: BasicTenticle
   m_TagString: Untagged
@@ -784,7 +785,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_activeStateText: 
-  m_myFaction: 0
   m_toReserveOnLoad: 0
   m_myLevel: 0
   m_name: 
@@ -800,16 +800,18 @@ MonoBehaviour:
   emergeOnAwake: 0
   isVisible: 0
   m_headPhaseAttacks:
-  - {fileID: 11400000, guid: ce8b918bdf7f07a4dbc7cfd8df904eec, type: 2}
+  - {fileID: 11400000, guid: 7ce2b637238e188439b01a9d53116361, type: 2}
   m_tentaclePhaseAttacks:
-  - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}
-  - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
+  - {fileID: 11400000, guid: e95a513ca22c7f240958fc6211f91663, type: 2}
+  - {fileID: 11400000, guid: 7d684fdcc43326e49bd30fb25568c6c0, type: 2}
   m_oilPhaseAttacks: []
   m_inkSlam:
     start: {x: 0, y: 0, z: 0}
+    center: {x: 0, y: 0, z: 0}
     end: {x: 0, y: 0, z: 0}
     type: 0
-    size: 0
+    size: {x: 0, y: 0, z: 0}
+    radius: 0
 --- !u!114 &2695535844105113941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -949,12 +951,13 @@ MonoBehaviour:
   m_targetMask:
     serializedVersion: 2
     m_Bits: 4352
+  m_attackSource: {fileID: 0}
   m_baseDamageMod: 1
   m_lastAttackName: 
   m_myData:
-  - {fileID: 11400000, guid: ce8b918bdf7f07a4dbc7cfd8df904eec, type: 2}
-  - {fileID: 11400000, guid: 0cf5a7a23cdd8114a8f0a1e16e7b5875, type: 2}
-  - {fileID: 11400000, guid: 5a6154ec006f2ac45bc5072bae624231, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2098726697452933951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1020,3 +1023,21 @@ MonoBehaviour:
   - {fileID: 4334076523658821087}
   - {fileID: 4334076524110517782}
   - {fileID: 4334076523094254653}
+--- !u!114 &3450740905111738071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334076525128619281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e02decaed8e6f34e997d33b1cec3cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_statusPrefab: {fileID: 873845993956563758, guid: 3ed1cd4414ac9e4479634ab99b646432,
+    type: 3}
+  IsImmuneToFrost: 0
+  IsImmuneToFlame: 0
+  IsImmuneToStun: 1
+  IsImmuneToPin: 1
