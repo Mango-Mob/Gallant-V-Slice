@@ -18,6 +18,7 @@ public class Player_Controller : MonoBehaviour
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
+    public bool m_isNearDrop = false;
     public bool m_isDisabledAttacks = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
@@ -233,7 +234,7 @@ public class Player_Controller : MonoBehaviour
                 m_dualWieldBonus = 1.0f;
             }
 
-            if (!m_isDisabledAttacks)
+            if (!m_isDisabledAttacks && !m_isNearDrop)
             {
                 // Weapon attacks
                 if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
@@ -656,6 +657,48 @@ public class Player_Controller : MonoBehaviour
         playerClassArmour.SetClassArmour(_class.inkmanClass);
 
         playerSkills.EvaluateSkills();
+
+        playerStats.m_effects = new Dictionary<EffectData, int>();
+
+        for (int i = 0; i < _class.movementSpeed; i++)
+        {
+            playerStats.AddEffect(ItemEffect.MOVE_SPEED);
+        }
+
+        for (int i = 0; i < _class.attackSpeed; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ATTACK_SPEED);
+        }
+
+        for (int i = 0; i < _class.abilityCD; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
+        }
+
+        for (int i = 0; i < _class.maximumHealth; i++)
+        {
+            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+        }
+
+        for (int i = 0; i < _class.physicalDamage; i++)
+        {
+            playerStats.AddEffect(ItemEffect.PHYSICAL_DAMAGE);
+        }
+
+        for (int i = 0; i < _class.abilityDamage; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_DAMAGE);
+        }
+
+        for (int i = 0; i < _class.physicalDefence; i++)
+        {
+            playerStats.AddEffect(ItemEffect.PHYSICAL_DEFENCE);
+        }
+
+        for (int i = 0; i < _class.abilityDefence; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_DEFENCE);
+        }
     }    
 
     public void UpgradeWeapon(Hand _hand)

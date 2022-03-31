@@ -21,7 +21,7 @@ public class Player_Pickup : MonoBehaviour
 
     public void Update()
     {
-        playerController.m_isDisabledAttacks = weaponsInRange.Count > 0;
+        playerController.m_isNearDrop = weaponsInRange.Count > 0;
     }
 
     /*******************

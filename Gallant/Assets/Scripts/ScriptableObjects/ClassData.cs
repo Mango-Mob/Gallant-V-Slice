@@ -16,4 +16,14 @@ public class ClassData : ScriptableObject
     [Header("Armour")]
     public Mesh helmetModel;
     public Material helmetMaterial;
+
+    [Header("Starting Runes")]
+    public int movementSpeed = 0;
+    public int attackSpeed = 0;
+    public int abilityCD = 0;
+    public int maximumHealth = 0;
+    public int physicalDamage = 0;
+    public int abilityDamage = 0;
+    public int physicalDefence = 0;
+    public int abilityDefence = 0;
 }

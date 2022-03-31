@@ -20,13 +20,19 @@ public class Debug_Player : MonoBehaviour
     private int m_abilityPowerLevel = 1;
 
     // Cheats
+    [Header("Cheats")]
     [SerializeField] private Toggle m_godModeToggle;
+
+    // Effects
+    [Header("Effects")]
+    [SerializeField] private TMP_Dropdown m_effectSelectInput;
 
     // Start is called before the first frame update
     void Start()
     {
         m_weaponSelectInput.ClearOptions();
         m_abilitySelectInput.ClearOptions();
+        m_effectSelectInput.ClearOptions();
         TMP_Dropdown.OptionData data;
 
         foreach (var weapon in System.Enum.GetNames(typeof(Weapon)))
@@ -38,6 +44,11 @@ public class Debug_Player : MonoBehaviour
         {
             data = new TMP_Dropdown.OptionData(ability);
             m_abilitySelectInput.options.Add(data);
+        }
+        foreach (var effect in System.Enum.GetNames(typeof(ItemEffect)))
+        {
+            data = new TMP_Dropdown.OptionData(effect);
+            m_effectSelectInput.options.Add(data);
         }
 
         m_weaponSelectInput.value = 1;
@@ -104,5 +115,13 @@ public class Debug_Player : MonoBehaviour
     {
         Debug.Log(_active);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().SetGodMode(_active);
+    }
+
+    public void AddEffect(bool _add)
+    {
+        if (_add)
+            GameManager.Instance.m_player.GetComponent<Player_Stats>().AddEffect((ItemEffect)m_effectSelectInput.value);
+        else
+            GameManager.Instance.m_player.GetComponent<Player_Stats>().RemoveEffect((ItemEffect)m_effectSelectInput.value);
     }
 }

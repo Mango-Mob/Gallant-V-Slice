@@ -86,7 +86,7 @@ public class UI_StatsMenu : UI_Element
     public void ToggleActive()
     {
         m_active = !m_active;
-        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = m_active;
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks = m_active;
     }
 
     public void UpdateList()
@@ -167,6 +167,22 @@ public class UI_StatsMenu : UI_Element
             case ItemEffect.MAX_HEALTH_INCREASE:
                 _runeInfo.m_name.text = "Max Health";
                 _runeInfo.m_number.text = (playerStats.m_maximumHealth - _effect.m_default).ToString((playerStats.m_maximumHealth > _effect.m_default ? "+0.0%" : "0.0%"));
+                break;
+            case ItemEffect.PHYSICAL_DAMAGE:
+                _runeInfo.m_name.text = "Attack Damage";
+                _runeInfo.m_number.text = (playerStats.m_physicalDamage - _effect.m_default).ToString((playerStats.m_physicalDamage > _effect.m_default ? "+0.0%" : "0.0%"));
+                break;
+            case ItemEffect.ABILITY_DAMAGE:
+                _runeInfo.m_name.text = "Magical Damage";
+                _runeInfo.m_number.text = (playerStats.m_abilityDamage - _effect.m_default).ToString((playerStats.m_abilityDamage > _effect.m_default ? "+0.0%" : "0.0%"));
+                break;
+            case ItemEffect.PHYSICAL_DEFENCE:
+                _runeInfo.m_name.text = "Armor";
+                _runeInfo.m_number.text = (playerStats.m_physicalDefence - _effect.m_default).ToString((playerStats.m_physicalDefence > _effect.m_default ? "+0" : "0"));
+                break;
+            case ItemEffect.ABILITY_DEFENCE:
+                _runeInfo.m_name.text = "Ward";
+                _runeInfo.m_number.text = (playerStats.m_abilityDefence - _effect.m_default).ToString((playerStats.m_abilityDefence > _effect.m_default ? "+0" : "0"));
                 break;
             default:
                 break;
