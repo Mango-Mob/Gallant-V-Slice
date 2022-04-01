@@ -76,7 +76,7 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
-    private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders)
+    private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders, StatusEffect _status = null)
     {
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
@@ -90,6 +90,12 @@ public abstract class WeaponBase : MonoBehaviour
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
                 actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));
+
+                StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
+                if (statusContainer != null && _status != null)
+                {
+                    statusContainer.AddStatusEffect(_status);
+                }
             }
             hitList.Add(collider.gameObject);
 
@@ -106,31 +112,31 @@ public abstract class WeaponBase : MonoBehaviour
      * @author : William de Beer
      * @param : (WeaponData) 
      */
-    protected void MeleeAttack(WeaponData _data, Vector3 _source)
+    protected void MeleeAttack(WeaponData _data, Vector3 _source, StatusEffect _status = null)
     {
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
             m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-        DamageColliders(_data, _source, colliders);
+        DamageColliders(_data, _source, colliders, _status);
     }
 
-    protected void LongMeleeAttack(WeaponData _data, Vector3 _source)
+    protected void LongMeleeAttack(WeaponData _data, Vector3 _source, StatusEffect _status = null)
     {
         Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset);
         Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize,
             m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
         
-        DamageColliders(_data, _source, colliders);
+        DamageColliders(_data, _source, colliders, _status);
     }
-    protected void GroundSlam(WeaponData _data, Vector3 _source)
+    protected void GroundSlam(WeaponData _data, Vector3 _source, StatusEffect _status = null)
     {
         Debug.Log(m_hand);
 
         Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
             m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-        DamageColliders(_data, _source, colliders);
+        DamageColliders(_data, _source, colliders, _status);
     }
 
     protected void BeginBlock()
