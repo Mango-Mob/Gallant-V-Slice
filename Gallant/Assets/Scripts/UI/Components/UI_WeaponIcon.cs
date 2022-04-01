@@ -37,7 +37,8 @@ public class UI_WeaponIcon : UI_Element
      */
     public void SetDisabledState(bool _disabled)
     {
-        m_disabled.enabled = _disabled;
+        if (m_disabled)
+            m_disabled.enabled = _disabled;
     }
 
     #region Parent override functions

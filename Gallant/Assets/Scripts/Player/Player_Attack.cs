@@ -53,6 +53,7 @@ public class Player_Attack : MonoBehaviour
     public Transform m_backHolster;
 
     [Header("Weapon Icons")]
+    private UI_WeaponIcon m_altAttackIcon;
     private UI_WeaponIcon m_leftWeaponIcon;
     private UI_WeaponIcon m_rightWeaponIcon;
 
@@ -72,6 +73,7 @@ public class Player_Attack : MonoBehaviour
 
         m_leftWeaponIcon = HUDManager.Instance.GetElement<UI_WeaponIcon>("WeaponL");
         m_rightWeaponIcon = HUDManager.Instance.GetElement<UI_WeaponIcon>("WeaponR");
+        m_altAttackIcon = HUDManager.Instance.GetElement<UI_WeaponIcon>("AbilityL");
     }
 
     private void Start()
@@ -451,12 +453,21 @@ public class Player_Attack : MonoBehaviour
                     else
                         Debug.LogWarning("Weapon icon not set");
 
+                    if (m_leftWeaponIcon != null)
+                    {
+                        if (IsTwoHanded())
+                            m_altAttackIcon.SetIconSprite(m_rightWeaponData.altAttackIcon);
+                        else
+                            m_altAttackIcon.SetIconSprite(m_leftWeaponData.altAttackIcon);
+                    }
+
                     playerController.playerAbilities.SetAbility(m_leftWeaponData.abilityData, Hand.LEFT);
                 }
                 else
                 {
                     if (m_leftWeaponIcon != null)
                         m_leftWeaponIcon.SetIconSprite(null);
+
                     playerController.playerAbilities.SetAbility(null, Hand.LEFT);
                     m_leftWeaponEffect = ItemEffect.NONE;
                 }
@@ -498,6 +509,19 @@ public class Player_Attack : MonoBehaviour
                 playerController.m_statsMenu.UpdateWeaponInfo(Hand.RIGHT, m_rightWeaponData);
                 break;
         }
+
+
+
+        if (m_leftWeaponIcon != null)
+        {
+            if (IsTwoHanded())
+                m_altAttackIcon.SetIconSprite(m_rightWeaponData.altAttackIcon);
+            else if (m_leftWeaponData)
+                m_altAttackIcon.SetIconSprite(m_leftWeaponData.altAttackIcon);
+            else
+                m_altAttackIcon.SetIconSprite(null);
+        }
+
 
         // Set idle animations
         if (m_leftWeaponData != null && !IsTwoHanded())
