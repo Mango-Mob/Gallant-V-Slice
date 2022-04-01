@@ -21,7 +21,7 @@ public enum KeyType
     NUM_ONE, NUM_TWO, NUM_THREE, NUM_FOUR, NUM_FIVE, NUM_SIX, NUM_SEVEN, NUM_EIGHT, NUM_NINE, NUM_ZERO,
     L_SHIFT, L_CTRL, L_ALT, TAB, ESC, SPACE,
     R_SHIFT, R_CTRL, R_ALT, ENTER,
-    TILDE, NONE
+    TILDE, UP, LEFT, RIGHT, DOWN, NONE
 }
 public enum MouseButton
 {
@@ -834,7 +834,11 @@ public class InputManager : SingletonPersistent<InputManager>
             case KeyType.R_ALT: { return keyboard.rightAltKey; }
             case KeyType.ENTER: { return keyboard.endKey; }
             case KeyType.TILDE: { return keyboard.backquoteKey; }
-                    default:
+            case KeyType.UP: { return keyboard.upArrowKey; }
+            case KeyType.LEFT: { return keyboard.leftArrowKey; }
+            case KeyType.RIGHT: { return keyboard.rightArrowKey; }
+            case KeyType.DOWN: { return keyboard.downArrowKey; }
+            default:
                 return null;
         }
     }
