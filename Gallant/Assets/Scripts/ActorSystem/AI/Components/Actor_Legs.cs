@@ -60,7 +60,7 @@ namespace ActorSystem.AI.Components
         void Update()
         {
             m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
-
+            
             if(m_delayTimer > 0)
                 return;
 

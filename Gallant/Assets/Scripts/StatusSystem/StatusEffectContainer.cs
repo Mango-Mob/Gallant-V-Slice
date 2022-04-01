@@ -8,6 +8,11 @@ public class StatusEffectContainer : MonoBehaviour
 {
     public GameObject m_statusPrefab;
 
+    public bool IsImmuneToFrost = false;
+    public bool IsImmuneToFlame = false;
+    public bool IsImmuneToStun = false;
+    public bool IsImmuneToWeaken = false;
+
     private Actor m_actor = null;
     private Player_Controller m_player = null;
 
@@ -31,6 +36,10 @@ public class StatusEffectContainer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(InputManager.Instance.IsKeyDown(KeyType.J))
+        {
+            AddStatusEffect(new StunStatus(1));
+        }
         //Loop through all effects and update them.
         foreach (var current in m_currentEffects)
         {
@@ -62,6 +71,15 @@ public class StatusEffectContainer : MonoBehaviour
      */
     public void AddStatusEffect(StatusEffect effect)
     {
+        if (IsImmuneToFlame && effect is BurnStatus)
+            return;
+        if (IsImmuneToFrost && effect is SlowStatus)
+            return;
+        if (IsImmuneToWeaken && effect is WeakenStatus)
+            return;
+        if (IsImmuneToStun && effect is StunStatus)
+            return;
+
         foreach (var current in m_currentEffects)
         {
             if (current.effect.ReactTo(effect))

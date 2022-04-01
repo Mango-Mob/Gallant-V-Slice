@@ -564,6 +564,7 @@ GameObject:
   - component: {fileID: 6787086130878318307}
   - component: {fileID: 3897020876884901267}
   - component: {fileID: 4126017059410110210}
+  - component: {fileID: 3518698825670869825}
   m_Layer: 9
   m_Name: OctoBoss
   m_TagString: Untagged
@@ -603,7 +604,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_activeStateText: 
-  m_myFaction: 0
   m_toReserveOnLoad: 0
   m_myLevel: 0
   m_name: 
@@ -714,6 +714,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3518698825670869825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6787086130878318306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e02decaed8e6f34e997d33b1cec3cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_statusPrefab: {fileID: 873845993956563758, guid: 3ed1cd4414ac9e4479634ab99b646432,
+    type: 3}
+  IsImmuneToFrost: 0
+  IsImmuneToFlame: 0
+  IsImmuneToStun: 1
+  IsImmuneToPin: 1
 --- !u!1 &6787086131004846691
 GameObject:
   m_ObjectHideFlags: 0
