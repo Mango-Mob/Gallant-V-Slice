@@ -17,7 +17,8 @@ public class ClassChanger : MonoBehaviour
     }
     private void Update()
     {
-        m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
+        m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
+        m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
         m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
     }
 
