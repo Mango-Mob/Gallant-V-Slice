@@ -265,7 +265,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     playerAbilities.StartUsing(Hand.RIGHT);
                 }
-                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID))
+                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID) && !playerAttack.IsTwoHanded())
                 {
                     playerAbilities.StartUsing(Hand.LEFT);
                 }

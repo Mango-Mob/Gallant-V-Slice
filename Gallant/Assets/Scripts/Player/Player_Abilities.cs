@@ -224,6 +224,8 @@ public class Player_Abilities : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
+                if (playerController.playerAttack.IsTwoHanded())
+                    return;
                 if (m_rightAbility != null)
                     if (m_leftAbility == null || (m_leftAbility.m_isSynergyAvailable && m_leftAbility.GetType() == m_rightAbility.GetType()))
                     {
