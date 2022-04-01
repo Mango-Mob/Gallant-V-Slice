@@ -36,10 +36,6 @@ public class StatusEffectContainer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(InputManager.Instance.IsKeyDown(KeyType.J))
-        {
-            AddStatusEffect(new StunStatus(1));
-        }
         //Loop through all effects and update them.
         foreach (var current in m_currentEffects)
         {
