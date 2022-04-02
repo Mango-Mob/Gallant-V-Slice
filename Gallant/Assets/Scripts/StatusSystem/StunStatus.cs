@@ -9,7 +9,8 @@ public class StunStatus : StatusEffect
     public override void StartActor(Actor _actor)
     {
         //Show VFX
-        _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
+        if (_actor.m_myBrain.m_legs)
+            _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
         _actor.m_myBrain.IsStunned = true;
     }
 
@@ -20,7 +21,8 @@ public class StunStatus : StatusEffect
 
     public override void EndActor(Actor _actor)
     {
-        _actor.m_myBrain.m_legs.m_speedModifier = 1.0f;
+        if (_actor.m_myBrain.m_legs)
+            _actor.m_myBrain.m_legs.m_speedModifier = 1.0f;
         _actor.m_myBrain.IsStunned = false;
     }
 
@@ -50,7 +52,8 @@ public class StunStatus : StatusEffect
 
     public override void UpdateOnActor(Actor _actor, float dt)
     {
-        _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
+        if (_actor.m_myBrain.m_legs)
+            _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
         m_duration -= dt;
     }
 

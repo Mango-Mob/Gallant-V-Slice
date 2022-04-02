@@ -86,7 +86,11 @@ public abstract class WeaponBase : MonoBehaviour
 
             playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f), _data.m_piercing);
             Actor actor = collider.GetComponentInParent<Actor>();
-            if (actor != null && !hitList.Contains(collider.gameObject))
+
+            if (collider.gameObject.layer == LayerMask.NameToLayer("Rubble"))
+                Debug.Log("Ping");
+
+            if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
                 actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));

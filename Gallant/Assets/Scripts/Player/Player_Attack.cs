@@ -654,6 +654,9 @@ public class Player_Attack : MonoBehaviour
                     damageMult = 1.0f;
                     break;
             }
+            if (_target.gameObject.layer == LayerMask.NameToLayer("Rubble"))
+                damageMult = 0.0f;
+
             actor.DealDamage(_damage * damageMult, CombatSystem.DamageType.Physical, _piercingVal, transform.position);
         }
 
