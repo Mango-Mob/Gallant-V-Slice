@@ -113,13 +113,17 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     }
     protected bool ProjectileCollide(Collider other)
     {
+        bool isRubble = other.gameObject.layer == LayerMask.NameToLayer("Rubble");
+
         Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
         m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altKnockbackMult : 1.0f), 0, CombatSystem.DamageType.Physical);
 
-        m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
-
-        m_projectileUser.CreateVFX(other, transform.position);
+        if (!isRubble)
+        {
+            m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
+            m_projectileUser.CreateVFX(other, transform.position);
+        }
 
         Actor actor = other.GetComponentInParent<Actor>();
         if (actor != null)

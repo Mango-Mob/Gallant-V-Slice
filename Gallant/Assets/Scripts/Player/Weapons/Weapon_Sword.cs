@@ -20,6 +20,10 @@ public class Weapon_Sword : WeaponBase
     new private void Update()
     {
         base.Update();
+        if (!playerController.animator.GetBool("UsingLeft") && m_attackReady)
+        {
+            m_attackReady = false;
+        }
     }
     public override void WeaponFunctionality()
     {
@@ -28,9 +32,20 @@ public class Weapon_Sword : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
-        MeleeAttack(m_weaponData, transform.position);
-        Transform modelTransform = playerController.playerMovement.playerModel.transform;
-        playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed * m_weaponData.m_speed * m_weaponData.m_altSpeedMult, m_weaponData.m_dashDuration / (m_weaponData.m_speed * m_weaponData.m_altSpeedMult), modelTransform.forward);
+        if (m_attackReady)
+        {
+            MeleeAttack(m_weaponData, transform.position);
+            m_attackReady = false;
+        }
+        else
+        {
+            m_attackReady = true;
+        }
+
+        //MeleeAttack(m_weaponData, transform.position);
+        //Transform modelTransform = playerController.playerMovement.playerModel.transform;
+        //playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed * m_weaponData.m_speed * m_weaponData.m_altSpeedMult, m_weaponData.m_dashDuration / (m_weaponData.m_speed * m_weaponData.m_altSpeedMult), modelTransform.forward);
+
     }
     public override void WeaponAltRelease() { }
 }

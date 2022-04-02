@@ -546,12 +546,26 @@ public class Player_Controller : MonoBehaviour
         }
         float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f, 0f));
 
-
-        if (playerAttack.m_isBlocking && _attacker != null)
+        Weapon_Sword sword = GetComponent<Weapon_Sword>();
+        if ((sword != null && sword.m_attackReady) || (playerAttack.m_isBlocking && _attacker != null))
         {
             Debug.Log("MISSED BLOCK");
-            if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
+            if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             {
+                if (sword != null && sword.m_attackReady)
+                {
+                    // PLAY PARRY SOUND
+                    Debug.Log("PARRY");
+                    animator.SetTrigger("Parry");
+                    playerAudioAgent.PlayOrbPickup();
+
+                    StatusEffectContainer statusContainer = _attacker.GetComponentInParent<StatusEffectContainer>();
+                    if (statusContainer != null)
+                        statusContainer.AddStatusEffect(new StunStatus(1.0f));
+
+                    return;
+                }
+
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
                 animator.SetTrigger("HitPlayer");

@@ -794,6 +794,12 @@ public class Player_Attack : MonoBehaviour
     {
         GameObject newObject = Instantiate(m_hitVFXPrefab, _target.ClosestPoint(_hitSource), Quaternion.identity);
     }
+
+    public void GetReadiedWeapon()
+    {
+
+    }
+
 }
 
 ///*******************

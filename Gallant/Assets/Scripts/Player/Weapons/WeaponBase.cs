@@ -18,6 +18,7 @@ public abstract class WeaponBase : MonoBehaviour
     public Hand m_hand;
 
     private GameObject m_hitVFXPrefab;
+    public bool m_attackReady = false;
 
     // Start is called before the first frame update
     protected void Awake()
@@ -84,10 +85,12 @@ public abstract class WeaponBase : MonoBehaviour
             if (hitList.Contains(collider.gameObject))
                 continue;
 
+            bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
+
             playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f), _data.m_piercing);
             Actor actor = collider.GetComponentInParent<Actor>();
 
-            if (collider.gameObject.layer == LayerMask.NameToLayer("Rubble"))
+            if (isRubble)
                 Debug.Log("Ping");
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
@@ -103,7 +106,8 @@ public abstract class WeaponBase : MonoBehaviour
             }
             hitList.Add(collider.gameObject);
 
-            playerController.playerAttack.CreateVFX(collider, _source);
+            if (!isRubble)
+                playerController.playerAttack.CreateVFX(collider, _source);
         }
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
