@@ -33,6 +33,9 @@ public class Weapon_Staff : WeaponBase
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
-    public override void WeaponAltFunctionality() { }
+    public override void WeaponAltFunctionality() 
+    {
+        ConeAttack(transform.position, m_weaponData, m_hand);
+    }
     public override void WeaponAltRelease() { }
 }

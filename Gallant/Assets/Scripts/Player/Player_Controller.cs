@@ -504,9 +504,14 @@ public class Player_Controller : MonoBehaviour
         //}
         //return targets;
     }
-    public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance)
+    public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance, bool _useLayerMask = false)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance);
+        Collider[] colliders;
+        if (_useLayerMask)
+            colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        else
+            colliders = Physics.OverlapSphere(transform.position, _distance);
+
         List<Collider> targets = new List<Collider>();
 
         foreach (var collider in colliders)

@@ -166,7 +166,12 @@ public abstract class WeaponBase : MonoBehaviour
         m_weaponObject.SetActive(false);
         m_isInUse = true;
     }
-
+    protected void ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand)
+    {
+        Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(45.0f, _data.altHitSize, true).ToArray();
+        Debug.Log(colliders);
+        DamageColliders(_data, _pos, colliders);
+    }
 
     protected void ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
     {
