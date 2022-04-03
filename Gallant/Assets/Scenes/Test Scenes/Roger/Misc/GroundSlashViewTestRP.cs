@@ -15,7 +15,7 @@ public class GroundSlashViewTestRP : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Roll") && Time.time >= timeToFire)
+        if (Input.GetButton("Fire1") && Time.time >= timeToFire)
         {
             timeToFire = Time.time + 1 / fireRate;
             ShootProjectile();
