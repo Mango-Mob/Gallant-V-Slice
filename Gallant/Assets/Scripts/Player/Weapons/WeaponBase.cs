@@ -90,9 +90,6 @@ public abstract class WeaponBase : MonoBehaviour
             playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f), _data.m_piercing);
             Actor actor = collider.GetComponentInParent<Actor>();
 
-            if (isRubble)
-                Debug.Log("Ping");
-
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
@@ -166,11 +163,16 @@ public abstract class WeaponBase : MonoBehaviour
         m_weaponObject.SetActive(false);
         m_isInUse = true;
     }
-    protected void ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected void ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
     {
-        Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(45.0f, _data.altHitSize, true).ToArray();
-        Debug.Log(colliders);
+        Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
         DamageColliders(_data, _pos, colliders);
+
+        GameObject vfx = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
+        ParticleSystem particleSystem = vfx.GetComponentInChildren<ParticleSystem>();
+        ParticleSystem.MainModule mainModule = particleSystem.main;
+        mainModule.startLifetime = ((_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize)) / mainModule.startSpeed.constant;
+        particleSystem.Play();
     }
 
     protected void ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)

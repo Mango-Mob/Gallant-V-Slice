@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Weapon_Staff : WeaponBase
 {
+    float m_pushAngle = 25.0f;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/StaffArcaneBolt");
-        //m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/WispProjectile");
+        m_objectAltPrefab = Resources.Load<GameObject>("VFX/ArcanePush");
         base.Awake();
     }
 
@@ -35,7 +36,8 @@ public class Weapon_Staff : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
     {
-        ConeAttack(transform.position, m_weaponData, m_hand);
+        ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
+
     }
     public override void WeaponAltRelease() { }
 }

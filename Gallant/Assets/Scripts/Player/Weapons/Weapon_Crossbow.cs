@@ -7,6 +7,7 @@ public class Weapon_Crossbow : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBoltAlt");
         base.Awake();
     }
 
@@ -25,10 +26,10 @@ public class Weapon_Crossbow : WeaponBase
     {
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
-    public override void WeaponRelease()
+    public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
     {
-        WeaponFunctionality();
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
-    public override void WeaponAltFunctionality() { }
     public override void WeaponAltRelease() { }
 }

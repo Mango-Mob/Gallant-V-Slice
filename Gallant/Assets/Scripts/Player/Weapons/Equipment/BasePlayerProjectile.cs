@@ -5,6 +5,14 @@ using UnityEngine;
 
 public abstract class BasePlayerProjectile : MonoBehaviour
 {
+    public enum EnemyStatus
+    {
+        NONE,
+        STUN,
+        BURN,
+        SLOW,
+    }
+
     public GameObject[] m_effects;
 
     // The model transform of the projectile to animate it
@@ -31,6 +39,11 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     private float m_scaleLerp = 0.0f;
     public float m_thrownScale = 1.0f;
     private Vector3 m_startScale;
+
+    [Header("Status")]
+    public EnemyStatus m_appliedStatusOnHit;
+    public float m_statusStrengthMult = 1.0f;
+    public float m_statusDuration = 1.0f;
 
     // Start is called before the first frame update
     protected void Start()
@@ -133,6 +146,30 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
             hitList.Add(other.gameObject);
             actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
+
+            if (m_appliedStatusOnHit != EnemyStatus.NONE)
+            {
+                StatusEffectContainer statusContainer = actor.GetComponent<StatusEffectContainer>();
+                if (statusContainer)
+                {
+                    StatusEffect newStatusEffect = null;
+                    switch (m_appliedStatusOnHit)
+                    {
+                        case EnemyStatus.STUN:
+                            newStatusEffect = new StunStatus(m_statusDuration);
+                            break;
+                        case EnemyStatus.BURN:
+                            newStatusEffect = new BurnStatus(m_weaponData.m_damage * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_statusDuration);
+                            break;
+                        case EnemyStatus.SLOW:
+                            newStatusEffect = new SlowStatus(m_statusStrengthMult, m_statusDuration);
+                            break;
+                    }
+
+                    if (newStatusEffect != null)
+                        statusContainer.AddStatusEffect(newStatusEffect);
+                }
+            }
             return true;
         }
         return false;

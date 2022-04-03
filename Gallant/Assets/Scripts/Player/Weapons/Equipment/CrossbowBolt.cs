@@ -12,6 +12,7 @@ using UnityEngine;
 public class CrossbowBolt : BasePlayerProjectile
 {
     private float m_lifeDuration = 1.0f;
+    public bool m_destructOnHit = false;
 
     // Start is called before the first frame update
     new private void Start()
@@ -38,12 +39,14 @@ public class CrossbowBolt : BasePlayerProjectile
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (hitList.Contains(other.gameObject))
+            return;
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
         if (layerMask == (layerMask | (1 << other.gameObject.layer)))
         {
             ProjectileCollide(other);
-            if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("Attackable") && m_destructOnHit)
                 Destruct();
         }
     }

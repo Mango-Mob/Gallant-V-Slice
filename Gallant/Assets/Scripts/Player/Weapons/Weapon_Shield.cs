@@ -14,6 +14,10 @@ public class Weapon_Shield : WeaponBase
     new private void Start()
     {
         base.Start();
+        if (m_hand == Hand.LEFT)
+        {
+            m_weaponObject.transform.localScale *= -1.0f;
+        }
     }
 
     // Update is called once per frame
