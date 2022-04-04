@@ -38,9 +38,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Start()
     {
-        //Generate(6, 2, 6);
-        //UpdateMap();
-        //ConstructScene();
+        Generate(6, 2, 6);
+        UpdateMap(0);
+        ConstructScene();
     }
 
     public void Update()
