@@ -19,8 +19,8 @@ public class GroundSlashRP : MonoBehaviour
         if (GetComponent<Rigidbody>() != null)
         {
             rb = GetComponent<Rigidbody>();
+            rb.velocity = transform.forward * speed;
             StartCoroutine(SlowDown());
-
         }
         else
             Debug.Log("No Rigidbody");

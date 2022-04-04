@@ -18,6 +18,7 @@ public class Player_Controller : MonoBehaviour
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
+    public bool m_isNearDrop = false;
     public bool m_isDisabledAttacks = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
@@ -120,7 +121,9 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed));
+        if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
+            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult);
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
         animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
         bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID); 
@@ -231,7 +234,7 @@ public class Player_Controller : MonoBehaviour
                 m_dualWieldBonus = 1.0f;
             }
 
-            if (!m_isDisabledAttacks)
+            if (!m_isDisabledAttacks && !m_isNearDrop)
             {
                 // Weapon attacks
                 if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
@@ -262,7 +265,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     playerAbilities.StartUsing(Hand.RIGHT);
                 }
-                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID))
+                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID) && !playerAttack.IsTwoHanded())
                 {
                     playerAbilities.StartUsing(Hand.LEFT);
                 }
@@ -501,9 +504,14 @@ public class Player_Controller : MonoBehaviour
         //}
         //return targets;
     }
-    public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance)
+    public List<Collider> GetCollidersInfrontOfPlayer(float _angle, float _distance, bool _useLayerMask = false)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, _distance);
+        Collider[] colliders;
+        if (_useLayerMask)
+            colliders = Physics.OverlapSphere(transform.position, _distance, playerAttack.m_attackTargets);
+        else
+            colliders = Physics.OverlapSphere(transform.position, _distance);
+
         List<Collider> targets = new List<Collider>();
 
         foreach (var collider in colliders)
@@ -535,20 +543,34 @@ public class Player_Controller : MonoBehaviour
         float resistance = 0;
         if (_damageType == CombatSystem.DamageType.Ability)
         {
-            resistance += playerSkills.m_magicalDefenceIncrease;
+            resistance += playerSkills.m_magicalDefenceIncrease + playerStats.m_abilityDefence;
         }
-        else if (_damageType == CombatSystem.DamageType.Ability)
+        else if (_damageType == CombatSystem.DamageType.Physical)
         {
-            resistance += playerSkills.m_physicalDefenceIncrease;
+            resistance += playerSkills.m_physicalDefenceIncrease + playerStats.m_physicalDefence;
         }
-        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f));
+        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f, 0f));
 
-
-        if (playerAttack.m_isBlocking && _attacker != null)
+        Weapon_Sword sword = GetComponent<Weapon_Sword>();
+        if ((sword != null && sword.m_attackReady) || (playerAttack.m_isBlocking && _attacker != null))
         {
             Debug.Log("MISSED BLOCK");
-            if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
+            if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             {
+                if (sword != null && sword.m_attackReady)
+                {
+                    // PLAY PARRY SOUND
+                    Debug.Log("PARRY");
+                    animator.SetTrigger("Parry");
+                    playerAudioAgent.PlayOrbPickup();
+
+                    StatusEffectContainer statusContainer = _attacker.GetComponentInParent<StatusEffectContainer>();
+                    if (statusContainer != null)
+                        statusContainer.AddStatusEffect(new StunStatus(1.0f));
+
+                    return;
+                }
+
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
                 animator.SetTrigger("HitPlayer");
@@ -654,6 +676,48 @@ public class Player_Controller : MonoBehaviour
         playerClassArmour.SetClassArmour(_class.inkmanClass);
 
         playerSkills.EvaluateSkills();
+
+        playerStats.m_effects = new Dictionary<EffectData, int>();
+
+        for (int i = 0; i < _class.movementSpeed; i++)
+        {
+            playerStats.AddEffect(ItemEffect.MOVE_SPEED);
+        }
+
+        for (int i = 0; i < _class.attackSpeed; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ATTACK_SPEED);
+        }
+
+        for (int i = 0; i < _class.abilityCD; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_CD);
+        }
+
+        for (int i = 0; i < _class.maximumHealth; i++)
+        {
+            playerStats.AddEffect(ItemEffect.MAX_HEALTH_INCREASE);
+        }
+
+        for (int i = 0; i < _class.physicalDamage; i++)
+        {
+            playerStats.AddEffect(ItemEffect.PHYSICAL_DAMAGE);
+        }
+
+        for (int i = 0; i < _class.abilityDamage; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_DAMAGE);
+        }
+
+        for (int i = 0; i < _class.physicalDefence; i++)
+        {
+            playerStats.AddEffect(ItemEffect.PHYSICAL_DEFENCE);
+        }
+
+        for (int i = 0; i < _class.abilityDefence; i++)
+        {
+            playerStats.AddEffect(ItemEffect.ABILITY_DEFENCE);
+        }
     }    
 
     public void UpgradeWeapon(Hand _hand)

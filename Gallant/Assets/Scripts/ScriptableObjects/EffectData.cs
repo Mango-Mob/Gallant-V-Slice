@@ -88,7 +88,7 @@ public class RandomScript_Editor : Editor
         for (int i = 0; i <= m_graphWidth; i++)
         {
             Keyframe keyframe = new Keyframe(i, script.GetEffectValue(i));
-            Debug.Log($"{keyframe.time}, {keyframe.value}");
+            //Debug.Log($"{keyframe.time}, {keyframe.value}");
             m_curve.AddKey(keyframe);
         }
     }

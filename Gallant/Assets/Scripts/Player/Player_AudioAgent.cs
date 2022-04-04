@@ -20,6 +20,9 @@ public class Player_AudioAgent : MultiAudioAgent
             case Weapon.BOW:
                 base.PlayOnce("BowLoad", false, Random.Range(0.95f, 1.05f));
                 break;
+            case Weapon.STAFF:
+                base.PlayOnce("BarrierLaunch", false, Random.Range(0.95f, 1.05f));
+                break;
             default:
                 base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
                 break;
@@ -35,6 +38,19 @@ public class Player_AudioAgent : MultiAudioAgent
             case Weapon.SHIELD:
                 base.PlayOnce("ShieldSlam", false, Random.Range(0.95f, 1.05f));
                 break;
+            case Weapon.HAMMER:
+                switch (_sound)
+                {
+                    case 1:
+                        base.PlayOnce("ShieldSlam", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    case 2:
+                        base.PlayOnce("StaffHit", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    default:
+                        break;
+                }
+                break;
             case Weapon.BRICK:
                 base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
                 break;
@@ -42,7 +58,7 @@ public class Player_AudioAgent : MultiAudioAgent
                 base.PlayOnce("BoomerangImpact", false, Random.Range(0.95f, 1.05f));
                 break;
             case Weapon.STAFF:
-                base.PlayOnce("BowImpact", false, Random.Range(0.95f, 1.05f));
+                base.PlayOnce("Thorns", false, Random.Range(0.95f, 1.05f));
                 break;
             case Weapon.BOW:
                 switch (_sound)

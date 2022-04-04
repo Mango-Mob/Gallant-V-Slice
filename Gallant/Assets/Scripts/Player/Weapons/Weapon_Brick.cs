@@ -37,7 +37,7 @@ public class Weapon_Brick : WeaponBase
                 LongMeleeAttack(m_weaponData, transform.position);
                 break;
             case 2:
-                ThrowBoomerang(m_weaponObject.transform.position, m_weaponData, m_hand);
+                ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
                 break;
             default:
                 MeleeAttack(m_weaponData, transform.position);
@@ -47,4 +47,9 @@ public class Weapon_Brick : WeaponBase
         m_currentAttack = Random.Range(0, 3);
     }
     public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality() 
+    {
+        WeaponFunctionality();
+    }
+    public override void WeaponAltRelease() { }
 }

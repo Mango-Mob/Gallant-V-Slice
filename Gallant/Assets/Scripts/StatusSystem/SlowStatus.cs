@@ -34,7 +34,7 @@ public class SlowStatus : StatusEffect
 
     public override void StartActor(Actor _actor)
     {
-        if(_actor.m_myBrain.m_legs != null)
+        if(_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f - m_strength;
     }
 
@@ -45,7 +45,7 @@ public class SlowStatus : StatusEffect
 
     public override void UpdateOnActor(Actor _actor, float dt)
     {
-        if (_actor.m_myBrain.m_legs != null)
+        if (_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)
         {
             float lerp = 1.0f - m_duration / m_startDuration;
             float strength = Mathf.Lerp(1.0f - m_strength, 1.0f, lerp);
@@ -67,7 +67,10 @@ public class SlowStatus : StatusEffect
         if (_actor.m_myBrain.m_legs != null)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f;
 
-        _actor.m_myBrain?.m_material.RefreshColor();
+        foreach (var material in _actor.m_myBrain.m_materials)
+        {
+            material.RefreshColor();
+        }
     }
 
     public override void EndPlayer(Player_Controller _player)

@@ -12,20 +12,21 @@ namespace ActorSystem.AI.Users
     public class LoreKeeper : Actor
     {
         [Header("~ LoreKeeper ~")]
-        public TextAsset m_dialog;
-        public string m_nextScene = "";
+        public TextAsset[] m_dialog;
+        public int myTutorialPosition = 0;
         public float m_idealDistance = 1.5f;
-        public UnityEvent m_result;
         
         private Interactable m_myInteractLogic;
 
         private UI_Text m_keyboardInput;
         private UI_Image m_gamepadInput;
         private GameObject m_player;
+        private bool isVisible = false;
+        private bool isDone = false;
         private bool m_showUI { 
             get {
                 if (m_player != null)
-                    return Vector3.Distance(transform.position, m_player.transform.position) <= m_idealDistance;
+                    return Vector3.Distance(transform.position, m_player.transform.position) <= m_idealDistance && isVisible;
                 
                 return false; 
             }  
@@ -49,6 +50,9 @@ namespace ActorSystem.AI.Users
 
         protected override void Update()
         {
+            isVisible = TutorialManager.Instance.tutorialPosition == myTutorialPosition && !isDone;
+            m_myBrain.m_animator.SetBool("IsVisible", isVisible);
+            GetComponent<Collider>().enabled = isVisible;
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
 
@@ -59,16 +63,27 @@ namespace ActorSystem.AI.Users
 
             m_myInteractLogic.m_isReady = m_showUI && Vector3.Distance(transform.position, m_player.transform.position) <= 1.5f;
 
+            if(isDone && m_myBrain.m_animator.IsCurrentStatePlaying(0, "Hidden"))
+            {
+                Destroy(gameObject);
+            }
         }
 
         public void Interact()
         {
-            DialogManager.Instance.LoadDialog(m_dialog);
+            DialogManager.Instance.LoadDialog(m_dialog[TutorialManager.Instance.targetDialog]);
 
-            DialogManager.Instance.m_interact = m_result;
+            DialogManager.Instance.m_interact = new UnityEvent();
+            DialogManager.Instance.m_interact.AddListener(CompleteDialog);
 
             GetComponentInChildren<Interactable>().m_isReady = false;
+            
             DialogManager.Instance.Show();
+        }
+
+        public void CompleteDialog()
+        {
+            isDone = TutorialManager.Instance.AdvanceTutorial();
         }
 
         private void UpdateDisplay()

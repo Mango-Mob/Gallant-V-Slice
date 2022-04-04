@@ -6,6 +6,7 @@ public class Weapon_Spear : WeaponBase
 {
     new private void Awake()
     {
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
         base.Awake();
     }
 
@@ -24,12 +25,16 @@ public class Weapon_Spear : WeaponBase
     {
         LongMeleeAttack(m_weaponData, transform.position);
     }
-
+    public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.LEFT);
+    }
+    public override void WeaponAltRelease() { }
     private void OnDrawGizmos()
     {
         Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * m_weaponData.hitCenterOffset;
         Gizmos.DrawWireSphere(capsulePos, m_weaponData.hitSize);
         Gizmos.DrawWireSphere(capsulePos + playerController.playerMovement.playerModel.transform.forward * m_weaponData.hitSize, m_weaponData.hitSize);
     }
-    public override void WeaponRelease() { }
 }

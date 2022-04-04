@@ -6,6 +6,7 @@ public class Weapon_Shield : WeaponBase
 {
     new private void Awake()
     {
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/ShieldProjectile");
         base.Awake();
     }
 
@@ -13,6 +14,10 @@ public class Weapon_Shield : WeaponBase
     new private void Start()
     {
         base.Start();
+        if (m_hand == Hand.LEFT)
+        {
+            m_weaponObject.transform.localScale *= -1.0f;
+        }
     }
 
     // Update is called once per frame
@@ -22,8 +27,13 @@ public class Weapon_Shield : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
+    }
+    public override void WeaponRelease() { }
+    public override void WeaponAltFunctionality()
+    {
         MeleeAttack(m_weaponData, transform.position);
         BeginBlock();
     }
-    public override void WeaponRelease() { }
+    public override void WeaponAltRelease() { }
 }

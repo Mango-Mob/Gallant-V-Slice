@@ -15,7 +15,7 @@ public class GroundSlashViewTestRP : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Fire1") && Time.time >= timeToFire)
+        if (InputManager.Instance.IsMouseButtonDown(MouseButton.LEFT) && Time.time >= timeToFire)
         {
             timeToFire = Time.time + 1 / fireRate;
             ShootProjectile();
@@ -25,21 +25,28 @@ public class GroundSlashViewTestRP : MonoBehaviour
     void ShootProjectile()
     {
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-
-        destination = ray.GetPoint(1000);
+        RaycastHit hit;
+        if(Physics.Raycast(ray, out hit, 1000))
+        {
+            destination = hit.point;
+        }
 
         InstantiateProjectile();
-
     }
 
     void InstantiateProjectile()
     {
-        var projectileObj = Instantiate(projectile, firePoint.position, Quaternion.identity) as GameObject;
 
-        groundSlashScript = projectileObj.GetComponent<GroundSlashRP>();
-        RotateToDestination(projectileObj, destination, true);
-        projectile.GetComponent<Rigidbody>().velocity = transform.forward * groundSlashScript.speed;
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, 1500))
+        {
+            var projectileObj = Instantiate(projectile, hit.point, Quaternion.identity) as GameObject;
 
+            groundSlashScript = projectileObj.GetComponent<GroundSlashRP>();
+
+            Vector3 direction = (destination - hit.point).normalized;
+            projectileObj.transform.forward = direction;
+        }
     }
 
     void RotateToDestination(GameObject obj, Vector3 destination, bool onlyY)
@@ -56,5 +63,11 @@ public class GroundSlashViewTestRP : MonoBehaviour
 
         obj.transform.localRotation = Quaternion.Lerp(obj.transform.rotation, rotation, 1);
 
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(destination, 0.5f);
     }
 }

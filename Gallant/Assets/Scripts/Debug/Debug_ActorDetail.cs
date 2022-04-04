@@ -29,7 +29,6 @@ namespace Exceed.Debug
             if (m_ref != null)
             {
                 m_level.text = m_ref.m_myLevel.ToString();
-                m_type.text = m_ref.m_myFaction.ToString();
                 m_state.text = m_ref.m_activeStateText;
                 m_target.text = (m_ref.m_target != null) ? m_ref.m_target.name : "Null";
 

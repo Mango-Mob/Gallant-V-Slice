@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI;
+using ActorSystem.Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ public class ProjectileObject : MonoBehaviour
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
             player.DamagePlayer(m_damage, CombatSystem.DamageType.Physical, gameObject);
-            AttackData.ApplyEffect(player, transform, m_damageDetails.effectAfterwards, m_damageDetails.effectPower);
+            AttackData.ApplyEffect(player, transform, m_damageDetails.onHitEffect, m_damageDetails.effectPower);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
 
             AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);

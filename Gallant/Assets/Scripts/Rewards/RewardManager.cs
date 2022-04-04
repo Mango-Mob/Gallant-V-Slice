@@ -12,8 +12,6 @@ public class RewardManager : Singleton<RewardManager>
 
     public GameObject m_window;
     public InfoDisplay[] m_rewardSlots;
-    public GameObject m_weaponRewardOption;
-    public GameObject m_itemRewardOption;
 
     [Header("Ability Description")]
     public Image m_abilityImage;
@@ -275,25 +273,12 @@ public class RewardManager : Singleton<RewardManager>
             if(wData.abilityData != null)
             {
                 m_abilityImage.gameObject.SetActive(true);
-                m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
+                //m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
                 m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
-
-                //if (m_rewardSlots[id].m_weaponData.abilityData.cooldownTime > 0)
-                //{
-                //    m_abilityCooldownHeader.text = "Cooldown:";
-                //}
-                //else
-                //{
-                //    m_abilityCooldownHeader.text = "";
-                //    m_abilityCooldownText.text = "";
-                //}
             }
             else
             {
                 m_abilityImage.gameObject.SetActive(false);
-                //m_abilityDescription.text = "";
-                //m_abilityCooldownHeader.text = "";
-                //m_abilityCooldownText.text = "";
             }
         }
         else if(data is ItemData)

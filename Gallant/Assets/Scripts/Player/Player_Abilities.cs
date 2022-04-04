@@ -39,8 +39,8 @@ public class Player_Abilities : MonoBehaviour
 
     private void Awake()
     {
-        m_leftAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityL");
-        m_rightAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("AbilityR");
+        m_leftAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("SpellL");
+        m_rightAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("SpellR");
     }
     private void Start()
     {
@@ -224,6 +224,8 @@ public class Player_Abilities : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT:
+                if (playerController.playerAttack.IsTwoHanded())
+                    return;
                 if (m_rightAbility != null)
                     if (m_leftAbility == null || (m_leftAbility.m_isSynergyAvailable && m_leftAbility.GetType() == m_rightAbility.GetType()))
                     {

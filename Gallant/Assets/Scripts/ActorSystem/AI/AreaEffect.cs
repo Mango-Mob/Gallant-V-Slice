@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI;
+using ActorSystem.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class AreaEffect: MonoBehaviour
             item.color = new Color(item.color.r, item.color.g, item.color.b, timer/delay);
         }
 
-        if(timer > delay)
+        if(timer >= delay)
         {
             ApplyEffect();
             Destroy(gameObject);
@@ -43,7 +44,7 @@ public class AreaEffect: MonoBehaviour
                 if (player != null)
                 {
                     player.DamagePlayer(damage, CombatSystem.DamageType.Ability);
-                    AttackData.ApplyEffect(player, transform, m_data.effectAfterwards, m_data.effectPower);
+                    AttackData.ApplyEffect(player, transform, m_data.onHitEffect, m_data.effectPower);
                 }
             }
         }

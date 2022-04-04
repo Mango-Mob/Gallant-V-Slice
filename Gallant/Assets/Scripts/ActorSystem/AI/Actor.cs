@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI.Components;
+using ActorSystem.Data;
 using ActorSystem.Spawning;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,6 @@ namespace ActorSystem.AI
     [RequireComponent(typeof(Actor_Brain))]
     public class Actor : StateMachine
     {
-        public CombatSystem.Faction m_myFaction;
         public bool m_toReserveOnLoad = false;
         public Actor_Brain m_myBrain { get; protected set; }
         public Actor_SpawnMethod m_mySpawn { get; protected set; }
@@ -131,7 +131,7 @@ namespace ActorSystem.AI
             m_myBrain.m_legs?.SetTargetRotation(rotatVector);
         }
 
-        public virtual void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
+        public virtual void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -139,8 +139,8 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                m_myBrain.m_material?.ShowHit();
-                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                m_myBrain.ShowHit();
+                if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                     if(m_HurtVFXPrefab != null)
                         Instantiate(m_HurtVFXPrefab, m_selfTargetTransform.position, Quaternion.identity);
@@ -164,7 +164,7 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false, false))
+                if (m_myBrain.HandleDamage(_damage, 0, _type, transform.position, false, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
@@ -210,7 +210,7 @@ namespace ActorSystem.AI
         public virtual void Kill()
         {
             if(!m_myBrain.IsDead)
-                m_myBrain.HandleDamage(float.MaxValue, CombatSystem.DamageType.True);
+                m_myBrain.HandleDamage(float.MaxValue, 0, CombatSystem.DamageType.True);
         }
 
         public void DestroySelf()
@@ -223,6 +223,11 @@ namespace ActorSystem.AI
             //Restart Statemachine
             SetState(m_myData.m_initialState);
             m_myBrain.SetEnabled(false);
+            foreach (var material in m_myBrain.m_materials)
+            {
+                material.RefreshColor();
+            }
+            m_myBrain.m_ragDoll?.DisableRagdoll();
         }
 
         public void Respawn(bool fullRefresh = false)

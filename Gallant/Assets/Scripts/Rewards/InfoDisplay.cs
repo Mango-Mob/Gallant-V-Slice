@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,8 @@ public class InfoDisplay : MonoBehaviour
     [Header("Current Information")]
     public bool IsADrop = false;
     public bool IsAWeapon = true;
+    public bool IsEquip = false;
+    public bool IsLeft = false;
 
     public WeaponData m_weaponData;
     public ItemData m_itemData;
@@ -19,9 +22,10 @@ public class InfoDisplay : MonoBehaviour
     public Color m_lesserColor = Color.red;
     public Color selectColor;
     public AudioClip m_collectAudio;
-
+    public Button[] m_flipBtns;
+    public Image[] m_controllerFlips;
     [Header("General Information")]
-    [SerializeField] private Image m_background;
+    [SerializeField] private Image[] m_backgrounds;
     [SerializeField] private Image m_foreground;
     [SerializeField] private Text m_title;
     [SerializeField] private Text m_level;
@@ -35,9 +39,17 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Text m_damage;
     [SerializeField] private Text m_speed;
     [SerializeField] private Text m_knockback;
+    [SerializeField] private Text m_piercing;
     [SerializeField] private GameObject m_passiveLocation;
     [SerializeField] private Text m_passiveText;
     [SerializeField] private GameObject m_tagLoc;
+
+    [Header("Back Information")]
+    [SerializeField] private TMP_Text m_altTitle;
+    [SerializeField] private TMP_Text m_altDescription;
+    [SerializeField] private TMP_Text m_abilityTitle;
+    [SerializeField] private TMP_Text m_abilityDescription;
+    [SerializeField] private Image m_abilityBackImageLoc;
 
     [Header("Item Information")]
     [SerializeField] private GameObject m_itemDetailsLoc;
@@ -56,9 +68,10 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_rightBar;
 
     private Player_Controller playerController;
+    private Animator m_animator;
 
     private Hand m_currentHandInUse = Hand.RIGHT;
-
+    private bool m_selected = false;
     private void Start()
     {
         if(m_leftHand != null)
@@ -68,6 +81,7 @@ public class InfoDisplay : MonoBehaviour
 
         m_itemDetailsLoc.SetActive(!IsAWeapon);
         m_weaponDetailsLoc.SetActive(IsAWeapon);
+        m_animator = GetComponent<Animator>();
 
         if (IsAWeapon && m_weaponData != null)
         {
@@ -95,19 +109,51 @@ public class InfoDisplay : MonoBehaviour
 
             m_leftBar.fillAmount = Mathf.Clamp(m_leftBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
             m_rightBar.fillAmount = Mathf.Clamp(m_rightBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
+
+            m_animator?.SetBool("IsDrop", IsADrop || IsEquip);
+        }
+
+        if(m_selected || IsADrop || IsEquip)
+        {
+            foreach (var item in m_controllerFlips)
+            {
+                item.enabled = InputManager.Instance.isInGamepadMode && IsAWeapon;
+            }
+
+            foreach (var item in m_flipBtns)
+            {
+                item.image.enabled = !InputManager.Instance.isInGamepadMode && IsAWeapon;
+            }
+
+            if (IsAWeapon)
+            {
+                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0) && !IsLeft)
+                {
+                    Flip();
+                }
+                else if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0) && IsLeft)
+                {
+                    Flip();
+                }
+            }
         }
     }
 
     public void LoadWeapon(WeaponData data)
     {
         IsAWeapon = true;
-
+        m_animator?.SetBool("IsBack", false);
         m_weaponData = data;
 
         if (data == null)
         {
             gameObject.SetActive(false);
             return;
+        }
+
+        foreach (var btn in m_flipBtns)
+        {
+            btn.image.enabled = true;
         }
 
         gameObject.SetActive(true);
@@ -121,7 +167,11 @@ public class InfoDisplay : MonoBehaviour
         if(data.abilityData != null)
         {
             m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
-            m_abilityImageLoc.gameObject.SetActive(true);
+            m_abilityBackImageLoc.sprite = data.abilityData.abilityIcon;
+            m_abilityTitle.text = data.abilityData.abilityName;
+            m_abilityDescription.SetText(AbilityData.EvaluateDescription(data.abilityData));
+            m_abilityImageLoc?.gameObject.SetActive(true);
+            m_abilityBackImageLoc?.gameObject.SetActive(true);
             m_abilityImageLoc.transform.parent.gameObject.SetActive(true);
 
             for (int i = 0; i < m_abilityStars.Length; i++)
@@ -131,8 +181,11 @@ public class InfoDisplay : MonoBehaviour
         }
         else
         {
-            m_abilityImageLoc.gameObject.SetActive(false);
+            m_abilityImageLoc?.gameObject.SetActive(false);
+            m_abilityBackImageLoc?.gameObject.SetActive(false);
             m_abilityImageLoc.transform.parent.gameObject.SetActive(false);
+            m_abilityTitle.text = "No ability";
+            m_abilityDescription.SetText("");
             for (int i = 0; i < m_abilityStars.Length; i++)
             {
                 m_abilityStars[i].gameObject.SetActive(false);
@@ -142,9 +195,9 @@ public class InfoDisplay : MonoBehaviour
         playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
 
         m_damage.text = data.m_damage.ToString();
-        m_speed.text = data.m_speed.ToString("0.0") + $"+ ({(playerController.playerStats.m_attackSpeed - 1.0f).ToString("0.0%")})";
-        m_knockback.text = data.m_knockback.ToString("0.0");
-
+        m_speed.text = data.m_speed.ToString("0.00") + $"+ ({(playerController.playerStats.m_attackSpeed - 1.0f).ToString("0.0%")})";
+        m_knockback.text = data.m_knockback.ToString("0.00");
+        m_piercing.text = data.m_piercing.ToString("0.00");
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
 
@@ -183,8 +236,13 @@ public class InfoDisplay : MonoBehaviour
     public void LoadItem(ItemData data)
     {
         IsAWeapon = false;
-
+        m_animator?.SetBool("IsBack", false);
         m_itemData = data;
+
+        foreach (var btn in m_flipBtns)
+        {
+            btn.image.enabled = false;
+        }
 
         if (data == null)
             return;
@@ -268,7 +326,11 @@ public class InfoDisplay : MonoBehaviour
 
     public void Select(bool status)
     {
-        m_background.color = (status) ? selectColor : Color.white;
+        foreach (var item in m_backgrounds)
+        {
+            item.color = (status) ? selectColor : Color.white;
+        }
+        m_selected = status;
     }
 
     public void GiveReward()
@@ -295,5 +357,10 @@ public class InfoDisplay : MonoBehaviour
     private void CompareVariables(float a, float b, Text display)
     {
         display.color = (a > b) ? m_greaterColor : (a < b) ? m_lesserColor : m_lesserColor;
+    }
+
+    public void Flip()
+    {
+        m_animator.SetBool("IsBack", !m_animator.GetBool("IsBack"));
     }
 }

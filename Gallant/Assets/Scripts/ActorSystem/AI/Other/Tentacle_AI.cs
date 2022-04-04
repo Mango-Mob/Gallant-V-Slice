@@ -1,4 +1,5 @@
 using ActorSystem.AI.Bosses;
+using ActorSystem.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace ActorSystem.AI.Other
         public List<AttackData> m_headPhaseAttacks;
         public List<AttackData> m_tentaclePhaseAttacks;
         public List<AttackData> m_oilPhaseAttacks;
-        public AttackData.HitBox m_inkSlam;
+        public Hitbox m_inkSlam;
 
         private bool m_submergStatus = true;
         private Vector3 m_velocity;
@@ -145,7 +146,7 @@ namespace ActorSystem.AI.Other
             isVisible = status;
         }
 
-        public override void DealDamage(float _damage, CombatSystem.DamageType _type, CombatSystem.Faction _from, Vector3? _damageLoc = null)
+        public override void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -153,9 +154,9 @@ namespace ActorSystem.AI.Other
             }
             if (!m_myBrain.IsDead)
             {
-                m_myBrain.m_material?.ShowHit();
+                m_myBrain.ShowHit();
                 float before = m_myBrain.m_currHealth;
-                if (m_myBrain.HandleDamage(_damage, _type, _damageLoc))
+                if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                      if (m_HurtVFXPrefab != null)
                         Instantiate(m_HurtVFXPrefab, m_selfTargetTransform.position, Quaternion.identity);
@@ -165,12 +166,15 @@ namespace ActorSystem.AI.Other
                         collider.enabled = false;
                     }
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
-                    m_myBrain.m_material.StartDisolve(2f);
+                    foreach (var material in m_myBrain.m_materials)
+                    {
+                        material.StartDisolve(2f);
+                    }
                     Submerge(false);
                 }
 
                 float after = m_myBrain.m_currHealth;
-                m_octoBrain.DealDamage(before - after, _type, _from, _damageLoc);
+                m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
             }
         }
 
@@ -183,14 +187,17 @@ namespace ActorSystem.AI.Other
             if (!m_myBrain.IsDead)
             {
                 float before = m_myBrain.m_currHealth;
-                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false))
+                if (m_myBrain.HandleDamage(_damage, 0, _type, transform.position, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false;
                     }
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
-                    m_myBrain.m_material.StartDisolve(2f);
+                    foreach (var material in m_myBrain.m_materials)
+                    {
+                        material.StartDisolve(2f);
+                    }
                     Submerge(false);
                 }
                 float after = m_myBrain.m_currHealth;
@@ -200,7 +207,7 @@ namespace ActorSystem.AI.Other
 
         public void DamageInSlam()
         {
-            List<Collider> hits = AttackData.GetOverlappingColliders(m_inkSlam, transform, m_myBrain.m_arms.m_targetMask);
+            Collider[] hits = m_inkSlam.GetOverlappingObjects(transform, m_myBrain.m_arms.m_targetMask);
 
             foreach (var item in hits)
             {
@@ -230,15 +237,16 @@ namespace ActorSystem.AI.Other
                 Gizmos.DrawLine(transform.position, transform.position + (m_player.transform.position - transform.position).normalized);
             }
 
-            Gizmos.matrix = transform.localToWorldMatrix;
-            AttackData.DrawHitbox(m_inkSlam);
-            Gizmos.matrix = Matrix4x4.identity;
+            m_inkSlam.DrawGizmos(transform);
         }
 
         public override void Kill()
         {
             base.Kill();
-            m_myBrain.m_material.StartDisolve();
+            foreach (var material in m_myBrain.m_materials)
+            {
+                material.StartDisolve(2f);
+            }
             m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
         }
 
