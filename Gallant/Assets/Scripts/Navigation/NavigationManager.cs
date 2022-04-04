@@ -5,46 +5,66 @@ using UnityEngine.UI;
 
 public class NavigationManager : SingletonPersistent<NavigationManager>
 {
-    public GameObject m_node;
+    public GameObject m_linePrefab;
     public NavigationNode m_rootNode;
     public NavigationNode m_endNode;
 
     public SceneData[] m_sceneData;
 
     public int index;
+    public Vector2 iconNoise;
 
     public float cameraSpeed = 10f;
     public float width;
-    private float height;
+    public float height;
 
+    [SerializeField] private UI_Text m_keyboardInput;
+    [SerializeField] private UI_Image m_gamepadInput;
+
+    public bool IsVisible { get { return m_myCamera.enabled && m_myCanvas.enabled; } }
     private List<NavigationNode> m_activeNodes = new List<NavigationNode>();
     private Camera m_myCamera;
+    private Canvas m_myCanvas;
 
     protected override void Awake()
     {
         base.Awake();
         m_myCamera = GetComponentInChildren<Camera>();
         m_myCamera.enabled = false;
+        m_myCanvas = GetComponent<Canvas>();
+        m_myCanvas.enabled = false;
         index = 0;
     }
 
     public void Start()
     {
-        Generate(3, 2, 5);
-        UpdateMap();
-        ConstructScene();
+        //Generate(6, 2, 6);
+        //UpdateMap();
+        //ConstructScene();
     }
 
     public void Update()
     {
-        if (InputManager.Instance.IsKeyDown(KeyType.J))
+        if (IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
         {
-            SetVisibility(!m_myCamera.enabled);
+            SetVisibility(false);
         }
 
-        if(m_myCamera.enabled)
+        m_keyboardInput.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
+        m_gamepadInput.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+
+        if (m_myCamera.enabled)
         {
-            float scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+            float scrollDelta;
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
+            }
+            else
+            {
+                scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+            }
+           
             if (scrollDelta != 0)
             {
                 float y = m_myCamera.transform.localPosition.y;
@@ -62,37 +82,30 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetVisibility(bool status)
     {
         m_myCamera.enabled = status;
+        m_myCanvas.enabled = status;
         if (m_myCamera.enabled)
         {
-            m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
+            m_myCamera.transform.localPosition = new Vector3(0, m_activeNodes[index].transform.localPosition.y, -10);
         }
         HUDManager.Instance.gameObject.SetActive(!m_myCamera.enabled);
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
     }
 
-    public void UpdateMap()
+    public void UpdateMap(int newIndex)
     {
-        foreach (var node in m_activeNodes)
-        {
-            node.GetComponent<Button>().interactable = false;
-        }
-        foreach (var nextNodes in m_activeNodes[index].otherNodes)
-        {
-            nextNodes.GetComponent<Button>().interactable = true;
-        }
-        
+        m_activeNodes[index].DeactivateMyConnections();
+        m_activeNodes[newIndex].ActivateMyConnections();
+        index = newIndex;
     }
-
     public void ConstructScene()
     {
         if(m_activeNodes.Count > 0 && index < m_activeNodes.Count)
-            Instantiate(m_activeNodes[index].data.prefabToLoad, Vector3.zero, Quaternion.identity);
+            Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
     }
 
     public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
     {
-        Clear();
-        height = (m_endNode.transform as RectTransform).localPosition.y - (m_rootNode.transform as RectTransform).transform.localPosition.y;
-
+        Clear(false);
         float heightStep = height / (sectDiv + 1);
 
         m_activeNodes.Add(m_rootNode);
@@ -115,28 +128,99 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                GameObject newNodeObj = GameObject.Instantiate(m_node, transform);
-                (newNodeObj.transform as RectTransform).localPosition = new Vector3(widthStep * (j+1) - (width/ (nodesToCreate * 0.5f)), heightStep * i, 0);
+                GameObject newNodeObj = NavigationNode.CreateNode(m_sceneData[Random.Range(0, m_sceneData.Length)], transform);
+                float xPos = widthStep * (j+0.5f) - (width/2) + Random.Range(-iconNoise.x, iconNoise.x);
+                (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * i + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
                 newNavNode.m_myIndex = m_activeNodes.Count;
-                newNavNode.data = m_sceneData[Random.Range(0, m_sceneData.Length)];
+                newNavNode.m_myDepth = i;
+                newNavNode.m_myData = m_sceneData[Random.Range(0, m_sceneData.Length)];
                 nextNodes.Add(newNavNode);
                 m_activeNodes.Add(newNavNode);
+
                 foreach (var prev in prevNodes)
                 {
-                    prev.AddLink(newNavNode);
+                    prev.AddLink(newNavNode, m_linePrefab);
                 }
             }
             prevNodes = nextNodes;
         }
+        m_endNode.m_myIndex = m_activeNodes.Count;
+        m_endNode.transform.localPosition = new Vector3(0, height, 0);
+        m_activeNodes.Add(m_endNode);
         foreach (var prev in prevNodes)
         {
-            prev.AddLink(m_endNode);
+            prev.AddLink(m_endNode, m_linePrefab);
         }
-        m_endNode.m_myIndex = m_activeNodes.Count;
-        m_activeNodes.Add(m_endNode);
+        CleanUp();
     }
-    public void Clear()
+
+    public void Generate(SceneData[] data, (int, int)[] connections)
+    {
+        Clear(true);
+        foreach (var item in data)
+        {
+            GameObject nodeObj = NavigationNode.CreateNode(item, transform);
+            nodeObj.transform.localPosition = item.navLocalPosition;
+            NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
+            nodeNav.m_myIndex = m_activeNodes.Count;
+            m_activeNodes.Add(nodeNav);
+        }
+
+        for (int i = 0; i < connections.Length; i++)
+        {
+            m_activeNodes[connections[i].Item1].AddLink(m_activeNodes[connections[i].Item2], m_linePrefab);
+        }
+        m_rootNode = m_activeNodes[0];
+        m_endNode = m_activeNodes[m_activeNodes.Count - 1];
+        m_endNode.transform.localPosition = new Vector3(0, height, 0);
+    }
+
+    public void CleanUp()
+    {
+        foreach (var nodeA in m_activeNodes)
+        {
+            foreach (var nodeB in m_activeNodes)
+            {
+                //If node A and B are the same or don't have any connections
+                if (nodeA == nodeB || nodeA.m_myConnections.Count == 0 || nodeB.m_myConnections.Count == 0)
+                    continue;
+
+                //If node A and B aren't on the same depth
+                if (nodeA.m_myDepth != nodeB.m_myDepth)
+                    continue;
+
+                for (int i = nodeA.m_myConnections.Count - 1; i >= 0; i--)
+                {
+                    for (int j = nodeB.m_myConnections.Count - 1; j >= 0; j--)
+                    {
+                        //If connection A and B are going to the same target
+                        if (nodeA.m_myConnections[i].other.m_myIndex == nodeB.m_myConnections[j].other.m_myIndex)
+                            continue;
+
+                        Vector2 result = new Vector2();
+                        if(Extentions.LineIntersection(nodeA.m_myConnections[i].posA, nodeA.m_myConnections[i].posB, nodeB.m_myConnections[j].posA, nodeB.m_myConnections[j].posB, ref result))
+                        {
+                            if(nodeA.m_myConnections[i].mag >= nodeB.m_myConnections[j].mag)
+                            {
+                                Destroy(nodeA.m_myConnections[i].render.gameObject);
+                                nodeA.m_myConnections.RemoveAt(i);
+                                break;
+                            }
+                            else
+                            {
+                                Destroy(nodeB.m_myConnections[j].render.gameObject);
+                                nodeB.m_myConnections.RemoveAt(j);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void Clear(bool clearAll = false)
     {
         for (int i = m_activeNodes.Count - 1; i >= 0; i--)
         {
@@ -147,6 +231,14 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             m_activeNodes.RemoveAt(i);
         }
         m_activeNodes.Clear();
+
+        if(clearAll)
+        {
+            Destroy(m_rootNode.gameObject);
+            m_rootNode = null;
+            Destroy(m_endNode.gameObject);
+            m_endNode = null;
+        }
     }
     public void OnDrawGizmos()
     {

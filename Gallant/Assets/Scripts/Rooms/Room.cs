@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
+    public bool m_spawnOnAwake;
     public bool m_finalRoom;
     public GameObject[] m_gates;
 
@@ -27,6 +28,8 @@ public class Room : MonoBehaviour
         {
             item.SetActive(false);
         }
+        if (m_spawnOnAwake)
+            m_mySpawnner.StartCombat();
     }
 
     private void Start()
