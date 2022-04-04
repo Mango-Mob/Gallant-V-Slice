@@ -154,7 +154,7 @@ public abstract class WeaponBase : MonoBehaviour
      * @author : William de Beer
      * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
      */
-    protected void ThrowWeapon(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected GameObject ThrowWeapon(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         // Create projectile
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
@@ -162,8 +162,10 @@ public abstract class WeaponBase : MonoBehaviour
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
+
+        return projectile;
     }
-    protected void ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
+    protected GameObject ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
     {
         Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
         DamageColliders(_data, _pos, colliders);
@@ -173,12 +175,16 @@ public abstract class WeaponBase : MonoBehaviour
         ParticleSystem.MainModule mainModule = particleSystem.main;
         mainModule.startLifetime = ((_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize)) / mainModule.startSpeed.constant;
         particleSystem.Play();
+
+        return vfx;
     }
 
-    protected void ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
+    protected GameObject ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand, _charge, _canCharge);
+
+        return projectile;
     }
 
     protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)

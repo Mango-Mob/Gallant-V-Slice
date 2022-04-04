@@ -297,6 +297,12 @@ public class WeaponData : ScriptableObject
                 Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
                 break;
         }
+
+
+        if (_data.weaponType == Weapon.STAFF && _data.abilityData?.overwriteStaffIcon != null)
+        {
+            _data.weaponIcon = _data.abilityData?.overwriteStaffIcon;
+        }
     }
 
     public static WeaponData UpgradeWeaponLevel(WeaponData _data)

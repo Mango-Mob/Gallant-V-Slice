@@ -31,13 +31,32 @@ public class Weapon_Staff : WeaponBase
     }
     public override void WeaponFunctionality()
     {
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+        GameObject projectile = ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+
+        if (m_weaponData.abilityData != null)
+        {
+            ParticleSystem[] particleSystems = projectile.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particle in particleSystems)
+            {
+                ParticleSystem.MainModule mainModule = particle.main;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(m_weaponData.abilityData.droppedEnergyColor);
+            }
+        }
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
     {
-        ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
+        GameObject vfx = ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
 
+        if (m_weaponData.abilityData != null)
+        {
+            ParticleSystem[] particleSystems = vfx.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particle in particleSystems)
+            {
+                ParticleSystem.MainModule mainModule = particle.main;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(m_weaponData.abilityData.droppedEnergyColor);
+            }
+        }
     }
     public override void WeaponAltRelease() { }
 }
