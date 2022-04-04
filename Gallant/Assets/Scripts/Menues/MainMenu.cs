@@ -54,11 +54,14 @@ public class MainMenu : MonoBehaviour
             GameManager.ResetPlayerInfo();
             GameManager.ClearPlayerInfoFromFile();
             SkillTreeReader.instance.EmptyAllTrees();
-            TutorialManager.isNewPlayer = isNew;
+            
             PlayerPrefs.SetInt("SwampLevel", 0);
             PlayerPrefs.SetInt("CastleLevel", 0);
             PlayerPrefs.SetInt("FrostLevel", 0);
             PlayerPrefs.SetInt("MagmaLevel", 0);
+            EndScreenMenu.Restart();
+            LevelManager.Instance.LoadNewLevel("Tutorial");
+            return;
         }
         else
         {

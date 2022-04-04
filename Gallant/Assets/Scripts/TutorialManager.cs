@@ -1,6 +1,7 @@
 using ActorSystem.AI;
 using ActorSystem.AI.Users;
 using ActorSystem.Spawning;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,10 +17,8 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
 
     public SceneData[] m_sceneData;
 
-    public Transform[] m_tutorialPositions;
-    public TextAsset[] m_tutorialDialog;
-
-    public TextAsset[] m_classReSpecDialog;
+    public int tutorialPosition = 0;
+    public int targetDialog = 0;
     public TextAsset m_playerDeathDialog;
 
     public ClassData m_warrior;
@@ -33,7 +32,6 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public GameObject[] m_mainGameObject;
     private Image m_fade;
 
-    private int current = 0;
     private bool m_isRespawning = false;
     private bool m_playerHasDied = false;
 
@@ -62,6 +60,7 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             conData[i] = (i, i + 1);
         }
         NavigationManager.Instance.Generate(m_sceneData, conData);
+        NavigationManager.Instance.UpdateMap(0);
         NavigationManager.Instance.ConstructScene();
     }
 
@@ -84,20 +83,10 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         //    (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
         //}
         //
-        //if(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerResources.m_dead && !m_isRespawning)
-        //{
-        //    StartCoroutine(RespawnPlayer());
-        //    m_playerHasDied = true;
-        //    m_spawner.ForceEnd();
-        //    m_spawner.Restart();
-        //}
-        //
-        //if(m_playerHasDied)
-        //{
-        //    (m_guide as LoreKeeper).m_dialog = m_playerDeathDialog;
-        //    m_playerHasDied = false;
-        //
-        //}
+        if(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerResources.m_dead && !m_isRespawning)
+        {
+            StartCoroutine(RespawnPlayer());
+        }
         //
         //if(InputManager.Instance.IsKeyDown(KeyType.P))
         //{
@@ -111,49 +100,49 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         //    }
         //    PlayerPrefs.SetInt("NewPlayer", 0);
         //}
+
+        if(NavigationManager.Instance.index == 3 && tutorialPosition == 3)
+        {
+            tutorialPosition = 4;
+            targetDialog = 0;
+        }
     }
 
-    public void AdvanceTutorial()
+    public bool AdvanceTutorial()
     {
-        //if (current < 3)
-        //{
-        //    current++;
-        //    m_guide.transform.position = m_tutorialPositions[current].position;
-        //    (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
-        //}
-        //
-        //if(current == 3)
-        //{
-        //    RewardManager.Instance.Show(m_warrior.rightWeapon, m_mage.rightWeapon, m_hunter.rightWeapon, SelectClass);
-        //}
-        //
-        //if(current == 4)
-        //{
-        //    current++;
-        //    m_guide.transform.position = m_tutorialPositions[current].position;
-        //    m_guide.m_myBrain.m_myOutline.enabled = false;
-        //    (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
-        //}
+        if (tutorialPosition < 3 || tutorialPosition == 4)
+        {
+            tutorialPosition++;
+            if (tutorialPosition == 3)
+                RewardManager.Instance.Show(m_warrior.rightWeapon, m_mage.rightWeapon, m_hunter.rightWeapon, SelectClass);
+            return true;
+        }
+        
+        if(tutorialPosition == 3)
+        {
+            RewardManager.Instance.Show(m_warrior.rightWeapon, m_mage.rightWeapon, m_hunter.rightWeapon, SelectClass);
+            return false;
+        }
+        
+        return false;
     }
 
     public void SelectClass(int selected)
     {
-        //switch(selected)
-        //{
-        //    default:
-        //    case 0:
-        //        GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_warrior);
-        //        (m_guide as LoreKeeper).m_dialog = m_classReSpecDialog[selected];
-        //        break;
-        //    case 1:
-        //        GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_mage);
-        //        (m_guide as LoreKeeper).m_dialog = m_classReSpecDialog[selected];
-        //        break;
-        //    case 2:
-        //        GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_hunter);
-        //        (m_guide as LoreKeeper).m_dialog = m_classReSpecDialog[selected];
-        //        break;
-        //}
+        targetDialog = selected;
+        switch (selected)
+        {
+            default:
+            case 0:
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_warrior);
+                break;
+            case 1:
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_mage);
+                break;
+            case 2:
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_hunter);
+                break;
+        }
     }
 
     private IEnumerator RespawnPlayer()
@@ -170,17 +159,11 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             m_fade.color = new Color(0, 0, 0, 1.0f - timeIn / 3.0f);
         }       
         player.GetComponent<Player_Controller>().RespawnPlayerTo(m_respawn.position, true);
-        player.GetComponent<Player_Controller>().m_isDisabledInput = true;
-        while (timeOut > 0.0f)
-        {
-            timeOut -= Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-            m_fade.color = new Color(0, 0, 0, timeOut / 1.0f);
-        }
         m_fade.enabled = false;
-        player.GetComponent<Player_Controller>().m_isDisabledInput = false;
-        m_isRespawning = false;
-        
+        NavigationManager.Instance.UpdateMap(1);
+        LevelManager.Instance.LoadNewLevel("Tutorial");
+        tutorialPosition = 3;
+        targetDialog = 3;
         yield return null;
     }
 

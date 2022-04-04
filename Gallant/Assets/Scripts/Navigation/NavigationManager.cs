@@ -18,14 +18,21 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public float width;
     public float height;
 
+    [SerializeField] private UI_Text m_keyboardInput;
+    [SerializeField] private UI_Image m_gamepadInput;
+
+    public bool IsVisible { get { return m_myCamera.enabled && m_myCanvas.enabled; } }
     private List<NavigationNode> m_activeNodes = new List<NavigationNode>();
     private Camera m_myCamera;
+    private Canvas m_myCanvas;
 
     protected override void Awake()
     {
         base.Awake();
         m_myCamera = GetComponentInChildren<Camera>();
         m_myCamera.enabled = false;
+        m_myCanvas = GetComponent<Canvas>();
+        m_myCanvas.enabled = false;
         index = 0;
     }
 
@@ -38,14 +45,26 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Update()
     {
-        if (InputManager.Instance.IsKeyDown(KeyType.J))
+        if (IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
         {
-            SetVisibility(!m_myCamera.enabled);
+            SetVisibility(false);
         }
 
-        if(m_myCamera.enabled)
+        m_keyboardInput.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
+        m_gamepadInput.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+
+        if (m_myCamera.enabled)
         {
-            float scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+            float scrollDelta;
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
+            }
+            else
+            {
+                scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+            }
+           
             if (scrollDelta != 0)
             {
                 float y = m_myCamera.transform.localPosition.y;
@@ -63,24 +82,21 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetVisibility(bool status)
     {
         m_myCamera.enabled = status;
+        m_myCanvas.enabled = status;
         if (m_myCamera.enabled)
         {
-            m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
+            m_myCamera.transform.localPosition = new Vector3(0, m_activeNodes[index].transform.localPosition.y, -10);
         }
         HUDManager.Instance.gameObject.SetActive(!m_myCamera.enabled);
-        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = true;
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
     }
 
-    public void UpdateMap()
+    public void UpdateMap(int newIndex)
     {
-        foreach (var node in m_activeNodes)
-        {
-            node.GetComponent<Button>().interactable = false;
-        }
-
-        m_activeNodes[index].ActivateMyConnections();
+        m_activeNodes[index].DeactivateMyConnections();
+        m_activeNodes[newIndex].ActivateMyConnections();
+        index = newIndex;
     }
-
     public void ConstructScene()
     {
         if(m_activeNodes.Count > 0 && index < m_activeNodes.Count)

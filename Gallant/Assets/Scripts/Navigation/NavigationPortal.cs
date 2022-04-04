@@ -18,6 +18,7 @@ public class NavigationPortal : MonoBehaviour
 
     public void Update()
     {
+        GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
         m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
         m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
         m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
@@ -26,12 +27,13 @@ public class NavigationPortal : MonoBehaviour
     public void Interact()
     {
         NavigationManager.Instance.SetVisibility(true);
+        m_myInterface.m_isReady = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
-            m_myInterface.m_isReady = true;
+            m_myInterface.m_isReady = !GameManager.Instance.IsInCombat;
     }
     private void OnTriggerExit(Collider other)
     {

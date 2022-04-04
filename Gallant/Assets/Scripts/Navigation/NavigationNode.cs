@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class NavigationNode : MonoBehaviour
@@ -49,19 +51,40 @@ public class NavigationNode : MonoBehaviour
         {
             connection.other.GetComponent<Button>().interactable = true;
         }
+
+        ColorBlock colors = GetComponent<Button>().colors;
+        colors.disabledColor = new Color(255, 193, 0, 0.8f);
+        GetComponent<Button>().colors = colors;
+        GetComponent<Button>().interactable = false;
+
+        if(m_myConnections.Count > 0)
+            EventSystem.current.SetSelectedGameObject(m_myConnections[0].other.gameObject);
+    }
+
+    public void DeactivateMyConnections()
+    {
+        foreach (var connection in m_myConnections)
+        {
+            connection.other.GetComponent<Button>().interactable = false;
+        }
+        ColorBlock colors = GetComponent<Button>().colors;
+        colors.disabledColor = new Color(200, 200, 200, 0.5f);
+        GetComponent<Button>().colors = colors;
+        GetComponent<Button>().interactable = false;
     }
 
     public void LoadMyScene()
     {
-        NavigationManager.Instance.index = m_myIndex;
+        NavigationManager.Instance.UpdateMap(m_myIndex);
         NavigationManager.Instance.SetVisibility(false);
-        LevelManager.Instance.LoadNewLevel("SceneLoadTest");
-        NavigationManager.Instance.UpdateMap();
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+        LevelManager.Instance.LoadNewLevel(m_myData.sceneToLoad);
     }
 
     public static GameObject CreateNode(SceneData data, Transform parent)
     {
         GameObject nodeObj = new GameObject();
+        nodeObj.name = $"NavNode ({data.name})";
         nodeObj.transform.SetParent(parent);
         nodeObj.transform.localPosition = Vector3.zero;
         nodeObj.transform.localRotation = Quaternion.identity;
@@ -76,7 +99,9 @@ public class NavigationNode : MonoBehaviour
         nodeObj.AddComponent<NavigationNode>();
         nodeObj.GetComponent<NavigationNode>().m_myData = data;
         nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().LoadMyScene);
-
+        nodeObj.GetComponent<Button>().interactable = false;
         return nodeObj;
     }
+
+    
 }
