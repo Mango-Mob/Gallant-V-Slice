@@ -37,13 +37,17 @@ public class CrossbowBolt : BasePlayerProjectile
             Destruct();
         }
     }
+    protected override void EnvironmentCollision()
+    {
+        Destruct();
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (hitList.Contains(other.gameObject))
             return;
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
-        if (layerMask == (layerMask | (1 << other.gameObject.layer)))
+        if (layerMask == (layerMask | (1 << other.gameObject.layer)) || (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment")))
         {
             ProjectileCollide(other);
             if (other.gameObject.layer == LayerMask.NameToLayer("Attackable") && m_destructOnHit)

@@ -72,13 +72,17 @@ public class ShieldProjectile : BasePlayerProjectile
             transform.position += m_projectileSpeed * direction * Time.fixedDeltaTime; // Move projectile
         }
     }
+    protected override void EnvironmentCollision()
+    {
+        m_returning = true;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (hitList.Contains(other.gameObject))
             return;
         //if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         LayerMask layerMask = m_projectileUser.playerController.playerAttack.m_attackTargets;
-        if (layerMask == (layerMask | (1 << other.gameObject.layer)))
+        if (layerMask == (layerMask | (1 << other.gameObject.layer)) || (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment")))
         {
             int hitCount = hitList.Count;
             ProjectileCollide(other);

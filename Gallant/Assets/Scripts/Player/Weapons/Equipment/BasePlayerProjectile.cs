@@ -23,7 +23,6 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     public float m_projectileSpeed = 10.0f;
     public WeaponData m_weaponData;
 
-
     protected Hand m_hand; // Hand to return to
     protected Transform m_handTransform;
 
@@ -39,6 +38,8 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     private float m_scaleLerp = 0.0f;
     public float m_thrownScale = 1.0f;
     private Vector3 m_startScale;
+
+    [SerializeField] protected bool m_canCollideWithEnvironment = true;
 
     [Header("Status")]
     public EnemyStatus m_appliedStatusOnHit;
@@ -172,6 +173,12 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             }
             return true;
         }
+
+        if (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment"))
+        {
+            EnvironmentCollision();
+        }
+
         return false;
     }
     public void Destruct()
@@ -190,6 +197,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         Destroy(gameObject);
     }
+    protected abstract void EnvironmentCollision();
 
     /*******************
      * SetReturnInfo : Sets the information of the user who threw the boomerang and who it should be returned to.

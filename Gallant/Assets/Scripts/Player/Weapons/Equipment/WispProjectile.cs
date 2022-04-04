@@ -122,6 +122,10 @@ public class WispProjectile : BasePlayerProjectile
         m_charge = _charge;
     }
 
+    protected override void EnvironmentCollision()
+    {
+        // ¯\_(ツ)_/¯
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (m_activated)
