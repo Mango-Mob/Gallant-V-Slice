@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Whirlpool : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class Whirlpool : MonoBehaviour
     void Start()
     {
         particles = GetComponentInChildren<ParticleSystem>();
+        VisualEffect vfx = gameObject.GetComponentInChildren<VisualEffect>();
+        vfx.SetFloat("Duration", m_data.lifetime);
     }
 
     // Update is called once per frame
@@ -38,7 +41,8 @@ public class Whirlpool : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((transform.position - actor.transform.position).normalized * m_data.effectiveness);
+                Vector3 forward = (transform.position - actor.transform.position).normalized * m_data.effectiveness;
+                actor.KnockbackActor(Quaternion.Euler(0.0f, 15.0f, 0.0f) * forward);
             }
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
