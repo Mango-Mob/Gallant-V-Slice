@@ -68,6 +68,11 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_rightController;
     [SerializeField] private Image m_rightBar;
 
+    [SerializeField] private GameObject m_mainHand;
+    [SerializeField] private Image m_mainKeyboard;
+    [SerializeField] private Image m_mainController;
+    [SerializeField] private Image m_mainBar;
+
     private Player_Controller playerController;
     private Animator m_animator;
 
@@ -108,10 +113,19 @@ public class InfoDisplay : MonoBehaviour
             m_rightController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
             m_rightController.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
 
+            m_mainKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
+            m_mainController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+            m_mainController.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
+
             m_leftBar.fillAmount = Mathf.Clamp(m_leftBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
             m_rightBar.fillAmount = Mathf.Clamp(m_rightBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
+            m_mainBar.fillAmount = Mathf.Clamp(m_mainBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
 
             m_animator?.SetBool("IsDrop", IsADrop || IsEquip);
+
+            m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
+            m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+            m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
         }
 
         if(m_selected || IsADrop || IsEquip)
@@ -164,6 +178,8 @@ public class InfoDisplay : MonoBehaviour
         m_title.text = data.weaponName;
         m_level.text = "Level: " + (data.m_level + 1).ToString();
         m_weaponImageLoc.sprite = data.weaponIcon;
+        m_altTitle.SetText(data.m_altAttackName);
+        m_altDescription.SetText(WeaponData.EvaluateDescription(data));
         m_altImage.sprite = data.altAttackIcon;
 
         if (data.abilityData != null)
@@ -269,6 +285,7 @@ public class InfoDisplay : MonoBehaviour
         {
             m_leftBar.fillAmount = 0.0f;
             m_rightBar.fillAmount = 0.0f;
+            m_mainBar.fillAmount = 0.0f;
         }
     }
 
@@ -294,36 +311,56 @@ public class InfoDisplay : MonoBehaviour
 
     public bool UpdatePickupTimer(WeaponData _heldWeapon, Hand _hand)
     {
-        if (m_currentHandInUse != _hand)
-        {
-            m_leftBar.fillAmount = 0.0f;
-            m_rightBar.fillAmount = 0.0f;
-            InitDisplayValues(_heldWeapon, _hand);
-        
-            bool usingLeft = _hand == Hand.LEFT;
-            Color active = Color.white;
-            Color deactive = Color.white;
-            deactive.a = 0.5f;
-        
-            if(InputManager.Instance.isInGamepadMode)
-            {
-                m_leftController.color = usingLeft ? active : deactive;
-                m_rightController.color = !usingLeft ? active : deactive;
-            }
-            else
-            {
-                m_leftKeyboard.color = usingLeft ? active : deactive;
-                m_rightKeyboard.color = !usingLeft ? active : deactive;
-            }
-        }
-
         m_currentHandInUse = _hand;
         
-        Image timer = m_currentHandInUse == Hand.LEFT ? m_leftBar : m_rightBar;
-        
-        timer.fillAmount = Mathf.Clamp(timer.fillAmount + 2.0f * Time.deltaTime, 0.0f, 1.0f);
-        if (timer.fillAmount >= 1.0f)
-            return true;
+        if(m_mainHand.activeInHierarchy)
+        {
+            if(_hand == Hand.RIGHT)
+            {
+                Image timer = m_mainBar;
+
+                InitDisplayValues(playerController.playerAttack.m_rightWeapon.m_weaponData, _hand);
+
+                Color active = Color.white;
+                m_mainController.color = active;
+
+                timer.fillAmount = Mathf.Clamp(timer.fillAmount + 2.0f * Time.deltaTime, 0.0f, 1.0f);
+                if (timer.fillAmount >= 1.0f)
+                    return true;
+            }
+        }
+        else
+        {
+            if (m_currentHandInUse != _hand)
+            {
+                m_leftBar.fillAmount = 0.0f;
+                m_rightBar.fillAmount = 0.0f;
+                m_mainBar.fillAmount = 0.0f;
+                InitDisplayValues(_heldWeapon, _hand);
+
+                bool usingLeft = _hand == Hand.LEFT;
+                Color active = Color.white;
+                Color deactive = Color.white;
+                deactive.a = 0.5f;
+
+                if (InputManager.Instance.isInGamepadMode)
+                {
+                    m_leftController.color = usingLeft ? active : deactive;
+                    m_rightController.color = !usingLeft ? active : deactive;
+                }
+                else
+                {
+                    m_leftKeyboard.color = usingLeft ? active : deactive;
+                    m_rightKeyboard.color = !usingLeft ? active : deactive;
+                }
+            }
+
+            Image timer = m_currentHandInUse == Hand.LEFT ? m_leftBar : m_rightBar;
+
+            timer.fillAmount = Mathf.Clamp(timer.fillAmount + 2.0f * Time.deltaTime, 0.0f, 1.0f);
+            if (timer.fillAmount >= 1.0f)
+                return true;
+        }
 
         return false;
     }

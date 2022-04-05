@@ -7,13 +7,24 @@ using UnityEngine;
 
 public class NavigationPortal : MonoBehaviour
 {
+    public bool GenerateOnAwake = false;
+    public SceneData[] m_dataToGenerateFrom;
+    public SceneData m_endNode;
+
     [SerializeField] private UI_Text m_keyboardInput;
     [SerializeField] private UI_Image m_gamepadInput;
     private Interactable m_myInterface;
 
-    private void Awake()
+    private void Start()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
+        if(GenerateOnAwake && m_dataToGenerateFrom.Length != 0)
+        {
+            NavigationManager.Instance.m_sceneData = m_dataToGenerateFrom;
+            NavigationManager.Instance.SetEnd(m_endNode);
+            NavigationManager.Instance.Generate(6, 2, 6);
+            NavigationManager.Instance.UpdateMap(0);
+        }
     }
 
     public void Update()
