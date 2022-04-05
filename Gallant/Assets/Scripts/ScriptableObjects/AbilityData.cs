@@ -36,7 +36,7 @@ public class AbilityData : ScriptableObject
     [Tooltip("The duration of any buff or status effect applied to the target. (does not apply to all abilities).")]
     public float duration = 0.0f; // The duration of any buff or status effect applied to the target. (does not apply to all abilities)
 
-    public float lastCooldown = 0.0f;
+    [HideInInspector] public float lastCooldown = 0.0f;
     public bool isPassive = false;
 
     public Sprite overwriteStaffIcon;

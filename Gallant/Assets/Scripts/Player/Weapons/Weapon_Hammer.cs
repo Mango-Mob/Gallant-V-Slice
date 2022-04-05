@@ -25,7 +25,7 @@ public class Weapon_Hammer : Weapon_Sword
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
     {
-        GroundSlam(m_weaponData, transform.position, new StunStatus(3.0f));
+        GroundSlam(m_weaponData, transform.position, new StunStatus(5.0f));
         playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType);
         GameObject newObject = Instantiate(m_vfxPrefab, transform.position, Quaternion.identity);
         newObject.transform.localScale *= m_weaponData.altHitSize * 4.0f;

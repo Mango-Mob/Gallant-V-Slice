@@ -42,7 +42,7 @@ public class SerializedWeapon
         if (_weapon.m_level == -2)
             return null;
 
-        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Substring(0, 6) == "Wooden"));
+        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Length > 6 && _weapon.m_weaponModel.Substring(0, 6) == "Wooden"));
 
         data.m_damage = _weapon.m_damage;
         data.m_speed = _weapon.m_speed;
@@ -292,6 +292,9 @@ public class WeaponData : ScriptableObject
                 break;
             case Ability.ROLL_BASH:
                 _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
+                break;
+            case Ability.WHIRLPOOL:
+                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
                 break;
             default:
                 Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
