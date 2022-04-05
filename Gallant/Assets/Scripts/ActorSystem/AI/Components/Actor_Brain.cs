@@ -176,11 +176,7 @@ namespace ActorSystem.AI.Components
             m_audioAgent?.Load(Actor_AudioAgent.SoundEffectType.Death, _data.deathSounds);
             m_audioAgent?.Finalise();
 
-            //Colliders
-            foreach (var item in GetComponentsInChildren<Collider>())
-            {
-                item.enabled = true;
-            }
+            m_ragDoll?.DisableRagdoll();
 
             //Start
             if(_data.invincible && m_refreshTimer == null)
@@ -321,10 +317,7 @@ namespace ActorSystem.AI.Components
                 material.RefreshColor();
             }
 
-            foreach (var item in GetComponentsInChildren<Collider>())
-            {
-                item.enabled = true;
-            }
+            m_ragDoll.DisableRagdoll();
         }
 
         public void DropOrbs(int amount, Vector3 position)
