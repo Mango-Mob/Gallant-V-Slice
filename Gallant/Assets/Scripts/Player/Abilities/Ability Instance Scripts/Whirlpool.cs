@@ -19,7 +19,7 @@ public class Whirlpool : MonoBehaviour
     void Update()
     {
         m_lifeTimer += Time.deltaTime;
-        if (m_lifeTimer > m_data.lifetime)
+        if (m_lifeTimer > m_data.duration)
         {
             particles.Stop();
             particles.transform.SetParent(null);
@@ -38,7 +38,7 @@ public class Whirlpool : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_data.effectiveness * Time.fixedDeltaTime);
+                actor.KnockbackActor((transform.position - actor.transform.position).normalized * m_data.effectiveness);
             }
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
