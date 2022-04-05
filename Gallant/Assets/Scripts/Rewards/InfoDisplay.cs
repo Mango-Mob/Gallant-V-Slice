@@ -46,6 +46,7 @@ public class InfoDisplay : MonoBehaviour
 
     [Header("Back Information")]
     [SerializeField] private TMP_Text m_altTitle;
+    [SerializeField] private Image m_altImage;
     [SerializeField] private TMP_Text m_altDescription;
     [SerializeField] private TMP_Text m_abilityTitle;
     [SerializeField] private TMP_Text m_abilityDescription;
@@ -163,8 +164,9 @@ public class InfoDisplay : MonoBehaviour
         m_title.text = data.weaponName;
         m_level.text = "Level: " + (data.m_level + 1).ToString();
         m_weaponImageLoc.sprite = data.weaponIcon;
+        m_altImage.sprite = data.altAttackIcon;
 
-        if(data.abilityData != null)
+        if (data.abilityData != null)
         {
             m_abilityImageLoc.sprite = data.abilityData.abilityIcon;
             m_abilityBackImageLoc.sprite = data.abilityData.abilityIcon;
@@ -195,7 +197,7 @@ public class InfoDisplay : MonoBehaviour
         playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
 
         m_damage.text = data.m_damage.ToString();
-        m_speed.text = data.m_speed.ToString("0.00") + $"+ ({(playerController.playerStats.m_attackSpeed - 1.0f).ToString("0.0%")})";
+        m_speed.text = data.m_speed.ToString("0.00");
         m_impact.text = data.m_impact.ToString("0.00");
         m_piercing.text = data.m_piercing.ToString("0.00");
         m_passiveText.text = data.GetPassiveEffectDescription();
@@ -280,12 +282,14 @@ public class InfoDisplay : MonoBehaviour
             CompareVariables(m_weaponData.m_damage, 0, m_damage);
             CompareVariables(m_weaponData.m_speed, 0, m_speed);
             CompareVariables(m_weaponData.m_impact, 0, m_impact);
+            CompareVariables(m_weaponData.m_piercing, 0, m_piercing);
             return;
         }
 
         CompareVariables(m_weaponData.m_damage, data.m_damage, m_damage);
         CompareVariables(m_weaponData.m_speed, data.m_speed, m_speed);
         CompareVariables(m_weaponData.m_impact, data.m_impact, m_impact);
+        CompareVariables(m_weaponData.m_piercing, data.m_impact, m_piercing);
     }
 
     public bool UpdatePickupTimer(WeaponData _heldWeapon, Hand _hand)
