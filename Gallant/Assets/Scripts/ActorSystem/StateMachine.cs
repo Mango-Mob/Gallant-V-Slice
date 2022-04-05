@@ -36,8 +36,8 @@ public abstract class StateMachine : MonoBehaviour
             case State.Type.ATTACK:
                 SetState(new State_Attack(this));
                 break;
-            case State.Type.KEEP_AWAY_FROM_TARGET:
-                SetState(new State_KeepAwayFromTarget(this));
+            case State.Type.STAGGER:
+                SetState(new State_Staggered(this));
                 break;
             case State.Type.DEAD:
                 SetState(new State_Dead(this));

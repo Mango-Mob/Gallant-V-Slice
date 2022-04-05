@@ -39,6 +39,15 @@ public class ArcaneboltProjectile : BaseAbilityProjectile
             GameObject impact = Instantiate(m_impactPrefab,
                 transform.position,
                 transform.rotation);
+
+            ParticleSystem[] particleSystems = impact.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particle in particleSystems)
+            {
+                ParticleSystem.MainModule mainModule = particle.main;
+                Color newColor = m_data.droppedEnergyColor;
+                newColor.a = mainModule.startColor.color.a;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+            }
         }
         Destroy(gameObject);
     }

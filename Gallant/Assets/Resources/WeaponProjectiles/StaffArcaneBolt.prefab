@@ -55,7 +55,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.05
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -202,9 +202,9 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 2
+      minMaxState: 0
       minColor: {r: 0.8463774, g: 0, b: 1, a: 1}
-      maxColor: {r: 0.05724907, g: 0, b: 1, a: 1}
+      maxColor: {r: 0.4067731, g: 0, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4800,7 +4800,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   looping: 1
-  prewarm: 1
+  prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
@@ -4808,7 +4808,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.05
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -4955,9 +4955,9 @@ ParticleSystem:
         m_RotationOrder: 4
     startColor:
       serializedVersion: 2
-      minMaxState: 2
+      minMaxState: 0
       minColor: {r: 0.8463774, g: 0, b: 1, a: 1}
-      maxColor: {r: 0.05724907, g: 0, b: 1, a: 1}
+      maxColor: {r: 0.4067731, g: 0, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9607,6 +9607,9 @@ MonoBehaviour:
   m_projectileSpeed: 10
   m_weaponData: {fileID: 0}
   m_thrownScale: 1
+  m_canCollideWithEnvironment: 1
+  m_overrideHitVFX: {fileID: 3577562659061573074, guid: a7963194313a5c244bd8667e06fe08f0,
+    type: 3}
   m_appliedStatusOnHit: 0
   m_statusStrengthMult: 1
   m_statusDuration: 1

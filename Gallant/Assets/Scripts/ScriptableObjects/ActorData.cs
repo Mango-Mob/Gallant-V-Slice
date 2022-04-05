@@ -9,9 +9,10 @@ public class ActorData : ScriptableObject
 
     [Header("Base Stats")]
     public float health;
+    public float stamina;
+    public float staminaReg;
     public float cost;
 
-    public float agility;
     public string ActorName;
     public float baseSpeed;
 
@@ -32,6 +33,8 @@ public class ActorData : ScriptableObject
 
     [Header("Changes per room level")]
     public float deltaHealth = 0;
+    public float deltaStamina = 0;
+    public float deltaStaminaReg;
     public float deltaSpeed = 0;
     public float deltaAdrenaline = 0;
     public float deltaPhyResist = 0;

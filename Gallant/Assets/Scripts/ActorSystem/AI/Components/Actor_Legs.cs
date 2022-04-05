@@ -106,7 +106,7 @@ namespace ActorSystem.AI.Components
             m_agent.updatePosition = !m_isKnocked && !m_isSeekingMesh;
             m_body.isKinematic = !m_isKnocked && !m_isSeekingMesh;
             
-            if (m_isKnocked && (m_body.velocity.magnitude < 1.0f || Vector3.Distance(m_lastPosition, transform.position) < 0.005f))
+            if (m_isKnocked && m_body.velocity.magnitude < 1.0f)
             {
                 m_isKnocked = false;
                 m_delayTimer = 0.25f;
@@ -173,6 +173,12 @@ namespace ActorSystem.AI.Components
         {
             if (m_agent.enabled && m_agent.isOnNavMesh)
                 m_agent.isStopped = true;
+
+            if (m_isKnocked)
+            {
+                m_isKnocked = false;
+                m_delayTimer = 0.25f;
+            }
         }
 
         /*******************
