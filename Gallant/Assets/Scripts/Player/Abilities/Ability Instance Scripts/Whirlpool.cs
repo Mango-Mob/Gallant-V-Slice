@@ -38,7 +38,7 @@ public class Whirlpool : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized);
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_data.effectiveness * Time.fixedDeltaTime);
             }
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
