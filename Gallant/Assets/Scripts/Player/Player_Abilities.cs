@@ -12,6 +12,7 @@ public enum Ability
     ARCANE_BOLT,
     FLAME_ROLL,
     ROLL_BASH,
+    WHIRLPOOL,
 
     NONE,
 }
@@ -159,7 +160,10 @@ public class Player_Abilities : MonoBehaviour
             case Ability.ROLL_BASH:
                 abilityScript = gameObject.AddComponent<Ability_RollBash>();
                 break;
-            default:
+            case Ability.WHIRLPOOL:
+                abilityScript = gameObject.AddComponent<Ability_Whirlpool>();
+                break;
+                default:
                 Debug.Log("No ability script set for " + _ability);
                 break;
         }

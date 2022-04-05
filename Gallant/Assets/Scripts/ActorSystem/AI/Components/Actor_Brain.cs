@@ -317,7 +317,7 @@ namespace ActorSystem.AI.Components
                 material.RefreshColor();
             }
 
-            m_ragDoll.DisableRagdoll();
+            m_ragDoll?.DisableRagdoll();
         }
 
         public void DropOrbs(int amount, Vector3 position)
