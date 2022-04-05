@@ -10,7 +10,7 @@ public class SerializedWeapon
     public int m_level = 0;
     public int m_damage = 10;
     public float m_speed = 1;
-    public float m_knockback = 1;
+    public float m_impact = 1;
     public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public string m_weaponModel;
@@ -29,7 +29,7 @@ public class SerializedWeapon
         weapon.m_level = _data.m_level;
         weapon.m_damage = _data.m_damage;
         weapon.m_speed = _data.m_speed;
-        weapon.m_knockback = _data.m_knockback;
+        weapon.m_impact = _data.m_impact;
         weapon.m_piercing = _data.m_piercing;
         weapon.m_projectileSpeed = _data.m_projectileSpeed;
         weapon.m_weaponModel = _data.weaponModelPrefab.name;
@@ -46,7 +46,7 @@ public class SerializedWeapon
 
         data.m_damage = _weapon.m_damage;
         data.m_speed = _weapon.m_speed;
-        data.m_knockback = _weapon.m_knockback;
+        data.m_impact = _weapon.m_impact;
         data.m_projectileSpeed = _weapon.m_projectileSpeed;
         data.weaponModelPrefab = Resources.Load<GameObject>("Weapons/Held Weapons/" + _weapon.m_weaponModel);
 
@@ -87,7 +87,7 @@ public class WeaponData : ScriptableObject
     public int m_level = 0;
     public int m_damage = 10; 
     public float m_speed = 1;
-    public float m_knockback = 1;
+    public float m_impact = 1;
     public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public float m_attackMoveSpeed = 0.5f;
@@ -98,7 +98,7 @@ public class WeaponData : ScriptableObject
     public Sprite altAttackIcon;
     public float m_altDamageMult = 1.0f;
     public float m_altSpeedMult = 1.0f;
-    public float m_altKnockbackMult = 1.0f;
+    public float m_altImpactMult = 1.0f;
     public float m_attackAltMoveSpeed = 0.5f;
     public float altHitCenterOffset = 0.75f;
     public float altHitSize = 1.0f;
@@ -433,7 +433,7 @@ public class WeaponData : ScriptableObject
         this.m_level = other.m_level;
         this.m_damage = other.m_damage;
         this.m_speed = other.m_speed;
-        this.m_knockback = other.m_knockback;
+        this.m_impact = other.m_impact;
         this.m_projectileSpeed = other.m_projectileSpeed;
         this.m_attackMoveSpeed = other.m_attackMoveSpeed;
         this.m_dashSpeed = other.m_dashSpeed;
@@ -442,7 +442,7 @@ public class WeaponData : ScriptableObject
         this.altAttackIcon = other.altAttackIcon;
         this.m_altDamageMult = other.m_altDamageMult;
         this.m_altSpeedMult = other.m_altSpeedMult;
-        this.m_altKnockbackMult = other.m_altKnockbackMult;
+        this.m_altImpactMult = other.m_altImpactMult;
         this.m_attackAltMoveSpeed = other.m_attackAltMoveSpeed;
         this.altHitCenterOffset = other.altHitCenterOffset;
         this.altHitSize = other.altHitSize;

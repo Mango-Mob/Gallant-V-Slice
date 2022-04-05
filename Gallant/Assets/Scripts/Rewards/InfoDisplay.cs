@@ -38,7 +38,7 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_abilityImageLoc;
     [SerializeField] private Text m_damage;
     [SerializeField] private Text m_speed;
-    [SerializeField] private Text m_knockback;
+    [SerializeField] private Text m_impact;
     [SerializeField] private Text m_piercing;
     [SerializeField] private GameObject m_passiveLocation;
     [SerializeField] private Text m_passiveText;
@@ -196,7 +196,7 @@ public class InfoDisplay : MonoBehaviour
 
         m_damage.text = data.m_damage.ToString();
         m_speed.text = data.m_speed.ToString("0.00") + $"+ ({(playerController.playerStats.m_attackSpeed - 1.0f).ToString("0.0%")})";
-        m_knockback.text = data.m_knockback.ToString("0.00");
+        m_impact.text = data.m_impact.ToString("0.00");
         m_piercing.text = data.m_piercing.ToString("0.00");
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
@@ -279,13 +279,13 @@ public class InfoDisplay : MonoBehaviour
         {
             CompareVariables(m_weaponData.m_damage, 0, m_damage);
             CompareVariables(m_weaponData.m_speed, 0, m_speed);
-            CompareVariables(m_weaponData.m_knockback, 0, m_knockback);
+            CompareVariables(m_weaponData.m_impact, 0, m_impact);
             return;
         }
 
         CompareVariables(m_weaponData.m_damage, data.m_damage, m_damage);
         CompareVariables(m_weaponData.m_speed, data.m_speed, m_speed);
-        CompareVariables(m_weaponData.m_knockback, data.m_knockback, m_knockback);
+        CompareVariables(m_weaponData.m_impact, data.m_impact, m_impact);
     }
 
     public bool UpdatePickupTimer(WeaponData _heldWeapon, Hand _hand)

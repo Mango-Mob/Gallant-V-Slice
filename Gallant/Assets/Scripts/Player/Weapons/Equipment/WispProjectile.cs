@@ -142,7 +142,7 @@ public class WispProjectile : BasePlayerProjectile
             if (actor != null && !actor.m_myBrain.IsDead)
             {
                 hitList.Add(other.gameObject);
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
+                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_impact * m_charge);
                 enemyCheck = true;
             }
 

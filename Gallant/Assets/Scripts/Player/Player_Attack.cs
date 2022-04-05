@@ -633,7 +633,7 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
-    public void DamageTarget(GameObject _target, float _damage, float _knockbackForce = 5.0f, float _piercingVal = 0, CombatSystem.DamageType _damageType = CombatSystem.DamageType.Physical, Vector3 _damageSource = default(Vector3))
+    public void DamageTarget(GameObject _target, float _damage, float _impactForce = 5.0f, float _piercingVal = 0, CombatSystem.DamageType _damageType = CombatSystem.DamageType.Physical, Vector3 _damageSource = default(Vector3))
     {
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
@@ -665,14 +665,14 @@ public class Player_Attack : MonoBehaviour
         Destructible destructible = _target.GetComponentInParent<Destructible>();
         if (destructible != null)
         {
-            destructible.ExplodeObject(transform.position, _knockbackForce * 8.0f, 20.0f);
+            destructible.ExplodeObject(transform.position, _impactForce * 8.0f, 20.0f);
         }
 
         if (LayerMask.LayerToName(_target.layer) == "Rubble")
         {
             Rigidbody rigidbody = _target.GetComponent<Rigidbody>();
             if (rigidbody)
-                rigidbody.AddExplosionForce(_knockbackForce * 8.0f, transform.position, 20.0f);
+                rigidbody.AddExplosionForce(_impactForce * 8.0f, transform.position, 20.0f);
         }
     }
 

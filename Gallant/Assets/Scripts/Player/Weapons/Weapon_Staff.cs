@@ -49,7 +49,7 @@ public class Weapon_Staff : WeaponBase
             }
         }
 
-        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = true;
+        
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
