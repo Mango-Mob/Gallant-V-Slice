@@ -9,6 +9,12 @@ public class Weapon_Staff : WeaponBase
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/StaffArcaneBolt");
         m_objectAltPrefab = Resources.Load<GameObject>("VFX/ArcanePush");
+
+        m_overrideHitVFXPrefab = Resources.Load<GameObject>("VFX/ArcaneHit");
+        m_overrideAltHitVFXPrefab = Resources.Load<GameObject>("VFX/ArcaneHit");
+
+        m_isVFXColored = true;
+        m_isAltVFXColored = true;
         base.Awake();
     }
 
@@ -42,6 +48,8 @@ public class Weapon_Staff : WeaponBase
                 mainModule.startColor = new ParticleSystem.MinMaxGradient(m_weaponData.abilityData.droppedEnergyColor);
             }
         }
+
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = true;
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 

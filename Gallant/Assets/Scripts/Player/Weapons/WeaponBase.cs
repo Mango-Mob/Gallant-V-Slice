@@ -17,8 +17,12 @@ public abstract class WeaponBase : MonoBehaviour
 
     public Hand m_hand;
 
-    private GameObject m_hitVFXPrefab;
+    protected GameObject m_overrideHitVFXPrefab;
+    protected GameObject m_overrideAltHitVFXPrefab;
     public bool m_attackReady = false;
+
+    protected bool m_isVFXColored = false;
+    protected bool m_isAltVFXColored = false;
 
     // Start is called before the first frame update
     protected void Awake()
@@ -104,7 +108,16 @@ public abstract class WeaponBase : MonoBehaviour
             hitList.Add(collider.gameObject);
 
             if (!isRubble)
-                playerController.playerAttack.CreateVFX(collider, _source);
+            {
+                if (m_weaponData.abilityData && (m_hand == Hand.LEFT && m_isAltVFXColored || m_hand == Hand.RIGHT && m_isVFXColored))
+                {
+                    playerController.playerAttack.CreateVFX(collider, _source, m_weaponData.abilityData.droppedEnergyColor, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                }
+                else
+                {
+                    playerController.playerAttack.CreateVFX(collider, _source, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                }
+            }
         }
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
@@ -159,6 +172,7 @@ public abstract class WeaponBase : MonoBehaviour
         // Create projectile
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand); // Set the information of the user to return to
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
@@ -183,6 +197,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand, _charge, _canCharge);
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
 
         return projectile;
     }
@@ -193,6 +208,7 @@ public abstract class WeaponBase : MonoBehaviour
         projectile.transform.position += Vector3.up * playerController.playerAttack.m_swingHeight + _pos;
         projectile.transform.rotation = Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up);
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand);
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;

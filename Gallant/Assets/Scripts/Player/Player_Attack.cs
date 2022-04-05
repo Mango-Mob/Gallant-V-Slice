@@ -790,9 +790,23 @@ public class Player_Attack : MonoBehaviour
                 return;
         }
     }
-    public void CreateVFX(Collider _target, Vector3 _hitSource)
+    public GameObject CreateVFX(Collider _target, Vector3 _hitSource, GameObject _prefab = null)
     {
-        GameObject newObject = Instantiate(m_hitVFXPrefab, _target.ClosestPoint(_hitSource), Quaternion.identity);
+        GameObject newObject = Instantiate(_prefab == null ? m_hitVFXPrefab : _prefab, _target.ClosestPoint(_hitSource), Quaternion.identity);
+        return newObject;
+    }
+    public GameObject CreateVFX(Collider _target, Vector3 _hitSource, Color _color, GameObject _prefab = null)
+    {
+        GameObject newObject = CreateVFX(_target, _hitSource, _prefab);
+        ParticleSystem[] particleSystems = newObject.GetComponentsInChildren<ParticleSystem>();
+        foreach (var particle in particleSystems)
+        {
+            ParticleSystem.MainModule mainModule = particle.main;
+            Color newColor = _color;
+            newColor.a = mainModule.startColor.color.a;
+            mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+        }
+        return newObject;
     }
 
     public void GetReadiedWeapon()

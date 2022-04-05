@@ -40,6 +40,8 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     private Vector3 m_startScale;
 
     [SerializeField] protected bool m_canCollideWithEnvironment = true;
+    [SerializeField] protected GameObject m_overrideHitVFX;
+    public bool m_overrideHitVFXColor = false;
 
     [Header("Status")]
     public EnemyStatus m_appliedStatusOnHit;
@@ -136,7 +138,11 @@ public abstract class BasePlayerProjectile : MonoBehaviour
         if (!isRubble)
         {
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
-            m_projectileUser.CreateVFX(other, transform.position);
+
+            if (m_overrideHitVFXColor && m_weaponData.abilityData && m_overrideHitVFX)
+                m_projectileUser.CreateVFX(other, transform.position, m_weaponData.abilityData.droppedEnergyColor, m_overrideHitVFX);
+            else
+                m_projectileUser.CreateVFX(other, transform.position, m_overrideHitVFX);
         }
 
         Actor actor = other.GetComponentInParent<Actor>();
