@@ -35,11 +35,11 @@ namespace ActorSystem.AI.Components
             m_parentCollider.enabled = true;
             foreach (var collider in m_colliders)
             {
-                collider.enabled = m_enabledRag;
+                collider.enabled = false;
             }
             foreach (var body in m_bodies)
             {
-                body.isKinematic = !m_enabledRag;
+                body.isKinematic = true;
             }
         }
 
@@ -49,11 +49,11 @@ namespace ActorSystem.AI.Components
             m_parentCollider.enabled = false;
             foreach (var collider in m_colliders)
             {
-                collider.enabled = m_enabledRag;
+                collider.enabled = true;
             }
             foreach (var body in m_bodies)
             {
-                body.isKinematic = !m_enabledRag;
+                body.isKinematic = false;
             }
         }
     }

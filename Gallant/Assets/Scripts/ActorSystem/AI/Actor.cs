@@ -107,9 +107,6 @@ namespace ActorSystem.AI
         {
             if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
                 m_myBrain.m_legs.KnockBack(force);
-
-            if (m_myBrain.m_ragDoll != null && m_myBrain.m_ragDoll.enabled)
-                m_myBrain.m_ragDoll.velocity = force * 3;
         }
 
         public void SetTarget(GameObject _target)
@@ -175,6 +172,13 @@ namespace ActorSystem.AI
                     return;
                 }
             }
+        }
+
+        public virtual void DealImpactDamage(float amount, Vector3 direction)
+        {
+
+            if (m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
+                m_myBrain.m_legs.KnockBack(amount * direction);
         }
 
         public void SetActorResistance(float val, CombatSystem.DamageType _type)

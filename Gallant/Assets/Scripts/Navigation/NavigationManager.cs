@@ -11,7 +11,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public SceneData[] m_sceneData;
 
-    public int index;
+    public int index = -1;
     public Vector2 iconNoise;
 
     public float cameraSpeed = 10f;
@@ -39,7 +39,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void Start()
     {
         //Generate(6, 2, 6);
-        //UpdateMap();
+        //UpdateMap(0);
         //ConstructScene();
     }
 
@@ -99,7 +99,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     }
     public void ConstructScene()
     {
-        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count)
+        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index > 0)
             Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
     }
 

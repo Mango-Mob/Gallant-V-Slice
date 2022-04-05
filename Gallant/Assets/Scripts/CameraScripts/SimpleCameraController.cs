@@ -77,6 +77,7 @@ public class SimpleCameraController : MonoBehaviour
 
         m_TargetCameraState.SetFromTransform(transform);
         m_InterpolatingCameraState.SetFromTransform(transform);
+        
     }
 
     Vector3 GetInputTranslationDirection()
@@ -109,7 +110,10 @@ public class SimpleCameraController : MonoBehaviour
         }
         return direction.normalized;
     }
-    
+    private void Awake()
+    {
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
     void Update()
     {
         Vector3 translation = Vector3.zero;
