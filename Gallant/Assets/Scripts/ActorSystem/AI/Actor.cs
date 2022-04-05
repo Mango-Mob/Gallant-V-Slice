@@ -112,6 +112,8 @@ namespace ActorSystem.AI
         {
             if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
                 m_myBrain.m_legs.KnockBack(force);
+
+            //DealImpactDamage(force.magnitude, 0, force.normalized, CombatSystem.DamageType.True);
         }   
 
         public void SetTarget(GameObject _target)
