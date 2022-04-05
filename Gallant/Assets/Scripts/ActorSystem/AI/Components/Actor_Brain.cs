@@ -20,6 +20,7 @@ namespace ActorSystem.AI.Components
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
+
         public Actor_Material[] m_materials { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
         public Actor_MiniMapIcon m_icon {get; private set;}
@@ -35,22 +36,27 @@ namespace ActorSystem.AI.Components
         public bool m_forceShowUI = false;
         
         [Header("Preview")]
-        public float m_agility;
         public float m_currHealth;
+        public float m_currStamina;
         public float m_currPhyResist;
         public float m_currAbilResist;
         public GameObject m_target;
 
-        public float m_stamina { get; private set; } = 1.0f;
-
         private bool m_isInvincible;
         public float m_startHealth { get; private set; }
+        public float m_startStamina { get; private set; }
         public float m_basePhyResist { get; private set; }
         public float m_baseAbilResist   { get; private set; }
 
+        public bool m_canStagger { get; set; }
+
+        private float m_staminaRegen; 
         private bool m_trackingTarget = false;
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
+
+        private UI_Bar m_staminaBar;
+
         public bool m_isDisolving { 
             get {
                 foreach (var material in m_materials)
@@ -80,7 +86,10 @@ namespace ActorSystem.AI.Components
 
             SetOutlineEnabled(false);
         }
-
+        public void Start()
+        {
+            m_staminaBar = m_ui?.GetElement<UI_Bar>("Stamina");
+        }
         public void StartSpawnAnimation()
         {
             m_animator.SetEnabled(true);
@@ -132,14 +141,19 @@ namespace ActorSystem.AI.Components
                 m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
             }
             m_ui?.SetBar("Health", (float) m_currHealth / m_startHealth);
+
+            if(m_staminaBar != null)
+                m_ui?.SetBar("Stamina", (float)m_currStamina / m_startStamina);
+            
+            m_staminaBar?.gameObject.SetActive(m_canStagger);
         }
 
         public void LoadData(ActorData _data, uint _level = 0)
         {
             //Brain
-            m_stamina = 1.0f;
-            m_agility = _data.agility;
             m_startHealth = _data.health + _data.deltaHealth * _level;
+            m_startStamina = _data.stamina + _data.deltaStamina * _level;
+            m_staminaRegen = _data.staminaReg + _data.deltaStaminaReg * _level;
             m_basePhyResist = _data.phyResist + _data.deltaPhyResist * _level;
             m_baseAbilResist = _data.abilResist + _data.deltaAbilResist * _level;
             m_adrenalineGain = new FloatRange(_data.adrenalineGainMin + _data.deltaAdrenaline * _level, _data.adrenalineGainMax + _data.deltaAdrenaline * _level);
@@ -231,6 +245,11 @@ namespace ActorSystem.AI.Components
             }
         }
 
+        public void RegenStamina(float mod)
+        {
+            m_currStamina = Mathf.Clamp(m_currStamina + m_staminaRegen * Time.deltaTime * mod, 0, m_startStamina);
+        }
+
         public void HaltRotation()
         {
             m_trackingTarget = false;
@@ -309,6 +328,45 @@ namespace ActorSystem.AI.Components
             return IsDead;
         }
 
+        public bool HandleImpactDamage(float damage, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
+        {
+            if (IsDead)
+                return false;
+
+            if(!m_canStagger)
+            {
+                m_legs.KnockBack(direction * damage);
+                return false;
+            }
+
+            switch (_type)
+            {
+                default:
+                case CombatSystem.DamageType.Physical:
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currPhyResist, piercingVal));
+                    break;
+                case CombatSystem.DamageType.Ability:
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, m_currAbilResist, piercingVal));
+                    break;
+                case CombatSystem.DamageType.True:
+                    damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, 0, 0));
+                    break;
+            }
+
+            m_currStamina = Mathf.Clamp(m_currStamina - damage, 0, m_startStamina);
+
+            if (m_currStamina == 0)
+            {
+                m_legs.KnockBack(direction * damage);
+                return true;
+            }
+            else
+            {
+                m_legs.KnockBack(direction * damage * 0.5f);
+                return false;
+            }
+        }
+
         public void Refresh()
         {
             m_currHealth = m_startHealth;
@@ -317,7 +375,7 @@ namespace ActorSystem.AI.Components
                 material.RefreshColor();
             }
 
-            m_ragDoll.DisableRagdoll();
+            m_ragDoll?.DisableRagdoll();
         }
 
         public void DropOrbs(int amount, Vector3 position)

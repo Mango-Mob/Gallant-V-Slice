@@ -13,7 +13,6 @@ public class ActorData : ScriptableObject
     public float staminaReg;
     public float cost;
 
-    public float agility;
     public string ActorName;
     public float baseSpeed;
 
