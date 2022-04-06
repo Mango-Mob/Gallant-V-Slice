@@ -113,10 +113,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Clear(false);
         float heightStep = height / (sectDiv + 1);
 
-        if (m_rootNode != null)
-            m_activeNodes.Add(m_rootNode);
-        else
+        if (m_rootNode == null)
             SetRoot(m_sceneData[Random.Range(0, m_sceneData.Length)]);
+
+        m_activeNodes.Add(m_rootNode);
 
         List<NavigationNode> prevNodes = new List<NavigationNode>(m_activeNodes);
 
@@ -232,7 +232,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetRoot(SceneData data)
     {
         GameObject nodeObj = NavigationNode.CreateNode(data, transform);
-        nodeObj.transform.localPosition = new Vector3(0, height, 0);
+        nodeObj.transform.localPosition = new Vector3(0, 0, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;
 
