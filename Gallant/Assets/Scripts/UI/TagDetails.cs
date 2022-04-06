@@ -20,13 +20,16 @@ public class TagDetails : MonoBehaviour
     {
         foreach (var image in GetComponentsInChildren<Image>())
         {
-            image.color = m_tagColor;
+            
+                image.color = m_tagColor;
         }
         foreach (var text in GetComponentsInChildren<Text>())
         {
             text.text = m_tagTitle;
             text.fontSize = (int) m_fontSize;
-            text.color = m_textColor;
+
+            if (text.gameObject != this.gameObject)
+                text.color = m_textColor;
         }
     }
 

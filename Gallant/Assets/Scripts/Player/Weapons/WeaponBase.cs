@@ -17,8 +17,12 @@ public abstract class WeaponBase : MonoBehaviour
 
     public Hand m_hand;
 
-    private GameObject m_hitVFXPrefab;
+    protected GameObject m_overrideHitVFXPrefab;
+    protected GameObject m_overrideAltHitVFXPrefab;
     public bool m_attackReady = false;
+
+    protected bool m_isVFXColored = false;
+    protected bool m_isAltVFXColored = false;
 
     // Start is called before the first frame update
     protected void Awake()
@@ -87,13 +91,13 @@ public abstract class WeaponBase : MonoBehaviour
 
             bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f), _data.m_piercing);
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing);
             Actor actor = collider.GetComponentInParent<Actor>();
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
-                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_knockback * (m_hand == Hand.LEFT ? _data.m_altKnockbackMult : 1.0f));
+                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
 
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
                 if (statusContainer != null && _status != null)
@@ -104,7 +108,16 @@ public abstract class WeaponBase : MonoBehaviour
             hitList.Add(collider.gameObject);
 
             if (!isRubble)
-                playerController.playerAttack.CreateVFX(collider, _source);
+            {
+                if (m_weaponData.abilityData && (m_hand == Hand.LEFT && m_isAltVFXColored || m_hand == Hand.RIGHT && m_isVFXColored))
+                {
+                    playerController.playerAttack.CreateVFX(collider, _source, m_weaponData.abilityData.droppedEnergyColor, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                }
+                else
+                {
+                    playerController.playerAttack.CreateVFX(collider, _source, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                }
+            }
         }
         if (hitList.Count != 0)
             playerController.playerAudioAgent.PlayWeaponHit(_data.weaponType); // Audio
@@ -154,16 +167,19 @@ public abstract class WeaponBase : MonoBehaviour
      * @author : William de Beer
      * @param : (Vector3) Point which projectile spawns, (WeaponData), (Hand),
      */
-    protected void ThrowWeapon(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected GameObject ThrowWeapon(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         // Create projectile
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand); // Set the information of the user to return to
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
+
+        return projectile;
     }
-    protected void ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
+    protected GameObject ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
     {
         Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
         DamageColliders(_data, _pos, colliders);
@@ -173,12 +189,17 @@ public abstract class WeaponBase : MonoBehaviour
         ParticleSystem.MainModule mainModule = particleSystem.main;
         mainModule.startLifetime = ((_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize)) / mainModule.startSpeed.constant;
         particleSystem.Play();
+
+        return vfx;
     }
 
-    protected void ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
+    protected GameObject ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand, _charge, _canCharge);
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
+
+        return projectile;
     }
 
     protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
@@ -187,6 +208,7 @@ public abstract class WeaponBase : MonoBehaviour
         projectile.transform.position += Vector3.up * playerController.playerAttack.m_swingHeight + _pos;
         projectile.transform.rotation = Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up);
         projectile.GetComponent<BasePlayerProjectile>().SetReturnInfo(playerController.playerAttack, _data, _hand);
+        projectile.GetComponent<BasePlayerProjectile>().m_overrideHitVFXColor = _hand == Hand.LEFT ? m_isAltVFXColored : m_isVFXColored;
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;

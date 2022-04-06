@@ -53,13 +53,13 @@ namespace ActorSystem.AI.Components
                         return subItem;
                 }
             }
-            Debug.LogError($"This actor {GetComponentInParent<Actor>().gameObject.name} does not contain an element required. (named: {name})");
+            Debug.LogWarning($"This actor {GetComponentInParent<Actor>().gameObject.name} does not contain an element required. (named: {name})");
             return null;
         }
 
         public void SetBar(string name, float value)
         {
-            GetElement<UI_Bar>("Health")?.SetValue(value);
+            GetElement<UI_Bar>(name)?.SetValue(value);
         }
     }
 }

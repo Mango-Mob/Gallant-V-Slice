@@ -62,7 +62,7 @@ namespace ActorSystem.AI
                 m_myBrain.LoadData(m_myData, (uint)Mathf.FloorToInt(GameManager.currentLevel));
                 m_myBrain.SetEnabled(true);
             }
-
+            m_myBrain.m_canStagger = m_states.Contains(State.Type.STAGGER);
         }
 
         public void Spawn(uint level, Vector3 start, Vector3 end, Vector3 forward)
@@ -84,7 +84,12 @@ namespace ActorSystem.AI
             m_myBrain.Update();
 
             if(m_myBrain.enabled)
+            {
+                if (!(m_currentState is State_Staggered))
+                    m_myBrain.RegenStamina(1.0f);
+
                 m_currentState.Update();
+            }
         }
 
         public void DisableFunction()
@@ -108,9 +113,8 @@ namespace ActorSystem.AI
             if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
                 m_myBrain.m_legs.KnockBack(force);
 
-            if (m_myBrain.m_ragDoll != null && m_myBrain.m_ragDoll.enabled)
-                m_myBrain.m_ragDoll.velocity = force * 3;
-        }
+            //DealImpactDamage(force.magnitude, 0, force.normalized, CombatSystem.DamageType.True);
+        }   
 
         public void SetTarget(GameObject _target)
         {
@@ -174,6 +178,18 @@ namespace ActorSystem.AI
                     SetState(new State_Dead(this));
                     return;
                 }
+            }
+        }
+
+        public virtual void DealImpactDamage(float amount, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
+        {
+            if (m_currentState is State_Staggered)
+                return;
+
+            if(m_myBrain.HandleImpactDamage(amount, piercingVal, direction, _type))
+            {
+                SetState(new State_Staggered(this));
+                return;
             }
         }
 

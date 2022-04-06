@@ -11,7 +11,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public SceneData[] m_sceneData;
 
-    public int index;
+    public int index = -1;
     public Vector2 iconNoise;
 
     public float cameraSpeed = 10f;
@@ -33,14 +33,14 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_myCamera.enabled = false;
         m_myCanvas = GetComponent<Canvas>();
         m_myCanvas.enabled = false;
-        index = 0;
+        index = -1;
     }
 
     public void Start()
     {
-        Generate(6, 2, 6);
-        UpdateMap(0);
-        ConstructScene();
+        //Generate(6, 2, 6);
+        //UpdateMap(0);
+        //ConstructScene();
     }
 
     public void Update()
@@ -85,7 +85,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_myCanvas.enabled = status;
         if (m_myCamera.enabled)
         {
-            m_myCamera.transform.localPosition = new Vector3(0, m_activeNodes[index].transform.localPosition.y, -10);
+            if(index > 0 && m_activeNodes.Count > 0)
+                m_myCamera.transform.localPosition = new Vector3(0, m_activeNodes[index].transform.localPosition.y, -10);
+            else
+                m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
         HUDManager.Instance.gameObject.SetActive(!m_myCamera.enabled);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
@@ -93,13 +96,15 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void UpdateMap(int newIndex)
     {
-        m_activeNodes[index].DeactivateMyConnections();
-        m_activeNodes[newIndex].ActivateMyConnections();
+        if(index >= 0)
+            m_activeNodes[index].DeactivateMyConnections();
+        if(newIndex >= 0)
+            m_activeNodes[newIndex].ActivateMyConnections();
         index = newIndex;
     }
     public void ConstructScene()
     {
-        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count)
+        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 && m_activeNodes[index].m_myData.prefabToLoad != null)
             Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
     }
 
@@ -108,7 +113,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Clear(false);
         float heightStep = height / (sectDiv + 1);
 
+        if (m_rootNode == null)
+            SetRoot(m_sceneData[Random.Range(0, m_sceneData.Length)]);
+
         m_activeNodes.Add(m_rootNode);
+
         List<NavigationNode> prevNodes = new List<NavigationNode>(m_activeNodes);
 
         //For each mid section
@@ -220,6 +229,32 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
     }
 
+    public void SetRoot(SceneData data)
+    {
+        GameObject nodeObj = NavigationNode.CreateNode(data, transform);
+        nodeObj.transform.localPosition = new Vector3(0, 0, 0);
+        NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
+        nodeNav.m_myIndex = m_activeNodes.Count;
+
+        if (m_rootNode != null)
+            Destroy(m_endNode.gameObject);
+
+        m_rootNode = nodeNav;
+    }
+
+    public void SetEnd(SceneData data)
+    {
+        GameObject nodeObj = NavigationNode.CreateNode(data, transform);
+        nodeObj.transform.localPosition = new Vector3(0, height, 0);
+        NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
+        nodeNav.m_myIndex = m_activeNodes.Count;
+
+        if (m_endNode != null)
+            Destroy(m_endNode.gameObject);
+
+        m_endNode = nodeNav;
+    }
+
     public void Clear(bool clearAll = false)
     {
         for (int i = m_activeNodes.Count - 1; i >= 0; i--)
@@ -234,15 +269,20 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         if(clearAll)
         {
-            Destroy(m_rootNode.gameObject);
-            m_rootNode = null;
-            Destroy(m_endNode.gameObject);
-            m_endNode = null;
+            if(m_rootNode != null)
+            {
+                Destroy(m_rootNode.gameObject);
+                m_rootNode = null;
+            }
+            if(m_endNode != null)
+            {
+                Destroy(m_endNode.gameObject);
+                m_endNode = null;
+            }
         }
     }
     public void OnDrawGizmos()
     {
-        float height = (m_endNode.transform as RectTransform).position.y - (m_rootNode.transform as RectTransform).transform.position.y;
         Gizmos.DrawWireCube((transform as RectTransform).position + new Vector3(0, height / 2f, 0), new Vector3(width * transform.localScale.x, height, 0));
     }
 }

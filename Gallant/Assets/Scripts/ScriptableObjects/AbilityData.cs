@@ -19,7 +19,7 @@ public class AbilityData : ScriptableObject
     public string tags;
     [TextArea(10, 15)]
     public string description;
-    [ColorUsage(false, true)] public Color droppedEnergyColor;
+    [ColorUsage(true, true)] public Color droppedEnergyColor;
 
     [Space(10)]
     [Range(1, 3)]
@@ -36,9 +36,10 @@ public class AbilityData : ScriptableObject
     [Tooltip("The duration of any buff or status effect applied to the target. (does not apply to all abilities).")]
     public float duration = 0.0f; // The duration of any buff or status effect applied to the target. (does not apply to all abilities)
 
-    public float lastCooldown = 0.0f;
+    [HideInInspector] public float lastCooldown = 0.0f;
     public bool isPassive = false;
 
+    public Sprite overwriteStaffIcon;
     public static string EvaluateDescription(AbilityData data)
     {
         string description = data.description;
@@ -122,5 +123,7 @@ public class AbilityData : ScriptableObject
         
         this.lastCooldown = other.lastCooldown;
         this.isPassive = other.isPassive;
+
+        this.overwriteStaffIcon = other.overwriteStaffIcon;
     }
 }

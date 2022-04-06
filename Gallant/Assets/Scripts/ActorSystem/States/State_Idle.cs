@@ -32,11 +32,6 @@ public class State_Idle : State
                 m_myActor.SetState(new State_Roam(m_myUser));
             }
         }
-
-        if(m_myActor.m_target != null && m_myActor.m_states.Contains(Type.KEEP_AWAY_FROM_TARGET))
-        {
-            m_myActor.SetState(new State_KeepAwayFromTarget(m_myUser));
-        }
     }
 
     public override void End()

@@ -40,6 +40,8 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     private Vector3 m_startScale;
 
     [SerializeField] protected bool m_canCollideWithEnvironment = true;
+    [SerializeField] protected GameObject m_overrideHitVFX;
+    public bool m_overrideHitVFXColor = false;
 
     [Header("Status")]
     public EnemyStatus m_appliedStatusOnHit;
@@ -131,12 +133,16 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
-        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_knockback * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altKnockbackMult : 1.0f), 0, CombatSystem.DamageType.Physical);
+        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_impact * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altImpactMult : 1.0f), 0, CombatSystem.DamageType.Physical);
 
         if (!isRubble)
         {
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
-            m_projectileUser.CreateVFX(other, transform.position);
+
+            if (m_overrideHitVFXColor && m_weaponData.abilityData && m_overrideHitVFX)
+                m_projectileUser.CreateVFX(other, transform.position, m_weaponData.abilityData.droppedEnergyColor, m_overrideHitVFX);
+            else
+                m_projectileUser.CreateVFX(other, transform.position, m_overrideHitVFX);
         }
 
         Actor actor = other.GetComponentInParent<Actor>();
@@ -146,7 +152,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
                 return false;
 
             hitList.Add(other.gameObject);
-            actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_knockback * m_charge);
+            actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_impact * m_charge);
 
             if (m_appliedStatusOnHit != EnemyStatus.NONE)
             {

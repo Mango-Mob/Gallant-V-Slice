@@ -57,12 +57,14 @@ namespace ActorSystem.AI.Components
 
         public void PlayHurt()
         {
-            m_myAgent.Play(m_hurtClips[Random.Range(0, m_hurtClips.Count)].name, false, Random.Range(0.85f, 1.25f));
+            if(m_hurtClips.Count > 0)
+                m_myAgent.Play(m_hurtClips[Random.Range(0, m_hurtClips.Count)].name, false, Random.Range(0.85f, 1.25f));
         }
 
         public void PlayDeath()
         {
-            m_myAgent.Play(m_hurtClips[Random.Range(0, m_deathClips.Count)].name, false, Random.Range(0.85f, 1.25f));
+            if (m_deathClips.Count > 0)
+                m_myAgent.Play(m_deathClips[Random.Range(0, m_deathClips.Count)].name, false, Random.Range(0.85f, 1.25f));
         }
 
         public override void SetEnabled(bool status)
