@@ -140,7 +140,7 @@ public class Player_Controller : MonoBehaviour
 
         //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
-        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isStunned || playerMovement.m_isRolling)
+        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
 
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
@@ -401,8 +401,10 @@ public class Player_Controller : MonoBehaviour
      * @author : William de Beer
      * @param : (float) Stun duration, (Vector3) Knockback velocity
      */
-    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity, GameObject _attacker = null)
     {
+        if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
+            return;
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
     public Vector2 GetPlayerMovementVector(bool _rawInput = false)
@@ -556,7 +558,6 @@ public class Player_Controller : MonoBehaviour
         Weapon_Sword sword = GetComponent<Weapon_Sword>();
         if ((sword != null && sword.m_attackReady) || (playerAttack.m_isBlocking && _attacker != null))
         {
-            Debug.Log("MISSED BLOCK");
             if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             {
                 if (sword != null && sword.m_attackReady)
@@ -575,10 +576,11 @@ public class Player_Controller : MonoBehaviour
 
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
-                animator.SetTrigger("HitPlayer");
+                animator.SetTrigger("BlockHit");
                 playerAudioAgent.PlayShieldBlock();
                 return;
             }
+            Debug.Log("MISSED BLOCK");
         }
 
         playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);

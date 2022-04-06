@@ -247,7 +247,6 @@ public class Player_Movement : MonoBehaviour
         if (!_bypassInvincibility && m_isRollInvincible)
             return;
 
-        m_isStunned = true;
         m_stunTimer = _stunDuration * (1 - playerController.playerSkills.m_stunDecrease);
         m_knockbackVelocity = _knockbackVelocity;
         m_knockbackVelocity.y = 0;
@@ -256,6 +255,7 @@ public class Player_Movement : MonoBehaviour
 
         if (_stunDuration != 0.0f)
         {
+            m_isStunned = true;
             m_isRolling = false;
             m_isRollInvincible = false;
 
