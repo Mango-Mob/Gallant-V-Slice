@@ -672,8 +672,14 @@ public class Player_Controller : MonoBehaviour
     {
         m_inkmanClass = _class;
 
-        playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
-        playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
+        if (playerAttack.m_leftWeaponData?.m_level == -1)
+        {
+            playerAttack.SetWeaponData(Hand.LEFT, _class.startWeapon);
+        }
+        else if (playerAttack.m_rightWeaponData?.m_level == -1)
+        {
+            playerAttack.SetWeaponData(Hand.RIGHT, _class.startWeapon); 
+        }
 
         playerClassArmour.SetClassArmour(_class.inkmanClass);
 

@@ -28,7 +28,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
-    float m_turnAnimationMult = 0.001f;
+    public float m_turnAnimationMult = 0.001f;
     public bool m_isRolling { get; private set; } = false;
     public bool m_isRollInvincible { get; private set; } = false;
     private Vector3 m_lastMoveDirection;
@@ -507,8 +507,8 @@ public class Player_Movement : MonoBehaviour
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
 
             float rotateOffset = m_turnSmoothVelocity * m_turnAnimationMult;
-            //if (Mathf.Abs(rotateOffset) <= 0.05f)
-            //    rotateOffset = 0.0f;
+            if (Mathf.Abs(rotateOffset) <= 0.05f)
+                rotateOffset = 0.0f;
             playerController.animator.SetFloat("Rotate", 0.5f + rotateOffset);
         }
         else
