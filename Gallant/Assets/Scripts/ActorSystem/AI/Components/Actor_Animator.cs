@@ -61,6 +61,11 @@ namespace ActorSystem.AI.Components
             this.enabled = status;
         }
 
+        public void SetInteger(string name, int value)
+        {
+            m_animator.SetInteger(name, value);
+        }
+
         /*******************
          * SetFloat : Sets a single float value in the animator, with the float provided.
          * @author : Michael Jordan

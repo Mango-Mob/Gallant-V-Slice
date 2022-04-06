@@ -7,17 +7,6 @@ namespace ActorSystem.AI.Components.SpawnMethods
         public GameObject m_spawnVFX;
         public float m_spawnDelay;
 
-        //public float m_postWaitTime = 0.5f;
-        //public float m_spawnDepth = 1.0f;
-        //public float m_width = 1.0f;
-        //public float m_height = 2.0f;
-        //public float m_acceleration;
-        //public float m_deceleration;
-        //
-        //protected Vector3 m_velocity;
-        //protected Vector3 m_direction;
-        //protected Vector3 m_forwardCast;
-        //private Vector3 m_endLocation;
         private bool m_hasResentlySpawnned;
         private float m_timer;
         private GameObject m_spawn;
@@ -26,20 +15,6 @@ namespace ActorSystem.AI.Components.SpawnMethods
         {
             m_spawn = GameObject.Instantiate(m_spawnVFX, navMeshPoint, Quaternion.identity);
 
-            //m_velocity = Vector3.zero;
-            //m_direction = (end - start).normalized;
-            //m_endLocation = end;
-            //transform.position = start + (start - end).normalized * m_spawnDepth;
-            //
-            //Vector3 midPoint = (start + end) / 2.0f;
-            //m_forwardCast = (navMeshPoint - end).normalized;
-            //RaycastHit hit;
-            //if (Physics.Raycast(midPoint, m_forwardCast, out hit, 2.0f))
-            //{
-            //    transform.forward = -hit.normal;
-            //    transform.position += hit.normal * m_width/2.0f;
-            //}
-            //
             ////Play animation
             GetComponent<Actor_Brain>().m_ragDoll?.DisableRagdoll();
             m_timer = m_spawnDelay;
@@ -60,16 +35,6 @@ namespace ActorSystem.AI.Components.SpawnMethods
                 GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", true);
                 GetComponent<Actor_Brain>().m_animator.PlayAnimation("Spawn_Loop");
             }
-            //if(m_spawnning && m_endLocation.y - transform.position.y < m_height/2.0f)
-            //{
-            //    GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", false);
-            //    m_spawnning = false;
-            //    m_hasResentlySpawnned = true;
-            //}
-            //if(m_hasResentlySpawnned && !m_spawnning)
-            //{
-            //    m_hasResentlySpawnned = !GetComponent<Actor_Brain>().m_legs.m_agent.isOnNavMesh;
-            //}
         }   
 
         public override void StopSpawning()
