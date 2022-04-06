@@ -28,6 +28,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
+    float m_turnAnimationMult = 0.001f;
     public bool m_isRolling { get; private set; } = false;
     public bool m_isRollInvincible { get; private set; } = false;
     private Vector3 m_lastMoveDirection;
@@ -337,7 +338,7 @@ public class Player_Movement : MonoBehaviour
                 Vector3 normalizedAim = (m_currentTarget.transform.position - transform.position).normalized;
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
-            else if (_aim.magnitude != 0) // If the player is trying to aim...
+            else // If the player is trying to aim...
             {
                 // Make player model face aim direction
                 Vector3 normalizedAim = Vector3.zero;
@@ -443,6 +444,10 @@ public class Player_Movement : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            playerController.animator.SetFloat("Rotate", 0.5f);
+        }
 
         Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
@@ -500,6 +505,15 @@ public class Player_Movement : MonoBehaviour
             float targetAngle = Mathf.Atan2(_direction.normalized.x, _direction.normalized.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(playerModel.transform.eulerAngles.y, targetAngle, ref m_turnSmoothVelocity, m_turnSmoothTime);
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
+
+            float rotateOffset = m_turnSmoothVelocity * m_turnAnimationMult;
+            //if (Mathf.Abs(rotateOffset) <= 0.05f)
+            //    rotateOffset = 0.0f;
+            playerController.animator.SetFloat("Rotate", 0.5f + rotateOffset);
+        }
+        else
+        {
+            playerController.animator.SetFloat("Rotate", 0.5f);
         }
     }
 

@@ -258,6 +258,15 @@ public class WeaponData : ScriptableObject
                 break;
         }
     }
+    public static void ApplyAbilityData(WeaponData _weaponData, AbilityData _abilityData)
+    {
+        _weaponData.abilityData = _abilityData;
+
+        if (_weaponData.weaponType == Weapon.STAFF && _weaponData.abilityData?.overwriteStaffIcon != null)
+        {
+            _weaponData.weaponIcon = _weaponData.abilityData?.overwriteStaffIcon;
+        }
+    }
     public static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
     {
         // Ability
