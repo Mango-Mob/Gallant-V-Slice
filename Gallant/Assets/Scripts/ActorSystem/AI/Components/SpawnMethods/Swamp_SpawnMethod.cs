@@ -11,9 +11,9 @@ namespace ActorSystem.AI.Components.SpawnMethods
         private float m_timer;
         private GameObject m_spawn;
 
-        public override void StartSpawn(Vector3 start, Vector3 end, Vector3 navMeshPoint)
+        public override void StartSpawn(Vector3 spawnLoc)
         {
-            m_spawn = GameObject.Instantiate(m_spawnVFX, navMeshPoint, Quaternion.identity);
+            m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
 
             ////Play animation
             GetComponent<Actor_Brain>().m_ragDoll?.DisableRagdoll();

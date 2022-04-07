@@ -11,7 +11,7 @@ namespace ActorSystem.AI.Components
     {
         public bool m_spawnning = false;
 
-        public abstract void StartSpawn(Vector3 start, Vector3 end, Vector3 navPoint);
+        public abstract void StartSpawn(Vector3 spawnLoc);
         public abstract void StopSpawning();
         protected virtual void Update() { }
 
