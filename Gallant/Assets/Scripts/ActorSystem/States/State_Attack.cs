@@ -47,9 +47,9 @@ public class State_Attack : State
                 {
                     m_myUser.SetState(new State_MoveToTarget(m_myUser));
                 }
-                else if(m_myActor.m_states.Contains(Type.MOVE_TO_TARGET) && m_myActor.m_target != null)
+                else if(m_myActor.m_states.Contains(Type.FLEE_FROM_TARGET) && m_myActor.m_target != null)
                 {
-                    m_myUser.SetState(new State_KeepAwayFromTarget(m_myUser));
+                    m_myUser.SetState(new State_FleeFromTarget(m_myUser));
                 }
                 else if (m_myActor.m_states.Contains(Type.IDLE))
                 {

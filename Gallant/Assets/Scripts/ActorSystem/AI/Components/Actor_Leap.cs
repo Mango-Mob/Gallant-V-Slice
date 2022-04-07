@@ -9,7 +9,6 @@ namespace ActorSystem.AI.Components
     [RequireComponent(typeof(Rigidbody))]
     public class Actor_Leap : Actor_Legs
     {
-        public float initialSpeed = 2;
         public float accel = 8;
         public float minHeight = 2;
         public float maxJumpDist = 8;
@@ -62,12 +61,12 @@ namespace ActorSystem.AI.Components
 
                 if (remainDist / startDist < 1.0f - endPointStart)
                 {
-                    m_animator.SetInteger("LeapingPart", 0);
+                    m_animator.SetInteger("LeapingPart", 2);
                 }
                 if (remainDist < 0)
                 {
                     transform.position = endPos;
-                    m_animator.SetInteger("LeapingPart", 0);
+                    m_animator.SetInteger("LeapingPart", 2);
                     isLeaping = false;
                 }
             }
@@ -89,7 +88,7 @@ namespace ActorSystem.AI.Components
                 return;
 
             Vector3 direction = target - transform.position;
-            Vector3 destination = transform.position + direction.normalized * Mathf.Min(maxJumpDist, direction.magnitude);
+            Vector3 destination = transform.position + direction.normalized * Mathf.Min(maxJumpDist * m_speedModifier, direction.magnitude);
             m_targetPosition = destination;
 
             NavMeshHit hit;
@@ -109,7 +108,7 @@ namespace ActorSystem.AI.Components
         public void StartLeap()
         {
             isLeaping = true;
-            speed = initialSpeed;
+            speed = m_baseSpeed;
             startPos = transform.position;
             startDist = MathParabola.ParabolaDistance(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 10);
             remainDist = startDist;
@@ -117,6 +116,7 @@ namespace ActorSystem.AI.Components
 
         public override void DrawGizmos()
         {
+            base.DrawGizmos();
             if(isLeaping)
             {
                 Gizmos.color = Color.cyan;
