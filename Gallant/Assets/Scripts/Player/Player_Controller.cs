@@ -152,11 +152,13 @@ public class Player_Controller : MonoBehaviour
         {
             armWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
             standArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            animator.SetBool("IsMoving", true);
         }
         else
         {
             armWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
             standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            animator.SetBool("IsMoving", false);
         }
 
         // Set avatar mask to be used
@@ -615,13 +617,13 @@ public class Player_Controller : MonoBehaviour
 
             if (playerAttack.m_leftWeaponData)
             {
-                playerAttack.m_leftWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.LEFT);
+                WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, GameManager.RetrieveAbilityData(Hand.LEFT));
                 if (playerAttack.m_leftWeaponData.abilityData)
                     playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
             }
             if (playerAttack.m_rightWeaponData)
             {
-                playerAttack.m_rightWeaponData.abilityData = GameManager.RetrieveAbilityData(Hand.RIGHT);
+                WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, GameManager.RetrieveAbilityData(Hand.RIGHT));
                 if (playerAttack.m_rightWeaponData.abilityData)
                     playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
             }
