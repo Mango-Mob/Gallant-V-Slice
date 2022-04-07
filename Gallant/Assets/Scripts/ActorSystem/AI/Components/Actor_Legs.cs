@@ -24,6 +24,7 @@ namespace ActorSystem.AI.Components
         public float m_speedModifier = 1.0f;
         public bool m_isKnocked = false;
         private bool m_isSeekingMesh = false;
+
         //External Accessors
         public Vector3 velocity { get { return (m_isKnocked) ? Vector3.zero : m_agent.velocity; } }
         public Vector3 localVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity; } }
@@ -44,20 +45,29 @@ namespace ActorSystem.AI.Components
 
         private float m_delayTimer = 0f;
         private Vector3 m_lastPosition;
+
+
         // Start is called before the first frame update
-        void Awake()
+        protected virtual void Awake()
         {
             m_agent = GetComponent<NavMeshAgent>();
             m_body = GetComponent<Rigidbody>();
             m_body.isKinematic = true;
             m_agent.updateRotation = false;
-            if(m_agent.isOnNavMesh)
+            m_targetPosition = transform.position;
+
+            if (m_agent.isOnNavMesh)
                 m_agent.SetDestination(transform.position);
             m_lastPosition = transform.position;
         }
 
+        protected virtual void Start()
+        {
+
+        }
+
         // Update is called once per frame
-        void Update()
+        protected virtual void Update()
         {
             m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
             
@@ -75,9 +85,9 @@ namespace ActorSystem.AI.Components
             }
         }
 
-        public void FixedUpdate()
+        protected virtual void FixedUpdate()
         {
-            if (m_agent.enabled && m_agent.isOnNavMesh)
+            if (m_agent.enabled && m_agent.isOnNavMesh && m_agent.updatePosition)
             {
                 m_agent.destination = m_targetPosition;
                 m_agent.speed = m_baseSpeed * m_speedModifier;
@@ -102,7 +112,6 @@ namespace ActorSystem.AI.Components
                 m_body.velocity -= (m_body.velocity.normalized * m_agent.acceleration * Time.fixedDeltaTime);
             }
             
-            //Debug.Log(m_body.velocity.magnitude);
             m_agent.updatePosition = !m_isKnocked && !m_isSeekingMesh;
             m_body.isKinematic = !m_isKnocked && !m_isSeekingMesh;
             
@@ -187,7 +196,7 @@ namespace ActorSystem.AI.Components
         * @param : (Vector3) position in world space of the target destination.
         * @param : (bool) if the actor should set it's target rotation to look towards the destination (default = false).
         */
-        public void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
+        public virtual void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
         {
             if (!m_agent.enabled || !m_agent.isOnNavMesh)
                 return;
@@ -227,7 +236,7 @@ namespace ActorSystem.AI.Components
         }
 
 
-        public void DrawGizmos()
+        public virtual void DrawGizmos()
         {
             Gizmos.color = Color.white;
             Extentions.GizmosDrawCircle(transform.position, GetComponent<NavMeshAgent>().stoppingDistance);
