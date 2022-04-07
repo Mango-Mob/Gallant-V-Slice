@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
@@ -172,5 +173,17 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
         m_upgradeAmount = _level;
         m_upgradeNumberText.text = m_upgradeAmount.ToString();
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        foreach (var other in m_unlockDependencies)
+        {
+            Gizmos.DrawLine(transform.position, other.transform.position);
+        }
+        Gizmos.color = Color.white;
+        Handles.Label(transform.position, m_skillData ? m_skillData.skillName : "EMPTY");
+        gameObject.name = m_skillData ? m_skillData.name : "emptyButton";
     }
 }
