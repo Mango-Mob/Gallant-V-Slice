@@ -61,12 +61,12 @@ namespace ActorSystem.AI.Components
 
                 if (remainDist / startDist < 1.0f - endPointStart)
                 {
-                    m_animator.SetInteger("LeapingPart", 0);
+                    m_animator.SetInteger("LeapingPart", 2);
                 }
                 if (remainDist < 0)
                 {
                     transform.position = endPos;
-                    m_animator.SetInteger("LeapingPart", 0);
+                    m_animator.SetInteger("LeapingPart", 2);
                     isLeaping = false;
                 }
             }

@@ -374,6 +374,14 @@ public class InfoDisplay : MonoBehaviour
         m_selected = status;
     }
 
+    public void Hover(bool status)
+    {
+        foreach (var item in m_backgrounds)
+        {
+            item.color = (status) ? selectColor : (m_selected) ? selectColor : Color.white;
+        }
+    }
+
     public void GiveReward()
     {
         if(IsAWeapon)
