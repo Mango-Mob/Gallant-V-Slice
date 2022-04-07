@@ -1,5 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5328332314071799265
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
+  m_Name: Vignette
+  m_EditorClassIdentifier: 
+  active: 1
+  m_AdvancedMode: 0
+  color:
+    m_OverrideState: 1
+    m_Value: {r: 0.22628158, g: 0.4245283, b: 0.40710267, a: 1}
+    hdr: 0
+    showAlpha: 0
+    showEyeDropper: 1
+  center:
+    m_OverrideState: 1
+    m_Value: {x: 0.5, y: 0.5}
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.623
+    min: 0
+    max: 1
+  smoothness:
+    m_OverrideState: 0
+    m_Value: 0.2
+    min: 0.01
+    max: 1
+  rounded:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!114 &-4005621820447134802
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -39,30 +75,35 @@ MonoBehaviour:
   m_AdvancedMode: 0
   threshold:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 0.5
     min: 0
   intensity:
     m_OverrideState: 1
-    m_Value: 1.12
+    m_Value: 2
     min: 0
   scatter:
     m_OverrideState: 1
-    m_Value: 0.393
+    m_Value: 0.7
     min: 0
     max: 1
   clamp:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 0.45
     min: 0
   tint:
     m_OverrideState: 0
-    m_Value: {r: 0.1509434, g: 0.1509434, b: 0.1509434, a: 1}
+    m_Value: {r: 0.33552864, g: 0.48893026, b: 0.49056602, a: 1}
     hdr: 0
     showAlpha: 0
     showEyeDropper: 1
   highQualityFiltering:
-    m_OverrideState: 1
-    m_Value: 1
+    m_OverrideState: 0
+    m_Value: 0
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 16
   dirtTexture:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -87,6 +128,7 @@ MonoBehaviour:
   - {fileID: -4005621820447134802}
   - {fileID: 1301752030099683239}
   - {fileID: 2526805180424065646}
+  - {fileID: -5328332314071799265}
 --- !u!114 &1301752030099683239
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -108,8 +150,8 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: {x: 0.8916744, y: 0.96141684, z: 1, w: 0}
   highlights:
-    m_OverrideState: 0
-    m_Value: {x: 1, y: 0.95653945, z: 0.7668825, w: -0.16326529}
+    m_OverrideState: 1
+    m_Value: {x: 0.8375353, y: 0.9204021, z: 1, w: 0.14705884}
   shadowsStart:
     m_OverrideState: 1
     m_Value: 0.3
@@ -142,11 +184,11 @@ MonoBehaviour:
   m_AdvancedMode: 0
   temperature:
     m_OverrideState: 1
-    m_Value: -29
+    m_Value: -15
     min: -100
     max: 100
   tint:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
     min: -100
     max: 100
