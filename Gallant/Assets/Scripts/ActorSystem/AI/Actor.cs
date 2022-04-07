@@ -71,7 +71,6 @@ namespace ActorSystem.AI
             m_myBrain.LoadData(m_myData, level);
             m_mySpawn.SetEnabled(true);
             m_mySpawn.StartSpawn(spawnLoc);
-            m_toReserveOnLoad = false;
         }
 
         public void SetLevel(uint level)

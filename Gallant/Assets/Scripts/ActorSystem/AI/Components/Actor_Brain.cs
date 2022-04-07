@@ -20,14 +20,13 @@ namespace ActorSystem.AI.Components
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
-
         public Actor_Material[] m_materials { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
         public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
         public Actor_Ragdoll m_ragDoll { get; private set; }
-        public Outline m_myOutline { get; private set; }
+        //public Outline m_myOutline { get; private set; }
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
@@ -76,13 +75,13 @@ namespace ActorSystem.AI.Components
             m_materials = GetComponentsInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponent<Actor_AudioAgent>();
-            m_myOutline = GetComponentInChildren<Outline>();
+            //m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
 
-            if(m_myOutline != null)
-                m_myOutline.enabled = false;
+            //if(m_myOutline != null)
+            //    m_myOutline.enabled = false;
 
             SetOutlineEnabled(false);
         }
@@ -107,9 +106,9 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_canBeTarget && m_ui != null && m_myOutline != null)
+            if(m_canBeTarget && m_ui != null)
             {
-                m_ui.SetEnabled(m_myOutline.enabled || m_forceShowUI);
+                m_ui.SetEnabled(m_forceShowUI);
             }
             if(m_trackingTarget && m_target != null && m_legs != null)
             {
@@ -210,8 +209,8 @@ namespace ActorSystem.AI.Components
 
         public void SetOutlineEnabled(bool status)
         {
-            if (m_myOutline != null)
-                m_myOutline.enabled = status;
+            //if (m_myOutline != null)
+            //    m_myOutline.enabled = status;
         }
 
         public int GetNextAttack()
