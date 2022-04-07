@@ -56,6 +56,7 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (_active)
         {
+            playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost);
             playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             WeaponAltFunctionality();
         }

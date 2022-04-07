@@ -328,9 +328,10 @@ public class Player_Controller : MonoBehaviour
             playerResources.UseAdrenaline();
         }
 
-        if (InputManager.Instance.IsBindDown("Switch", gamepadID))
+        if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
+            && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded))
         {
-            playerAttack.SwapWeapons();
+                playerAttack.SwapWeapons();
         }
 
         // Camera zoom;
@@ -577,7 +578,16 @@ public class Player_Controller : MonoBehaviour
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
                 animator.SetTrigger("BlockHit");
+
+                playerResources.ChangeStamina(-_damage);
+                if (playerResources.m_isExhausted)
+                {
+                    playerAudioAgent.PlayShieldBlock(); // Guard break audio
+                    animator.SetTrigger("HitPlayer");
+                    return;
+                }
                 playerAudioAgent.PlayShieldBlock();
+
                 return;
             }
             Debug.Log("MISSED BLOCK");

@@ -93,7 +93,8 @@ public class Player_Attack : MonoBehaviour
     {
         m_attackedThisFrame = false;
 
-        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded)
+        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded 
+            && (m_rightWeaponData == null || m_rightWeaponData != null && !m_rightWeaponData.isTwoHanded))
         {
             SwapWeapons();
         }
@@ -112,6 +113,9 @@ public class Player_Attack : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT: // Left hand weapon
+                if (playerController.playerResources.m_isExhausted)
+                    return;
+
                 if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
                 {
                     if (m_rightWeaponInUse)
@@ -608,7 +612,7 @@ public class Player_Attack : MonoBehaviour
      */
     public void SwapWeapons()
     {
-        if (m_leftWeaponInUse || m_rightWeaponInUse)
+        if ((m_leftWeapon && m_leftWeapon.m_isInUse) || (m_rightWeapon && m_rightWeapon.m_isInUse))
             return;
 
         if (m_leftWeaponData != null && m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)

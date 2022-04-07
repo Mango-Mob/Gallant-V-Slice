@@ -103,6 +103,8 @@ public class WeaponData : ScriptableObject
     public float altHitCenterOffset = 0.75f;
     public float altHitSize = 1.0f;
 
+    public float m_altAttackStaminaCost = 40.0f;
+
     [Header("Dropped Weapon Data")]
     public float m_dropScaleMultiplier = 1.0f;
 
@@ -458,5 +460,7 @@ public class WeaponData : ScriptableObject
         this.m_attackAltMoveSpeed = other.m_attackAltMoveSpeed;
         this.altHitCenterOffset = other.altHitCenterOffset;
         this.altHitSize = other.altHitSize;
+
+        this.m_altAttackStaminaCost = other.m_altAttackStaminaCost;
     }
 }
