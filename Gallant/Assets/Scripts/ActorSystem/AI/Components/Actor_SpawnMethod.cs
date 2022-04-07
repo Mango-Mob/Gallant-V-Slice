@@ -21,7 +21,7 @@ namespace ActorSystem.AI.Components
         }
         public override void SetEnabled(bool status)
         {
-            this.enabled = status;
+            //this.enabled = status;
         }
     }
 }
