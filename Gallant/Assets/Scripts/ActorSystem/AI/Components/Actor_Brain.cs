@@ -97,7 +97,7 @@ namespace ActorSystem.AI.Components
         {
             if (IsStunned || IsDead)
             {
-                m_legs.Halt();
+                m_legs?.Halt();
                 return;
             }
 
