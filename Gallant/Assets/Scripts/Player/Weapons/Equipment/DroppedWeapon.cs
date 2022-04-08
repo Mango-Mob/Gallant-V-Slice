@@ -69,11 +69,11 @@ public class DroppedWeapon : MonoBehaviour
             {
                 foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
                 {
-                    Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
-                    //outlineScript.OutlineColor = newColor;m_defaultColor
-                    outlineScript.OutlineColor = m_defaultColor;
-                    outlineScript.OutlineWidth = 2.5f;
-                    outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
+                    //Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
+                    ////outlineScript.OutlineColor = newColor;m_defaultColor
+                    //outlineScript.OutlineColor = m_defaultColor;
+                    //outlineScript.OutlineWidth = 2.5f;
+                    //outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
                 }
             }
         }
