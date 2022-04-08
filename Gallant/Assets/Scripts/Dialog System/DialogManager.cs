@@ -54,6 +54,15 @@ public class DialogManager : Singleton<DialogManager>
         {
             EventSystem.current.SetSelectedGameObject(null);
         }
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i))
+            {
+                if (m_options[i].interactable)
+                    m_options[i].onClick?.Invoke();
+            }
+        }
     }
 
     public void Show()

@@ -30,7 +30,7 @@ namespace ActorSystem.AI.Components
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
-        public bool IsStunned = false;
+        public bool IsStunned { get; set; } = false;
         public bool m_canBeTarget = true;
         public bool m_forceShowUI = false;
         
@@ -50,7 +50,6 @@ namespace ActorSystem.AI.Components
         public bool m_canStagger { get; set; }
 
         private float m_staminaRegen; 
-        private bool m_trackingTarget = false;
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
 
@@ -75,7 +74,6 @@ namespace ActorSystem.AI.Components
             m_materials = GetComponentsInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponent<Actor_AudioAgent>();
-            //m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
@@ -99,7 +97,7 @@ namespace ActorSystem.AI.Components
         {
             if (IsStunned || IsDead)
             {
-                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 0.0f);
+                m_legs.Halt();
                 return;
             }
 
@@ -109,10 +107,6 @@ namespace ActorSystem.AI.Components
             if(m_canBeTarget && m_ui != null)
             {
                 m_ui.SetEnabled(m_forceShowUI);
-            }
-            if(m_trackingTarget && m_target != null && m_legs != null)
-            {
-                m_legs.SetTargetRotation(Quaternion.LookRotation((m_target.transform.position - transform.position).normalized, Vector3.up));
             }
         }
 
@@ -231,15 +225,7 @@ namespace ActorSystem.AI.Components
             {
                 if(m_arms.Begin(id) != null)
                 {
-                    if (m_arms.m_myData[m_arms.m_activeAttack.Value].canAttackMove)
-                    {
-                        m_legs?.SetTargetLocation(m_target.transform.position);
-                    }
-                    else
-                    {
-                        m_legs?.Halt();
-                    }
-                    m_trackingTarget = m_arms.m_myData[m_arms.m_activeAttack.Value].canTrackTarget;
+                    
                 }
             }
         }
@@ -247,11 +233,6 @@ namespace ActorSystem.AI.Components
         public void RegenStamina(float mod)
         {
             m_currStamina = Mathf.Clamp(m_currStamina + m_staminaRegen * Time.deltaTime * mod, 0, m_startStamina);
-        }
-
-        public void HaltRotation()
-        {
-            m_trackingTarget = false;
         }
 
         public void InvokeAttack(int id = 0)
@@ -271,8 +252,7 @@ namespace ActorSystem.AI.Components
 
         public void EndAttack()
         {
-            m_arms.m_activeAttack = null;
-            m_trackingTarget = false;
+            m_arms.End();
         }
 
         public bool HandleDamage(float damage, float piercingVal, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)
