@@ -6,10 +6,10 @@ public class Weapon_Bow : WeaponBase
 {
     private bool m_chargingShot = false;
     private float m_charge = 0.0f;
-    private float m_chargeRate = 0.7f;
+    private float m_chargeRate = 3.0f;
     new private void Awake()
     {
-        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
+        m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
         base.Awake();
     }
 

@@ -5,10 +5,17 @@ using UnityEngine;
 
 public class FirewaveProjectile : BaseAbilityProjectile
 {
+    public float m_expansionRate = 1.0f;
+
     // Start is called before the first frame update
     new private void Start()
     {
         base.Start();
+        transform.localScale = Vector3.zero;
+    }
+    private void Update()
+    {
+        transform.localScale += Vector3.one * m_expansionRate * Time.deltaTime;
     }
     protected override void DetonateProjectile(bool hitTarget = false)
     {

@@ -28,6 +28,8 @@ public class Player_Movement : MonoBehaviour
     public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
     float m_turnSmoothVelocity;
+    float m_turnAnimationVelocity = 0.0f;
+    public float m_turnAnimationTime = 0.075f;
     public float m_turnAnimationMult = 0.001f;
     public bool m_isRolling { get; private set; } = false;
     public bool m_isRollInvincible { get; private set; } = false;
@@ -499,6 +501,8 @@ public class Player_Movement : MonoBehaviour
      */
     private void RotateToFaceDirection(Vector3 _direction)
     {
+        float targetRotateAnim = 0.5f;
+
         // Rotate player model
         if (_direction.magnitude >= 0.1f && playerModel != null)
         {
@@ -506,15 +510,20 @@ public class Player_Movement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(playerModel.transform.eulerAngles.y, targetAngle, ref m_turnSmoothVelocity, m_turnSmoothTime);
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
 
-            float rotateOffset = m_turnSmoothVelocity * m_turnAnimationMult;
-            if (Mathf.Abs(rotateOffset) <= 0.05f)
-                rotateOffset = 0.0f;
-            playerController.animator.SetFloat("Rotate", 0.5f + rotateOffset);
+            targetRotateAnim = Mathf.SmoothDampAngle(playerController.animator.GetFloat("Rotate"), 
+                0.5f + m_turnSmoothVelocity * m_turnAnimationMult, ref m_turnAnimationVelocity, m_turnAnimationTime);
+            //float rotateOffset = m_turnSmoothVelocity * m_turnAnimationMult;
+            //if (Mathf.Abs(rotateOffset) <= 0.05f)
+            //    rotateOffset = 0.0f;
+            //playerController.animator.SetFloat("Rotate", 0.5f + rotateOffset);
         }
         else
         {
-            playerController.animator.SetFloat("Rotate", 0.5f);
+            targetRotateAnim = Mathf.SmoothDampAngle(playerController.animator.GetFloat("Rotate"),
+                0.5f, ref m_turnAnimationVelocity, m_turnAnimationTime);
+            //playerController.animator.SetFloat("Rotate", targetRotateAnim);
         }
+        playerController.animator.SetFloat("Rotate", targetRotateAnim);
     }
 
     public void LockOnTarget()
