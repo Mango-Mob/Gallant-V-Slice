@@ -69,7 +69,7 @@ public class Whirlpool : MonoBehaviour
                 Vector3 direction = transform.position - actor.transform.position;
                 direction.y = 0.0f;
                 Vector3 forward = direction.normalized * m_data.effectiveness;
-                actor.KnockbackActor(Quaternion.Euler(0.0f, 15.0f, 0.0f) * forward);
+                actor.KnockbackActor(Quaternion.Euler(0.0f, 35.0f, 0.0f) * forward);
             }
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)

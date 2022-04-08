@@ -95,9 +95,9 @@ public class Player_Resources : MonoBehaviour
         {
             m_staminaRegenDelayTimer -= Time.deltaTime;
         }
-        else if (m_stamina < m_maxStamina)
+        else if (m_stamina < m_maxStamina && !playerController.playerAttack.m_isBlocking)
         {
-            m_stamina += m_staminaRegenRate * Time.deltaTime * (m_isExhausted ? m_exhaustRegenMult : 1.0f);
+            m_stamina += m_staminaRegenRate * playerController.playerSkills.m_staminaRegenRate * Time.deltaTime * (m_isExhausted ? m_exhaustRegenMult : 1.0f);
             m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
             m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
         }

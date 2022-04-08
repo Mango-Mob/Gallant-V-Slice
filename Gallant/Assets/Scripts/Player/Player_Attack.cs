@@ -93,7 +93,8 @@ public class Player_Attack : MonoBehaviour
     {
         m_attackedThisFrame = false;
 
-        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded)
+        if (m_leftWeaponData != null && m_leftWeaponData.isTwoHanded 
+            && (m_rightWeaponData == null || m_rightWeaponData != null && !m_rightWeaponData.isTwoHanded))
         {
             SwapWeapons();
         }
@@ -112,6 +113,9 @@ public class Player_Attack : MonoBehaviour
         switch (_hand)
         {
             case Hand.LEFT: // Left hand weapon
+                if (playerController.playerResources.m_isExhausted)
+                    return;
+
                 if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
                 {
                     if (m_rightWeaponInUse)
@@ -608,7 +612,7 @@ public class Player_Attack : MonoBehaviour
      */
     public void SwapWeapons()
     {
-        if (m_leftWeaponInUse || m_rightWeaponInUse)
+        if ((m_leftWeapon && m_leftWeapon.m_isInUse) || (m_rightWeapon && m_rightWeapon.m_isInUse))
             return;
 
         if (m_leftWeaponData != null && m_leftWeaponData.abilityData != null && playerController.playerAbilities.m_leftAbility != null)
@@ -648,7 +652,11 @@ public class Player_Attack : MonoBehaviour
                     damageMult = playerController.playerStats.m_physicalDamage;
                     break;
                 case CombatSystem.DamageType.Ability:
-                    damageMult = playerController.playerStats.m_physicalDamage;
+                    damageMult = playerController.playerStats.m_abilityDamage;
+
+                    float arcaneFocus = playerController.playerStats.m_arcaneFocus;
+                    damageMult += (arcaneFocus * ((m_leftWeaponEffect == ItemEffect.ARCANE_FOCUS ? m_leftWeaponData.m_damage : 0.0f)));
+                    damageMult += (arcaneFocus * ((m_rightWeaponEffect == ItemEffect.ARCANE_FOCUS ? m_rightWeaponData.m_damage : 0.0f)));
                     break;
                 case CombatSystem.DamageType.True:
                     damageMult = 1.0f;
@@ -657,7 +665,7 @@ public class Player_Attack : MonoBehaviour
             if (_target.gameObject.layer == LayerMask.NameToLayer("Rubble"))
                 damageMult = 0.0f;
 
-            actor.DealDamage(_damage * damageMult, CombatSystem.DamageType.Physical, _piercingVal, transform.position);
+            actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
         }
 
         Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
@@ -708,7 +716,7 @@ public class Player_Attack : MonoBehaviour
         {
             if (m_leftWeapon)
             {
-                if (m_leftWeaponData != null)
+                if (m_leftWeaponData != null && m_leftWeaponEffect == ItemEffect.NONE)
                 {
                     playerController.playerStats.AddEffect(m_leftWeaponData.itemEffect);
                     m_leftWeaponEffect = m_leftWeaponData.itemEffect;

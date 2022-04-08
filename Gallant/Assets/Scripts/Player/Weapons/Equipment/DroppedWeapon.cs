@@ -12,6 +12,7 @@ public class DroppedWeapon : MonoBehaviour
 {
     public WeaponData m_weaponData; // Data of contained weapon
     [ColorUsage(true, true)] public Color m_defaultColor;
+    public bool m_outlineEnabled = false;
 
     [Header("Floating Object")]
     public GameObject m_defaultModel;
@@ -53,10 +54,10 @@ public class DroppedWeapon : MonoBehaviour
 
 
                 Color newColor = m_weaponData.abilityData.droppedEnergyColor;
-                newColor.a = m_weaponBubble.material.color.a;
 
                 m_weaponBubble.material.color = newColor;
-                m_weaponBubble.material.SetColor("_EmissionColor", newColor);
+                m_weaponBubble.material.SetColor("_Emission", newColor);
+
 
                 newColor.a = 1.0f;
                 ParticleSystem.MainModule mainModule = m_particleSystem.main;
@@ -64,13 +65,16 @@ public class DroppedWeapon : MonoBehaviour
 
                 m_particleSystem.Play();
             }
-            foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
+            if (m_outlineEnabled)
             {
-                //Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
-                //outlineScript.OutlineColor = newColor;m_defaultColor
-                //outlineScript.OutlineColor = m_defaultColor;
-                //outlineScript.OutlineWidth = 2.5f;
-                //outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
+                foreach (var meshRenderer in m_weaponModel.GetComponentsInChildren<MeshRenderer>())
+                {
+                    //Outline outlineScript = meshRenderer.gameObject.AddComponent<Outline>();
+                    ////outlineScript.OutlineColor = newColor;m_defaultColor
+                    //outlineScript.OutlineColor = m_defaultColor;
+                    //outlineScript.OutlineWidth = 2.5f;
+                    //outlineScript.OutlineMode = Outline.Mode.OutlineVisible;
+                }
             }
         }
         ToggleDisplay(false);
@@ -110,5 +114,10 @@ public class DroppedWeapon : MonoBehaviour
             Debug.Log("No dropped weapon component found on dropped object. Wrong prefab/resource being loaded.");
         }
         return droppedWeapon;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(m_weaponBubble.transform.position, m_weaponBubble.transform.localScale.x / 2.0f);
     }
 }
