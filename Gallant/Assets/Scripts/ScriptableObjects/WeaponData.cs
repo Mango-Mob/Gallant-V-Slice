@@ -75,6 +75,7 @@ public class WeaponData : ScriptableObject
     public float hitSize = 1.0f;
     public AbilityData abilityData;
     public ItemEffect itemEffect; // Only for weapons with passives.
+    private EffectData m_itemEffectData;
 
     public string overrideAnimation = "";
 
@@ -113,6 +114,7 @@ public class WeaponData : ScriptableObject
 
     private static float m_minSpeedPerLevel = 0.05f;
     private static float m_maxSpeedPerLevel = 0.2f;
+
 
     public static WeaponData GenerateWeapon(int _level)
     {
@@ -259,6 +261,8 @@ public class WeaponData : ScriptableObject
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/bowData"));
                 break;
         }
+        _data.m_itemEffectData = null;
+        _data.m_itemEffectData = EffectData.GetEffectData(_data.itemEffect);
     }
     public static void ApplyAbilityData(WeaponData _weaponData, AbilityData _abilityData)
     {
@@ -357,13 +361,13 @@ public class WeaponData : ScriptableObject
             case Weapon.BOOMERANG:
                 return "One hand, Ranged";
             case Weapon.SHIELD:
-                return "One hand, Melee";
+                return "One hand, Ranged";
             case Weapon.CROSSBOW:
                 return "One hand, Ranged";
             case Weapon.HAMMER:
                 return "One hand, Melee";
             case Weapon.STAFF:
-                return "One hand, Melee";
+                return "One hand, Ranged";
             case Weapon.GREATSWORD:
                 return "Two hands, Melee";
             case Weapon.BOW:
@@ -388,6 +392,10 @@ public class WeaponData : ScriptableObject
                 return "Higher damage resistance.";
             case ItemEffect.MAX_HEALTH_INCREASE:
                 return "Higher maximum health.";
+            case ItemEffect.ARCANE_FOCUS:
+                if (m_itemEffectData != null)
+                    return $"Spell damage increased by {m_itemEffectData.GetEffectValue(1) * 100.0f * m_damage}%.";
+                return null;
             default:
                 return null;
         }
@@ -438,6 +446,7 @@ public class WeaponData : ScriptableObject
         this.hitSize = other.hitSize;
         this.abilityData = other.abilityData;
         this.itemEffect = other.itemEffect;
+        this.m_itemEffectData = other.m_itemEffectData;
 
         this.overrideAnimation = other.overrideAnimation;
 

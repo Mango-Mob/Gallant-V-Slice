@@ -131,7 +131,7 @@ public class UI_StatsMenu : UI_Element
                     break;
                 }
             }
-            if (!runeInfoExists)
+            if (!runeInfoExists && effect.Key.effect != ItemEffect.ARCANE_FOCUS)
             {
                 RuneInfo newObject = Instantiate(m_runeInfoPrefab, m_listObject.transform).GetComponent<RuneInfo>();
                 newObject.m_effect = effect.Key;

@@ -15,6 +15,8 @@ public class EffectData : ScriptableObject
         ADDITIVE,
         DIMINISHING,
         CURVE_TO_EXTREME,
+        STACK_COUNT,
+        RETURN_STRENGTH,
     }
 
     [Header("Effect Information")]
@@ -26,7 +28,6 @@ public class EffectData : ScriptableObject
     public float m_stackStrength = 0.1f;
     [HideInInspector] public float m_diminishingValue = 0.5f;
     [HideInInspector] public float m_extremeValue = 0.3f;
-
     public float GetEffectValue(int _stackCount)
     {
         float value = 0.0f;
@@ -48,11 +49,60 @@ public class EffectData : ScriptableObject
                 else
                     value = m_default;
                 break;
+            case StackCalculation.STACK_COUNT:
+                value = _stackCount;
+                break;
+            case StackCalculation.RETURN_STRENGTH:
+                value = m_stackStrength;
+                break;
             default:
                 break;
         }
 
         return value;
+    }
+
+    public static EffectData GetEffectData(ItemEffect _effect)
+    {
+        EffectData data = null;
+        switch (_effect)
+        {
+            case ItemEffect.NONE:
+                return null;
+            case ItemEffect.MOVE_SPEED:
+                data = Resources.Load<EffectData>("Data/Effects/moveSpeed");
+                break;
+            case ItemEffect.ABILITY_CD:
+                data = Resources.Load<EffectData>("Data/Effects/abilityCD");
+                break;
+            case ItemEffect.ATTACK_SPEED:
+                data = Resources.Load<EffectData>("Data/Effects/attackSpeed");
+                break;
+            case ItemEffect.DAMAGE_RESISTANCE:
+                data = Resources.Load<EffectData>("Data/Effects/damageResist");
+                break;
+            case ItemEffect.MAX_HEALTH_INCREASE:
+                data = Resources.Load<EffectData>("Data/Effects/healthIncrease");
+                break;
+            case ItemEffect.PHYSICAL_DAMAGE:
+                data = Resources.Load<EffectData>("Data/Effects/physicalDamage");
+                break;
+            case ItemEffect.ABILITY_DAMAGE:
+                data = Resources.Load<EffectData>("Data/Effects/abilityDamage");
+                break;
+            case ItemEffect.PHYSICAL_DEFENCE:
+                data = Resources.Load<EffectData>("Data/Effects/physicalDefence");
+                break;
+            case ItemEffect.ABILITY_DEFENCE:
+                data = Resources.Load<EffectData>("Data/Effects/abilityDefence");
+                break;
+            case ItemEffect.ARCANE_FOCUS:
+                data = Resources.Load<EffectData>("Data/Effects/arcaneFocus");
+                break;
+            default:
+                break;
+        }
+        return data;
     }
 }
 

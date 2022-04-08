@@ -11,7 +11,6 @@ using UnityEngine;
 public class Ability_RollBash : AbilityBase
 {
     public GameObject m_objectPrefab;
-    private GameObject m_lastProjectile;
 
     new private void Awake()
     {

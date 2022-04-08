@@ -13,6 +13,7 @@ public enum ItemEffect
     PHYSICAL_DEFENCE,
     ABILITY_DEFENCE,
     DAMAGE_RESISTANCE,
+    ARCANE_FOCUS,
 }
 /****************
  * Player_Stats: Manages the stats of the player including effects
@@ -33,6 +34,7 @@ public class Player_Stats : MonoBehaviour
     public float m_abilityDamage = 1.0f;
     public float m_physicalDefence = 1.0f;
     public float m_abilityDefence = 1.0f;
+    public float m_arcaneFocus = 0.0f;
 
     public Dictionary<EffectData, int> m_effects = new Dictionary<EffectData, int>();
 
@@ -48,6 +50,8 @@ public class Player_Stats : MonoBehaviour
      */
     public void AddEffect(ItemEffect _effect)
     {
+        Debug.Log($"Adding {_effect}");
+
         if (_effect == ItemEffect.NONE)
             return;
 
@@ -64,40 +68,8 @@ public class Player_Stats : MonoBehaviour
         if (!foundEffect)
         {
             EffectData data = null;
-            switch (_effect)
-            {
-                case ItemEffect.NONE:
-                    return;
-                case ItemEffect.MOVE_SPEED:
-                    data = Resources.Load<EffectData>("Data/Effects/moveSpeed");
-                    break;
-                case ItemEffect.ABILITY_CD:
-                    data = Resources.Load<EffectData>("Data/Effects/abilityCD");
-                    break;
-                case ItemEffect.ATTACK_SPEED:
-                    data = Resources.Load<EffectData>("Data/Effects/attackSpeed");
-                    break;
-                case ItemEffect.DAMAGE_RESISTANCE:
-                    data = Resources.Load<EffectData>("Data/Effects/damageResist");
-                    break;
-                case ItemEffect.MAX_HEALTH_INCREASE:
-                    data = Resources.Load<EffectData>("Data/Effects/healthIncrease");
-                    break;
-                case ItemEffect.PHYSICAL_DAMAGE:
-                    data = Resources.Load<EffectData>("Data/Effects/physicalDamage");
-                    break;
-                case ItemEffect.ABILITY_DAMAGE:
-                    data = Resources.Load<EffectData>("Data/Effects/abilityDamage");
-                    break;
-                case ItemEffect.PHYSICAL_DEFENCE:
-                    data = Resources.Load<EffectData>("Data/Effects/physicalDefence");
-                    break;
-                case ItemEffect.ABILITY_DEFENCE:
-                    data = Resources.Load<EffectData>("Data/Effects/abilityDefence");
-                    break;
-                default:
-                    break;
-            }
+
+            data = EffectData.GetEffectData(_effect);
 
             if (data == null)
                 return;
@@ -188,6 +160,9 @@ public class Player_Stats : MonoBehaviour
                     break;
                 case ItemEffect.ABILITY_DEFENCE:
                     m_abilityDefence = effect.Key.GetEffectValue(effect.Value);
+                    break;
+                case ItemEffect.ARCANE_FOCUS:
+                    m_arcaneFocus = effect.Key.GetEffectValue(effect.Value);
                     break;
                 default:
                     Debug.Log("Added one " + effect.Key + " buff. Total: " + effect.Value);
