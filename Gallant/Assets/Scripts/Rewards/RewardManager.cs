@@ -246,51 +246,6 @@ public class RewardManager : Singleton<RewardManager>
         return m_items[select];
     }
 
-    public void Hover(int id)
-    {
-        ScriptableObject data;
-
-        switch(id)
-            {
-            case 0: case 1: case 2:
-                if(m_rewardSlots[id].IsAWeapon)
-                    data = m_rewardSlots[id].m_weaponData;
-                else
-                    data = m_rewardSlots[id].m_itemData;
-                break;
-            default:
-            case 3:
-                data = m_leftHand.m_weaponData;
-                break;
-            case 4:
-                data = m_rightHand.m_weaponData;
-                break;
-        }
-
-        if(data is WeaponData)
-        {
-            WeaponData wData = data as WeaponData;
-            if(wData.abilityData != null)
-            {
-                m_abilityImage.gameObject.SetActive(true);
-                //m_abilityDescription.text = AbilityData.EvaluateDescription(wData.abilityData);
-                m_abilityCooldownText.text = wData.abilityData.cooldownTime.ToString() + "s";
-            }
-            else
-            {
-                m_abilityImage.gameObject.SetActive(false);
-            }
-        }
-        else if(data is ItemData)
-        {
-            ItemData iData = data as ItemData;
-            m_abilityImage.sprite = m_rewardSlots[id].m_itemData.itemIcon;
-            m_abilityCooldownHeader.text = "";
-            m_abilityCooldownText.text = "";
-            m_abilityDescription.text = iData.description;
-        }
-    }
-
     public void Select(int item)
     {      
         if(m_select != item)

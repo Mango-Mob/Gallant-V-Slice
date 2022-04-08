@@ -24,11 +24,6 @@ public class RoomData : ScriptableObject
         if (m_waveInformation == null)
             return 0;
 
-        foreach (var wave in m_waveInformation)
-        {
-            if(wave.actor != null)
-                cost += wave.actor.cost * (wave.count + Mathf.RoundToInt(wave.count/2));
-        }
         return cost;
     }
 

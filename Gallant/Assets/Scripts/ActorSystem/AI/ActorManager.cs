@@ -89,6 +89,9 @@ namespace ActorSystem.AI
         {
             if(!m_subscribed.Contains(user))
                 m_subscribed.Add(user);
+
+            if (!m_reserved.ContainsKey(user.m_myData.ActorName))
+                m_reserved.Add(user.m_myData.ActorName, new List<Actor>());
         }
 
         public void ReserveMe(Actor user)

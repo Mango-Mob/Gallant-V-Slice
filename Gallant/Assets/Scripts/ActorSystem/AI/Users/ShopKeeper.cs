@@ -54,7 +54,7 @@ namespace ActorSystem.AI.Users
             m_keyboardInput.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
 
-            m_myBrain.m_myOutline.SetEnabled(!m_hasGivenReward);
+            //m_myBrain.m_myOutline.SetEnabled(!m_hasGivenReward);
             if (m_myBrain.enabled && Vector3.Distance(transform.position, m_player.transform.position) > m_disableDistance)
             {
                 m_myBrain.SetEnabled(false);

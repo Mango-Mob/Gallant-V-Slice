@@ -7,55 +7,42 @@ namespace ActorSystem.Spawning
 {
     public class PortalSpawnData : SpawnDataGenerator
     {
-        protected override Task GenerateSpawnPoints()
-        {
-            m_spawnPoints = new List<SpawnData>();
+        public GameObject portalVFXPrefab;
 
-            for (int i = 0; i < m_sections; i++)
+        public override bool GetASpawnPoint(float actorSize, out Vector3 spawnPos)
+        {
+            Collider[] overlapCheck = null;
+            int safetyCheck = 5;
+            NavMeshHit hit;
+
+            do
             {
-                m_spawnPoints.Add(CreateSpawn());
+                //iterate safety
+                safetyCheck--;
+
+                //Get Random point within the known bounds, and transform from local to world
+                Vector2 randInBounds = (m_isCircle) ? Random.insideUnitCircle : new Vector2(Random.Range(-m_spawnSize, m_spawnSize), Random.Range(-m_spawnSize, m_spawnSize));
+                Vector3 randPos = transform.TransformPoint(new Vector3(randInBounds.x, 0, randInBounds.y));
+
+                //Project point to navmesh
+                if (!NavMesh.SamplePosition(randPos, out hit, m_navSampleRadius, NavMesh.AllAreas))
+                    continue; //if failed, do another loop
+
+                //Conduct an overlap check of the area for any other agents/players
+                overlapCheck = Physics.OverlapSphere(hit.position, actorSize, spawnOverlapLayer);
+
+                //If WITHIN the safey bounds and another object is WITHIN the overlap, Redo
+            } while (safetyCheck > 5 && overlapCheck.Length > 0);
+
+            //isValid point
+            if(overlapCheck.Length == 0)
+            {//Note: if safety was zero, this still could be a valid point
+                spawnPos = hit.position;
+                return true;
             }
 
-            return Task.CompletedTask;
-        }
-
-        private SpawnData CreateSpawn()
-        {
-            Vector2 loc;
-            if (m_isCircle)
-            {
-                loc = Random.insideUnitCircle;
-            }
-            else
-            {
-                loc = new Vector2(Random.Range(-m_spawnSize, m_spawnSize), Random.Range(-m_spawnSize, m_spawnSize));
-            }
-            SpawnData data = new SpawnData();
-            data.endPoint = transform.position + new Vector3(loc.x, 0, loc.y);
-            data.startPoint = data.endPoint;
-
-            NavMeshHit navHit;
-            if (NavMesh.SamplePosition(data.endPoint, out navHit, m_navSampleRadius, NavMesh.AllAreas))
-            {
-                data.navPoint = navHit.position;
-            }
-            return data;
-        }
-
-        public override void OnDrawGizmos()
-        {
-            base.OnDrawGizmos();
-        }
-
-        public override SpawnData GetASpawnPoint()
-        {
-            int selectSpawn = Random.Range(0, m_spawnPoints.Count);
-            SpawnData result = m_spawnPoints[selectSpawn];
-
-            m_spawnPoints.Add(CreateSpawn());
-
-            m_spawnPoints.RemoveAt(selectSpawn);
-            return result;
+            spawnPos = Vector3.zero;
+            return false;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -25,8 +26,10 @@ namespace ActorSystem.Spawning
 
         public List<Actor> m_myActors { get; private set; }
         public bool m_hasStarted { get; private set; } = false;
-        public SpawnDataGenerator m_generator { get; private set; }
+        public SpawnDataGenerator[] m_generators;
 
+        private int activeRoutines = 0;
+        private float spawnDelay = 0.5f;
         //MonoBehaviour
         private void Awake()
         {
@@ -35,7 +38,7 @@ namespace ActorSystem.Spawning
             {
                 m_value += wave.CalculateCost();
             }
-            m_generator = GetComponentInChildren<SpawnDataGenerator>();
+            m_generators = GetComponentsInChildren<SpawnDataGenerator>();
             m_myActors = new List<Actor>();
             if (m_spawnOnAwake && m_waves.Count > 0)
             {
@@ -131,79 +134,65 @@ namespace ActorSystem.Spawning
             if (wave == null)
                 return;
 
-            if(m_generator.m_spawnPoints == null || m_generator.m_spawnPoints.Count == 0)
+
+            foreach (var item in wave.m_waveInformation)
             {
-                Debug.LogError("Spawner doesn't have any valid spawn points.");
-                return;
+                StartCoroutine(SpawnActors(item.actor, 0.25f, item.count));
             }
-            //Create a copy of the scriptableObject
-            RoomData data = ScriptableObject.CreateInstance<RoomData>();
-            data.m_waveInformation = new List<RoomData.Actor>(wave.m_waveInformation);
-            int count = data.Count();
+        }
 
-            while (count > 0) //Until the last enemy is spawnned.
+        private IEnumerator SpawnActors(ActorData actor, float delay, int qantity)
+        {
+            if (ActorManager.Instance.m_reserved.ContainsKey(actor.ActorName))
             {
-                //For each select type of unit
-                int selectUnit = Random.Range(0, data.m_waveInformation.Count);
-                for (int i = 0; i < wave.m_waveInformation[selectUnit].count; i++)
+                activeRoutines++;
+                for (int i = 0; i < qantity; i++)
                 {
-                    int selectSpawn = Random.Range(0, m_generator.m_spawnPoints.Count);
-                    SpawnData spawnData = m_generator.GetASpawnPoint();
+                    yield return new WaitForSeconds(delay);
 
-                    //Get/Create actor in the reserves
-                    Actor spawn = ActorManager.Instance.GetReservedActor(data.m_waveInformation[selectUnit].actor.ActorName);
+                    int spawnSelect = 0;
+                    Vector3 spawnLoc;
+
+                    do
+                    {
+                        yield return new WaitForEndOfFrame();
+                        spawnSelect = Random.Range(0, m_generators.Length);
+                    } while (!m_generators[spawnSelect].GetASpawnPoint(actor.radius, out spawnLoc));
+
+                    Actor spawn = ActorManager.Instance.GetReservedActor(actor.ActorName);
                     m_myActors.Add(spawn);
                     spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;
-
-                    //Start Spawn animation
-                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnData.startPoint, spawnData.endPoint, spawnData.navPoint);
-
-                    count--;
+                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnLoc);
                 }
 
-                //Remove option
-                data.m_waveInformation.RemoveAt(selectUnit);
+                activeRoutines--;
             }
+            yield return null;
         }
 
         //MonoBehaviour
         void Update()
         {
-            if(m_hasStarted && m_myActors.Count == 0)
+            if(m_hasStarted && m_myActors.Count == 0 && activeRoutines == 0)
             {
-                 if (m_waves.Count == 0)
-                 {
-                     Stop();
-                     RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
-                     GameManager.Advance();
-                     EndScreenMenu.roomsCleared++;
-                 }
-                 else
-                 {
-                     SpawnWave(m_waves[0]);
-                     m_waves.RemoveAt(0);
-                 }
-            }
-        }
+                if (spawnDelay > 0.0f)
+                    spawnDelay -= Time.deltaTime;
 
-        public bool GetClosestSpawn(Vector3 position, out SpawnData closest)
-        {
-            float dist = float.MaxValue;
-            closest = new SpawnData();
-            foreach (var item in m_generator.m_spawnPoints)
-            {
-                if(Vector3.Distance(position, item.startPoint) < dist)
+                if (m_waves.Count == 0 && spawnDelay <= 0)
                 {
-                    dist = Vector3.Distance(position, item.startPoint);
-                    closest = item;
+                    Stop();
+                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
+                    GameManager.Advance();
+                    EndScreenMenu.roomsCleared++;
+                }
+                else if (spawnDelay <= 0)
+                {
+                    SpawnWave(m_waves[0]);
+                    m_waves.RemoveAt(0);
+                    spawnDelay = 0.5f;
                 }
             }
-            if(dist == float.MaxValue)
-            {
-                return false;
-            }
-            return true;
         }
     }
 }

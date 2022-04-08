@@ -42,6 +42,9 @@ public abstract class StateMachine : MonoBehaviour
             case State.Type.DEAD:
                 SetState(new State_Dead(this));
                 break;
+            case State.Type.FLEE_FROM_TARGET:
+                SetState(new State_FleeFromTarget(this));
+                break;
             default:
                 break;
         }

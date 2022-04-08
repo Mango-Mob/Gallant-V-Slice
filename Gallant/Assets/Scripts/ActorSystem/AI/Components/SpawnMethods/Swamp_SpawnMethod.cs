@@ -5,19 +5,20 @@ namespace ActorSystem.AI.Components.SpawnMethods
     public class Swamp_SpawnMethod : Actor_SpawnMethod
     {
         public GameObject m_spawnVFX;
-        public float m_spawnDelay;
+        public float m_spawnDelayMin;
+        public float m_spawnDelayMax;
 
         private bool m_hasResentlySpawnned;
         private float m_timer;
         private GameObject m_spawn;
 
-        public override void StartSpawn(Vector3 start, Vector3 end, Vector3 navMeshPoint)
+        public override void StartSpawn(Vector3 spawnLoc)
         {
-            m_spawn = GameObject.Instantiate(m_spawnVFX, navMeshPoint, Quaternion.identity);
-
+            m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
+            m_spawn.transform.localScale = Vector3.one * GetComponent<Actor>().m_myData.radius;
             ////Play animation
             GetComponent<Actor_Brain>().m_ragDoll?.DisableRagdoll();
-            m_timer = m_spawnDelay;
+            m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
             //m_spawnning = true;
         }
