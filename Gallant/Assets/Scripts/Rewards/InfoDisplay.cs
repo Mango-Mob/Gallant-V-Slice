@@ -180,7 +180,8 @@ public class InfoDisplay : MonoBehaviour
         m_weaponImageLoc.sprite = data.weaponIcon;
         m_altTitle.SetText(data.m_altAttackName);
         m_altDescription.SetText(WeaponData.EvaluateDescription(data));
-        m_altImage.sprite = data.altAttackIcon;
+        if(data.altAttackIcon != null)
+            m_altImage.sprite = data.altAttackIcon;
 
         if (data.abilityData != null)
         {

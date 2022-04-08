@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ActorSystem.AI;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActorSystem.Data
@@ -85,6 +86,42 @@ namespace ActorSystem.Data
                     break;
                 default:
                     break;
+            }
+        }
+
+        public virtual void BeginActor(Actor user)
+        {
+            if (canAttackMove)
+            {
+                user.SetTargetLocation(user.m_target.transform.position, canTrackTarget);
+            }
+            else if (canTrackTarget)
+            {
+                user.SetTargetOrientaion(user.m_target.transform.position);
+            }
+        }
+
+        public virtual void UpdateActor(Actor user)
+        {
+            if (canAttackMove)
+            {
+                user.SetTargetLocation(user.m_target.transform.position, canTrackTarget);
+            }
+            else if (canTrackTarget)
+            {
+                user.SetTargetOrientaion(user.m_target.transform.position);
+            }
+        }
+
+        public virtual void EndActor(Actor user)
+        {
+            if (canAttackMove)
+            {
+                user.SetTargetLocation(user.m_target.transform.position, canTrackTarget);
+            }
+            else if (canTrackTarget)
+            {
+                user.SetTargetOrientaion(user.m_target.transform.position);
             }
         }
 

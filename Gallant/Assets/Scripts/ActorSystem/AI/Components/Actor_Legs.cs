@@ -22,17 +22,21 @@ namespace ActorSystem.AI.Components
 
         [Range(0.0f, 2.0f)]
         public float m_speedModifier = 1.0f;
+        public bool m_canBeKnocked = true;
         public bool m_isKnocked = false;
+
         private bool m_isSeekingMesh = false;
 
         //External Accessors
         public Vector3 velocity { get { return (m_isKnocked) ? Vector3.zero : m_agent.velocity; } }
         public Vector3 localVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(transform.rotation.eulerAngles.y, -Vector3.up) * m_agent.velocity; } }
+
         public Vector3 scaledVelocity { get { return localVelocity / m_agent.speed; } }
 
         //Statistics:
         public float m_rotationAccel = 5f;
         private float m_rotationSpeed = 0f;
+
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
         public float m_pivotMin = 160;
@@ -44,8 +48,7 @@ namespace ActorSystem.AI.Components
         protected Quaternion m_targetRotation;
 
         private float m_delayTimer = 0f;
-        private Vector3 m_lastPosition;
-
+        private float m_baseStopDist;
 
         // Start is called before the first frame update
         protected virtual void Awake()
@@ -58,7 +61,8 @@ namespace ActorSystem.AI.Components
 
             if (m_agent.isOnNavMesh)
                 m_agent.SetDestination(transform.position);
-            m_lastPosition = transform.position;
+
+            m_baseStopDist = m_agent.stoppingDistance;
         }
 
         protected virtual void Start()
@@ -74,7 +78,7 @@ namespace ActorSystem.AI.Components
             if(m_delayTimer > 0)
                 return;
 
-            if(!m_agent.isOnNavMesh && !m_isKnocked)
+            if(!m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
             {
                 NavMeshHit hit;
                 if (NavMesh.FindClosestEdge(transform.position, out hit, m_agent.areaMask))
@@ -89,8 +93,11 @@ namespace ActorSystem.AI.Components
         {
             if (m_agent.enabled && m_agent.isOnNavMesh && m_agent.updatePosition)
             {
-                m_agent.destination = m_targetPosition;
-                m_agent.speed = m_baseSpeed * m_speedModifier;
+                if(!m_agent.isStopped)
+                {
+                    m_agent.destination = m_targetPosition;
+                    m_agent.speed = m_baseSpeed * m_speedModifier;
+                }
 
                 if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
@@ -120,7 +127,6 @@ namespace ActorSystem.AI.Components
                 m_isKnocked = false;
                 m_delayTimer = 0.25f;
             }
-            m_lastPosition = transform.position;
         }
 
         public void SetTargetVelocity(Vector3 moveVector)
@@ -198,7 +204,7 @@ namespace ActorSystem.AI.Components
         */
         public virtual void SetTargetLocation(Vector3 target, bool lookAtTarget = false)
         {
-            if (!m_agent.enabled || !m_agent.isOnNavMesh)
+            if (!m_agent.enabled || !m_agent.isOnNavMesh || m_isKnocked)
                 return;
 
             m_agent.isStopped = false;
@@ -288,16 +294,28 @@ namespace ActorSystem.AI.Components
 
         public void KnockBack(Vector3 force)
         {
-            SetTargetVelocity(force);
-            if (!m_isKnocked)
+            if(m_canBeKnocked)
             {
-                m_isKnocked = true;
-                m_body.isKinematic = false;
-                m_agent.updatePosition = false;
+                SetTargetVelocity(force);
+                if (!m_isKnocked)
+                {
+                    m_isKnocked = true;
+                    m_body.isKinematic = false;
+                    m_agent.updatePosition = false;
+                    m_body.velocity = force;
+                    return;
+                }
                 m_body.velocity = force;
-                return;
             }
-            m_body.velocity = force;
+        }
+
+        public void RefreshStopDist()
+        {
+            m_agent.stoppingDistance = m_baseStopDist;
+        }
+        public void OverrideStopDist(float val)
+        {
+            m_agent.stoppingDistance = val;
         }
     }
 }

@@ -10,7 +10,11 @@ public class StunStatus : StatusEffect
     {
         //Show VFX
         if (_actor.m_myBrain.m_legs)
-            _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
+            _actor.m_myBrain.m_legs.Halt();
+        if (_actor.m_myBrain.m_animator)
+            _actor.m_myBrain.m_animator.SetPause(true);
+
+            
         _actor.m_myBrain.IsStunned = true;
     }
 
@@ -21,8 +25,12 @@ public class StunStatus : StatusEffect
 
     public override void EndActor(Actor _actor)
     {
-        if (_actor.m_myBrain.m_legs)
-            _actor.m_myBrain.m_legs.m_speedModifier = 1.0f;
+        if (_actor.m_myBrain.m_animator)
+        {
+            _actor.m_myBrain.m_animator.SetPause(false);
+            _actor.m_myBrain.m_animator.Shake(0.0f);
+        }
+            
         _actor.m_myBrain.IsStunned = false;
     }
 
@@ -53,7 +61,14 @@ public class StunStatus : StatusEffect
     public override void UpdateOnActor(Actor _actor, float dt)
     {
         if (_actor.m_myBrain.m_legs)
-            _actor.m_myBrain.m_legs.m_speedModifier = 0.0f;
+            _actor.m_myBrain.m_legs.Halt();
+        if (_actor.m_myBrain.m_animator)
+        {
+            _actor.m_myBrain.m_animator.SetPause(true);
+            _actor.m_myBrain.m_animator.Shake(0.025f * m_duration/m_startDuration);
+        }
+            
+        _actor.m_myBrain.IsStunned = true;
         m_duration -= dt;
     }
 
