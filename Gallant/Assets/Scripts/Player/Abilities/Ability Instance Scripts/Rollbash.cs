@@ -26,7 +26,7 @@ public class Rollbash : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(-playerController.playerMovement.playerModel.transform.forward + playerController.playerMovement.playerModel.transform.right, playerController.playerMovement.m_rollSpeed * Time.deltaTime * 90.0f);
+        m_model.transform.Rotate(-playerController.playerMovement.playerModel.transform.forward + playerController.playerMovement.playerModel.transform.right, playerController.playerMovement.m_rollSpeed * Time.deltaTime * 90.0f);
         
         if (m_model.transform.localScale.x < m_startScale)
             m_model.transform.localScale += Vector3.one * Time.deltaTime * m_scaleSpeed;

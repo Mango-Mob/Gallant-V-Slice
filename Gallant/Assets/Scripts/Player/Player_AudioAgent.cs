@@ -42,7 +42,7 @@ public class Player_AudioAgent : MultiAudioAgent
                 switch (_sound)
                 {
                     case 1:
-                        base.PlayOnce("ShieldSlam", false, Random.Range(0.95f, 1.05f));
+                        base.PlayOnce("HammerHit", false, Random.Range(0.95f, 1.05f));
                         break;
                     case 2:
                         base.PlayOnce("StaffHit", false, Random.Range(0.95f, 1.05f));
@@ -108,6 +108,18 @@ public class Player_AudioAgent : MultiAudioAgent
     public void ReflectiveShield()
     {
         base.PlayOnce("Thorns", false, Random.Range(0.95f, 1.05f));
+    }
+    public void WhirlpoolLaunch()
+    {
+        base.PlayOnce("WhirlpoolLaunch", false, Random.Range(0.95f, 1.05f));
+    }
+    public void RockStart()
+    {
+        base.PlayOnce("RockStart", false, Random.Range(0.95f, 1.05f));
+    }
+    public void RockEnd()
+    {
+        base.PlayOnce("RockEnd", false, Random.Range(0.95f, 1.05f));
     }
     #endregion
 

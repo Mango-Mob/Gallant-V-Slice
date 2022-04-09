@@ -57,6 +57,8 @@ public class SkillTreeObject : MonoBehaviour
         playerController.playerCamera.enabled = true;
         m_skillTreeCamera.enabled = false;
 
+        playerController.playerSkills.EvaluateSkills();
+
         if (HUDManager.Instance != null)
             HUDManager.Instance.gameObject.SetActive(true);
     }

@@ -46,7 +46,7 @@ public class Ability_RollBash : AbilityBase
     {
         if (m_objectPrefab != null)
         {
-            playerController.playerAudioAgent.FirewaveLaunch();
+            playerController.playerAudioAgent.RockStart();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_objectPrefab, transform);
@@ -66,7 +66,10 @@ public class Ability_RollBash : AbilityBase
     public override void AbilityOnEndRoll()
     {
         if (m_lastProjectile != null)
+        {
+            playerController.playerAudioAgent.RockEnd();
             m_lastProjectile.GetComponent<Rollbash>().Destruct();
+        }
     }
 }
 

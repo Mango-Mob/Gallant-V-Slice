@@ -24,6 +24,7 @@ public class Player_Movement : MonoBehaviour
     public float m_rollSpeed = 12.0f;
     public float m_rollDistanceMult = 8.0f;
     public float m_attackMoveSpeed = 0.4f;
+    public float m_healMoveSpeedMult = 0.5f;
     public float m_attackMoveSpeedLerpSpeed = 5.0f;
     public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
@@ -328,7 +329,8 @@ public class Player_Movement : MonoBehaviour
             m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
         }
 
-        _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp);
+        _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
+            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease);
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
