@@ -21,7 +21,7 @@ namespace ActorSystem.Spawning
                 safetyCheck--;
 
                 //Get Random point within the known bounds, and transform from local to world
-                Vector2 randInBounds = (m_isCircle) ? Random.insideUnitCircle : new Vector2(Random.Range(-m_spawnSize, m_spawnSize), Random.Range(-m_spawnSize, m_spawnSize));
+                Vector2 randInBounds = (m_isCircle) ? Random.insideUnitCircle * m_spawnSize : new Vector2(Random.Range(-m_spawnSize, m_spawnSize), Random.Range(-m_spawnSize, m_spawnSize));
                 Vector3 randPos = transform.TransformPoint(new Vector3(randInBounds.x, 0, randInBounds.y));
 
                 //Project point to navmesh
@@ -35,8 +35,8 @@ namespace ActorSystem.Spawning
             } while (safetyCheck > 5 && overlapCheck.Length > 0);
 
             //isValid point
-            if(overlapCheck.Length == 0)
-            {//Note: if safety was zero, this still could be a valid point
+            if(overlapCheck.Length == 0 && safetyCheck != 0)
+            {
                 spawnPos = hit.position;
                 return true;
             }

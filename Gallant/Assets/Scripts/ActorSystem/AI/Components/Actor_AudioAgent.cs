@@ -57,13 +57,13 @@ namespace ActorSystem.AI.Components
 
         public void PlayHurt()
         {
-            if(m_hurtClips.Count > 0)
+            if(m_hurtClips != null && m_hurtClips.Count > 0)
                 m_myAgent.Play(m_hurtClips[Random.Range(0, m_hurtClips.Count)].name, false, Random.Range(0.85f, 1.25f));
         }
 
         public void PlayDeath()
         {
-            if (m_deathClips.Count > 0)
+            if (m_deathClips != null && m_deathClips.Count > 0)
                 m_myAgent.Play(m_deathClips[Random.Range(0, m_deathClips.Count)].name, false, Random.Range(0.85f, 1.25f));
         }
 

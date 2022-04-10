@@ -31,7 +31,15 @@ namespace ActorSystem.AI.Components.SpawnMethods
             if(m_hasResentlySpawnned && m_timer <= 0 && !GetComponent<Actor_Brain>().m_animator.enabled)
             {
                 transform.position = m_spawn.transform.position;
-                transform.rotation = Quaternion.LookRotation((GetComponent<Actor_Brain>().m_target.transform.position - transform.position).normalized, Vector3.up);
+                if(GetComponent<Actor_Brain>().m_target != null)
+                {
+                    transform.rotation = Quaternion.LookRotation((GetComponent<Actor_Brain>().m_target.transform.position - transform.position).normalized, Vector3.up);
+                }
+                else
+                {
+                    transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                }
+
                 GetComponent<Actor_Brain>().m_animator.SetEnabled(true);
                 GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", true);
                 GetComponent<Actor_Brain>().m_animator.PlayAnimation("Spawn_Loop");
