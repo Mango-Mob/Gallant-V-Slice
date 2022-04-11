@@ -363,35 +363,23 @@ public class WeaponData : ScriptableObject
     {
         this.m_level = _level;
     }
-
-    public static string GetTags(Weapon type)
+    public string GetTagsString()
     {
-        switch (type)
+        string tags = "";
+        foreach (var tag in m_tags)
         {
-            case Weapon.SWORD:
-                return "One hand, Melee";
-            case Weapon.SPEAR:
-                return "Two hands, Melee";
-            case Weapon.BOOMERANG:
-                return "One hand, Ranged";
-            case Weapon.SHIELD:
-                return "One hand, Ranged";
-            case Weapon.CROSSBOW:
-                return "One hand, Ranged";
-            case Weapon.HAMMER:
-                return "One hand, Melee";
-            case Weapon.STAFF:
-                return "One hand, Ranged";
-            case Weapon.GREATSWORD:
-                return "Two hands, Melee";
-            case Weapon.BOW:
-                return "Two hands, Ranged";
-            default:
-            case Weapon.BRICK:
-                return "";
-		}
-	}
-	
+            tags += tag.ToString().Replace('_', ' ') + ", ";
+        }
+        if (abilityData)
+        {
+            foreach (var tag in abilityData.m_tags)
+            {
+                tags += tag.ToString().Replace('_', ' ') + ", ";
+            }
+        }
+        Debug.Log(tags);
+        return tags;
+    }
     public string GetPassiveEffectDescription()
     {
         switch (itemEffect)
@@ -464,6 +452,8 @@ public class WeaponData : ScriptableObject
 
         this.overrideAnimation = other.overrideAnimation;
 
+        this.m_tags = other.m_tags;
+
         this.m_altAttackName = other.m_altAttackName;
         this.m_altAttackDesc = other.m_altAttackDesc;
 
@@ -487,60 +477,3 @@ public class WeaponData : ScriptableObject
         this.m_altAttackStaminaCost = other.m_altAttackStaminaCost;
     }
 }
-
-#if UNITY_EDITOR
-/****************
- * WeaponDataEditor: Reorderable list for tags
- * @author : William de Beer
- * @file : WeaponData.cs
- * @year : 2022
- */
-[CustomEditor(typeof(WeaponData), true)]
-public class WeaponDataEditor : Editor
-{
-    SerializedProperty panelComponent;
-    ReorderableList list;
-
-    private void OnEnable()
-    {
-        panelComponent = serializedObject.FindProperty("m_tag");
-
-        list = new ReorderableList(serializedObject, panelComponent, true, true, false, false);
-
-        list.drawElementCallback = DrawListItems;
-        list.drawHeaderCallback = DrawHeader;
-    }
-    
-    //Draws the items stored in the reorderable list.
-    void DrawListItems(Rect _rect, int _index, bool _isActive, bool _isFocused)
-    {
-        SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(_index);
-
-        if (element != null && element.objectReferenceValue != null)
-        {
-            EditorGUI.LabelField(new Rect(_rect.x, _rect.y, 400, EditorGUIUtility.singleLineHeight), element.objectReferenceValue.name);
-        }
-        else if (element.objectReferenceValue == null)
-        {
-            Debug.LogWarning("Could not find object associated with serialized property.");
-        }
-    }
-
-    //Draws the header of the reorderable list.
-    void DrawHeader(Rect _rect)
-    {
-        string name = "Objects";
-        EditorGUI.LabelField(_rect, name);
-    }
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-
-        // Draw list
-        serializedObject.Update();
-        if (panelComponent != null)
-            list.DoLayoutList();
-        serializedObject.ApplyModifiedProperties();
-    }
-}
-#endif

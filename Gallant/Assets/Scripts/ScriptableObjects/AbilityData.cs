@@ -30,7 +30,7 @@ public class AbilityData : ScriptableObject
     public string weaponTitle; //_ <weapon> of <title>
     public Ability abilityPower;
     public Sprite abilityIcon;
-    public AbilityTag[] m_tags;
+    public List<AbilityTag> m_tags = new List<AbilityTag>();
     [TextArea(10, 15)]
     public string description;
     [ColorUsage(true, true)] public Color droppedEnergyColor;
@@ -141,60 +141,3 @@ public class AbilityData : ScriptableObject
         this.overwriteStaffIcon = other.overwriteStaffIcon;
     }
 }
-
-#if UNITY_EDITOR
-/****************
- * WeaponDataEditor: Reorderable list for tags
- * @author : William de Beer
- * @file : WeaponData.cs
- * @year : 2022
- */
-[CustomEditor(typeof(AbilityData), true)]
-public class AbilityDataEditor : Editor
-{
-    SerializedProperty panelComponent;
-    ReorderableList list;
-
-    private void OnEnable()
-    {
-        panelComponent = serializedObject.FindProperty("m_tag");
-
-        list = new ReorderableList(serializedObject, panelComponent, true, true, true, true);
-
-        list.drawElementCallback = DrawListItems;
-        list.drawHeaderCallback = DrawHeader;
-    }
-
-    //Draws the items stored in the reorderable list.
-    void DrawListItems(Rect _rect, int _index, bool _isActive, bool _isFocused)
-    {
-        SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(_index);
-
-        if (element != null && element.objectReferenceValue != null)
-        {
-            EditorGUI.LabelField(new Rect(_rect.x, _rect.y, 400, EditorGUIUtility.singleLineHeight), element.objectReferenceValue.name);
-        }
-        else if (element.objectReferenceValue == null)
-        {
-            Debug.LogWarning("Could not find object associated with serialized property.");
-        }
-    }
-
-    //Draws the header of the reorderable list.
-    void DrawHeader(Rect _rect)
-    {
-        string name = "Objects";
-        EditorGUI.LabelField(_rect, name);
-    }
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-
-        // Draw list
-        serializedObject.Update();
-        if (panelComponent != null)
-            list.DoLayoutList();
-        serializedObject.ApplyModifiedProperties();
-    }
-}
-#endif
