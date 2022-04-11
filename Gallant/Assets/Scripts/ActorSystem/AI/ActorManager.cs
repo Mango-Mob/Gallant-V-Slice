@@ -185,5 +185,21 @@ namespace ActorSystem.AI
             if(m_subscribed.Contains(user))
                 m_subscribed.Remove(user);
         }
+
+        public uint GetActorCount(string name = "")
+        {
+            if (name == "")
+                return (uint)m_subscribed.Count;
+
+            uint count = 0;
+            foreach (var actor in m_subscribed)
+            {
+                if(actor.m_name == name)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 }

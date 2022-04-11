@@ -2,6 +2,7 @@ using ActorSystem.AI;
 using ActorSystem.Spawning;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DevButtonSpawner : MonoBehaviour
@@ -12,11 +13,11 @@ public class DevButtonSpawner : MonoBehaviour
     [SerializeField] private UI_Image m_gamepadInput;
 
     private Interactable m_myInterface;
+    public TMP_Text m_counter;
 
     private void Awake()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
-        m_myInterface.m_interactFunction.AddListener(Spawn);
     }
 
     private void Update()
@@ -24,6 +25,8 @@ public class DevButtonSpawner : MonoBehaviour
         m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
         m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
         m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
+
+        m_counter?.SetText(ActorManager.Instance.GetActorCount(actorName).ToString());
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -56,5 +59,10 @@ public class DevButtonSpawner : MonoBehaviour
         }
 
         ActorManager.Instance.Kill(spawn);        
+    }
+
+    public void Despawn()
+    {
+        ActorManager.Instance.KillAll();
     }
 }
