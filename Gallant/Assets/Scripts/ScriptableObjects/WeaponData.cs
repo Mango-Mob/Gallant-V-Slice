@@ -54,6 +54,13 @@ public class SerializedWeapon
     }
 }
 
+public enum WeaponTag
+{
+    One_hand,
+    Two_hands,
+    Melee,
+    Ranged,
+}
 
 /****************
  * WeaponData: Scriptable object containing data for weapon

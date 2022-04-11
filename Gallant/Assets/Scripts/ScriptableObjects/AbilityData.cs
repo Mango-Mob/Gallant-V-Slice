@@ -1,6 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+public enum AbilityTag
+{
+    Fire,
+    Air,
+    Earth,
+    Water,
+}
+
+
 /****************
  * AbilityData: Scriptable object containing data for ability
  * @author : William de Beer
