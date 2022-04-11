@@ -21,5 +21,20 @@ public class MathParabola
 
         return new Vector2(mid.x, f(t) + Mathf.Lerp(start.y, end.y, t));
     }
+    public static float ParabolaDistance(Vector2 start, Vector2 end, float height, uint steps = 2)
+    {
+        if (steps < 2)
+            steps = 2;
 
+        float distance = 0;
+        Vector3 prevPoint = start;
+        for (int i = 1; i < steps; i++)
+        {
+            Vector3 nextPoint = Parabola(start, end, height, i * (1.0f / (steps - 1)));
+            distance += Vector3.Distance(prevPoint, nextPoint);
+            prevPoint = nextPoint;
+        }
+
+        return distance;
+    }
 }

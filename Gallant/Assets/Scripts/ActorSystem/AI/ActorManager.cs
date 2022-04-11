@@ -89,6 +89,9 @@ namespace ActorSystem.AI
         {
             if(!m_subscribed.Contains(user))
                 m_subscribed.Add(user);
+
+            if (!m_reserved.ContainsKey(user.m_myData.ActorName))
+                m_reserved.Add(user.m_myData.ActorName, new List<Actor>());
         }
 
         public void ReserveMe(Actor user)
@@ -181,6 +184,22 @@ namespace ActorSystem.AI
         {
             if(m_subscribed.Contains(user))
                 m_subscribed.Remove(user);
+        }
+
+        public uint GetActorCount(string name = "")
+        {
+            if (name == "")
+                return (uint)m_subscribed.Count;
+
+            uint count = 0;
+            foreach (var actor in m_subscribed)
+            {
+                if(actor.m_name == name)
+                {
+                    count++;
+                }
+            }
+            return count;
         }
     }
 }

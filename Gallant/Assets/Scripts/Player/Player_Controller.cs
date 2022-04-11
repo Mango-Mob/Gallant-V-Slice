@@ -140,7 +140,7 @@ public class Player_Controller : MonoBehaviour
 
         //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
-        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isStunned || playerMovement.m_isRolling)
+        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
 
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
@@ -325,10 +325,12 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.Instance.IsBindDown("Consume", gamepadID))
         {
             // Heal from adrenaline
-            playerResources.UseAdrenaline();
+            animator.SetTrigger("Heal");
+            //playerResources.UseAdrenaline();
         }
 
-        if (InputManager.Instance.IsBindDown("Switch", gamepadID))
+        if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
+            && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded))
         {
             playerAttack.SwapWeapons();
         }
@@ -395,14 +397,17 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    public void StartHeal() { animator.SetBool("IsHealing", true); }
 
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.
      * @author : William de Beer
      * @param : (float) Stun duration, (Vector3) Knockback velocity
      */
-    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity)
+    public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity, GameObject _attacker = null)
     {
+        if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
+            return;
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
     }
     public Vector2 GetPlayerMovementVector(bool _rawInput = false)
@@ -556,7 +561,6 @@ public class Player_Controller : MonoBehaviour
         Weapon_Sword sword = GetComponent<Weapon_Sword>();
         if ((sword != null && sword.m_attackReady) || (playerAttack.m_isBlocking && _attacker != null))
         {
-            Debug.Log("MISSED BLOCK");
             if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             {
                 if (sword != null && sword.m_attackReady)
@@ -575,10 +579,20 @@ public class Player_Controller : MonoBehaviour
 
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
-                animator.SetTrigger("HitPlayer");
+                animator.SetTrigger("BlockHit");
+
+                playerResources.ChangeStamina(-_damage);
+                if (playerResources.m_isExhausted)
+                {
+                    playerAudioAgent.PlayShieldBlock(); // Guard break audio
+                    animator.SetTrigger("HitPlayer");
+                    return;
+                }
                 playerAudioAgent.PlayShieldBlock();
+
                 return;
             }
+            Debug.Log("MISSED BLOCK");
         }
 
         playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
@@ -672,8 +686,14 @@ public class Player_Controller : MonoBehaviour
     {
         m_inkmanClass = _class;
 
-        playerAttack.SetWeaponData(Hand.LEFT, _class.leftWeapon);
-        playerAttack.SetWeaponData(Hand.RIGHT, _class.rightWeapon);
+        if (playerAttack.m_leftWeaponData?.m_level == -1)
+        {
+            playerAttack.SetWeaponData(Hand.LEFT, _class.startWeapon);
+        }
+        else if (playerAttack.m_rightWeaponData?.m_level == -1)
+        {
+            playerAttack.SetWeaponData(Hand.RIGHT, _class.startWeapon); 
+        }
 
         playerClassArmour.SetClassArmour(_class.inkmanClass);
 

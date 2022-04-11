@@ -20,18 +20,17 @@ namespace ActorSystem.AI.Components
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
-
         public Actor_Material[] m_materials { get; private set; } //Core texture of the actor (the renderer)
         public Actor_UI m_ui { get; private set; } //UI display for this actor
         public Actor_MiniMapIcon m_icon {get; private set;}
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
         public Actor_Ragdoll m_ragDoll { get; private set; }
-        public Outline m_myOutline { get; private set; }
+        //public Outline m_myOutline { get; private set; }
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
-        public bool IsStunned = false;
+        public bool IsStunned { get; set; } = false;
         public bool m_canBeTarget = true;
         public bool m_forceShowUI = false;
         
@@ -51,7 +50,6 @@ namespace ActorSystem.AI.Components
         public bool m_canStagger { get; set; }
 
         private float m_staminaRegen; 
-        private bool m_trackingTarget = false;
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
 
@@ -76,13 +74,12 @@ namespace ActorSystem.AI.Components
             m_materials = GetComponentsInChildren<Actor_Material>();
             m_ui = GetComponentInChildren<Actor_UI>();
             m_audioAgent = GetComponent<Actor_AudioAgent>();
-            m_myOutline = GetComponentInChildren<Outline>();
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
 
-            if(m_myOutline != null)
-                m_myOutline.enabled = false;
+            //if(m_myOutline != null)
+            //    m_myOutline.enabled = false;
 
             SetOutlineEnabled(false);
         }
@@ -100,20 +97,16 @@ namespace ActorSystem.AI.Components
         {
             if (IsStunned || IsDead)
             {
-                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 0.0f);
+                m_legs?.Halt();
                 return;
             }
 
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_canBeTarget && m_ui != null && m_myOutline != null)
+            if(m_canBeTarget && m_ui != null)
             {
-                m_ui.SetEnabled(m_myOutline.enabled || m_forceShowUI);
-            }
-            if(m_trackingTarget && m_target != null && m_legs != null)
-            {
-                m_legs.SetTargetRotation(Quaternion.LookRotation((m_target.transform.position - transform.position).normalized, Vector3.up));
+                m_ui.SetEnabled(m_forceShowUI);
             }
         }
 
@@ -210,8 +203,8 @@ namespace ActorSystem.AI.Components
 
         public void SetOutlineEnabled(bool status)
         {
-            if (m_myOutline != null)
-                m_myOutline.enabled = status;
+            //if (m_myOutline != null)
+            //    m_myOutline.enabled = status;
         }
 
         public int GetNextAttack()
@@ -232,15 +225,7 @@ namespace ActorSystem.AI.Components
             {
                 if(m_arms.Begin(id) != null)
                 {
-                    if (m_arms.m_myData[m_arms.m_activeAttack.Value].canAttackMove)
-                    {
-                        m_legs?.SetTargetLocation(m_target.transform.position);
-                    }
-                    else
-                    {
-                        m_legs?.Halt();
-                    }
-                    m_trackingTarget = m_arms.m_myData[m_arms.m_activeAttack.Value].canTrackTarget;
+                    
                 }
             }
         }
@@ -248,11 +233,6 @@ namespace ActorSystem.AI.Components
         public void RegenStamina(float mod)
         {
             m_currStamina = Mathf.Clamp(m_currStamina + m_staminaRegen * Time.deltaTime * mod, 0, m_startStamina);
-        }
-
-        public void HaltRotation()
-        {
-            m_trackingTarget = false;
         }
 
         public void InvokeAttack(int id = 0)
@@ -272,8 +252,7 @@ namespace ActorSystem.AI.Components
 
         public void EndAttack()
         {
-            m_arms.m_activeAttack = null;
-            m_trackingTarget = false;
+            m_arms.End();
         }
 
         public bool HandleDamage(float damage, float piercingVal, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)

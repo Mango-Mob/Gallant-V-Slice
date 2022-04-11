@@ -16,6 +16,8 @@ namespace ActorSystem.AI.Components
         public string m_lastAttackName = "";
         public List<AttackData> m_myData = new List<AttackData>();
 
+        public bool m_canUpdateAttack { get; set; } = true;
+        private Actor m_mainComponent;
         private float[] m_cooldowns;
         public bool hasCancel { 
             get 
@@ -30,7 +32,7 @@ namespace ActorSystem.AI.Components
         private void Awake()
         {
             m_myData.Sort(new AttackPrioritySort());
-
+            m_mainComponent = GetComponentInParent<Actor>();
             m_cooldowns = new float[m_myData.Count];
             for (int i = 0; i < m_cooldowns.Length; i++)
             {
@@ -44,6 +46,11 @@ namespace ActorSystem.AI.Components
             {
                 if (m_cooldowns[i] > 0)
                     m_cooldowns[i] -= Time.deltaTime;
+            }
+
+            if(m_canUpdateAttack && m_activeAttack.HasValue)
+            {
+                m_myData[m_activeAttack.Value].UpdateActor(m_mainComponent);
             }
         }
 
@@ -59,6 +66,8 @@ namespace ActorSystem.AI.Components
                 m_activeAttack = id;
                 m_cooldowns[id] = m_myData[id].cooldown;
                 m_lastAttackName = m_myData[id].animID;
+                m_myData[id].BeginActor(m_mainComponent);
+                m_canUpdateAttack = true;
                 return m_myData[id];
             }
             return null;
@@ -72,7 +81,13 @@ namespace ActorSystem.AI.Components
             }
             return false;
         }
+        public void End()
+        {
+            if(m_activeAttack.HasValue)
+                m_myData[m_activeAttack.Value].EndActor(m_mainComponent);
 
+            m_activeAttack = null;
+        }
         private void DealDamage(Collider _target, CombatSystem.DamageType _type)
         {
             if(_target.gameObject.layer == LayerMask.NameToLayer("Player"))

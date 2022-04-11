@@ -20,7 +20,7 @@ namespace ActorSystem.AI
         public Transform m_selfTargetTransform;
         public GameObject m_HurtVFXPrefab;
 
-        [SerializeField] protected ActorData m_myData;
+        public ActorData m_myData;
 
         public GameObject m_target { get { return m_myBrain.m_target; }}
 
@@ -65,12 +65,12 @@ namespace ActorSystem.AI
             m_myBrain.m_canStagger = m_states.Contains(State.Type.STAGGER);
         }
 
-        public void Spawn(uint level, Vector3 start, Vector3 end, Vector3 forward)
+        public void Spawn(uint level, Vector3 spawnLoc)
         {
             m_myLevel = level;
             m_myBrain.LoadData(m_myData, level);
             m_mySpawn.SetEnabled(true);
-            m_mySpawn.StartSpawn(start, end, forward);
+            m_mySpawn.StartSpawn(spawnLoc);
         }
 
         public void SetLevel(uint level)
@@ -135,7 +135,7 @@ namespace ActorSystem.AI
             m_myBrain.m_legs?.SetTargetRotation(rotatVector);
         }
 
-        public virtual void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
+        public virtual bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -155,12 +155,13 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
-        public virtual void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        public virtual bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -176,9 +177,10 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         public virtual void DealImpactDamage(float amount, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
@@ -248,20 +250,7 @@ namespace ActorSystem.AI
 
         public void Respawn(bool fullRefresh = false)
         {
-            if(m_lastSpawner != null)
-            {
-                m_myBrain.SetEnabled(false);
-                SpawnData data;
-                if(m_lastSpawner.GetClosestSpawn(transform.position, out data))
-                {
-                    SetState(m_myData.m_initialState);
-                    m_mySpawn.StartSpawn(data.startPoint, data.endPoint, data.navPoint);
-                }
-            }
-            else if (m_myBrain.m_legs != null)
-            {
-                Debug.LogError("TODO");
-            }
+            Debug.LogError("TODO");
         }
         public virtual void Slam()
         {

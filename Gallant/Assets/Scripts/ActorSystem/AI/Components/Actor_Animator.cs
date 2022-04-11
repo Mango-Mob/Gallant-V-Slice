@@ -61,6 +61,11 @@ namespace ActorSystem.AI.Components
             this.enabled = status;
         }
 
+        public void SetInteger(string name, int value)
+        {
+            m_animator.SetInteger(name, value);
+        }
+
         /*******************
          * SetFloat : Sets a single float value in the animator, with the float provided.
          * @author : Michael Jordan
@@ -228,6 +233,18 @@ namespace ActorSystem.AI.Components
                 }
             }
             return false;
+        }
+
+        public void SetPause(bool status)
+        {
+            m_animator.speed = (status) ? 0.0f: 1.0f;
+        }
+
+        public void Shake(float intensity)
+        {
+            Vector2 sides = UnityEngine.Random.insideUnitCircle * intensity;
+            Vector3 shakeVector = new Vector3(sides.x, 0, sides.y);
+            transform.localPosition = shakeVector;
         }
     }
 }

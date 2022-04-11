@@ -10,6 +10,7 @@ public class Rollbash : MonoBehaviour
     [HideInInspector] public Player_Controller playerController;
     [HideInInspector] public AbilityData m_data;
     [SerializeField] public GameObject m_explodeVFX;
+    [SerializeField] private GameObject m_particles;
     public GameObject m_model;
 
     public float m_scaleSpeed = 5.0f;
@@ -25,15 +26,25 @@ public class Rollbash : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(-playerController.playerMovement.playerModel.transform.forward + playerController.playerMovement.playerModel.transform.right, playerController.playerMovement.m_rollSpeed * Time.deltaTime * 90.0f);
+        m_model.transform.Rotate(-playerController.playerMovement.playerModel.transform.forward + playerController.playerMovement.playerModel.transform.right, playerController.playerMovement.m_rollSpeed * Time.deltaTime * 90.0f);
         
         if (m_model.transform.localScale.x < m_startScale)
             m_model.transform.localScale += Vector3.one * Time.deltaTime * m_scaleSpeed;
     }
-    private void OnDestroy()
+    public void Destruct()
     {
         GameObject vfx = Instantiate(m_explodeVFX, transform.position, Quaternion.identity);
 
+        m_particles.transform.SetParent(null);
+        m_particles.GetComponent<VFXTimerScript>().m_startedTimer = true;
+
+        ParticleSystem[] particleSystems = m_particles.GetComponentsInChildren<ParticleSystem>();
+        foreach (var particles in particleSystems)
+        {
+            particles.Stop();
+        }
+
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

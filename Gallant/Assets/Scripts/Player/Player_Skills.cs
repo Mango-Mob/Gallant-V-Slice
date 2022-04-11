@@ -9,11 +9,13 @@ public class Player_Skills : MonoBehaviour
 
     public float m_healthIncrease = 0.0f;
     public float m_moveSpeedIncrease = 0.0f;
+    public float m_healMoveSpeedIncrease = 0.0f;
     public float m_physicalDefenceIncrease = 0.0f;
     public float m_magicalDefenceIncrease = 0.0f;
     public float m_outOfCombatSpeedIncrease = 0.0f;
     public float m_healPowerIncrease = 0.0f;
     public float m_rollDistanceIncrease = 0.0f;
+    public float m_staminaRegenRate = 0.0f;
     public float m_stunDecrease = 0.0f;
     public int m_experienceBonus = 0;
     public int m_extraHealOrbs = 0;
@@ -38,11 +40,13 @@ public class Player_Skills : MonoBehaviour
     {
         m_healthIncrease = 0.0f;
         m_moveSpeedIncrease = 1.0f;
+        m_healMoveSpeedIncrease = 1.0f;
         m_physicalDefenceIncrease = 0.0f;
         m_magicalDefenceIncrease = 0.0f;
         m_outOfCombatSpeedIncrease = 1.0f;
         m_healPowerIncrease = 0.0f;
         m_rollDistanceIncrease = 1.0f;
+        m_staminaRegenRate = 1.0f;
         m_stunDecrease = 0.0f;
         m_experienceBonus = 0;
         m_extraHealOrbs = 0;
@@ -113,8 +117,14 @@ public class Player_Skills : MonoBehaviour
             case "rollDistanceIncrease": // Added
                 m_rollDistanceIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
+            case "staminaRegenRate": // Added
+                m_staminaRegenRate += skillData.effectStrength * _skill.upgradeLevel;
+                break;
             case "stunDecrease": // Added
                 m_stunDecrease += skillData.effectStrength * _skill.upgradeLevel;
+                break;
+            case "healMoveSpeed": // Added
+                m_healMoveSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
             default:
                 Debug.LogWarning($"No case for the skill named {skillID}.");

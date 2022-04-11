@@ -10,8 +10,7 @@ public class ClassData : ScriptableObject
     public Sprite m_classIcon;
 
     [Header("Starting Weapons")]
-    public WeaponData leftWeapon;
-    public WeaponData rightWeapon;
+    public WeaponData startWeapon;
 
     [Header("Armour")]
     public Mesh helmetModel;

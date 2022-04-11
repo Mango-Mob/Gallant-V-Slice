@@ -146,7 +146,7 @@ namespace ActorSystem.AI.Other
             isVisible = status;
         }
 
-        public override void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal, Vector3? _damageLoc = null)
+        public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -156,6 +156,7 @@ namespace ActorSystem.AI.Other
             {
                 m_myBrain.ShowHit();
                 float before = m_myBrain.m_currHealth;
+                float after = 0;
                 if (m_myBrain.HandleDamage(_damage, piercingVal, _type, _damageLoc))
                 {
                      if (m_HurtVFXPrefab != null)
@@ -171,14 +172,18 @@ namespace ActorSystem.AI.Other
                         material.StartDisolve(2f);
                     }
                     Submerge(false);
+                    after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
+                    return true;
                 }
 
-                float after = m_myBrain.m_currHealth;
+                after = m_myBrain.m_currHealth;
                 m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
             }
+            return false;
         }
 
-        public override void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -187,6 +192,7 @@ namespace ActorSystem.AI.Other
             if (!m_myBrain.IsDead)
             {
                 float before = m_myBrain.m_currHealth;
+                float after = 0;
                 if (m_myBrain.HandleDamage(_damage, 0, _type, transform.position, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
@@ -199,10 +205,14 @@ namespace ActorSystem.AI.Other
                         material.StartDisolve(2f);
                     }
                     Submerge(false);
+                    after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamageSilent(before - after, _type);
+                    return true;
                 }
-                float after = m_myBrain.m_currHealth;
+                after = m_myBrain.m_currHealth;
                 m_octoBrain.DealDamageSilent(before - after, _type);
             }
+            return false;
         }
 
         public void DamageInSlam()

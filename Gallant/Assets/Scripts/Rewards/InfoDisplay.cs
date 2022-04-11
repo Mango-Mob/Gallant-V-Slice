@@ -180,7 +180,8 @@ public class InfoDisplay : MonoBehaviour
         m_weaponImageLoc.sprite = data.weaponIcon;
         m_altTitle.SetText(data.m_altAttackName);
         m_altDescription.SetText(WeaponData.EvaluateDescription(data));
-        m_altImage.sprite = data.altAttackIcon;
+        if(data.altAttackIcon != null)
+            m_altImage.sprite = data.altAttackIcon;
 
         if (data.abilityData != null)
         {
@@ -372,6 +373,14 @@ public class InfoDisplay : MonoBehaviour
             item.color = (status) ? selectColor : Color.white;
         }
         m_selected = status;
+    }
+
+    public void Hover(bool status)
+    {
+        foreach (var item in m_backgrounds)
+        {
+            item.color = (status) ? selectColor : (m_selected) ? selectColor : Color.white;
+        }
     }
 
     public void GiveReward()

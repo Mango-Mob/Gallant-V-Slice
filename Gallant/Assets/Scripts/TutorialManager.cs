@@ -114,13 +114,13 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         {
             tutorialPosition++;
             if (tutorialPosition == 3)
-                RewardManager.Instance.Show(m_warrior.rightWeapon, m_mage.rightWeapon, m_hunter.rightWeapon, SelectClass);
+                RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return true;
         }
         
         if(tutorialPosition == 3)
         {
-            RewardManager.Instance.Show(m_warrior.rightWeapon, m_mage.rightWeapon, m_hunter.rightWeapon, SelectClass);
+            RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return false;
         }
         

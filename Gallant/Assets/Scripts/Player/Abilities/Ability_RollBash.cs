@@ -11,7 +11,6 @@ using UnityEngine;
 public class Ability_RollBash : AbilityBase
 {
     public GameObject m_objectPrefab;
-    private GameObject m_lastProjectile;
 
     new private void Awake()
     {
@@ -47,7 +46,7 @@ public class Ability_RollBash : AbilityBase
     {
         if (m_objectPrefab != null)
         {
-            playerController.playerAudioAgent.FirewaveLaunch();
+            playerController.playerAudioAgent.RockStart();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
             
             m_lastProjectile = Instantiate(m_objectPrefab, transform);
@@ -66,7 +65,11 @@ public class Ability_RollBash : AbilityBase
     }
     public override void AbilityOnEndRoll()
     {
-        Destroy(m_lastProjectile);
+        if (m_lastProjectile != null)
+        {
+            playerController.playerAudioAgent.RockEnd();
+            m_lastProjectile.GetComponent<Rollbash>().Destruct();
+        }
     }
 }
 

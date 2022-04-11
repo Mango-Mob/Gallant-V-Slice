@@ -20,8 +20,6 @@ namespace ActorSystem.Spawning
 
     public abstract class SpawnDataGenerator : MonoBehaviour
     {
-        public List<SpawnData> m_spawnPoints { get; protected set; }
-
         [SerializeField] protected bool m_isCircle = false;
         [Min(3)]
         [SerializeField] protected uint m_sections = 3;
@@ -32,12 +30,9 @@ namespace ActorSystem.Spawning
         [Min(0.05f)]
         [SerializeField] protected float m_overlapRadius = 0.35f;
 
-        /*******************
-         * GenerateSpawnPoints : (MultiThreaded) Creates and generates spawn data for a given point on the map.
-         * @author : Michael Jordan
-         */
-        protected abstract Task GenerateSpawnPoints();
-        public abstract SpawnData GetASpawnPoint(); 
+        public LayerMask spawnOverlapLayer;
+
+        public abstract bool GetASpawnPoint(float actorSize, out Vector3 spawnPos);
         //MonoBehaviour
         public virtual void OnDrawGizmos()
         {
@@ -45,27 +40,6 @@ namespace ActorSystem.Spawning
                 Extentions.GizmosDrawCircle(transform.position, m_spawnSize);
             else
                 Extentions.GizmosDrawSquare(transform.position, transform.rotation, new Vector2(m_spawnSize, m_spawnSize) * 2);
-
-            if (m_spawnPoints != null)
-            {
-                foreach (var data in m_spawnPoints)
-                {
-                    Gizmos.color = Color.white;
-                    Gizmos.DrawSphere(data.startPoint, m_overlapRadius);
-                    Gizmos.color = Color.black;
-                    Gizmos.DrawSphere(data.endPoint, m_overlapRadius);
-
-                    Gizmos.color = Color.cyan;
-                    Gizmos.DrawLine(data.startPoint, data.endPoint);
-                    Gizmos.DrawSphere(data.navPoint, m_overlapRadius);
-                }
-            }
-        }
-
-        //MonoBehaviour
-        protected async void Awake()
-        {
-            await GenerateSpawnPoints();
         }
     }
 }

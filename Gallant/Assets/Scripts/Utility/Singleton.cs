@@ -44,7 +44,7 @@ public abstract class SingletonPersistent<T> : Singleton<T> where T : MonoBehavi
             return;
         }
 
-        if(transform.parent != null)
+        if(transform.parent != null && transform.parent.gameObject != null)
             DontDestroyOnLoad(transform.parent.gameObject);
         else
             DontDestroyOnLoad(gameObject);

@@ -522,8 +522,11 @@ MonoBehaviour:
   m_rollSpeed: 9
   m_rollDistanceMult: 5
   m_attackMoveSpeed: 0.5
+  m_healMoveSpeedMult: 0.7
   m_attackMoveSpeedLerpSpeed: 4
   m_rollCost: 35
+  m_turnAnimationTime: 0.2
+  m_turnAnimationMult: 0.003
   m_minKnockbackSpeed: 0.5
   m_groundLayerMask:
     serializedVersion: 2
@@ -566,6 +569,7 @@ MonoBehaviour:
   m_abilityDamage: 1
   m_physicalDefence: 1
   m_abilityDefence: 1
+  m_arcaneFocus: 0
 --- !u!114 &3122777058140226031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -666,6 +670,7 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: 6e283b38a70fffc41a5aa1d574a6b4f7, type: 3}
   - {fileID: 8300000, guid: 9886ce1102a2fd84694790702cf59c1f, type: 3}
+  - {fileID: 8300000, guid: d12d9ba58d580af438450bdb916d5be0, type: 3}
   - {fileID: 8300000, guid: 3c49871afd32b8a4a8c693dc649f98af, type: 3}
   - {fileID: 8300000, guid: ce5c685759459d4499068c79dcd0f0d9, type: 3}
   - {fileID: 8300000, guid: b1d6d7b9ae7e52c4596400d7b8d36557, type: 3}
@@ -674,6 +679,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 128d0ae253ac77b44952955c8e57c6d5, type: 3}
   - {fileID: 8300000, guid: f6bc85187cbc04b449171c6d340289b8, type: 3}
   - {fileID: 8300000, guid: d9dcbc719cb510e4ba05d9f25f069009, type: 3}
+  - {fileID: 8300000, guid: d8b9418d4b4926048bfd9e992da94034, type: 3}
+  - {fileID: 8300000, guid: c115a81a7d623bd4c95a48cf21f46a80, type: 3}
+  - {fileID: 8300000, guid: a3cc999489bbb664e87ffdaa4c1dc7dc, type: 3}
   - {fileID: 8300000, guid: fefaa1969f9b1fc4db239803a6d20a0f, type: 3}
   - {fileID: 8300000, guid: 9000071051f3568429219da07880d0aa, type: 3}
   - {fileID: 8300000, guid: 1da949951ec4bdd4a8151ec2d0a71033, type: 3}
@@ -731,11 +739,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_healthIncrease: 0
   m_moveSpeedIncrease: 0
+  m_healMoveSpeedIncrease: 0
   m_physicalDefenceIncrease: 0
   m_magicalDefenceIncrease: 0
   m_outOfCombatSpeedIncrease: 0
   m_healPowerIncrease: 0
   m_rollDistanceIncrease: 0
+  m_staminaRegenRate: 0
   m_stunDecrease: 0
   m_experienceBonus: 0
   m_extraHealOrbs: 0
@@ -1987,6 +1997,38 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: Player_Movement, Assembly-CSharp
           m_MethodName: Footstep
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _name: Heal
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226029}
+          m_TargetAssemblyTypeName: Player_Resources, Assembly-CSharp
+          m_MethodName: UseAdrenaline
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _name: StartHeal
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3122777058140226017}
+          m_TargetAssemblyTypeName: Player_Controller, Assembly-CSharp
+          m_MethodName: StartHeal
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

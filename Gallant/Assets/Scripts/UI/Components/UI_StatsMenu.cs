@@ -9,11 +9,17 @@ public class UI_StatsMenu : UI_Element
     private bool m_active = false;
     public float m_deactiveOffset = 300.0f;
 
-    private CanvasGroup m_canvasGroup;
+    [SerializeField] private CanvasGroup m_statCanvasGroup;
+    [SerializeField] private CanvasGroup m_balanceCanvasGroup;
 
     [SerializeField] private Image m_background;
     [SerializeField] private TextMeshProUGUI m_currencyText;
     [SerializeField] private TextMeshProUGUI m_currencyTextShad;
+
+    [Header("Currency Display")]
+    [SerializeField] private float m_balanceChangeSpeed = 0.9f;
+    private float m_displayedBalance = 0;
+    private float m_balanceDisplayLerp = 0.0f;
 
     [Header("Rune Info")]
     public Transform m_runeGroup;
@@ -32,28 +38,36 @@ public class UI_StatsMenu : UI_Element
     private float m_offsetLerp = 0.0f;
     private Player_Stats playerStats;
 
+
     // Start is called before the first frame update
     void Start()
     {
         playerStats = FindObjectOfType<Player_Stats>();
-        m_canvasGroup = GetComponent<CanvasGroup>();
 
         m_runeStartPosX = m_runeGroup.position.x;
         m_weaponStartPosX = m_weaponGroup.position.x;
+
+        m_displayedBalance = PlayerPrefs.GetInt("Player Balance");
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
-        m_currencyTextShad.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+        float balanceDifference = PlayerPrefs.GetInt("Player Balance") - m_displayedBalance;
+        m_displayedBalance += (balanceDifference * Time.deltaTime * m_balanceChangeSpeed);
+
+        m_currencyText.text = $"{Mathf.RoundToInt(m_displayedBalance)}";
+        m_currencyTextShad.text = $"{Mathf.RoundToInt(m_displayedBalance)}";
+
+        m_balanceDisplayLerp = Mathf.Clamp(m_balanceDisplayLerp + (Mathf.Abs(balanceDifference) > 0.5f ? 1.0f : -0.2f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
         if (InputManager.Instance.IsKeyDown(KeyType.TAB) || InputManager.Instance.IsGamepadButtonDown(ButtonType.SELECT, InputManager.Instance.GetAnyGamePad()))
             ToggleActive();
 
         m_offsetLerp = Mathf.Clamp(m_offsetLerp + (m_active ? 1.0f : -1.0f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
-        m_canvasGroup.alpha = m_offsetLerp;
+        m_statCanvasGroup.alpha = m_offsetLerp;
+        m_balanceCanvasGroup.alpha = Mathf.Max(m_balanceDisplayLerp, m_offsetLerp);
         //Color backgroundColor = m_background.color;
         //backgroundColor.a = 0.85f * m_offsetLerp;
         //m_background.color = backgroundColor;
@@ -131,7 +145,7 @@ public class UI_StatsMenu : UI_Element
                     break;
                 }
             }
-            if (!runeInfoExists)
+            if (!runeInfoExists && effect.Key.effect != ItemEffect.ARCANE_FOCUS)
             {
                 RuneInfo newObject = Instantiate(m_runeInfoPrefab, m_listObject.transform).GetComponent<RuneInfo>();
                 newObject.m_effect = effect.Key;
