@@ -26,7 +26,7 @@ public class Ability_Whirlpool : AbilityBase
     {
         if (m_boltPrefab != null)
         {
-            playerController.playerAudioAgent.Lightning();
+            playerController.playerAudioAgent.WhirlpoolLaunch();
             Transform modelTransform = playerController.playerMovement.playerModel.transform;
 
             GameObject projectile = Instantiate(m_boltPrefab,

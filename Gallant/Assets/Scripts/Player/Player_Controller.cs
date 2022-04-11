@@ -325,13 +325,14 @@ public class Player_Controller : MonoBehaviour
         if (InputManager.Instance.IsBindDown("Consume", gamepadID))
         {
             // Heal from adrenaline
-            playerResources.UseAdrenaline();
+            animator.SetTrigger("Heal");
+            //playerResources.UseAdrenaline();
         }
 
         if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
             && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded))
         {
-                playerAttack.SwapWeapons();
+            playerAttack.SwapWeapons();
         }
 
         // Camera zoom;
@@ -396,6 +397,7 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    public void StartHeal() { animator.SetBool("IsHealing", true); }
 
     /*******************
      * StunPlayer : Calls playerMovement StunPlayer function.
