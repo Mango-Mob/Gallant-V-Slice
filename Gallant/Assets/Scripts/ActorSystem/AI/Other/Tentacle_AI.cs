@@ -146,7 +146,7 @@ namespace ActorSystem.AI.Other
             isVisible = status;
         }
 
-        public override void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal, Vector3? _damageLoc = null)
+        public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -171,14 +171,18 @@ namespace ActorSystem.AI.Other
                         material.StartDisolve(2f);
                     }
                     Submerge(false);
+                    float after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
+                    return true;
                 }
 
                 float after = m_myBrain.m_currHealth;
                 m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
             }
+            return false;
         }
 
-        public override void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -199,10 +203,14 @@ namespace ActorSystem.AI.Other
                         material.StartDisolve(2f);
                     }
                     Submerge(false);
+                    float after = m_myBrain.m_currHealth;
+                    m_octoBrain.DealDamageSilent(before - after, _type);
+                    return true;
                 }
                 float after = m_myBrain.m_currHealth;
                 m_octoBrain.DealDamageSilent(before - after, _type);
             }
+            return false;
         }
 
         public void DamageInSlam()

@@ -279,7 +279,7 @@ namespace ActorSystem.AI.Bosses
             m_currentOrient = Random.Range(0, m_myBrain.m_patrol.m_targetOrientations.Count);
         }
 
-        public override void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
+        public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (!m_myBrain.IsDead)
             {
@@ -293,7 +293,7 @@ namespace ActorSystem.AI.Bosses
                     {
                         collider.enabled = false;
                     }
-                    return;
+                    return true;
                 }
                 else
                 {
@@ -314,9 +314,10 @@ namespace ActorSystem.AI.Bosses
                     }
                 }
             }
+            return false;
         }
 
-        public override void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (!m_myBrain.IsDead)
             {
@@ -332,7 +333,7 @@ namespace ActorSystem.AI.Bosses
                         material.StartDisolve(2f);
                     }
                     Submerge();
-                    return;
+                    return true;
                 }
 
                 if (m_mode == Phase.HEAD)
@@ -344,6 +345,7 @@ namespace ActorSystem.AI.Bosses
                     }
                 }
             }
+            return false;
         }
 
         private IEnumerator CreateInk(int subtract, float duration, float delay)

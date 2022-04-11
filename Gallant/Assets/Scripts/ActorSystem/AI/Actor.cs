@@ -135,7 +135,7 @@ namespace ActorSystem.AI
             m_myBrain.m_legs?.SetTargetRotation(rotatVector);
         }
 
-        public virtual void DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
+        public virtual bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -155,12 +155,13 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
-        public virtual void DealDamageSilent(float _damage, CombatSystem.DamageType _type)
+        public virtual bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
@@ -176,9 +177,10 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
-                    return;
+                    return true;
                 }
             }
+            return false;
         }
 
         public virtual void DealImpactDamage(float amount, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
