@@ -151,15 +151,36 @@ public class Player_Skills : MonoBehaviour
         {
             case AbilityTag.Fire:
                 // Splash damage to nearby enemies
+
+                // Get actors within radius
+
+                // Apply damage to those in radius that is not hit actor (multiply damage by potency)
+
+                // Spawn VFX
+
                 break;
             case AbilityTag.Air:
                 // Increase attack speed on hit
+
+                // Need status system
+
+                // SFX
                 break;
             case AbilityTag.Earth:
                 // Splash impact damage to nearby enemies
+
+                // Get actors within radius
+
+                // Apply impact to those in radius that is not hit actor (multiply impact by potency)
+
+                // Spawn VFX
                 break;
             case AbilityTag.Water:
                 // Heal regen on hit - doesn't stack (about 1% a second)
+
+                // Need status system
+
+                // SFX & VFX
                 break;
         }
     }
@@ -169,15 +190,29 @@ public class Player_Skills : MonoBehaviour
         {
             case AbilityTag.Fire:
                 // Patch of fire where enemy dies
+
+                // Use flame evade asset
                 break;
             case AbilityTag.Air:
                 // Bonus movement speed on kills
+
+                // Need status system
+
+                // SFX
                 break;
             case AbilityTag.Earth:
-                // Knockback nearby enemies on kill
+                // Apply knockback to nearby enemies on kill
+
+                // Get actors within radius
+
+                // Apply knockback to those in radius that is not hit actor
+
+                // Spawn VFX
                 break;
             case AbilityTag.Water:
                 // Slow patch on kill
+
+                // Use frost evade asset
                 break;
         }
     }
