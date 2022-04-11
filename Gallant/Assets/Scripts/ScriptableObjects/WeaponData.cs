@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
+
 [System.Serializable]
 
 public class SerializedWeapon
@@ -53,7 +58,7 @@ public class SerializedWeapon
         return data;
     }
 }
-
+[System.Serializable]
 public enum WeaponTag
 {
     One_hand,
@@ -85,6 +90,8 @@ public class WeaponData : ScriptableObject
     private EffectData m_itemEffectData;
 
     public string overrideAnimation = "";
+
+    public List<WeaponTag> m_tags = new List<WeaponTag>();
 
     [Header("Alt Attack Info")]
     public string m_altAttackName = "None";
@@ -480,3 +487,60 @@ public class WeaponData : ScriptableObject
         this.m_altAttackStaminaCost = other.m_altAttackStaminaCost;
     }
 }
+
+#if UNITY_EDITOR
+/****************
+ * WeaponDataEditor: Reorderable list for tags
+ * @author : William de Beer
+ * @file : WeaponData.cs
+ * @year : 2022
+ */
+[CustomEditor(typeof(WeaponData), true)]
+public class WeaponDataEditor : Editor
+{
+    SerializedProperty panelComponent;
+    ReorderableList list;
+
+    private void OnEnable()
+    {
+        panelComponent = serializedObject.FindProperty("m_tag");
+
+        list = new ReorderableList(serializedObject, panelComponent, true, true, false, false);
+
+        list.drawElementCallback = DrawListItems;
+        list.drawHeaderCallback = DrawHeader;
+    }
+    
+    //Draws the items stored in the reorderable list.
+    void DrawListItems(Rect _rect, int _index, bool _isActive, bool _isFocused)
+    {
+        SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(_index);
+
+        if (element != null && element.objectReferenceValue != null)
+        {
+            EditorGUI.LabelField(new Rect(_rect.x, _rect.y, 400, EditorGUIUtility.singleLineHeight), element.objectReferenceValue.name);
+        }
+        else if (element.objectReferenceValue == null)
+        {
+            Debug.LogWarning("Could not find object associated with serialized property.");
+        }
+    }
+
+    //Draws the header of the reorderable list.
+    void DrawHeader(Rect _rect)
+    {
+        string name = "Objects";
+        EditorGUI.LabelField(_rect, name);
+    }
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+
+        // Draw list
+        serializedObject.Update();
+        if (panelComponent != null)
+            list.DoLayoutList();
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+#endif
