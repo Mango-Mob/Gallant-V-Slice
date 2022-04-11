@@ -49,7 +49,7 @@ public class ChainLightning : MonoBehaviour
         {
             m_hitTargets.Add(closestTarget);
             //closestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
-            m_user.playerAttack.DamageTarget(closestTarget.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability);
+            m_user.playerAttack.DamageTarget(closestTarget.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
 
             CreateVFX(transform.position, closestTarget.m_selfTargetTransform.transform.position);
 
@@ -94,7 +94,7 @@ public class ChainLightning : MonoBehaviour
             {
                 m_hitTargets.Add(bestTarget);
                 //bestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
-                m_user.playerAttack.DamageTarget(bestTarget.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability);
+                m_user.playerAttack.DamageTarget(bestTarget.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
 
                 // Chain VFX
                 CreateVFX(_lastPosition, bestTarget.m_selfTargetTransform.transform.position);

@@ -92,7 +92,7 @@ public abstract class WeaponBase : MonoBehaviour
 
             bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing);
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
             Actor actor = collider.GetComponentInParent<Actor>();
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))

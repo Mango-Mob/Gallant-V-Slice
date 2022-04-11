@@ -54,7 +54,7 @@ public class Rollbash : MonoBehaviour
 
         if (playerController.playerAttack.m_attackTargets == (playerController.playerAttack.m_attackTargets | (1 << other.gameObject.layer)))
         {
-            playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, m_data.effectiveness, 0, CombatSystem.DamageType.Ability);
+            playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, m_data.effectiveness, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
