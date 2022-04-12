@@ -221,6 +221,9 @@ public class Player_Skills : MonoBehaviour
         switch (_tag)
         {
             case AbilityTag.Fire:
+                if (m_fireDamageSplashSkill == null)
+                    return;
+
                 // Splash damage to nearby enemies
 
                 // Get actors within radius
@@ -229,20 +232,24 @@ public class Player_Skills : MonoBehaviour
                 // Apply damage to those in radius that is not hit actor (multiply damage by potency)
                 foreach (var collider in fireColliders)
                 {
-                    playerController.playerAttack.DamageTarget(collider.gameObject, 5.0f * _potency, 0.0f, 0.0f, CombatSystem.DamageType.Ability);
+                    playerController.playerAttack.DamageTarget(collider.gameObject, m_fireDamageSplashSkill.m_strength * _potency, 0.0f, 0.0f, CombatSystem.DamageType.Ability);
                 }
                 // Spawn VFX
 
                 break;
             case AbilityTag.Air:
+                if (m_attackSpeedStatus == null)
+                    return;
                 // Increase attack speed on hit
 
                 // Use status system
-                playerController.statusEffectContainer.AddStatusEffect(new AttackSpeedStatus(0.05f, 3.0f));
+                playerController.statusEffectContainer.AddStatusEffect(new AttackSpeedStatus(m_attackSpeedStatus.m_strength, m_attackSpeedStatus.m_duration));
 
                 // SFX
                 break;
             case AbilityTag.Earth:
+                if (m_impactSplashSkill == null)
+                    return;
                 // Splash impact damage to nearby enemies
 
                 // Get actors within radius
@@ -254,17 +261,19 @@ public class Player_Skills : MonoBehaviour
                     Actor actor = GetComponentInParent<Actor>();
                     if (actor && _actor != actor)
                     {
-                        actor.DealImpactDamage(4.0f, 0.0f, (actor.transform.position - _actor.transform.position).normalized, CombatSystem.DamageType.Ability);
+                        actor.DealImpactDamage(m_impactSplashSkill.m_strength, 0.0f, (actor.transform.position - _actor.transform.position).normalized, CombatSystem.DamageType.Ability);
                     }
                 }
 
                 // Spawn VFX
                 break;
             case AbilityTag.Water:
+                if (m_healthRegenStatus == null)
+                    return;
                 // Heal regen on hit - doesn't stack (about 1% a second)
 
                 // Use status system
-                playerController.statusEffectContainer.AddStatusEffect(new HealthRegenStatus(1.0f, 3.0f));
+                playerController.statusEffectContainer.AddStatusEffect(new HealthRegenStatus(m_healthRegenStatus.m_strength, m_healthRegenStatus.m_duration));
 
                 // SFX & VFX
                 break;
@@ -275,20 +284,26 @@ public class Player_Skills : MonoBehaviour
         switch (_tag)
         {
             case AbilityTag.Fire:
+                if (m_flamePatchSkill == null)
+                    return;
                 // Patch of fire where enemy dies
                 GameObject flamePatch = Instantiate(m_flamePatchPrefab, _actor.transform.position, transform.rotation);
-                flamePatch.GetComponent<BaseSkillObject>().m_strength = 5.0f * _potency;
-                flamePatch.GetComponent<BaseSkillObject>().m_lifetime = 3.0f;
+                flamePatch.GetComponent<BaseSkillObject>().m_strength = m_flamePatchSkill.m_strength * _potency;
+                flamePatch.GetComponent<BaseSkillObject>().m_lifetime = m_flamePatchSkill.m_duration;
                 break;
             case AbilityTag.Air:
+                if (m_movementSpeedStatus == null)
+                    return;
                 // Bonus movement speed on kills
 
                 // Use status system
-                playerController.statusEffectContainer.AddStatusEffect(new MoveSpeedStatus(0.05f, 3.0f));
+                playerController.statusEffectContainer.AddStatusEffect(new MoveSpeedStatus(m_movementSpeedStatus.m_strength, m_movementSpeedStatus.m_duration));
 
                 // SFX
                 break;
             case AbilityTag.Earth:
+                if (m_knockbackSplashSkill == null)
+                    return;
                 // Apply knockback to nearby enemies on kill
 
                 // Get actors within radius
@@ -301,17 +316,19 @@ public class Player_Skills : MonoBehaviour
                     Actor actor = collider.GetComponentInParent<Actor>();
                     if (actor && _actor != actor)
                     {
-                        actor.KnockbackActor((actor.transform.position - _actor.transform.position).normalized * 12.0f);
+                        actor.KnockbackActor((actor.transform.position - _actor.transform.position).normalized * m_knockbackSplashSkill.m_strength);
                     }
                 }
 
                 // Spawn VFX
                 break;
             case AbilityTag.Water:
+                if (m_slowPatchSplashSkill == null)
+                    return;
                 // Slow patch on kill
                 GameObject frostPatch = Instantiate(m_slowPatchPrefab, _actor.transform.position, transform.rotation);
-                frostPatch.GetComponent<BaseSkillObject>().m_strength = 5.0f * _potency;
-                frostPatch.GetComponent<BaseSkillObject>().m_lifetime = 3.0f;
+                frostPatch.GetComponent<BaseSkillObject>().m_strength = m_slowPatchSplashSkill.m_strength * _potency;
+                frostPatch.GetComponent<BaseSkillObject>().m_lifetime = m_slowPatchSplashSkill.m_duration;
                 break;
         }
     }
