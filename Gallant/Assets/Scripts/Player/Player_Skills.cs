@@ -21,6 +21,34 @@ public class Player_Skills : MonoBehaviour
     public int m_experienceBonus = 0;
     public int m_extraHealOrbs = 0;
 
+    [Header("Skill Tree Ability")]
+    private SkillAbility m_attackSpeedStatus;
+    public float m_attackSpeedStatusBonus = 1.0f;
+
+    private SkillAbility m_movementSpeedStatus;
+    public float m_movementSpeedStatusBonus = 1.0f;
+
+    private SkillAbility m_flamePatchSkill;
+    private GameObject m_flamePatchPrefab;
+
+    private SkillAbility m_slowPatchSplashSkill;
+    private GameObject m_slowPatchPrefab;
+
+    private SkillAbility m_healthRegenStatus;
+    private SkillAbility m_knockbackSplashSkill;
+    private SkillAbility m_impactSplashSkill;
+    private SkillAbility m_fireDamageSplashSkill;
+    private class SkillAbility
+    {
+        public float m_strength { private set; get; } = 0.0f;
+        public float m_duration { private set; get; } = 0.0f;
+        public SkillAbility(float _strength, float _duration)
+        {
+            m_strength = _strength;
+            m_duration = _duration;
+        }
+    }
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -29,6 +57,9 @@ public class Player_Skills : MonoBehaviour
         playerController = GetComponent<Player_Controller>();
 
         EvaluateSkills();
+
+        m_flamePatchPrefab = Resources.Load<GameObject>("Skills/FlamePatch");
+        m_slowPatchPrefab = Resources.Load<GameObject>("Skills/FrostPatch");
     }
 
     // Update is called once per frame
@@ -52,6 +83,15 @@ public class Player_Skills : MonoBehaviour
         m_experienceBonus = 0;
         m_extraHealOrbs = 0;
 
+        m_attackSpeedStatus = null;
+        m_movementSpeedStatus = null;
+        m_healthRegenStatus = null;
+        m_flamePatchSkill = null;
+        m_knockbackSplashSkill = null;
+        m_impactSplashSkill = null;
+        m_fireDamageSplashSkill = null;
+        m_slowPatchSplashSkill = null;
+
         foreach (var skill in SkillTreeReader.instance.GetSkillTree(InkmanClass.GENERAL).skills)
         {
             CalculateSkillEffect(skill);
@@ -71,6 +111,11 @@ public class Player_Skills : MonoBehaviour
     {
         string path = "Data/Skills/" + _skill.id;
         SkillData skillData = Resources.Load<SkillData>(path);
+        if (skillData == null)
+        {
+            path = "Data/Skills/Elemental/" + _skill.id;
+            skillData = Resources.Load<SkillData>(path);
+        }
 
         if (skillData == null)
         {
@@ -127,6 +172,32 @@ public class Player_Skills : MonoBehaviour
             case "healMoveSpeed": // Added
                 m_healMoveSpeedIncrease += skillData.effectStrength * _skill.upgradeLevel;
                 break;
+
+                // STATUS EFFECT SKILLS
+            case "attackSpeedStatus": // Added
+                m_attackSpeedStatus = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "movementSpeedStatus": // Added
+                m_movementSpeedStatus = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "healthRegenStatus": // Added
+                m_healthRegenStatus = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "flamePatch": // Added
+                m_flamePatchSkill = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "knockbackSplash": // Added
+                m_knockbackSplashSkill = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "impactSplash": // Added
+                m_impactSplashSkill = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "fireDamageSplash": // Added
+                m_fireDamageSplashSkill = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
+            case "slowPatch": // Added
+                m_slowPatchSplashSkill = new SkillAbility(skillData.effectStrength, skillData.effectDuration);
+                break;
             default:
                 Debug.LogWarning($"No case for the skill named {skillID}.");
                 break;
@@ -141,7 +212,7 @@ public class Player_Skills : MonoBehaviour
         foreach (var tag in _abilityTags)
         {
             OnHitEffectSkills(tag, _actor, _potency);
-            if (!_killedTarget)
+            if (_killedTarget)
                 OnKillEffectSkills(tag, _actor, _potency);
         }
     }
@@ -153,16 +224,21 @@ public class Player_Skills : MonoBehaviour
                 // Splash damage to nearby enemies
 
                 // Get actors within radius
+                Collider[] fireColliders = Physics.OverlapSphere(_actor.transform.position, 5.0f, playerController.playerAttack.m_attackTargets);
 
                 // Apply damage to those in radius that is not hit actor (multiply damage by potency)
-
+                foreach (var collider in fireColliders)
+                {
+                    playerController.playerAttack.DamageTarget(collider.gameObject, 5.0f * _potency, 0.0f, 0.0f, CombatSystem.DamageType.Ability);
+                }
                 // Spawn VFX
 
                 break;
             case AbilityTag.Air:
                 // Increase attack speed on hit
 
-                // Need status system
+                // Use status system
+                playerController.statusEffectContainer.AddStatusEffect(new AttackSpeedStatus(0.05f, 3.0f));
 
                 // SFX
                 break;
@@ -170,15 +246,25 @@ public class Player_Skills : MonoBehaviour
                 // Splash impact damage to nearby enemies
 
                 // Get actors within radius
+                Collider[] earthColliders = Physics.OverlapSphere(_actor.transform.position, 5.0f, playerController.playerAttack.m_attackTargets);
 
                 // Apply impact to those in radius that is not hit actor (multiply impact by potency)
+                foreach (var collider in earthColliders)
+                {
+                    Actor actor = GetComponentInParent<Actor>();
+                    if (actor && _actor != actor)
+                    {
+                        actor.DealImpactDamage(4.0f, 0.0f, (actor.transform.position - _actor.transform.position).normalized, CombatSystem.DamageType.Ability);
+                    }
+                }
 
                 // Spawn VFX
                 break;
             case AbilityTag.Water:
                 // Heal regen on hit - doesn't stack (about 1% a second)
 
-                // Need status system
+                // Use status system
+                playerController.statusEffectContainer.AddStatusEffect(new HealthRegenStatus(1.0f, 3.0f));
 
                 // SFX & VFX
                 break;
@@ -190,13 +276,15 @@ public class Player_Skills : MonoBehaviour
         {
             case AbilityTag.Fire:
                 // Patch of fire where enemy dies
-
-                // Use flame evade asset
+                GameObject flamePatch = Instantiate(m_flamePatchPrefab, _actor.transform.position, transform.rotation);
+                flamePatch.GetComponent<BaseSkillObject>().m_strength = 5.0f * _potency;
+                flamePatch.GetComponent<BaseSkillObject>().m_lifetime = 3.0f;
                 break;
             case AbilityTag.Air:
                 // Bonus movement speed on kills
 
-                // Need status system
+                // Use status system
+                playerController.statusEffectContainer.AddStatusEffect(new MoveSpeedStatus(0.05f, 3.0f));
 
                 // SFX
                 break;
@@ -204,15 +292,26 @@ public class Player_Skills : MonoBehaviour
                 // Apply knockback to nearby enemies on kill
 
                 // Get actors within radius
+                Collider[] earthColliders = Physics.OverlapSphere(_actor.transform.position, 5.0f, playerController.playerAttack.m_attackTargets);
+
 
                 // Apply knockback to those in radius that is not hit actor
+                foreach (var collider in earthColliders)
+                {
+                    Actor actor = collider.GetComponentInParent<Actor>();
+                    if (actor && _actor != actor)
+                    {
+                        actor.KnockbackActor((actor.transform.position - _actor.transform.position).normalized * 12.0f);
+                    }
+                }
 
                 // Spawn VFX
                 break;
             case AbilityTag.Water:
                 // Slow patch on kill
-
-                // Use frost evade asset
+                GameObject frostPatch = Instantiate(m_slowPatchPrefab, _actor.transform.position, transform.rotation);
+                frostPatch.GetComponent<BaseSkillObject>().m_strength = 5.0f * _potency;
+                frostPatch.GetComponent<BaseSkillObject>().m_lifetime = 3.0f;
                 break;
         }
     }

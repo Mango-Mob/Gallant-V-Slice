@@ -377,7 +377,6 @@ public class WeaponData : ScriptableObject
                 tags += tag.ToString().Replace('_', ' ') + ", ";
             }
         }
-        Debug.Log(tags);
         return tags;
     }
     public string GetPassiveEffectDescription()
