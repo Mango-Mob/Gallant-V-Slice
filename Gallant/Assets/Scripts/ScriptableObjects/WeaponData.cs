@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
+
 [System.Serializable]
 
 public class SerializedWeapon
@@ -53,7 +58,14 @@ public class SerializedWeapon
         return data;
     }
 }
-
+[System.Serializable]
+public enum WeaponTag
+{
+    One_hand,
+    Two_hands,
+    Melee,
+    Ranged,
+}
 
 /****************
  * WeaponData: Scriptable object containing data for weapon
@@ -78,6 +90,8 @@ public class WeaponData : ScriptableObject
     private EffectData m_itemEffectData;
 
     public string overrideAnimation = "";
+
+    public List<WeaponTag> m_tags = new List<WeaponTag>();
 
     [Header("Alt Attack Info")]
     public string m_altAttackName = "None";
@@ -349,35 +363,23 @@ public class WeaponData : ScriptableObject
     {
         this.m_level = _level;
     }
-
-    public static string GetTags(Weapon type)
+    public string GetTagsString()
     {
-        switch (type)
+        string tags = "";
+        foreach (var tag in m_tags)
         {
-            case Weapon.SWORD:
-                return "One hand, Melee";
-            case Weapon.SPEAR:
-                return "Two hands, Melee";
-            case Weapon.BOOMERANG:
-                return "One hand, Ranged";
-            case Weapon.SHIELD:
-                return "One hand, Ranged";
-            case Weapon.CROSSBOW:
-                return "One hand, Ranged";
-            case Weapon.HAMMER:
-                return "One hand, Melee";
-            case Weapon.STAFF:
-                return "One hand, Ranged";
-            case Weapon.GREATSWORD:
-                return "Two hands, Melee";
-            case Weapon.BOW:
-                return "Two hands, Ranged";
-            default:
-            case Weapon.BRICK:
-                return "";
-		}
-	}
-	
+            tags += tag.ToString().Replace('_', ' ') + ", ";
+        }
+        if (abilityData)
+        {
+            foreach (var tag in abilityData.m_tags)
+            {
+                tags += tag.ToString().Replace('_', ' ') + ", ";
+            }
+        }
+        Debug.Log(tags);
+        return tags;
+    }
     public string GetPassiveEffectDescription()
     {
         switch (itemEffect)
@@ -449,6 +451,8 @@ public class WeaponData : ScriptableObject
         this.m_itemEffectData = other.m_itemEffectData;
 
         this.overrideAnimation = other.overrideAnimation;
+
+        this.m_tags = other.m_tags;
 
         this.m_altAttackName = other.m_altAttackName;
         this.m_altAttackDesc = other.m_altAttackDesc;

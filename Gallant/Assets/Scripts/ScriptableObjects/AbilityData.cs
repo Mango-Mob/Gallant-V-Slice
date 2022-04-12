@@ -1,6 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditorInternal;
+#endif
+public enum AbilityTag
+{
+    Fire,
+    Air,
+    Earth,
+    Water,
+}
+
+
 /****************
  * AbilityData: Scriptable object containing data for ability
  * @author : William de Beer
@@ -16,7 +30,7 @@ public class AbilityData : ScriptableObject
     public string weaponTitle; //_ <weapon> of <title>
     public Ability abilityPower;
     public Sprite abilityIcon;
-    public string tags;
+    public List<AbilityTag> m_tags = new List<AbilityTag>();
     [TextArea(10, 15)]
     public string description;
     [ColorUsage(true, true)] public Color droppedEnergyColor;

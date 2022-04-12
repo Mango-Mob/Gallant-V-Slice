@@ -220,9 +220,10 @@ public class InfoDisplay : MonoBehaviour
         m_passiveText.text = data.GetPassiveEffectDescription();
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
 
-        string taglist = WeaponData.GetTags(data.weaponType) + ", ";
-        if(data.abilityData != null)
-            taglist += data.abilityData.tags;
+        string taglist = data.GetTagsString();
+        //string taglist = WeaponData.GetTags(data.weaponType) + ", ";
+        //if(data.abilityData != null)
+            //taglist += data.abilityData.tags;
 
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();

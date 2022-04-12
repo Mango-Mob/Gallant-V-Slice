@@ -637,7 +637,7 @@ public class Player_Attack : MonoBehaviour
      * @author : William de Beer
      * @param : (GameObject) Target of attack, (float) Damage to deal
      */
-    public void DamageTarget(GameObject _target, float _damage, float _impactForce = 5.0f, float _piercingVal = 0, CombatSystem.DamageType _damageType = CombatSystem.DamageType.Physical, Vector3 _damageSource = default(Vector3))
+    public void DamageTarget(GameObject _target, float _damage, float _impactForce = 5.0f, float _piercingVal = 0, CombatSystem.DamageType _damageType = CombatSystem.DamageType.Physical, List<AbilityTag> _abilityTags = null, Vector3 _damageSource = default(Vector3))
     {
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
@@ -665,7 +665,8 @@ public class Player_Attack : MonoBehaviour
             if (_target.gameObject.layer == LayerMask.NameToLayer("Rubble"))
                 damageMult = 0.0f;
 
-            actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
+            bool killedEnemy = actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
+            playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
         }
 
         Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
