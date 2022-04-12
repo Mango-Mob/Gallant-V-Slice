@@ -38,7 +38,7 @@ public class Ability_Thorns : AbilityBase
 
         if (_attacker != null)
         {
-            playerController.playerAttack.DamageTarget(_attacker, _damage * dataToUse.effectiveness, 0, 0, CombatSystem.DamageType.Ability);
+            playerController.playerAttack.DamageTarget(_attacker, _damage * dataToUse.effectiveness, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
             barrier.transform.forward = (_attacker.transform.position - transform.position).normalized;
             barrier.GetComponent<ThornsVFX>().target = _attacker;
         }

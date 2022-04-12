@@ -330,7 +330,8 @@ public class Player_Movement : MonoBehaviour
         }
 
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
-            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease);
+            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease)
+            * playerController.playerSkills.m_movementSpeedStatusBonus;
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;

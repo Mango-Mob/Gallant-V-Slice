@@ -48,7 +48,7 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
     protected abstract void DetonateProjectile(bool hitTarget = false);
     protected bool ProjectileCollide(Collider other)
     {
-        playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability);
+        playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
 
         Actor actor = other.GetComponentInParent<Actor>();
         if (actor != null && !m_hitList.Contains(actor))

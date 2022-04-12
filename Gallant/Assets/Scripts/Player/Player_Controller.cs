@@ -35,6 +35,7 @@ public class Player_Controller : MonoBehaviour
     public Player_CombatAnimator playerCombatAnimator { private set; get; }
     public Player_ClassArmour playerClassArmour { private set; get; }
     public Player_Skills playerSkills { private set; get; }
+    public StatusEffectContainer statusEffectContainer { private set; get; }
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
@@ -84,6 +85,7 @@ public class Player_Controller : MonoBehaviour
         playerCombatAnimator = GetComponent<Player_CombatAnimator>();
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
+        statusEffectContainer = GetComponent<StatusEffectContainer>();
     }
 
     // Start is called before the first frame update
@@ -122,9 +124,9 @@ public class Player_Controller : MonoBehaviour
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
         if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
-            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult);
-        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
-        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
+            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult * playerSkills.m_attackSpeedStatusBonus);
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
+        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
         bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID); 
         bool leftAttackHeld = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
