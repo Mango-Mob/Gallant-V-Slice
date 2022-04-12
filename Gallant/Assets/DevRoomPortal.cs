@@ -12,7 +12,7 @@ public class DevRoomPortal : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            other.GetComponent<Player_Controller>().RespawnPlayerTo(playerSendTo.position);
+            other.GetComponent<Player_Controller>().RespawnPlayerTo(playerSendTo.position, true);
             foreach (var actor in ActorManager.Instance.m_subscribed)
             {
                 actor.SetTarget(null);

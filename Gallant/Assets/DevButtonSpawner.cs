@@ -65,4 +65,9 @@ public class DevButtonSpawner : MonoBehaviour
     {
         ActorManager.Instance.KillAll();
     }
+
+    public void ToggleWalls(GameObject walls)
+    {
+        walls.SetActive(!walls.activeInHierarchy);
+    }
 }
