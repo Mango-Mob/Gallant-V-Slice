@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 5190684896381553234}
   - component: {fileID: 4677801292968336669}
   - component: {fileID: 1549617315979062133}
+  - component: {fileID: 1731840947}
   m_Layer: 9
   m_Name: Shopkeeper
   m_TagString: Untagged
@@ -166,7 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b14cdc9ed1adee4881f4b8653b2a7ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsStunned: 0
   m_canBeTarget: 0
   m_forceShowUI: 0
   m_currHealth: 0
@@ -188,6 +188,111 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1731840947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413747602781867310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 7673921877491334355}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 925077590221348560}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 831016906922551652}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 2219557401302853963}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 0
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 45.78885, g: 18.197184, b: 0, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &413747603708313577
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,6 +545,7 @@ GameObject:
   - component: {fileID: 8497600225670725447}
   - component: {fileID: 2219557401302853963}
   - component: {fileID: 4758438587931818732}
+  - component: {fileID: 799704643}
   m_Layer: 17
   m_Name: MiniMapIcon
   m_TagString: Untagged
@@ -525,6 +631,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_idealRotation: {x: -0.65328145, y: 0.27059808, z: -0.27059808, w: -0.65328145}
+--- !u!114 &799704643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707129828180648859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1766875117539650322
 GameObject:
   m_ObjectHideFlags: 0
@@ -750,6 +868,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2970050684445727282}
   - component: {fileID: 831016906922551652}
+  - component: {fileID: 1868607798}
   m_Layer: 0
   m_Name: Scarf
   m_TagString: Untagged
@@ -829,6 +948,18 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.27210593, y: -0.013639301, z: 0.02189672}
     m_Extent: {x: 0.41503042, y: 0.27170748, z: 0.28105235}
   m_DirtyAABB: 0
+--- !u!114 &1868607798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776415197973342396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2786430225654694948
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,6 +1095,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3633060316544762546}
   - component: {fileID: 925077590221348560}
+  - component: {fileID: 1198287902}
   m_Layer: 0
   m_Name: Gloves
   m_TagString: Untagged
@@ -1043,6 +1175,18 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.13593465, y: -0.48547745, z: 0.12650745}
     m_Extent: {x: 0.3985086, y: 0.5713669, z: 0.240038}
   m_DirtyAABB: 0
+--- !u!114 &1198287902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3254151240570108271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3736445423271929377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,6 +1197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 514877752580325768}
   - component: {fileID: 7673921877491334355}
+  - component: {fileID: 177793497}
   m_Layer: 0
   m_Name: Belt
   m_TagString: Untagged
@@ -1141,6 +1286,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.29280663, y: 0.030653551, z: -0.0029684305}
     m_Extent: {x: 1.1096632, y: 0.4236952, z: 0.6038292}
   m_DirtyAABB: 0
+--- !u!114 &177793497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3736445423271929377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3769496281825058729
 GameObject:
   m_ObjectHideFlags: 0
