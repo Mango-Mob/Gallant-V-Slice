@@ -75,7 +75,7 @@ namespace ActorSystem.AI.Components
          */
         public void SetFloat(string name, float value, float lerpDuration = 0)
         {
-            if (lerpDuration > 0)
+            if (lerpDuration > 0 && m_animator.GetFloat(name) != value)
             {
                 if (name != "")
                     StartCoroutine(BlendFloatValue(name, value, lerpDuration));

@@ -129,7 +129,12 @@ namespace ActorSystem.AI.Components
                 m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
                 m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.scaledVelocity : Vector3.zero);
             }
-            if (m_animator != null && m_animator.m_hasPivot)
+            if (m_animator != null && m_animator.HasParameter("RotationVelocity"))
+            {
+                //m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
+                m_animator.SetFloat("RotationVelocity", (m_legs != null) ? m_legs.m_rotationDirection : 0f, 0.25f);
+            }
+            if(m_animator != null && m_animator.m_hasPivot)
             {
                 m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
             }

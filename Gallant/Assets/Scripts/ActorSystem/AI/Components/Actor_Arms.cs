@@ -19,6 +19,7 @@ namespace ActorSystem.AI.Components
         public bool m_canUpdateAttack { get; set; } = true;
         private Actor m_mainComponent;
         private float[] m_cooldowns;
+
         public bool hasCancel { 
             get 
             {
@@ -87,13 +88,6 @@ namespace ActorSystem.AI.Components
                 m_myData[m_activeAttack.Value].EndActor(m_mainComponent);
 
             m_activeAttack = null;
-        }
-        private void DealDamage(Collider _target, CombatSystem.DamageType _type)
-        {
-            if(_target.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                _target.GetComponent<Player_Controller>()?.DamagePlayer(m_myData[m_activeAttack.Value].baseDamage * (m_baseDamageMod), CombatSystem.DamageType.Physical, gameObject);
-            }
         }
 
         public int GetNextAttack()

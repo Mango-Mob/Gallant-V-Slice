@@ -24,6 +24,8 @@ public class State_Attack : State
     {
         m_myUser.m_activeStateText = "ATTACK";
 
+        m_myActor.m_myBrain.m_legs?.Halt();
+
         if (selectedAttack < 0 && m_myActor.m_states.Contains(Type.IDLE))
         {
             m_myUser.SetState(new State_Idle(m_myUser));

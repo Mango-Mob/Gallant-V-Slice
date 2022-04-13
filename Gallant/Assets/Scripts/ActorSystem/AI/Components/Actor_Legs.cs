@@ -37,6 +37,8 @@ namespace ActorSystem.AI.Components
         public float m_rotationAccel = 5f;
         private float m_rotationSpeed = 0f;
 
+        public float m_rotationDirection { get; protected set; } = 0f;
+
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
         public float m_pivotMin = 160;
@@ -58,6 +60,7 @@ namespace ActorSystem.AI.Components
             m_body.isKinematic = true;
             m_agent.updateRotation = false;
             m_targetPosition = transform.position;
+            m_targetRotation = transform.rotation;
 
             if (m_agent.isOnNavMesh)
                 m_agent.SetDestination(transform.position);
@@ -104,10 +107,28 @@ namespace ActorSystem.AI.Components
                     m_rotationSpeed += m_rotationAccel * Time.fixedDeltaTime;
 
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
+
+                    if(Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
+                    {
+                        if (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0)
+                        {
+                            m_rotationDirection = 1.0f;
+                        }
+                        else
+                        {
+                            m_rotationDirection = -1.0f;
+                        }
+                    }
+                    else
+                    {
+                        m_rotationDirection = 0.0f;
+                    }
+                    
                 }
                 else
                 {
                     m_rotationSpeed = 0f;
+                    m_rotationDirection = 0f;
                 }
             }
                 
@@ -283,10 +304,12 @@ namespace ActorSystem.AI.Components
                 Gizmos.DrawLine(transform.position, transform.position + m_body.velocity);
             }
         }
+
         public bool ShouldPivot()
         {
             return Vector3.Angle(transform.forward, m_targetRotation * Vector3.forward) > m_pivotMin;
         }
+
         public bool IsGrounded()
         {
             return Physics.OverlapSphere(transform.position, m_agent.radius, 1 << LayerMask.NameToLayer("Default")).Length > 0;
