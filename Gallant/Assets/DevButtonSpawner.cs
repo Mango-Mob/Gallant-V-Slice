@@ -9,8 +9,6 @@ public class DevButtonSpawner : MonoBehaviour
 {
     public string actorName;
     public SpawnDataGenerator data;
-    [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
 
     private Interactable m_myInterface;
     public TMP_Text m_counter;
@@ -22,10 +20,6 @@ public class DevButtonSpawner : MonoBehaviour
 
     private void Update()
     {
-        m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
-        m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
-
         m_counter?.SetText(ActorManager.Instance.GetActorCount(actorName).ToString());
     }
     private void OnTriggerEnter(Collider other)

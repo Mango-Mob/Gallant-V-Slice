@@ -7,8 +7,6 @@ public class SkillTreeObject : MonoBehaviour
     private Player_Controller playerController;
 
     private Interactable m_interactable;
-    [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
     [SerializeField] private GameObject m_skillTreeDisplayControl;
     [SerializeField] private Camera m_skillTreeCamera;
     [SerializeField] private GameObject m_useButton;
@@ -25,8 +23,6 @@ public class SkillTreeObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_keyboardInput.transform.parent.gameObject.SetActive(m_interactable.m_isReady && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_interactable.m_isReady && InputManager.Instance.isInGamepadMode);
         m_useButton.SetActive(m_interactable.m_isReady && !m_skillTreeDisplayControl.activeSelf);
         if (m_skillTreeDisplayControl.activeSelf)
         {

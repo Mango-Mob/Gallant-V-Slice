@@ -52,8 +52,23 @@ public class InputManager : SingletonPersistent<InputManager>
     protected int gamepadCount;
 
     public bool bindHasUpdated = true;
+    [Header("Keyboard Sprites")]
+    [SerializeField] protected Sprite m_leftClick;
+    [SerializeField] protected Sprite m_rightClick;
+    [SerializeField] protected Sprite m_space;
+    [SerializeField] protected Sprite m_backspace;
+    [SerializeField] protected Sprite m_enter;
+    [SerializeField] protected Sprite m_lShift;
+    [SerializeField] protected Sprite m_lCtrl;
+    [SerializeField] protected Sprite m_lAlt;
+    [SerializeField] protected Sprite m_rShift;
+    [SerializeField] protected Sprite m_rCtrl;
+    [SerializeField] protected Sprite m_rAlt;
+    [SerializeField] protected Sprite m_tab;
+    [SerializeField] protected Sprite m_escape;
+    [SerializeField] protected Sprite m_tilde;
 
-    [Header("Sprites")]
+    [Header("Gamepad Sprites")]
     [SerializeField] protected Sprite m_north;
     [SerializeField] protected Sprite m_south;
     [SerializeField] protected Sprite m_east;
@@ -333,29 +348,44 @@ public class InputManager : SingletonPersistent<InputManager>
         return "";
     }
 
-    public Sprite GetBindImage(string _id)
+    public Sprite GetBindImage(string _id, bool includeGamepad = true)
     {
         Bind[] result = null;
         if (m_binds.ContainsKey(_id))
             result = m_binds[_id];
 
+        Sprite resultImage = null;
         if (result != null)
         {
             foreach (var bind in result)
             {
-                if (bind.enumType == typeof(ButtonType))
+                if (bind.enumType == typeof(KeyType))
                 {
-                    return GetGamepadSprite((ButtonType)bind.value);
+                    resultImage = GetKeyImage((KeyType)bind.value);
                 }
-                else if (bind.enumType == typeof(StickType))
+                else if (bind.enumType == typeof(MouseButton))
                 {
-                    return GetGameStickSprite((StickType)bind.value);
+                    resultImage = GetMouseButtonSprite((MouseButton)bind.value);
                 }
+                if(includeGamepad)
+                {
+                    if (bind.enumType == typeof(ButtonType))
+                    {
+                        resultImage = GetGamepadSprite((ButtonType)bind.value);
+                    }
+                    else if (bind.enumType == typeof(StickType))
+                    {
+                        resultImage = GetGameStickSprite((StickType)bind.value);
+                    }
+                }
+
+                if (resultImage != null)
+                    break;
             }
 
         }
 
-        return null;
+        return resultImage;
     }
 
     public bool DoesBindContainNull(string _id)
@@ -949,10 +979,85 @@ public class InputManager : SingletonPersistent<InputManager>
             case KeyType.NONE: { return ""; }
         }
     }
+    public Sprite GetKeyImage(KeyType key)
+    {
+        switch (key)
+        {
+            case KeyType.Q: { return null; }
+            case KeyType.W: { return null; }
+            case KeyType.E: { return null; }
+            case KeyType.R: { return null; }
+            case KeyType.T: { return null; }
+            case KeyType.Y: { return null; }
+            case KeyType.U: { return null; }
+            case KeyType.I: { return null; }
+            case KeyType.O: { return null; }
+            case KeyType.P: { return null; }
+                                     
+            case KeyType.A: { return null; }
+            case KeyType.S: { return null; }
+            case KeyType.D: { return null; }
+            case KeyType.F: { return null; }
+            case KeyType.G: { return null; }
+            case KeyType.H: { return null; }
+            case KeyType.J: { return null; }
+            case KeyType.K: { return null; }
+            case KeyType.L: { return null; }
+                                     
+            case KeyType.Z: { return null; }
+            case KeyType.X: { return null; }
+            case KeyType.C: { return null; }
+            case KeyType.V: { return null; }
+            case KeyType.B: { return null; }
+            case KeyType.N: { return null; }
+            case KeyType.M: { return null; }
+
+            case KeyType.ALP_ONE:   { return null; }
+            case KeyType.ALP_TWO:   { return null; }
+            case KeyType.ALP_THREE: { return null; }
+            case KeyType.ALP_FOUR:  { return null; }
+            case KeyType.ALP_FIVE:  { return null; }
+            case KeyType.ALP_SIX:   { return null; }
+            case KeyType.ALP_SEVEN: { return null; }
+            case KeyType.ALP_EIGHT: { return null; }
+            case KeyType.ALP_NINE:  { return null; }
+            case KeyType.ALP_ZERO:  { return null; }
+
+            case KeyType.NUM_ONE:   { return null; }
+            case KeyType.NUM_TWO:   { return null; }
+            case KeyType.NUM_THREE: { return null; }
+            case KeyType.NUM_FOUR:  { return null; }
+            case KeyType.NUM_FIVE:  { return null; }
+            case KeyType.NUM_SIX:   { return null; }
+            case KeyType.NUM_SEVEN: { return null; }
+            case KeyType.NUM_EIGHT: { return null; }
+            case KeyType.NUM_NINE:  { return null; }
+            case KeyType.NUM_ZERO:  { return null; }
+
+            case KeyType.L_SHIFT:   { return m_lShift; }
+            case KeyType.L_CTRL:    { return m_lCtrl; }
+            case KeyType.L_ALT:     { return m_lAlt; }
+
+            case KeyType.TAB:   { return m_tab; }
+            case KeyType.ESC:   { return m_escape; }
+            case KeyType.SPACE: { return m_space; }
+
+            case KeyType.R_SHIFT:  { return m_rShift; }
+            case KeyType.R_CTRL:   { return m_rCtrl; }
+            case KeyType.R_ALT: { return m_rAlt; }
+
+            case KeyType.ENTER: { return m_enter; }
+
+            default:
+
+            case KeyType.TILDE: { return m_tilde; }
+            case KeyType.NONE: { return null; }
+        }
+    }
     #endregion
 
     #region Mouse
-    
+
     public bool IsAnyMousePressed()
     {
         return mouse.press.isPressed;
@@ -1080,6 +1185,18 @@ public class InputManager : SingletonPersistent<InputManager>
 
             default:
             case MouseButton.NONE:{ return ""; }
+        }
+    }
+    public Sprite GetMouseButtonSprite(MouseButton button)
+    {
+        switch (button)
+        {
+            case MouseButton.LEFT: { return m_leftClick; }
+            case MouseButton.MIDDLE: { return null; }
+            case MouseButton.RIGHT: { return m_leftClick; }
+
+            default:
+            case MouseButton.NONE: { return null; }
         }
     }
     #endregion

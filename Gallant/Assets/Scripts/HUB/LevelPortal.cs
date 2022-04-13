@@ -9,8 +9,6 @@ public class LevelPortal : MonoBehaviour
     public string m_prefRequire = "";
     public GameObject gate;
 
-    [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
     private Interactable m_myInterface;
 
     private void Awake()
@@ -35,9 +33,6 @@ public class LevelPortal : MonoBehaviour
     public void Update()
     {
         GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
-        m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
-        m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
     }
 
     public void Interact()

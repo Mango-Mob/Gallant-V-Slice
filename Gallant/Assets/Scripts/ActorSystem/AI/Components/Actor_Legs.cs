@@ -34,8 +34,7 @@ namespace ActorSystem.AI.Components
         public Vector3 scaledVelocity { get { return localVelocity / m_agent.speed; } }
 
         //Statistics:
-        public float m_rotationAccel = 5f;
-        private float m_rotationSpeed = 0f;
+        public float m_rotationSpeed = 5f;
 
         public float m_rotationDirection { get; protected set; } = 0f;
 
@@ -104,8 +103,6 @@ namespace ActorSystem.AI.Components
 
                 if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
-                    m_rotationSpeed += m_rotationAccel * Time.fixedDeltaTime;
-
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
 
                     if(Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
@@ -123,11 +120,9 @@ namespace ActorSystem.AI.Components
                     {
                         m_rotationDirection = 0.0f;
                     }
-                    
                 }
                 else
                 {
-                    m_rotationSpeed = 0f;
                     m_rotationDirection = 0f;
                 }
             }

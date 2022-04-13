@@ -51,6 +51,7 @@ namespace ActorSystem.AI.Components
         {
             if (m_setDelay > 0)
                 m_setDelay -= Time.deltaTime;
+            
         }
 
         public override void SetEnabled(bool status)
