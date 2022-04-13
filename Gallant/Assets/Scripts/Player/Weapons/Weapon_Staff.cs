@@ -37,6 +37,8 @@ public class Weapon_Staff : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+
         GameObject projectile = ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
 
         if (m_weaponData.abilityData != null)
@@ -48,12 +50,12 @@ public class Weapon_Staff : WeaponBase
                 mainModule.startColor = new ParticleSystem.MinMaxGradient(m_weaponData.abilityData.droppedEnergyColor);
             }
         }
-
-        
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+
         GameObject vfx = ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
 
         if (m_weaponData.abilityData != null)

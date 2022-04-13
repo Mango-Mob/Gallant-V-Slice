@@ -24,11 +24,16 @@ public class Weapon_Crossbow : WeaponBase
     }
     public override void WeaponFunctionality()
     {
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+        if (!playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+        {
+            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+            ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+        }
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }

@@ -182,8 +182,12 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         {
             Gizmos.DrawLine(transform.position, other.transform.position);
         }
-        Gizmos.color = Color.white;
+
+#if UNITY_EDITOR
+        Handles.color = Color.white;
         Handles.Label(transform.position, m_skillData ? m_skillData.skillName : "EMPTY");
+
         gameObject.name = m_skillData ? m_skillData.name : "emptyButton";
+#endif
     }
 }

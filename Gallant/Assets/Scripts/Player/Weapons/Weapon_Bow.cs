@@ -36,6 +36,7 @@ public class Weapon_Bow : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         m_chargingShot = true;
     }
     public override void WeaponRelease()
@@ -49,10 +50,12 @@ public class Weapon_Bow : WeaponBase
     }
     public override void WeaponAltFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         WeaponFunctionality();
     }
     public override void WeaponAltRelease() 
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         WeaponRelease();
     }
 }
