@@ -60,7 +60,6 @@ namespace ActorSystem.AI.Components
             m_agent.updateRotation = false;
             m_targetPosition = transform.position;
             m_targetRotation = transform.rotation;
-
             if (m_agent.isOnNavMesh)
                 m_agent.SetDestination(transform.position);
 
@@ -69,7 +68,7 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Start()
         {
-
+            
         }
 
         // Update is called once per frame
