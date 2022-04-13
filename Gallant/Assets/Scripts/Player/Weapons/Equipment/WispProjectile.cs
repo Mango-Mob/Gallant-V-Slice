@@ -122,7 +122,7 @@ public class WispProjectile : BasePlayerProjectile
         m_charge = _charge;
     }
 
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
         // ¯\_(ツ)_/¯
     }

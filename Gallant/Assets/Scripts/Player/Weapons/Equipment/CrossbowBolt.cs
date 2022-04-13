@@ -37,7 +37,7 @@ public class CrossbowBolt : BasePlayerProjectile
             Destruct();
         }
     }
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
         Destruct();
     }

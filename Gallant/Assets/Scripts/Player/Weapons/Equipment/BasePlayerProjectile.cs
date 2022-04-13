@@ -110,21 +110,25 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
             transform.position += m_projectileSpeed * direction * Time.fixedDeltaTime; // Move projectile
                                                                                        //transform.rotation = Quaternion.LookRotation(direction, transform.up); // Face projectile towards player
-            if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), // Check distance between player and projectile
-                new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < 0.2f * m_projectileSpeed / 20.0f)
+            CatchProjectile(0.2f * m_projectileSpeed / 20.0f);
+        }
+    }
+    protected void CatchProjectile(float _minDistance = 0.5f)
+    {
+        if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), // Check distance between player and projectile
+                new Vector3(m_handTransform.position.x, 0, m_handTransform.position.z)) < _minDistance)
+        {
+            // "Catch" the projectile when close enough to player.
+            m_projectileUser.CatchProjectile(m_hand);
+
+            foreach (var effect in m_effects)
             {
-                // "Catch" the projectile when close enough to player.
-                m_projectileUser.CatchProjectile(m_hand);
-
-                foreach (var effect in m_effects)
-                {
-                    effect.transform.SetParent(null);
-                    if (effect.GetComponent<VFXTimerScript>() != null)
-                        effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
-                }
-
-                Destroy(gameObject);
+                effect.transform.SetParent(null);
+                if (effect.GetComponent<VFXTimerScript>() != null)
+                    effect.GetComponent<VFXTimerScript>().m_startedTimer = true;
             }
+
+            Destroy(gameObject);
         }
     }
     protected bool ProjectileCollide(Collider other)
@@ -182,7 +186,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         if (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment"))
         {
-            EnvironmentCollision();
+            EnvironmentCollision(other);
         }
 
         return false;
@@ -203,7 +207,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         Destroy(gameObject);
     }
-    protected abstract void EnvironmentCollision();
+    protected abstract void EnvironmentCollision(Collider _other);
 
     /*******************
      * SetReturnInfo : Sets the information of the user who threw the boomerang and who it should be returned to.
