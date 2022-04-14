@@ -11,7 +11,7 @@ public class State_Idle : State
     public override void Start()
     {
         m_myUser.m_activeStateText = "IDLE";
-        m_myActor.SetTargetVelocity(Vector3.zero);
+        m_myActor.m_myBrain.m_legs?.Halt();
     }
 
     public override void Update()
