@@ -131,7 +131,6 @@ namespace ActorSystem.AI.Components
             }
             if (m_animator != null && m_animator.HasParameter("RotationVelocity"))
             {
-                //m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
                 m_animator.SetFloat("RotationVelocity", (m_legs != null) ? m_legs.m_rotationDirection : 0f, 0.25f);
             }
             if(m_animator != null && m_animator.m_hasPivot)

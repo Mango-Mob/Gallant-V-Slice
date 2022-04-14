@@ -41,6 +41,7 @@ namespace ActorSystem.AI.Components
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
         public float m_pivotMin = 160;
+        protected bool m_isPivot = false;
         public float m_idealDistance { get{ return m_agent.stoppingDistance; } }
         protected Rigidbody m_body;
 
@@ -50,7 +51,7 @@ namespace ActorSystem.AI.Components
 
         private float m_delayTimer = 0f;
         private float m_baseStopDist;
-
+        
         // Start is called before the first frame update
         protected virtual void Awake()
         {
@@ -81,6 +82,13 @@ namespace ActorSystem.AI.Components
 
             if(!m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
             {
+                if (m_isPivot)
+                {
+                    Halt();
+                    m_targetRotation = transform.rotation;
+                    return;
+                }
+
                 NavMeshHit hit;
                 if (NavMesh.FindClosestEdge(transform.position, out hit, m_agent.areaMask))
                 {
@@ -333,6 +341,11 @@ namespace ActorSystem.AI.Components
         public void OverrideStopDist(float val)
         {
             m_agent.stoppingDistance = val;
+        }
+
+        public void SetPivotStatus(bool status)
+        {
+            m_isPivot = status;
         }
     }
 }

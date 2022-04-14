@@ -47,6 +47,11 @@ namespace ActorSystem.AI.Components
             return false;
         }
 
+        public bool IsMutexSet()
+        {
+            return m_animator.GetBool("Mutex");
+        }
+
         public void Update()
         {
             if (m_setDelay > 0)
