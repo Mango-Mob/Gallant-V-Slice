@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class NavigationManager : SingletonPersistent<NavigationManager>
@@ -55,14 +56,17 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         if (m_myCamera.enabled)
         {
-            float scrollDelta;
+            float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
             {
                 scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
             }
-            else
+            else if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
             {
-                scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+                scrollDelta = -InputManager.Instance.GetMouseDelta().y * 10f;
+            }else
+            {
+                scrollDelta = InputManager.Instance.GetMouseScrollDelta() * 5f;
             }
            
             if (scrollDelta != 0)
@@ -104,8 +108,13 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     }
     public void ConstructScene()
     {
-        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 && m_activeNodes[index].m_myData.prefabToLoad != null)
-            Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 )
+        {
+            if (SceneManager.GetActiveScene().name == m_activeNodes[index].m_myData.sceneToLoad && m_activeNodes[index].m_myData.prefabToLoad != null)
+            {
+                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+            }
+        }
     }
 
     public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
