@@ -87,6 +87,7 @@ namespace ActorSystem.AI.Users
             if (GameManager.Instance.clearedArenas >= m_requiresAllRooms)
             {
                 DialogManager.Instance.Hide();
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
                 LevelManager.Instance.LoadNewLevel(m_nextScene, LevelManager.Transition.CROSSFADE);
             }
         }

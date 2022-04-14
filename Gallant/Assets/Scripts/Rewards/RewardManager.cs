@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class RewardManager : Singleton<RewardManager>
 {
+    public static bool giveRewardUponLoad = false;
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
     public GameObject m_window;
@@ -57,7 +58,16 @@ public class RewardManager : Singleton<RewardManager>
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
         m_pressDurationImage.fillAmount = 0.0f;
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
-        Hide();
+
+        if (giveRewardUponLoad)
+        {
+            Show(Mathf.FloorToInt(GameManager.currentLevel));
+            giveRewardUponLoad = false;
+        }
+        else
+        {
+            Hide();
+        }
     }
 
     // Update is called once per frame

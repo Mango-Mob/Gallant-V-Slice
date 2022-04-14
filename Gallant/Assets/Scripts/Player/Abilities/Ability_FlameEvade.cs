@@ -63,11 +63,11 @@ public class Ability_FlameEvade : AbilityBase
     }
     public override void AbilityWhileRolling()
     {
-        m_lastProjectile.GetComponent<Flamepath>().SetEdgePoint(playerController.GetFloorPosition());
+        m_lastProjectile?.GetComponent<Flamepath>()?.SetEdgePoint(playerController.GetFloorPosition());
     }
     public override void AbilityOnEndRoll()
     {
-        m_lastProjectile.GetComponent<Flamepath>().StartLife();
+        m_lastProjectile?.GetComponent<Flamepath>()?.StartLife();
     }
 }
 

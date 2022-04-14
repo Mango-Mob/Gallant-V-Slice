@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActorSystem.AI.Components
@@ -17,7 +18,7 @@ namespace ActorSystem.AI.Components
         public bool hasCancel { 
             get 
             {
-                if (m_activeAttack.HasValue)
+                if (m_activeAttack.HasValue && m_myData[m_activeAttack.Value] != null)
                 {
                     return m_myData[m_activeAttack.Value].canBeCanceled;
                 }
@@ -63,7 +64,7 @@ namespace ActorSystem.AI.Components
 
         public Collider[] GetOverlapping(int damageId)
         {
-            if(m_activeAttack != null)
+            if(m_activeAttack != null && m_myData[m_activeAttack.Value] != null)
             {
                 return m_myData[m_activeAttack.Value].GetDamagingOverlaping(transform, m_targetMask, damageId).ToArray();
             }
@@ -124,6 +125,20 @@ namespace ActorSystem.AI.Components
             {
                 if(attack != null)
                     attack.DrawGizmos(transform);
+            }
+        }
+
+        public void PostInvoke()
+        {
+            if (m_myData[m_activeAttack.Value].vfxSpawn != null)
+            {
+                Vector3 hitloc = transform.TransformPoint(AttackData.GetHitLocation(m_myData[m_activeAttack.Value].damageHitboxes[0]));
+                RaycastHit hit;
+                if(Physics.Raycast(hitloc, Vector3.down, out hit, 15f, 1 << LayerMask.NameToLayer("Environment")))
+                {
+                    GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].vfxSpawn, hit.point, Quaternion.identity);
+                    vfx.transform.forward = transform.forward;
+                }
             }
         }
     }

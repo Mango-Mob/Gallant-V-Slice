@@ -66,7 +66,6 @@ namespace ActorSystem.AI.Other
                     m_isAttacking = true;
                     m_canRotate = false;
                     m_myBrain.BeginAttack(nextAttack);
-                    m_myBrain.EndAttack();
                 }
             }
 
@@ -168,13 +167,10 @@ namespace ActorSystem.AI.Other
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     m_myBrain.m_material.StartDisolve(2f);
                     Submerge(false);
-                    return;
                 }
-                else
-                {
-                    float after = m_myBrain.m_currHealth;
-                    m_octoBrain.DealDamage(before-after, _type, _from, _damageLoc);
-                }
+
+                float after = m_myBrain.m_currHealth;
+                m_octoBrain.DealDamage(before - after, _type, _from, _damageLoc);
             }
         }
 
@@ -196,13 +192,9 @@ namespace ActorSystem.AI.Other
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     m_myBrain.m_material.StartDisolve(2f);
                     Submerge(false);
-                    return;
                 }
-                else
-                {
-                    float after = m_myBrain.m_currHealth;
-                    m_octoBrain.DealDamageSilent(before - after, _type);
-                }
+                float after = m_myBrain.m_currHealth;
+                m_octoBrain.DealDamageSilent(before - after, _type);
             }
         }
 

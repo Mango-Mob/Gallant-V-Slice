@@ -31,7 +31,7 @@ public class EndScreenMenu : MonoBehaviour
     void Start()
     {
         m_timeText.text = CaluclateTime();
-        m_levelReachedText.text = (levelReached).ToString();
+        m_levelReachedText.text = (Mathf.FloorToInt(GameManager.currentLevel) + 1).ToString();
         m_roomsClearedText.text = (roomsCleared).ToString();
         m_damageDealtText.text = CalculateDamage();
 
@@ -66,6 +66,7 @@ public class EndScreenMenu : MonoBehaviour
     }
     public void BackToHUB()
     {
+        Restart();
         LevelManager.Instance.LoadHubWorld(true);
     }
     private string CalculateDamage()

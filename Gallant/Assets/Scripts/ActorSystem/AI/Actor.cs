@@ -149,7 +149,7 @@ namespace ActorSystem.AI
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
                     return;
                 }
@@ -164,13 +164,13 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false))
+                if (m_myBrain.HandleDamage(_damage, _type, transform.position, false, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6));
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
                     return;
                 }
@@ -241,6 +241,10 @@ namespace ActorSystem.AI
             {
                 Debug.LogError("TODO");
             }
+        }
+        public virtual void Slam()
+        {
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(6, 0.2f);
         }
     }
 }

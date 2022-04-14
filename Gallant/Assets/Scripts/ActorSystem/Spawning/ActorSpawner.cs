@@ -56,7 +56,10 @@ namespace ActorSystem.Spawning
                 if(m_hasStarted)
                     ActorManager.Instance.m_activeSpawnners.Add(this);
 
-                if(m_myActors.Count != 0)
+                if(m_myActors == null)
+                    m_myActors = new List<Actor>();
+
+                if (m_myActors.Count != 0)
                 {
                     foreach (var actor in m_myActors)
                     {
@@ -88,6 +91,16 @@ namespace ActorSystem.Spawning
             SpawnWave(wave);
         }
 
+        public void ForceEnd()
+        {
+            for (int i = m_myActors.Count - 1; i >= 0; i--)
+            {
+                m_myActors[i].DestroySelf();
+            }
+            m_myActors.Clear();
+            Stop();
+        }
+
         /*******************
          * Restart : Restarts the waves.
          * @author : Michael Jordan
@@ -115,6 +128,9 @@ namespace ActorSystem.Spawning
          */
         public void SpawnWave(RoomData wave)
         {
+            if (wave == null)
+                return;
+
             if(m_generator.m_spawnPoints == null || m_generator.m_spawnPoints.Count == 0)
             {
                 Debug.LogError("Spawner doesn't have any valid spawn points.");
@@ -161,6 +177,7 @@ namespace ActorSystem.Spawning
                      Stop();
                      RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
                      GameManager.Advance();
+                     EndScreenMenu.roomsCleared++;
                  }
                  else
                  {

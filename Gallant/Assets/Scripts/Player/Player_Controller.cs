@@ -12,8 +12,8 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Controller : MonoBehaviour
 {
+    public GameObject testObject;
     public Camera playerCamera { private set; get; }
-    public Animator animatorCamera { private set; get; }
     public Animator animator;
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
@@ -62,6 +62,12 @@ public class Player_Controller : MonoBehaviour
 
     public LayerMask m_waterLayer;
 
+    [Header("Camera Shake")]
+    private float m_shake = 0.0f;
+    private float m_shakeIntensityMult = 1.0f;
+    [SerializeField] private float m_shakeAmount = 0.7f;
+    [SerializeField] private float m_shakeDecreaseSpeed = 1.0f;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
@@ -84,13 +90,28 @@ public class Player_Controller : MonoBehaviour
     {
         playerCamera = Camera.main;
         m_startZoom = playerCamera.fieldOfView;
-        animatorCamera = playerCamera.GetComponent<Animator>();
         LoadPlayerInfo();
+    }
+
+    private void FixedUpdate()
+    {
+        if (m_shake > 0.0f)
+        {
+            playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+            m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+
+        }
+        else
+        {
+            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+            m_shake = 0.0f;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
             return;
 
@@ -116,13 +137,13 @@ public class Player_Controller : MonoBehaviour
 
         //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
-        if (!rightAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
-            playerAttack.ToggleBlock(false);
-        if (!leftAttackHeld || playerMovement.m_isStunned || playerMovement.m_isRolling)
+        if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isStunned || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
 
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
+        float runArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("RunArmL"));
+        float idleWeight = animator.GetLayerWeight(animator.GetLayerIndex("IdleArmL"));
         // Set avatar mask to be used
         if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.05f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.05f)
         {
@@ -135,16 +156,30 @@ public class Player_Controller : MonoBehaviour
             standArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
         }
 
+        // Set avatar mask to be used
+        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
+        {
+            runArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            idleWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
+        else
+        {
+            runArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            idleWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+        }
+
         armWeight = Mathf.Clamp(armWeight, 0.0f, 1.0f);
         standArmWeight = Mathf.Clamp(standArmWeight, 0.0f, 1.0f);
+        runArmWeight = Mathf.Clamp(runArmWeight, 0.0f, 1.0f);
+        idleWeight = Mathf.Clamp(idleWeight, 0.0f, 1.0f);
         //float armWeight = 0.0f;
         //float standArmWeight = 1.0f;
 
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (standArmWeight));
-        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (standArmWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmL"), (idleWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("IdleArmR"), (idleWeight));
 
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (armWeight));
-        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (armWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmL"), (runArmWeight));
+        animator.SetLayerWeight(animator.GetLayerIndex("RunArmR"), (runArmWeight));
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
@@ -306,7 +341,7 @@ public class Player_Controller : MonoBehaviour
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            DamagePlayer(20.0f, CombatSystem.DamageType.True, FindObjectOfType<Actor>().gameObject, false);
+            DamagePlayer(20.0f, CombatSystem.DamageType.True, testObject, false);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_TWO))
         {
@@ -418,6 +453,7 @@ public class Player_Controller : MonoBehaviour
                 normalizedAim *= -1;
                 m_lastAimDirection = new Vector2(normalizedAim.x, normalizedAim.z);
             }
+
             //m_lastAimDirection = new Vector2(0.0f, 0.0f);
             return m_lastAimDirection;
         }
@@ -510,6 +546,7 @@ public class Player_Controller : MonoBehaviour
 
         if (playerAttack.m_isBlocking && _attacker != null)
         {
+            Debug.Log("MISSED BLOCK");
             if (IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position)) 
             {
                 // PLAY BLOCK SOUND
@@ -532,10 +569,16 @@ public class Player_Controller : MonoBehaviour
         if (m_damageVFXPrefab != null)
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
 
-        if (animatorCamera)
-            animatorCamera.SetTrigger("Shake");
+        //if (animatorCamera)
+        //    animatorCamera.SetTrigger("Shake");
+        ScreenShake(5.0f);
     }
 
+    public void ScreenShake(float _intensity, float _shake = 0.3f)
+    {
+        m_shakeIntensityMult = _intensity;
+        m_shake = _shake;
+    }
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 

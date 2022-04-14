@@ -1,4 +1,5 @@
-﻿using ActorSystem.AI.Other;
+﻿using ActorSystem.AI.Components;
+using ActorSystem.AI.Other;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace ActorSystem.AI.Bosses
         public GameObject m_myModel;
         public int m_amountOfAttacks = 2;
         public float m_tentaclePhaseDuration = 5f;
-        public float m_inkAttackDuration = 8f;
+        public float m_inkAttackDuration = 5f;
         public List<Tentacle_AI> m_currentlyAttacking { get; private set; } = new List<Tentacle_AI>();
         public List<GameObject> m_inkSplatter = new List<GameObject>();
         public GameObject m_inkBallVFX;
@@ -22,7 +23,7 @@ namespace ActorSystem.AI.Bosses
         public Tentacle_AI m_tentacleR;
         public Tentacle_AI m_tentacleO;
         public Tentacle_AI m_tentacleI;
-        public List<Tentacle_AI> m_holdingTentacles;
+        public List<Actor_Material> m_holdingTentacles;
 
         private Transform m_restingTransformL;
         private Transform m_restingTransformR;
@@ -187,7 +188,17 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleR.Kill(); m_tentacleR.Submerge(false);
                     m_tentacleO.Kill(); m_tentacleO.Submerge(false);
                     m_tentacleI.Kill(); m_tentacleI.Submerge(false);
+
+                    m_myBrain.DropOrbs(Random.Range(5, 10), GameManager.Instance.m_player.transform.position);
+
+                    foreach (var hold in m_holdingTentacles)
+                    {
+                        hold.StartDisolve(5f);
+                    }
+
                     PlayerPrefs.SetInt("SwampLevel", 1);
+                    RewardManager.giveRewardUponLoad = true;
+                    GameManager.currentLevel++;
                     m_gameOverTimer.Start(6f);
                     break;
                 default:
@@ -287,7 +298,7 @@ namespace ActorSystem.AI.Bosses
                         m_headphaseHealth -= _damage;
                         if(m_headphaseHealth <= 0)
                         {
-                            if(m_myBrain.m_currHealth/m_myBrain.m_startHealth < 0.65f && Random.Range(0, 1000) < 500)
+                            if(m_myBrain.m_currHealth/m_myBrain.m_startHealth < 0.65f && Random.Range(0, 1000) < (1.0f - m_myBrain.m_currHealth / m_myBrain.m_startHealth) * 1000)
                             {
                                 TransitionToPhase(Phase.INK);
                             }
@@ -370,14 +381,15 @@ namespace ActorSystem.AI.Bosses
             target.SetActive(true);
             yield return null;
         }
+
         private void End()
         {
-            LevelManager.Instance.LoadNextLevel();
+            GameManager.Instance.FinishLevel();
         }
 
-        public void Slam()
+        public override void Slam()
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().animatorCamera.SetTrigger("HeavyShake");
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(8, 0.3f);
         }
     }
 }
