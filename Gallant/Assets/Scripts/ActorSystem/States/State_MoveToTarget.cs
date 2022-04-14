@@ -42,10 +42,14 @@ public class State_MoveToTarget : State
         if(m_myActor.m_states.Contains(Type.ATTACK))
         {
             int id = m_myActor.m_myBrain.GetNextAttack();
-            if(id >= 0)
+            if(!m_myActor.m_myBrain.m_animator.IsMutexSet())
             {
-                m_myUser.SetState(new State_Attack(m_myUser, id));
+                if (id >= 0)
+                {
+                    m_myUser.SetState(new State_Attack(m_myUser, id));
+                }
             }
+            
         }
     }
 
