@@ -44,6 +44,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
     [SerializeField] private GameObject m_hunterTree;
 
     private EventSystem eventSystem;
+    private Vector3 m_canvasStartPos;
 
     private void Awake()
     {
@@ -53,6 +54,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         {
             _instance = this;
         }
+        m_canvasStartPos = transform.position;
     }
 
     // Start is called before the first frame update
@@ -127,6 +129,58 @@ public class SkillTreeDisplayControl : MonoBehaviour
 #endif
 
         m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+
+        Navigation();
+    }
+
+    public void Navigation()
+    {
+        if (InputManager.Instance.isInGamepadMode)
+        {
+            if (m_currentlyDisplayedButton != null)
+            {
+                Vector3 direction = (m_canvasStartPos - m_currentlyDisplayedButton.transform.position);
+                float distance = direction.magnitude;
+
+                if (distance > 1.0f)
+                {
+                    direction.Normalize();
+                    transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * 100.0f;
+
+                    AfterNavigationUpdate();
+                }
+            }
+        }
+        else
+        {
+            if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
+            {
+                Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * 0.1f;
+                transform.position += new Vector3(mouseDelta.x, mouseDelta.y, 0);
+
+                AfterNavigationUpdate();
+            }
+        }
+    }
+
+    private void AfterNavigationUpdate()
+    {
+        // x bounds
+        if (transform.position.x > m_canvasStartPos.x + 50.0f)
+            transform.position = new Vector3(m_canvasStartPos.x + 50.0f, transform.position.y, transform.position.z);
+        if (transform.position.x < m_canvasStartPos.x - 50.0f)
+            transform.position = new Vector3(m_canvasStartPos.x - 50.0f, transform.position.y, transform.position.z);
+
+        // y bounds
+        if (transform.position.y > m_canvasStartPos.y + 50.0f)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y + 50.0f, transform.position.z);
+        if (transform.position.y < m_canvasStartPos.y - 50.0f)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y - 50.0f, transform.position.z);
+
+        foreach (var button in m_selectedTreeManager.m_buttons)
+        {
+            button.UpdateLinkPosition();
+        }
     }
     public void SelectSkillButton(SkillButton _button)
     {

@@ -157,10 +157,19 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             Vector3 difference = m_lineEnterance.position - dependency.m_lineExit.position;
             newObject.transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(difference.y / difference.x) + 90.0f);
 
-            m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
-            
-           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 20.0f);
-           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 20.0f);
+            SkillButtonLink linkScript = newObject.GetComponent<SkillButtonLink>();
+            m_dependencyLink.Add(linkScript);
+            linkScript.SetPoints(m_lineEnterance, dependency.m_lineExit);
+           //newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 20.0f);
+           //newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 20.0f);
+        }
+        UpdateLinkPosition();
+    }
+    public void UpdateLinkPosition()
+    {
+        foreach (var dependency in m_dependencyLink)
+        {
+            dependency.UpdatePositions();
         }
     }
     public void SetUpgradeLevel(int _level)

@@ -23,7 +23,7 @@ public class SkillTreeObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //m_useButton.SetActive(m_interactable.m_isReady && !m_skillTreeDisplayControl.activeSelf);
+        m_useButton.SetActive(m_interactable.m_isReady && !m_skillTreeDisplayControl.activeSelf);
         if (m_skillTreeDisplayControl.activeSelf)
         {
             if (InputManager.Instance.IsBindDown("Skill_Back"))
