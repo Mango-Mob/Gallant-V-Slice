@@ -18,6 +18,10 @@ public class WorldToCanvas : MonoBehaviour
         if(m_canvas.enabled)
             ForceUpdate();
     }
+    private void OnEnable()
+    {
+        ForceUpdate();
+    }
 
     public void ForceUpdate()
     {
