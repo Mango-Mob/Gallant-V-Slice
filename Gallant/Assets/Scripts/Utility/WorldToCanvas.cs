@@ -25,7 +25,7 @@ public class WorldToCanvas : MonoBehaviour
 
     public void ForceUpdate()
     {
-        if (m_anchorTransform != null && GameManager.Instance.m_activeCamera != null)
+        if (m_anchorTransform != null && GameManager.Instance != null && GameManager.Instance.m_activeCamera != null)
         {
             Vector3 pos = GameManager.Instance.m_activeCamera.WorldToScreenPoint(m_anchorTransform.transform.position);
             (transform as RectTransform).position = pos;
