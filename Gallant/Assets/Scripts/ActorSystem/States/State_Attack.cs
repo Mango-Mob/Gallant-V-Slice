@@ -64,6 +64,6 @@ public class State_Attack : State
 
     public override void End()
     {
-        m_myActor.m_myBrain.EndAttack();
+        
     }
 }
