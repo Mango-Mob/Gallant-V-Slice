@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ParentAnimationSync : StateMachineBehaviour
 {
-    public int heirarchyDepth = 0;
+    public float rotation = 180;
 
     private Transform updatingParent;
     private Transform connectionParent;
@@ -26,7 +26,7 @@ public class ParentAnimationSync : StateMachineBehaviour
    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
    {
         animator.applyRootMotion = false;
-        animator.transform.parent.Rotate(new Vector3(0, 1, 0), 180);
+        animator.transform.parent.Rotate(new Vector3(0, 1, 0), rotation);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
