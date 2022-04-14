@@ -73,7 +73,8 @@ public class Player_Controller : MonoBehaviour
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
-        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+        if (m_statsMenu == null)
+            m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
 
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
