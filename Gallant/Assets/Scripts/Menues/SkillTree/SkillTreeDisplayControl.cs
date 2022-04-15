@@ -51,6 +51,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
     public float m_maxZoom = 100.0f;
     public float m_minZoom = 30.0f;
     public float m_boundsDistance = 200.0f;
+    public float m_allowedLockonDistance = 5.0f;
     public float m_controllerMoveSpeed = 100.0f;
     public float m_controllerZoomSpeed = 1.0f;
     public float m_mouseDragSpeed = 0.1f;
@@ -155,7 +156,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
                 Vector3 direction = (m_canvasStartPos - m_currentlyDisplayedButton.transform.position);
                 float distance = direction.magnitude;
 
-                if (distance > 1.0f)
+                if (distance > m_allowedLockonDistance * transform.localScale.x)
                 {
                     direction.Normalize();
                     transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * m_controllerMoveSpeed;
