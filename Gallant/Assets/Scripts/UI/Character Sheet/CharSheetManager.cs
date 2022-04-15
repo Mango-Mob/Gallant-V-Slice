@@ -42,60 +42,66 @@ public class CharSheetManager : MonoBehaviour
     {
         playerController = FindObjectOfType<Player_Controller>();
     }
-
+    public void SetActive(bool _active)
+    {
+        m_isActive = _active;
+    }
     // Update is called once per frame
     void Update()
     {
-        if (playerController.m_inkmanClass != null)
+        if (m_isActive)
         {
-            m_class.SetInformation(playerController.m_inkmanClass.m_className);
-        }
+            if (playerController.m_inkmanClass != null)
+            {
+                m_class.SetInformation(playerController.m_inkmanClass.m_className);
+            }
 
-        m_time.SetInformation("00:00:00");
-        m_kills.SetInformation("0");
-        m_damageDone.SetInformation("0");
-        m_healingDone.SetInformation("0");
+            m_time.SetInformation("00:00:00");
+            m_kills.SetInformation("0");
+            m_damageDone.SetInformation("0");
+            m_healingDone.SetInformation("0");
 
-        m_maxHealth.SetInformation($"{playerController.playerResources.m_maxHealth}");
-        m_maxStamina.SetInformation($"{playerController.playerResources.m_maxStamina}");
-        m_attackSpeed.SetInformation((playerController.m_dualWieldBonus * playerController.playerStats.m_attackSpeed * playerController.playerSkills.m_attackSpeedStatusBonus).ToString("0.0%"));
-        m_moveSpeed.SetInformation(playerController.animator.GetFloat("MovementSpeed").ToString("0.0%"));
-        m_armor.SetInformation($"{playerController.playerSkills.m_physicalDefenceIncrease + playerController.playerStats.m_physicalDefence}");
-        m_ward.SetInformation($"{playerController.playerSkills.m_magicalDefenceIncrease + playerController.playerStats.m_abilityDefence}");
-        m_physicalDamage.SetInformation((playerController.playerStats.m_physicalDamage).ToString("0.0%"));
-        m_magicalDamage.SetInformation((playerController.playerStats.m_abilityDamage
-            + (playerController.playerStats.m_arcaneFocus * ((playerController.playerAttack.m_leftWeaponEffect == ItemEffect.ARCANE_FOCUS ? playerController.playerAttack.m_leftWeaponData.m_damage : 0.0f))
-            + (playerController.playerStats.m_arcaneFocus * ((playerController.playerAttack.m_rightWeaponEffect == ItemEffect.ARCANE_FOCUS ? playerController.playerAttack.m_rightWeaponData.m_damage : 0.0f))))).ToString("0.0%"));
-        m_cooldown.SetInformation(playerController.playerStats.m_abilityCD.ToString("0.0%"));
+            m_maxHealth.SetInformation($"{playerController.playerResources.m_maxHealth}");
+            m_maxStamina.SetInformation($"{playerController.playerResources.m_maxStamina}");
+            m_attackSpeed.SetInformation((playerController.m_dualWieldBonus * playerController.playerStats.m_attackSpeed * playerController.playerSkills.m_attackSpeedStatusBonus).ToString("0.0%"));
+            m_moveSpeed.SetInformation(playerController.animator.GetFloat("MovementSpeed").ToString("0.0%"));
+            m_armor.SetInformation($"{playerController.playerSkills.m_physicalDefenceIncrease + playerController.playerStats.m_physicalDefence}");
+            m_ward.SetInformation($"{playerController.playerSkills.m_magicalDefenceIncrease + playerController.playerStats.m_abilityDefence}");
+            m_physicalDamage.SetInformation((playerController.playerStats.m_physicalDamage).ToString("0.0%"));
+            m_magicalDamage.SetInformation((playerController.playerStats.m_abilityDamage
+                + (playerController.playerStats.m_arcaneFocus * ((playerController.playerAttack.m_leftWeaponEffect == ItemEffect.ARCANE_FOCUS ? playerController.playerAttack.m_leftWeaponData.m_damage : 0.0f))
+                + (playerController.playerStats.m_arcaneFocus * ((playerController.playerAttack.m_rightWeaponEffect == ItemEffect.ARCANE_FOCUS ? playerController.playerAttack.m_rightWeaponData.m_damage : 0.0f))))).ToString("0.0%"));
+            m_cooldown.SetInformation(playerController.playerStats.m_abilityCD.ToString("0.0%"));
 
-        if (playerController.playerAttack.m_rightWeaponData != null)
-        {
-            m_damageMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerStats.m_physicalDamage}");
-            m_speedMainHand.SetInformation($"{playerController.animator.GetFloat("RightAttackSpeed")}");
-            m_impactMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact}");
-            m_pierceMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
-        }
-        else
-        {
-            m_damageMainHand.SetInformation("0");
-            m_speedMainHand.SetInformation("0");
-            m_impactMainHand.SetInformation("0");
-            m_pierceMainHand.SetInformation("0");
-        }
+            if (playerController.playerAttack.m_rightWeaponData != null)
+            {
+                m_damageMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerStats.m_physicalDamage}");
+                m_speedMainHand.SetInformation($"{playerController.animator.GetFloat("RightAttackSpeed")}");
+                m_impactMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact}");
+                m_pierceMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
+            }
+            else
+            {
+                m_damageMainHand.SetInformation("0");
+                m_speedMainHand.SetInformation("0");
+                m_impactMainHand.SetInformation("0");
+                m_pierceMainHand.SetInformation("0");
+            }
 
-        if (playerController.playerAttack.m_leftWeaponData != null)
-        {
-            m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
-            m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
-            m_impactOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_impact * playerController.playerAttack.m_leftWeaponData.m_altImpactMult}");
-            m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_piercing}");
-        }
-        else
-        {
-            m_damageOffHand.SetInformation("0");
-            m_speedOffHand.SetInformation("0");
-            m_impactOffHand.SetInformation("0");
-            m_pierceOffHand.SetInformation("0");
+            if (playerController.playerAttack.m_leftWeaponData != null)
+            {
+                m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
+                m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
+                m_impactOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_impact * playerController.playerAttack.m_leftWeaponData.m_altImpactMult}");
+                m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_piercing}");
+            }
+            else
+            {
+                m_damageOffHand.SetInformation("0");
+                m_speedOffHand.SetInformation("0");
+                m_impactOffHand.SetInformation("0");
+                m_pierceOffHand.SetInformation("0");
+            }
         }
     }
 }

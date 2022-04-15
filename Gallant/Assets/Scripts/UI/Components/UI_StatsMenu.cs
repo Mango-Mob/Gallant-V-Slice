@@ -101,6 +101,8 @@ public class UI_StatsMenu : UI_Element
     {
         m_active = !m_active;
         GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks = m_active;
+
+        GetComponentInChildren<CharSheetManager>()?.SetActive(m_active);
     }
 
     public void UpdateList()
