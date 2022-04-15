@@ -149,14 +149,16 @@ public class SkillTreeDisplayControl : MonoBehaviour
     {
         if (InputManager.Instance.isInGamepadMode)
         {
-            transform.localScale += Vector3.one * InputManager.Instance.GetGamepadStick(StickType.RIGHT, _gamepadID).y * m_controllerZoomSpeed * Time.deltaTime;
+            float zoom = InputManager.Instance.GetGamepadStick(StickType.RIGHT, _gamepadID).y;
+            ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime);
+            //transform.localScale += Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime;
 
             if (m_currentlyDisplayedButton != null)
             {
                 Vector3 direction = (m_canvasStartPos - m_currentlyDisplayedButton.transform.position);
                 float distance = direction.magnitude;
 
-                if (distance > m_allowedLockonDistance * transform.localScale.x)
+                if (distance > m_allowedLockonDistance)
                 {
                     direction.Normalize();
                     transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * m_controllerMoveSpeed;
@@ -165,7 +167,9 @@ public class SkillTreeDisplayControl : MonoBehaviour
         }
         else
         {
-            transform.localScale += Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed;
+            ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed);
+
+            //transform.localScale += Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed;
             if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
             {
                 Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * m_mouseDragSpeed;
@@ -173,23 +177,34 @@ public class SkillTreeDisplayControl : MonoBehaviour
 
             }
         }
-        transform.localScale = Vector3.one * Mathf.Clamp(transform.localScale.x, m_minZoom, m_maxZoom);
         AfterNavigationUpdate();
+    }
+    private void ScaleAround(Transform target, Transform pivot, Vector3 scale)
+    {
+        Transform pivotParent = pivot.parent;
+        Vector3 pivotPos = pivot.position;
+        pivot.SetParent(target);
+        target.localScale = scale;
+        target.localScale = Vector3.one * Mathf.Clamp(target.localScale.x, m_minZoom, m_maxZoom);
+        target.position += pivotPos - pivot.position;
+        pivot.SetParent(pivotParent);
     }
 
     private void AfterNavigationUpdate()
     {
+        float boundDist = m_boundsDistance * transform.localScale.x;
+
         // x bounds
-        if (transform.position.x > m_canvasStartPos.x + m_boundsDistance)
-            transform.position = new Vector3(m_canvasStartPos.x + m_boundsDistance, transform.position.y, transform.position.z);
-        if (transform.position.x < m_canvasStartPos.x - m_boundsDistance)
-            transform.position = new Vector3(m_canvasStartPos.x - m_boundsDistance, transform.position.y, transform.position.z);
+        if (transform.position.x > m_canvasStartPos.x + boundDist)
+            transform.position = new Vector3(m_canvasStartPos.x + boundDist, transform.position.y, transform.position.z);
+        if (transform.position.x < m_canvasStartPos.x - boundDist)
+            transform.position = new Vector3(m_canvasStartPos.x - boundDist, transform.position.y, transform.position.z);
 
         // y bounds
-        if (transform.position.y > m_canvasStartPos.y + m_boundsDistance)
-            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y + m_boundsDistance, transform.position.z);
-        if (transform.position.y < m_canvasStartPos.y - m_boundsDistance)
-            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y - m_boundsDistance, transform.position.z);
+        if (transform.position.y > m_canvasStartPos.y + boundDist)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y + boundDist, transform.position.z);
+        if (transform.position.y < m_canvasStartPos.y - boundDist)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y - boundDist, transform.position.z);
 
         foreach (var button in m_selectedTreeManager.m_buttons)
         {
