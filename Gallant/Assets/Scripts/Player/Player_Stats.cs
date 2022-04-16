@@ -38,7 +38,7 @@ public class Player_Stats : MonoBehaviour
 
     public Dictionary<EffectData, int> m_effects = new Dictionary<EffectData, int>();
 
-    private void Start()
+    private void Awake()
     {
         playerController = GetComponent<Player_Controller>();
     }
@@ -170,6 +170,8 @@ public class Player_Stats : MonoBehaviour
             }
         }
 
+        if (playerController.m_statsMenu == null)
+            playerController.m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
         playerController.m_statsMenu.UpdateList();
 
         //foreach (var effect in m_effects)

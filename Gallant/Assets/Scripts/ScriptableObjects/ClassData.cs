@@ -6,6 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public class ClassData : ScriptableObject
 {
+    public string m_className;
+
     public InkmanClass inkmanClass;
     public Sprite m_classIcon;
 

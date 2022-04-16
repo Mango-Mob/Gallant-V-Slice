@@ -39,7 +39,7 @@ public class Player_Controller : MonoBehaviour
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
-    private float m_dualWieldBonus = 1.0f;
+    public float m_dualWieldBonus { private set; get; } = 1.0f;
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -73,7 +73,8 @@ public class Player_Controller : MonoBehaviour
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
-        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+        if (m_statsMenu == null)
+            m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
 
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
