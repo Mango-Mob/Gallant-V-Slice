@@ -50,7 +50,7 @@ namespace ActorSystem.AI.Components
         protected Quaternion m_targetRotation;
 
         private float m_delayTimer = 0f;
-        private float m_baseStopDist;
+        public float m_baseStopDist { get; private set; }
         
         // Start is called before the first frame update
         protected virtual void Awake()
@@ -108,7 +108,7 @@ namespace ActorSystem.AI.Components
                     m_agent.speed = m_baseSpeed * m_speedModifier;
                 }
 
-                if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                if (m_agent.updateRotation && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
 

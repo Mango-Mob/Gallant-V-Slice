@@ -27,17 +27,6 @@ public class State_MoveToTarget : State
             }
             return;
         }
-
-        //Transition To Attack
-        if(Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) > m_myActor.m_myBrain.m_legs.m_idealDistance)
-        {
-            m_myActor.SetTargetLocation(m_myActor.m_target.transform.position, true);
-        }
-        else
-        {
-            m_myActor.SetTargetVelocity(Vector3.zero);
-            m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
-        }
         
         if(m_myActor.m_states.Contains(Type.ATTACK))
         {
@@ -47,9 +36,22 @@ public class State_MoveToTarget : State
                 if (id >= 0)
                 {
                     m_myUser.SetState(new State_Attack(m_myUser, id));
+                    return;
                 }
             }
-            
+        }
+
+        m_myActor.SetTargetLocation(m_myActor.m_target.transform.position, true);
+
+        if (Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) <= m_myActor.m_myBrain.m_legs.m_idealDistance)
+        {
+            m_myActor.SetTargetVelocity(Vector3.zero);
+            m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
+
+            if (m_myActor.m_states.Contains(Type.STRAFE))
+            {
+                m_myUser.SetState(new State_Strafe(m_myUser));
+            }
         }
     }
 

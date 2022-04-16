@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EPOOutline;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +27,7 @@ namespace ActorSystem.AI.Components
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
         public Actor_Ragdoll m_ragDoll { get; private set; }
-        //public Outline m_myOutline { get; private set; }
+        public Outlinable m_myOutline { get; private set; }
         #endregion
 
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
@@ -77,9 +78,7 @@ namespace ActorSystem.AI.Components
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
-
-            //if(m_myOutline != null)
-            //    m_myOutline.enabled = false;
+            m_myOutline = GetComponent<Outlinable>();
 
             SetOutlineEnabled(false);
         }
@@ -104,9 +103,9 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_canBeTarget && m_ui != null)
+            if(m_canBeTarget && m_ui != null && m_myOutline != null)
             {
-                m_ui.SetEnabled(m_forceShowUI);
+                m_ui.SetEnabled(m_forceShowUI || m_myOutline.enabled);
             }
         }
 
@@ -207,8 +206,8 @@ namespace ActorSystem.AI.Components
 
         public void SetOutlineEnabled(bool status)
         {
-            //if (m_myOutline != null)
-            //    m_myOutline.enabled = status;
+            if (m_myOutline != null)
+                m_myOutline.enabled = status;
         }
 
         public int GetNextAttack()

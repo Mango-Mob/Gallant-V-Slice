@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: HeadlessKnight
   m_EditorClassIdentifier: 
   health: 65
-  cost: 20
-  agility: 0
+  stamina: 0
+  staminaReg: 0
+  radius: 0
   ActorName: Headless Knight
   baseSpeed: 3.5
   adrenalineGainMin: 0.005
@@ -25,6 +26,8 @@ MonoBehaviour:
   abilResist: 30
   m_damageModifier: 0.5
   deltaHealth: 20
+  deltaStamina: 0
+  deltaStaminaReg: 0
   deltaSpeed: 0.25
   deltaAdrenaline: 0.002
   deltaPhyResist: 12
@@ -34,5 +37,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bbc7e95e960e247428cee274240d659e, type: 3}
   hurtSounds:
   - {fileID: 8300000, guid: 33ad9817d7c20934ea16a3fb0ba3cb16, type: 3}
-  m_states: 00000000020000000300000005000000
+  m_states: 0000000002000000030000000700000005000000
   m_initialState: 0

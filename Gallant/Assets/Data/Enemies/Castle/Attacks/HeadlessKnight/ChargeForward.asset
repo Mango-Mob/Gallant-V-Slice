@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bcec45f1ff22f84082d4ea5f97bd360, type: 3}
   m_Name: ChargeForward
   m_EditorClassIdentifier: 
-  debugShow: 1
+  debugShow: 0
   animID: chargeAtk
   priority: 10
   cooldown: 10
+  brainLag: 2
   damageType: 0
   baseDamage: 10
   postVFXPrefab: {fileID: 0}
@@ -23,6 +24,7 @@ MonoBehaviour:
   canBeCanceled: 0
   canTrackTarget: 0
   canAttackMove: 0
+  isIdleAfterAttack: 0
   detectCollider:
     start: {x: 0, y: 1, z: 2}
     center: {x: 0, y: 0, z: 0}
