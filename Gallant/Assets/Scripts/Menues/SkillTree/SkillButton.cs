@@ -80,7 +80,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         }
 
         // Tooltip update
-        m_tooltipName.text = m_skillData.skillName;
+        m_tooltipName.text = $"{m_skillData.skillName}   {m_upgradeAmount}/{m_skillData.upgradeMaximum}";
         m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
         
         if (m_upgradeAmount < m_skillData.upgradeMaximum)
@@ -92,8 +92,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         {
             m_tooltipCost.gameObject.SetActive(false);
         }
-
         m_tooltipCurrentLevel.text = $"{m_upgradeAmount}/{m_skillData.upgradeMaximum}";
+        m_tooltipCurrentLevel.text = $"";
 
         m_tooltipLerp = Mathf.Clamp01(m_tooltipLerp + (m_tooltipsActive ? 1.0f : -1.0f) * Time.deltaTime * m_tooltipLerpSpeed);
         m_tooltipObject.transform.localScale = new Vector3(m_tooltipLerp, m_tooltipObject.transform.localScale.y, m_tooltipObject.transform.localScale.z);
