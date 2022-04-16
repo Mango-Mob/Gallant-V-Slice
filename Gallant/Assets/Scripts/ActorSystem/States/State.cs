@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class State
 {
-    public enum Type {IDLE, ROAM, MOVE_TO_TARGET, ATTACK, STAGGER, DEAD, FLEE_FROM_TARGET };
+    public enum Type {IDLE, ROAM, MOVE_TO_TARGET, ATTACK, STAGGER, DEAD, FLEE_FROM_TARGET, STRAFE };
 
     protected StateMachine m_myUser = null;
     protected ActorSystem.AI.Actor m_myActor = null;

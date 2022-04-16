@@ -117,6 +117,11 @@ namespace ActorSystem.AI.Components
                 m_animator.SetFloat(yName, vector.y);
         }
 
+        public int GetInteger(string name)
+        {
+            return m_animator.GetInteger(name);
+        }
+
         /*******************
         * SetVector3 : Sets three floats in the animator, with the vector3 provided.
         * @author : Michael Jordan

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public static class Extentions
 { 
@@ -147,5 +148,25 @@ public static class Extentions
     private static bool same_sign(float a, float b)
     {
         return ((a * b) >= 0f);
+    }
+
+    public static bool NavMeshOverlapSphere(Vector3 sampleLoc, float radius, LayerMask layerMask, out Vector3 navPoint)
+    {
+        navPoint = Vector3.zero;
+        Collider[] rHit;
+        NavMeshHit nHit;
+
+        //First sample location using navmesh
+        if(!NavMesh.SamplePosition(sampleLoc, out nHit, radius, -1))
+            return false;
+
+        //Secondly sample location using physics
+        rHit = Physics.OverlapSphere(nHit.position, radius, layerMask);
+
+        if (rHit.Length > 0)
+            return false;
+
+        navPoint = nHit.position;
+        return true;
     }
 }
