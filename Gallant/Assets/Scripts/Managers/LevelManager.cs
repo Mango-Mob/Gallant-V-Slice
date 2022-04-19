@@ -143,7 +143,9 @@ public class LevelManager : SingletonPersistent<LevelManager>
         string[] lines = hintList.text.Split('\n');
         int randomIndex = UnityEngine.Random.Range(0, lines.Length);
 
-        loadingHint.text = lines[randomIndex];
+        loadingHint.text = "Hint: " + lines[randomIndex];
+
+        Animator hintAnimator = loadingHint.GetComponentInChildren<Animator>();
 
         // Loading screen
         Slider loadingBar = Instantiate(loadingBarPrefab, transition.transform).GetComponent<Slider>();
@@ -167,6 +169,9 @@ public class LevelManager : SingletonPersistent<LevelManager>
             timeMult = 1.0f;
 
         transition.speed = 1.0f / timeMult;
+
+        hintAnimator.speed = 1.0f / timeMult;
+        hintAnimator.SetTrigger("Fade");
 
         Destroy(loadingBar.gameObject);
 
