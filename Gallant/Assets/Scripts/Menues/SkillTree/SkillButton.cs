@@ -43,6 +43,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     private float m_tooltipLerp = 0.0f;
     [SerializeField] private float m_tooltipLerpSpeed = 4.0f;
 
+    private bool m_hiddenMode = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,6 +59,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     // Update is called once per frame
     void Update()
     {
+        
+
         if (IsUnlockable())
         {
             foreach (var image in m_availabilityImages)
@@ -72,29 +76,43 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             }
         }
 
-        m_canvasGroup.alpha = IsAvailable() ? 1.0f : 0.0f;
+        m_canvasGroup.alpha = (IsAvailable()) ? 1.0f : 0.0f;
         m_button.enabled = IsAvailable();
         foreach (var link in m_dependencyLink)
         {
-            link.ToggleAvailability(IsAvailable() && link.m_dependency.IsAvailable());
+            link.ToggleAvailability((IsAvailable()) && link.m_dependency.IsAvailable());
         }
 
-        // Tooltip update
-        m_tooltipName.text = $"{m_skillData.skillName}   {m_upgradeAmount}/{m_skillData.upgradeMaximum}";
-        m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
-        
-        if (m_upgradeAmount < m_skillData.upgradeMaximum)
+        if (m_hiddenMode)
         {
-            m_tooltipCost.text = $"{GetCurrentCost()}";
+            m_upgradeNumberText.text = "?";
+            m_icon.color = Color.black;
+
+            m_tooltipName.text = "???";
+            m_tooltipDesc.text = "???";
+
             m_tooltipCost.gameObject.SetActive(true);
+            m_tooltipCost.text = "???";
         }
-        else 
+        else
         {
-            m_tooltipCost.gameObject.SetActive(false);
-        }
-        m_tooltipCurrentLevel.text = $"{m_upgradeAmount}/{m_skillData.upgradeMaximum}";
-        m_tooltipCurrentLevel.text = $"";
+            m_upgradeNumberText.text = m_upgradeAmount.ToString();
+            m_icon.color = Color.white;
 
+            // Tooltip update
+            m_tooltipName.text = $"{m_skillData.skillName} {m_upgradeAmount}/{m_skillData.upgradeMaximum}";
+            m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
+
+            if (m_upgradeAmount < m_skillData.upgradeMaximum)
+            {
+                m_tooltipCost.text = $"{GetCurrentCost()}";
+                m_tooltipCost.gameObject.SetActive(true);
+            }
+            else
+            {
+                m_tooltipCost.gameObject.SetActive(false);
+            }
+        }
         m_tooltipLerp = Mathf.Clamp01(m_tooltipLerp + (m_tooltipsActive ? 1.0f : -1.0f) * Time.deltaTime * m_tooltipLerpSpeed);
         m_tooltipObject.transform.localScale = new Vector3(m_tooltipLerp, m_tooltipObject.transform.localScale.y, m_tooltipObject.transform.localScale.z);
     }
@@ -169,6 +187,25 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         if (m_permaLocked)
             return false;
 
+        // Hidden check
+        m_hiddenMode = false;
+        foreach (var dependency in m_unlockDependencies)
+        {
+            if (dependency.m_unlockDependencies.Count == 0)
+                m_hiddenMode = true;
+
+            foreach (var item in dependency.m_unlockDependencies)
+            {
+                if (item.m_upgradeAmount > 0)
+                {
+                    m_hiddenMode = true;
+                    break;
+                }
+            }
+            if (m_hiddenMode)
+                break;
+        }
+
         if (m_unlockDependencies.Count == 0)
             return true;
 
@@ -181,6 +218,11 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
                 unlockable = true;
             }
         }
+
+        if (!unlockable && m_hiddenMode)
+            return true;
+        else
+            m_hiddenMode = false;
 
         return unlockable;
     }
