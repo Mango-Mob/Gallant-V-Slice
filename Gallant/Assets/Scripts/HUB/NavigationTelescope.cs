@@ -10,12 +10,14 @@ public class NavigationTelescope : MonoBehaviour
     {
         public string sceneName;
         public float locationAngle;
+        public Material m_portalMat;
     }
 
     [SerializeField] private Camera m_camera;
     [SerializeField] private GameObject m_useButton;
     [SerializeField] private GameObject m_selectCanvas;
     [SerializeField] private Image m_crosshair;
+    [SerializeField] private LevelPortal m_portal;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -120,6 +122,8 @@ public class NavigationTelescope : MonoBehaviour
     private void SelectDestination(Destination _destination)
     {
         // Change portal destination
+        m_portal.m_portalDestination = _destination.sceneName;
+        m_portal.gate.GetComponent<MeshRenderer>().material = _destination.m_portalMat;
 
         // Trigger animation
 
