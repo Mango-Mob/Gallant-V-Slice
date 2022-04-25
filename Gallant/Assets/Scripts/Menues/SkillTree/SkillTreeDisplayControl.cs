@@ -149,12 +149,13 @@ public class SkillTreeDisplayControl : MonoBehaviour
     {
         if (InputManager.Instance.isInGamepadMode)
         {
-            float zoom = InputManager.Instance.GetGamepadStick(StickType.RIGHT, _gamepadID).y;
-            ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime);
             //transform.localScale += Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime;
+            float zoom = InputManager.Instance.GetGamepadStick(StickType.RIGHT, _gamepadID).y;
 
             if (m_currentlyDisplayedButton != null)
             {
+                ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime);
+
                 Vector3 direction = (m_canvasStartPos - m_currentlyDisplayedButton.transform.position);
                 float distance = direction.magnitude;
 
@@ -164,17 +165,25 @@ public class SkillTreeDisplayControl : MonoBehaviour
                     transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * m_controllerMoveSpeed;
                 }
             }
+            else
+            {
+                transform.localScale += Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime;
+            }
         }
         else
         {
-            ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed);
-
-            //transform.localScale += Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed;
+            if (m_currentlyDisplayedButton != null)
+            {
+                ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed);
+            }
+            else
+            {
+                transform.localScale += Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed;
+            }
             if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
             {
                 Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * m_mouseDragSpeed;
                 transform.position += new Vector3(mouseDelta.x, mouseDelta.y, 0);
-
             }
         }
         AfterNavigationUpdate();

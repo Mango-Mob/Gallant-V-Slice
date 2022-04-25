@@ -168,6 +168,10 @@ public class Player_Resources : MonoBehaviour
     public void ChangeHealth(float _amount)
     {
         m_health += _amount;
+
+        if (_amount > 0.0f)
+            GameManager.m_healingDealt += _amount;
+
         if (m_health <= 0.0f && !m_dead)
         {
             // Kill

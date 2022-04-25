@@ -4,6 +4,8 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
+using System.IO;
 
 /// <summary>
 /// William de Beer
@@ -22,6 +24,7 @@ public class LevelManager : SingletonPersistent<LevelManager>
     public static bool loadingNextArea = false;
 
     public GameObject loadingBarPrefab;
+    public GameObject loadingHintPrefab;
 
     public static GameObject transitionPrefab;
     public static GameObject youdiedPrefab;
@@ -132,6 +135,18 @@ public class LevelManager : SingletonPersistent<LevelManager>
 
         transition.speed = 0.0f;
 
+        // Get random hint
+        TextMeshProUGUI loadingHint = Instantiate(loadingHintPrefab, transition.transform).GetComponentInChildren<TextMeshProUGUI>();
+        loadingHint.transform.SetAsLastSibling();
+
+        TextAsset hintList = Resources.Load<TextAsset>("UI/LoadingHints");
+        string[] lines = hintList.text.Split('\n');
+        int randomIndex = UnityEngine.Random.Range(0, lines.Length);
+
+        loadingHint.text = "Hint: " + lines[randomIndex];
+
+        Animator hintAnimator = loadingHint.GetComponentInChildren<Animator>();
+
         // Loading screen
         Slider loadingBar = Instantiate(loadingBarPrefab, transition.transform).GetComponent<Slider>();
         loadingBar.transform.SetAsLastSibling();
@@ -154,6 +169,9 @@ public class LevelManager : SingletonPersistent<LevelManager>
             timeMult = 1.0f;
 
         transition.speed = 1.0f / timeMult;
+
+        hintAnimator.speed = 1.0f / timeMult;
+        hintAnimator.SetTrigger("Fade");
 
         Destroy(loadingBar.gameObject);
 
