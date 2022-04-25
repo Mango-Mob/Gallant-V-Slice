@@ -59,11 +59,18 @@ public class CharSheetManager : MonoBehaviour
                 m_class.SetInformation(playerController.m_inkmanClass.m_className);
             }
 
-            m_time.SetInformation("00:00:00");
+            // Run info
+            m_time.SetInformation(GameManager.CalculateTimerString(GameManager.m_runTime));
             m_kills.SetInformation("0");
             m_damageDone.SetInformation("0");
             m_healingDone.SetInformation("0");
 
+            //m_time.SetInformation("00:00:00");
+            //m_kills.SetInformation("0");
+            //m_damageDone.SetInformation("0");
+            //m_healingDone.SetInformation("0");
+
+            // Stats
             m_maxHealth.SetInformation($"{playerController.playerResources.m_maxHealth}");
             m_maxStamina.SetInformation($"{playerController.playerResources.m_maxStamina}");
             m_attackSpeed.SetInformation((playerController.m_dualWieldBonus * playerController.playerStats.m_attackSpeed * playerController.playerSkills.m_attackSpeedStatusBonus).ToString("0.0%"));
@@ -78,14 +85,18 @@ public class CharSheetManager : MonoBehaviour
 
             bool isTwohanding = false;
 
+            // Attacks
             if (playerController.playerAttack.m_rightWeaponData != null)
             {
                 if (playerController.playerAttack.m_rightWeaponData.isTwoHanded)
                 {
                     isTwohanding = true;
 
-                    m_offIcon.enabled = true;
-                    m_offIcon.sprite = playerController.playerAttack.m_rightWeaponData.altAttackIcon;
+                    if (m_offIcon)
+                    {
+                        m_offIcon.enabled = true;
+                        m_offIcon.sprite = playerController.playerAttack.m_rightWeaponData.altAttackIcon;
+                    }
 
                     m_damageOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerAttack.m_rightWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
                     m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
@@ -93,8 +104,11 @@ public class CharSheetManager : MonoBehaviour
                     m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
                 }
 
-                m_mainIcon.enabled = true;
-                m_mainIcon.sprite = playerController.playerAttack.m_rightWeaponData.weaponIcon;
+                if (m_mainIcon)
+                {
+                    m_mainIcon.enabled = true;
+                    m_mainIcon.sprite = playerController.playerAttack.m_rightWeaponData.weaponIcon;
+                }
 
                 m_damageMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerStats.m_physicalDamage}");
                 m_speedMainHand.SetInformation($"{playerController.animator.GetFloat("RightAttackSpeed")}");
@@ -103,7 +117,8 @@ public class CharSheetManager : MonoBehaviour
             }
             else
             {
-                m_mainIcon.enabled = false;
+                if (m_mainIcon)
+                    m_mainIcon.enabled = false;
 
                 m_damageMainHand.SetInformation("0");
                 m_speedMainHand.SetInformation("0");
@@ -115,8 +130,11 @@ public class CharSheetManager : MonoBehaviour
             {
                 if (playerController.playerAttack.m_leftWeaponData != null)
                 {
-                    m_offIcon.enabled = true;
-                    m_offIcon.sprite = playerController.playerAttack.m_leftWeaponData.altAttackIcon;
+                    if (m_offIcon)
+                    {
+                        m_offIcon.enabled = true;
+                        m_offIcon.sprite = playerController.playerAttack.m_leftWeaponData.altAttackIcon;
+                    }
 
                     m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
                     m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
@@ -125,7 +143,8 @@ public class CharSheetManager : MonoBehaviour
                 }
                 else
                 {
-                    m_offIcon.enabled = false;
+                    if (m_offIcon)
+                        m_offIcon.enabled = false;
 
                     m_damageOffHand.SetInformation("0");
                     m_speedOffHand.SetInformation("0");
