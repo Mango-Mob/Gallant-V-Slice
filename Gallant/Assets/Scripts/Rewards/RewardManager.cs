@@ -71,6 +71,7 @@ public class RewardManager : Singleton<RewardManager>
     // Update is called once per frame
     void Update()
     {
+        GameManager.m_runTime += Time.deltaTime;
         EndScreenMenu.elapsedTimeInSeconds += Time.deltaTime;
 
         if(m_window.activeInHierarchy)

@@ -296,6 +296,7 @@ namespace ActorSystem.AI.Components
             //Internal
             m_currHealth -= damage;
             EndScreenMenu.damageDealt += damage;
+            GameManager.m_damageDealt += damage;
 
             if (playAudio && IsDead)
             {
