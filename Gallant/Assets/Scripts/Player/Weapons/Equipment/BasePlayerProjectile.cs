@@ -156,7 +156,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
                 return false;
 
             hitList.Add(other.gameObject);
-            actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_impact * m_charge);
+            //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_impact * m_charge);
 
             if (m_appliedStatusOnHit != EnemyStatus.NONE)
             {

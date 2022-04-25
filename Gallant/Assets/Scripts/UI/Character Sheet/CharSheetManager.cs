@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharSheetManager : MonoBehaviour
 {
@@ -27,12 +28,14 @@ public class CharSheetManager : MonoBehaviour
 
     [Header("Main Hand")]
     [Header("Weapons")]
+    [SerializeField] private Image m_mainIcon;
     [SerializeField] private CharSheetInfo m_damageMainHand;
     [SerializeField] private CharSheetInfo m_speedMainHand;
     [SerializeField] private CharSheetInfo m_impactMainHand;
     [SerializeField] private CharSheetInfo m_pierceMainHand;
 
     [Header("Off Hand")]
+    [SerializeField] private Image m_offIcon;
     [SerializeField] private CharSheetInfo m_damageOffHand;
     [SerializeField] private CharSheetInfo m_speedOffHand;
     [SerializeField] private CharSheetInfo m_impactOffHand;
@@ -73,8 +76,26 @@ public class CharSheetManager : MonoBehaviour
                 + (playerController.playerStats.m_arcaneFocus * ((playerController.playerAttack.m_rightWeaponEffect == ItemEffect.ARCANE_FOCUS ? playerController.playerAttack.m_rightWeaponData.m_damage : 0.0f))))).ToString("0.0%"));
             m_cooldown.SetInformation(playerController.playerStats.m_abilityCD.ToString("0.0%"));
 
+            bool isTwohanding = false;
+
             if (playerController.playerAttack.m_rightWeaponData != null)
             {
+                if (playerController.playerAttack.m_rightWeaponData.isTwoHanded)
+                {
+                    isTwohanding = true;
+
+                    m_offIcon.enabled = true;
+                    m_offIcon.sprite = playerController.playerAttack.m_rightWeaponData.altAttackIcon;
+
+                    m_damageOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerAttack.m_rightWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
+                    m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
+                    m_impactOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact * playerController.playerAttack.m_rightWeaponData.m_altImpactMult}");
+                    m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
+                }
+
+                m_mainIcon.enabled = true;
+                m_mainIcon.sprite = playerController.playerAttack.m_rightWeaponData.weaponIcon;
+
                 m_damageMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerStats.m_physicalDamage}");
                 m_speedMainHand.SetInformation($"{playerController.animator.GetFloat("RightAttackSpeed")}");
                 m_impactMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact}");
@@ -82,25 +103,35 @@ public class CharSheetManager : MonoBehaviour
             }
             else
             {
+                m_mainIcon.enabled = false;
+
                 m_damageMainHand.SetInformation("0");
                 m_speedMainHand.SetInformation("0");
                 m_impactMainHand.SetInformation("0");
                 m_pierceMainHand.SetInformation("0");
             }
 
-            if (playerController.playerAttack.m_leftWeaponData != null)
+            if (!isTwohanding)
             {
-                m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
-                m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
-                m_impactOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_impact * playerController.playerAttack.m_leftWeaponData.m_altImpactMult}");
-                m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_piercing}");
-            }
-            else
-            {
-                m_damageOffHand.SetInformation("0");
-                m_speedOffHand.SetInformation("0");
-                m_impactOffHand.SetInformation("0");
-                m_pierceOffHand.SetInformation("0");
+                if (playerController.playerAttack.m_leftWeaponData != null)
+                {
+                    m_offIcon.enabled = true;
+                    m_offIcon.sprite = playerController.playerAttack.m_leftWeaponData.altAttackIcon;
+
+                    m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
+                    m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
+                    m_impactOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_impact * playerController.playerAttack.m_leftWeaponData.m_altImpactMult}");
+                    m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_piercing}");
+                }
+                else
+                {
+                    m_offIcon.enabled = false;
+
+                    m_damageOffHand.SetInformation("0");
+                    m_speedOffHand.SetInformation("0");
+                    m_impactOffHand.SetInformation("0");
+                    m_pierceOffHand.SetInformation("0");
+                }
             }
         }
     }

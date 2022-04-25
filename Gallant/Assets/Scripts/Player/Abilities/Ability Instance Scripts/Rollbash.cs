@@ -58,7 +58,7 @@ public class Rollbash : MonoBehaviour
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-                actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_data.effectiveness);
+                //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_data.effectiveness);
                 m_hitList.Add(actor.gameObject);
             }
 

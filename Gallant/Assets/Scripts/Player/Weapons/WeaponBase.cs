@@ -96,7 +96,7 @@ public abstract class WeaponBase : MonoBehaviour
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
-                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
+                //actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
 
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
                 if (statusContainer != null && _status != null)

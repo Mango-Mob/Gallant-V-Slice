@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 using UnityEditor.Experimental.SceneManagement;
 
-public class SkillButton : MonoBehaviour, IPointerEnterHandler
+public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Skill Information")]
     public SkillData m_skillData;
@@ -28,6 +28,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private Transform m_lineExit;
 
     [Header("Components")]
+    [SerializeField] private Image m_purchaseProgressBar;
     private Button m_button;
     private CanvasGroup m_canvasGroup;
 
@@ -43,12 +44,19 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     private float m_tooltipLerp = 0.0f;
     [SerializeField] private float m_tooltipLerpSpeed = 4.0f;
 
+    private bool m_hiddenMode = false;
+    private bool m_isMouseHovering = false;
+    private bool m_purchaseFlag = false;
+    private float m_purchaseProgress = 0.0f;
+    private MultiAudioAgent m_audioAgent;
+
     // Start is called before the first frame update
     void Start()
     {
         m_manager = GetComponentInParent<SkillTreeManager>();
         m_canvasGroup = GetComponent<CanvasGroup>();
         m_button = GetComponent<Button>();
+        m_audioAgent = GetComponent<MultiAudioAgent>();
 
         m_icon.sprite = m_skillData.skillIcon;
         m_tooltipObject.SetActive(true);
@@ -72,31 +80,108 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             }
         }
 
-        m_canvasGroup.alpha = IsAvailable() ? 1.0f : 0.0f;
+        m_canvasGroup.alpha = (IsAvailable()) ? 1.0f : 0.0f;
         m_button.enabled = IsAvailable();
         foreach (var link in m_dependencyLink)
         {
-            link.ToggleAvailability(IsAvailable() && link.m_dependency.IsAvailable());
+            link.ToggleAvailability((IsAvailable()) && link.m_dependency.IsAvailable());
         }
 
-        // Tooltip update
-        m_tooltipName.text = m_skillData.skillName;
-        m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
-        
-        if (m_upgradeAmount < m_skillData.upgradeMaximum)
+        if (m_hiddenMode)
         {
-            m_tooltipCost.text = $"{GetCurrentCost()}";
+            m_upgradeNumberText.text = "?";
+            m_icon.color = Color.black;
+
+            m_tooltipName.text = "???";
+            m_tooltipDesc.text = "???";
+
             m_tooltipCost.gameObject.SetActive(true);
+            m_tooltipCost.text = "???";
         }
-        else 
+        else
         {
-            m_tooltipCost.gameObject.SetActive(false);
+            m_upgradeNumberText.text = m_upgradeAmount.ToString();
+            m_icon.color = Color.white;
+
+            // Tooltip update
+            m_tooltipName.text = $"{m_skillData.skillName} {m_upgradeAmount}/{m_skillData.upgradeMaximum}";
+            m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
+
+            if (m_upgradeAmount < m_skillData.upgradeMaximum)
+            {
+                m_tooltipCost.text = $"{GetCurrentCost()}";
+                m_tooltipCost.gameObject.SetActive(true);
+            }
+            else
+            {
+                m_tooltipCost.gameObject.SetActive(false);
+            }
         }
-
-        m_tooltipCurrentLevel.text = $"{m_upgradeAmount}/{m_skillData.upgradeMaximum}";
-
         m_tooltipLerp = Mathf.Clamp01(m_tooltipLerp + (m_tooltipsActive ? 1.0f : -1.0f) * Time.deltaTime * m_tooltipLerpSpeed);
         m_tooltipObject.transform.localScale = new Vector3(m_tooltipLerp, m_tooltipObject.transform.localScale.y, m_tooltipObject.transform.localScale.z);
+
+        if (IsUnlockable())
+        {
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                if (InputManager.Instance.IsGamepadButtonPressed(ButtonType.SOUTH, 0) && m_tooltipsActive)
+                {
+                    ProcessPurchase();
+                }
+                else
+                {
+                    m_purchaseProgress = 0.0f;
+                    m_purchaseFlag = false;
+                }
+            }
+            else if (m_isMouseHovering)
+            {
+                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
+                {
+                    ProcessPurchase();
+                }
+                else
+                {
+                    m_purchaseProgress = 0.0f;
+                    m_purchaseFlag = false;
+                }
+            }
+            else
+            {
+                m_purchaseProgress = 0.0f;
+            }
+        }
+        else
+        {
+            m_purchaseProgress = 0.0f;
+        }
+        m_purchaseProgressBar.fillAmount = m_purchaseProgress;
+        if (m_purchaseProgress == 0.0f && m_audioAgent.IsAudioPlaying("StartPurchase"))
+        {
+            m_audioAgent.StopAudio("StartPurchase");
+        }
+    }
+    private void ProcessPurchase()
+    {
+        if (m_purchaseFlag)
+            return;
+
+        if (!m_audioAgent.IsAudioPlaying("StartPurchase"))
+        {
+            m_audioAgent.Play("StartPurchase");
+        }
+
+        m_purchaseProgress += Time.deltaTime * 2.0f;
+        m_purchaseProgress = Mathf.Clamp01(m_purchaseProgress);
+
+
+        if (m_purchaseProgress >= 1.0f)
+        {
+            m_audioAgent.Play("PurchaseSkill");
+            PurchaseSkill();
+            m_purchaseProgress = 0.0f;
+            m_purchaseFlag = true;
+        }
     }
     private int GetCurrentCost()
     {
@@ -109,12 +194,20 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        m_isMouseHovering = true;
         if (!InputManager.Instance.isInGamepadMode)
         {
             SelectSkill();
         }
     }
-
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        m_isMouseHovering = false;
+    }
+    public void OnPointerStay(PointerEventData eventData)
+    {
+        Debug.Log(m_skillData.skillName);
+    }
     public void SelectSkill()
     {
         SkillTreeDisplayControl._instance.SelectSkillButton(this);
@@ -129,7 +222,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
 
             SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
-        SelectSkill();
+        //SelectSkill();
     }
     public void RefundSkill()
     {
@@ -169,6 +262,25 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         if (m_permaLocked)
             return false;
 
+        // Hidden check
+        m_hiddenMode = false;
+        foreach (var dependency in m_unlockDependencies)
+        {
+            if (dependency.m_unlockDependencies.Count == 0)
+                m_hiddenMode = true;
+
+            foreach (var item in dependency.m_unlockDependencies)
+            {
+                if (item.m_upgradeAmount > 0)
+                {
+                    m_hiddenMode = true;
+                    break;
+                }
+            }
+            if (m_hiddenMode)
+                break;
+        }
+
         if (m_unlockDependencies.Count == 0)
             return true;
 
@@ -181,6 +293,11 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
                 unlockable = true;
             }
         }
+
+        if (!unlockable && m_hiddenMode)
+            return true;
+        else
+            m_hiddenMode = false;
 
         return unlockable;
     }
