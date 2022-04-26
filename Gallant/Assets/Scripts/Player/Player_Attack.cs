@@ -241,8 +241,16 @@ public class Player_Attack : MonoBehaviour
         Debug.Log("Pew");
         if (_left)
         {
-            if (m_leftWeapon)
-                m_leftWeapon.TriggerWeaponAlt(false);
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.TriggerWeaponAlt(false);
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                if (m_leftWeapon)
+                    m_leftWeapon.TriggerWeaponAlt(false);
+            }
         }
         else
         {
