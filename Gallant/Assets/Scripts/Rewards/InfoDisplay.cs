@@ -13,9 +13,11 @@ public class InfoDisplay : MonoBehaviour
     public bool IsAWeapon = true;
     public bool IsEquip = false;
     public bool IsLeft = false;
+    public bool IsUpgrade = false;
 
     public WeaponData m_weaponData;
     public ItemData m_itemData;
+    public AbilityData m_abilityUpgradeData;
 
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
@@ -73,6 +75,14 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_mainController;
     [SerializeField] private Image m_mainBar;
 
+    [Header("Spellbook Information")]
+    [SerializeField] private Image m_upgradeAbilityImageLoc;
+    [SerializeField] private Image[] m_upgradeAbilityStars;
+    [SerializeField] private TMP_Text m_upgradeAbilityDescription;
+    
+    [Header("Weapon Upgrade Information")]
+    // Something will be here in the future.
+
     private Player_Controller playerController;
     private Animator m_animator;
 
@@ -101,7 +111,7 @@ public class InfoDisplay : MonoBehaviour
 
     private void Update()
     {
-        m_itemImageLoc.transform.parent.gameObject.SetActive(!IsAWeapon);
+        m_itemImageLoc.transform.parent.gameObject.SetActive(!IsAWeapon && !IsUpgrade);
         m_weaponImageLoc.transform.parent.gameObject.SetActive(IsAWeapon);
 
         if(IsADrop)
@@ -126,6 +136,11 @@ public class InfoDisplay : MonoBehaviour
             m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
             m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
             m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+        }
+
+        if (IsUpgrade)
+        {
+
         }
 
         if(m_selected || IsADrop || IsEquip)
@@ -279,6 +294,43 @@ public class InfoDisplay : MonoBehaviour
         m_itemDescription.text = data.description;
 
         m_passiveLocation.SetActive(false);
+    }
+    public void LoadUpgrade(AbilityData data = null) // If null, is forge upgrade
+    {
+        IsAWeapon = false;
+        IsUpgrade = true;
+
+        m_itemDetailsLoc.SetActive(false);
+        m_weaponDetailsLoc.SetActive(false);
+
+        if (data == null)
+        {
+            m_abilityUpgradeData = data;
+            m_title.text = m_abilityUpgradeData.abilityName;
+
+            m_upgradeAbilityImageLoc.sprite = data.abilityIcon;
+            m_upgradeAbilityDescription.SetText(AbilityData.EvaluateDescription(data));
+
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(i < data.starPowerLevel);
+            }
+        }
+        else
+        {
+            m_title.text = "Upgrade Weapon";
+        }
+
+        m_animator?.SetBool("IsBack", false);
+
+        foreach (var btn in m_flipBtns)
+        {
+            btn.image.enabled = false;
+        }
+
+        playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
+        m_passiveLocation.SetActive(false);
+        m_level.gameObject.SetActive(false);
     }
 
     public void ResetPickupTimer()
