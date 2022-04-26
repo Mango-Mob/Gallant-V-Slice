@@ -2118,22 +2118,22 @@ AnimatorStateMachine:
     m_Position: {x: 630, y: -280, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1456410308939703968}
-    m_Position: {x: -160, y: -480, z: 0}
+    m_Position: {x: -170, y: -580, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7365688398393046907}
-    m_Position: {x: -160, y: -420, z: 0}
+    m_Position: {x: -170, y: -520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8200383554801686885}
-    m_Position: {x: 60, y: -420, z: 0}
+    m_Position: {x: 50, y: -520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1326199825657503848}
-    m_Position: {x: 560, y: -420, z: 0}
+    m_Position: {x: 550, y: -520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2507143719023377759}
-    m_Position: {x: 780, y: -420, z: 0}
+    m_Position: {x: 770, y: -520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9048553081585224413}
-    m_Position: {x: 780, y: -480, z: 0}
+    m_Position: {x: 770, y: -580, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4704139222452235190}
     m_Position: {x: 860, y: -190, z: 0}
@@ -2173,6 +2173,15 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 645533839425442046}
     m_Position: {x: 320, y: 370, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 1945602202977748172}
+    m_Position: {x: 630, y: -350, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6731740621578180843}
+    m_Position: {x: -240, y: -360, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 3196948799155486795}
+    m_Position: {x: -20, y: -360, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 7251490333508230691}
@@ -2181,7 +2190,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 340, y: -280, z: 0}
   m_EntryPosition: {x: 340, y: -340, z: 0}
-  m_ExitPosition: {x: 330, y: -470, z: 0}
+  m_ExitPosition: {x: 320, y: -570, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 3368158315612374860}
 --- !u!1102 &-3092124659543782160
@@ -2625,6 +2634,28 @@ BlendTree:
   m_UseAutomaticThresholds: 1
   m_NormalizedBlendValues: 0
   m_BlendType: 0
+--- !u!1101 &-2307420622653010420
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 3196948799155486795}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.05
+  m_TransitionOffset: 0
+  m_ExitTime: 0.95
+  m_HasExitTime: 1
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1102 &-2236591533912575096
 AnimatorState:
   serializedVersion: 6
@@ -2754,6 +2785,28 @@ AnimatorStateTransition:
   m_TransitionOffset: 0
   m_ExitTime: 0.75000006
   m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &-1528926522913149498
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 3368158315612374860}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.15
+  m_TransitionOffset: 0
+  m_ExitTime: 0.95
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -3324,9 +3377,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.15
   m_TransitionOffset: 0
-  m_ExitTime: 0.7413793
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -3798,6 +3851,15 @@ AnimatorController:
     - serializedVersion: 2
       m_State: {fileID: 645533839425442046}
       m_Motion: {fileID: 7400000, guid: a4613fab4588d71429f9f30e43157599, type: 2}
+    - serializedVersion: 2
+      m_State: {fileID: 1945602202977748172}
+      m_Motion: {fileID: 7400000, guid: 2d2c24f3f5244a14787c62b7824cbf7c, type: 2}
+    - serializedVersion: 2
+      m_State: {fileID: 6731740621578180843}
+      m_Motion: {fileID: 7400000, guid: c9ff68ec6162bd4428af3b23754508d1, type: 2}
+    - serializedVersion: 2
+      m_State: {fileID: 3196948799155486795}
+      m_Motion: {fileID: 7400000, guid: 9f244ee977c5cff44b6940242161e109, type: 2}
     m_Behaviours:
     - m_State: {fileID: 3368158315612374860}
       m_StateMachineBehaviours: []
@@ -3940,6 +4002,28 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -8356477518966101606}
+--- !u!1101 &403750481800946896
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 3368158315612374860}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.05
+  m_TransitionOffset: 0
+  m_ExitTime: 0.95
+  m_HasExitTime: 1
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
 --- !u!1101 &425199222554550287
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -4622,6 +4706,33 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &1945602202977748172
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Right Greatsword
+  m_Speed: 1.5
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: -1528926522913149498}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 1
+  m_SpeedParameterActive: 1
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 2d2c24f3f5244a14787c62b7824cbf7c, type: 2}
+  m_Tag: 
+  m_SpeedParameter: RightAttackSpeed
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &2195804566048465548
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -5182,9 +5293,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.15
   m_TransitionOffset: 0
-  m_ExitTime: 0.7413793
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -5214,6 +5325,33 @@ AnimatorState:
   m_Motion: {fileID: 7400000, guid: c9ff68ec6162bd4428af3b23754508d1, type: 2}
   m_Tag: 
   m_SpeedParameter: RightAttackSpeed
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &3196948799155486795
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Left Greatsword Swing
+  m_Speed: 1.5
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: 403750481800946896}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 1
+  m_SpeedParameterActive: 1
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 9f244ee977c5cff44b6940242161e109, type: 2}
+  m_Tag: 
+  m_SpeedParameter: LeftAttackSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
@@ -6137,7 +6275,7 @@ AnimatorState:
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
   m_Mirror: 1
-  m_SpeedParameterActive: 0
+  m_SpeedParameterActive: 1
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
@@ -6508,6 +6646,33 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &6731740621578180843
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Left Greatsword
+  m_Speed: 1.5
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: -2307420622653010420}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 1
+  m_SpeedParameterActive: 1
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: c9ff68ec6162bd4428af3b23754508d1, type: 2}
+  m_Tag: 
+  m_SpeedParameter: LeftAttackSpeed
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!206 &6740651862075593659
 BlendTree:
   m_ObjectHideFlags: 1
@@ -6865,6 +7030,28 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.1141026
   m_TransitionOffset: 0.1358975
   m_ExitTime: 0.84440553
+  m_HasExitTime: 1
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
+--- !u!1101 &7458164338589697329
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions: []
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 3368158315612374860}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.15
+  m_TransitionOffset: 0
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

@@ -240,6 +240,16 @@ public class Player_Movement : MonoBehaviour
         m_dashFaceDirection = _facingDirection;
     }
 
+    public void CancelDashMovement()
+    {
+        m_dashTimer = 0.0f;
+    }
+
+    public bool IsDashing()
+    {
+        return m_dashTimer > 0.0f;
+    }
+
     /*******************
      * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
      * @author : William de Beer
@@ -335,7 +345,7 @@ public class Player_Movement : MonoBehaviour
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
-        if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
+        if (m_dashTimer <= 0.0f && !m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
         {
             if (m_currentTarget != null)
             {
