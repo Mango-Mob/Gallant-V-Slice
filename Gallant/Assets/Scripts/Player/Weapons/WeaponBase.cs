@@ -53,13 +53,17 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public void TriggerWeaponAlt(bool _active)
     {
+        Debug.Log($"Triggering Alt Attack: {_active}");
         if (_active)
         {
             playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost);
             WeaponAltFunctionality();
         }
         else
+        {
+            Debug.Log("Release Navidad");
             WeaponAltRelease();
+        }
     }
 
     public abstract void WeaponFunctionality();
