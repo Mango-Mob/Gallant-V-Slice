@@ -76,10 +76,15 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_mainBar;
 
     [Header("Spellbook Information")]
+    [SerializeField] private GameObject m_upgradeAbilityDetailsLoc;
     [SerializeField] private Image m_upgradeAbilityImageLoc;
     [SerializeField] private Image[] m_upgradeAbilityStars;
     [SerializeField] private TMP_Text m_upgradeAbilityDescription;
-    
+
+    [Header("Weapon Upgrade Information")]
+    [SerializeField] private GameObject m_upgradeWeaponDetailsLoc;
+    [SerializeField] private Image m_upgradeWeaponImageLoc;
+
     [Header("Weapon Upgrade Information")]
     // Something will be here in the future.
 
@@ -106,6 +111,10 @@ public class InfoDisplay : MonoBehaviour
         else if(m_itemData != null)
         {
             LoadItem(m_itemData);
+        }
+        else if (IsUpgrade)
+        {
+            LoadUpgrade(m_abilityUpgradeData);
         }
     }
 
@@ -187,8 +196,10 @@ public class InfoDisplay : MonoBehaviour
         }
 
         gameObject.SetActive(true);
-        m_itemDetailsLoc.SetActive(!IsAWeapon);
-        m_weaponDetailsLoc.SetActive(IsAWeapon);
+        m_itemDetailsLoc.SetActive(false);
+        m_weaponDetailsLoc.SetActive(true);
+        m_upgradeAbilityDetailsLoc.SetActive(false);
+        m_upgradeWeaponDetailsLoc.SetActive(false);
 
         m_title.text = data.weaponName;
         m_level.text = "Level: " + (data.m_level + 1).ToString();
@@ -302,6 +313,8 @@ public class InfoDisplay : MonoBehaviour
 
         m_itemDetailsLoc.SetActive(false);
         m_weaponDetailsLoc.SetActive(false);
+        m_upgradeAbilityDetailsLoc.SetActive(data != null);
+        m_upgradeWeaponDetailsLoc.SetActive(data == null);
 
         if (data == null)
         {

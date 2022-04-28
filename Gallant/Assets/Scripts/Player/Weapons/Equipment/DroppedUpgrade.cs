@@ -10,6 +10,8 @@ using UnityEngine;
  */
 public class DroppedUpgrade : MonoBehaviour
 {
+    public AbilityData m_abilityData;
+
     [ColorUsage(true, true)] public Color m_defaultColor;
     public bool m_outlineEnabled = false;
 
