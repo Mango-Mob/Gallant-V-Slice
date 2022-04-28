@@ -300,6 +300,7 @@ namespace ActorSystem.AI.Components
 
             if (playAudio && IsDead)
             {
+                GameManager.m_killCount++;
                 m_audioAgent?.PlayDeath();
                 m_legs?.Halt();
             }

@@ -61,14 +61,9 @@ public class CharSheetManager : MonoBehaviour
 
             // Run info
             m_time.SetInformation(GameManager.CalculateTimerString(GameManager.m_runTime));
-            m_kills.SetInformation("0");
-            m_damageDone.SetInformation("0");
-            m_healingDone.SetInformation("0");
-
-            //m_time.SetInformation("00:00:00");
-            //m_kills.SetInformation("0");
-            //m_damageDone.SetInformation("0");
-            //m_healingDone.SetInformation("0");
+            m_kills.SetInformation(GameManager.m_killCount.ToString());
+            m_damageDone.SetInformation(GameManager.m_damageDealt.ToString("0"));
+            m_healingDone.SetInformation(GameManager.m_healingDealt.ToString("0"));
 
             // Stats
             m_maxHealth.SetInformation($"{playerController.playerResources.m_maxHealth}");

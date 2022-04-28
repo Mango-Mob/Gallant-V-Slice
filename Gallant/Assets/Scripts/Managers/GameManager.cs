@@ -85,6 +85,14 @@ public class GameManager : Singleton<GameManager>
     }
     public static string CalculateTimerString(float _time)
     {
+        int seconds = Mathf.FloorToInt(_time % 60);
+        int minutes = Mathf.FloorToInt((_time / 60) % 60);
+        int hours = Mathf.FloorToInt(_time / 3600);
+
+        return $"{hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+    }
+    public static string CalculateTimeUnitString(float _time)
+    {
         float minutes;
         float hours;
 
