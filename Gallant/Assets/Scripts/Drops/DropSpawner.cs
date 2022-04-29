@@ -33,6 +33,7 @@ public class DropSpawner : MonoBehaviour
                 display1.m_weaponData = weaponData;
                 break;
             case DropType.UPGRADE:
+                GameObject droppedUpgrade = DroppedWeapon.CreateWeaponUpgrade(transform.position + m_spawnLoc);
                 break;
             case DropType.SPELLBOOK:
                 GameObject droppedSpellbook = DroppedWeapon.CreateSpellUpgrade(transform.position + m_spawnLoc, AbilityData.LoadAbilityData(m_abilityType, m_abilityPowerLevel));

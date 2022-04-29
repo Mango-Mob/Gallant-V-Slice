@@ -513,7 +513,9 @@ public class Player_Attack : MonoBehaviour
                 else
                 {
                     if (m_rightWeaponIcon != null)
+                    {
                         m_rightWeaponIcon.SetIconSprite(null);
+                    }
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
                     m_rightWeaponEffect = ItemEffect.NONE;
                 }
@@ -581,6 +583,8 @@ public class Player_Attack : MonoBehaviour
         m_rightWeaponIcon.SetDisabledState(m_leftWeaponData && m_leftWeaponData.isTwoHanded);
 
         ToggleTwohandedMode(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
+
+
 
         playerController.playerAudioAgent.EquipWeapon();
     }

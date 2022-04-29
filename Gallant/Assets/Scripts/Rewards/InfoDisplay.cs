@@ -142,15 +142,21 @@ public class InfoDisplay : MonoBehaviour
 
             m_animator?.SetBool("IsDrop", IsADrop || IsEquip);
 
-            m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
-            m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
-            m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+            if (!IsUpgrade)
+            {
+                m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
+                m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+                m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+            }
+            else
+            {
+                m_mainHand?.SetActive(false);
+                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeaponData != null);
+                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeaponData != null);
+
+            }
         }
 
-        if (IsUpgrade)
-        {
-
-        }
 
         if(m_selected || IsADrop || IsEquip)
         {
@@ -316,7 +322,7 @@ public class InfoDisplay : MonoBehaviour
         m_upgradeAbilityDetailsLoc.SetActive(data != null);
         m_upgradeWeaponDetailsLoc.SetActive(data == null);
 
-        if (data == null)
+        if (data != null)
         {
             m_abilityUpgradeData = data;
             m_title.text = m_abilityUpgradeData.abilityName;
@@ -331,7 +337,7 @@ public class InfoDisplay : MonoBehaviour
         }
         else
         {
-            m_title.text = "Upgrade Weapon";
+            m_title.text = "Temporal Forge";
         }
 
         m_animator?.SetBool("IsBack", false);
