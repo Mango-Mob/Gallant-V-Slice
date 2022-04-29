@@ -220,4 +220,9 @@ public class Player_Stats : MonoBehaviour
 
         return 0;
     }
+
+    public bool ReachedRuneCap(ItemEffect _effect)
+    {
+        return GetEffectQuantity(_effect) >= 10.0f; 
+    }
 }
