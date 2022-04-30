@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
+using TMPro;
 
 public class RuneCountDisplay : MonoBehaviour
 {
     private static Player_Controller playerController;
     public ItemData m_runeItem;
     public Image m_icon;
+
+    [Header("Tally Mode")]
     public Image[] m_tallyMarks;
+
+    [Header("Number Mode")]
+    public TextMeshProUGUI m_numberValue;
+    public Image m_runeFill;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +33,9 @@ public class RuneCountDisplay : MonoBehaviour
         {
             m_tallyMarks[i].enabled = i < effectCount;
         }
+
+        m_numberValue.text = effectCount.ToString();
+        m_runeFill.fillAmount = effectCount / 10.0f;
     }
     private void OnValidate()
     {
