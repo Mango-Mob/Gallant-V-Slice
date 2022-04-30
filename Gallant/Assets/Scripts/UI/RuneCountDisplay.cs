@@ -16,6 +16,7 @@ public class RuneCountDisplay : MonoBehaviour
 
     [Header("Number Mode")]
     public TextMeshProUGUI m_numberValue;
+    public TextMeshProUGUI m_fractionNumberValue;
     public Image m_runeFill;
 
     // Start is called before the first frame update
@@ -35,6 +36,7 @@ public class RuneCountDisplay : MonoBehaviour
         }
 
         m_numberValue.text = effectCount.ToString();
+        m_fractionNumberValue.text = $"{effectCount}/10";
         m_runeFill.fillAmount = effectCount / 10.0f;
     }
     private void OnValidate()
