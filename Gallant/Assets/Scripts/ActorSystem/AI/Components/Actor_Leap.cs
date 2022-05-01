@@ -33,6 +33,7 @@ namespace ActorSystem.AI.Components
             m_animator = GetComponentInChildren<Actor_Animator>();
             m_agent.updatePosition = false;
             m_agent.updateRotation = false;
+            m_canRotate = false;
             startPos = transform.position;
             endPos = transform.position;
         }

@@ -38,7 +38,8 @@ namespace ActorSystem.Data
             switch (m_type)
             {
                 case UtilityType.Teleport:
-                    if(Vector3.Distance(user.transform.position, targetPoint) < 0.5f)
+                    user.SetTargetLocation(targetPoint, canTrackTarget);
+                    if (Vector3.Distance(user.transform.position, targetPoint) < 0.5f)
                     {
                         user.m_myBrain.EndAttack();
                     }

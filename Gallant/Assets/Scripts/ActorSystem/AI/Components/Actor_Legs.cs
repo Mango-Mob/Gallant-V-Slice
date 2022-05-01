@@ -22,6 +22,7 @@ namespace ActorSystem.AI.Components
         public float m_speedModifier = 1.0f;
         public bool m_canBeKnocked = true;
         public bool m_isKnocked = false;
+        public bool m_canRotate = true;
 
         private bool m_isSeekingMesh = false;
 
@@ -106,7 +107,7 @@ namespace ActorSystem.AI.Components
                     m_agent.speed = m_baseSpeed * m_speedModifier;
                 }
 
-                if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                if (m_canRotate && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
 
