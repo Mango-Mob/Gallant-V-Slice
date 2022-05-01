@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -108,7 +106,7 @@ namespace ActorSystem.AI.Components
                     m_agent.speed = m_baseSpeed * m_speedModifier;
                 }
 
-                if (m_agent.updateRotation && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
 
