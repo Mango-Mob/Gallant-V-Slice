@@ -205,8 +205,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeaponData, Hand.LEFT))
                     {
-                        playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
-                        playerPickup.RemoveDropFromList(droppedWeapon);
+                        HandlePickupDrop(droppedWeapon, Hand.LEFT);
                     }
                 }
             }
@@ -219,8 +218,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeaponData, Hand.RIGHT))
                     {
-                        playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
-                        playerPickup.RemoveDropFromList(droppedWeapon);
+                        HandlePickupDrop(droppedWeapon, Hand.RIGHT);
                     }
                 }
             }
@@ -400,6 +398,54 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    private void HandlePickupDrop(DroppedWeapon _drop, Hand _hand)
+    {
+        switch (_drop.m_dropType)
+        {
+            case DropSpawner.DropType.WEAPON:
+                playerAttack.PickUpWeapon(_drop, _hand);
+                break;
+            case DropSpawner.DropType.UPGRADE:
+                if (_hand == Hand.LEFT)
+                {
+                    if (playerAttack.m_leftWeaponData != null)
+                    {
+                        playerAttack.m_leftWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_leftWeaponData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                else
+                {
+                    if (playerAttack.m_rightWeaponData != null)
+                    {
+                        playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                playerAttack.ApplyWeaponData(_hand);
+                break;
+            case DropSpawner.DropType.SPELLBOOK:
+                if (_hand == Hand.LEFT)
+                {
+                    if (playerAttack.m_leftWeaponData != null)
+                    {
+                        WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, _drop.m_abilityData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                else
+                {
+                    if (playerAttack.m_rightWeaponData != null)
+                    {
+                        WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, _drop.m_abilityData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                playerAttack.ApplyWeaponData(_hand);
+                break;
+        }
+        playerPickup.RemoveDropFromList(_drop);
+    }
     public void StartHeal() { animator.SetBool("IsHealing", true); }
 
     /*******************

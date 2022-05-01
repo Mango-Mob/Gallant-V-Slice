@@ -186,6 +186,7 @@ public class Player_Abilities : MonoBehaviour
                 m_leftAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
                 m_leftAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_leftAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
+                m_leftAbilityIcon.SetBindDisplayActive(_ability != null && !_ability.isPassive);
 
                 if (m_leftAbility == null)
                     m_leftAbilityIcon.SetCooldown(0.0f, 1.0f);
@@ -200,6 +201,7 @@ public class Player_Abilities : MonoBehaviour
                 m_rightAbilityIcon.SetIconSprite(_ability != null ? _ability.abilityIcon : null);
                 m_rightAbilityIcon.SetPowerLevel(_ability != null ? _ability.starPowerLevel : 0);
                 m_rightAbilityIcon.SetFrame(abilityScript != null ? (abilityScript.m_isPassive ? FrameType.PASSIVE : FrameType.ACTIVE) : FrameType.NONE);
+                m_rightAbilityIcon.SetBindDisplayActive(_ability != null && !_ability.isPassive);
 
                 if (m_rightAbility == null)
                     m_rightAbilityIcon.SetCooldown(0.0f, 1.0f);

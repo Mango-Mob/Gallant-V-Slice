@@ -10,6 +10,7 @@ public class Weapon_Bow : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/ChargedBowArrow");
         base.Awake();
     }
 
@@ -45,17 +46,25 @@ public class Weapon_Bow : WeaponBase
 
         m_chargingShot = false;
         m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand, m_charge, true);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.RIGHT, m_charge, true);
         m_charge = 0.0f;
     }
     public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        WeaponFunctionality();
+        m_chargingShot = true;
+
+        Debug.Log("LEFT CHARGE SHOT BOW");
     }
-    public override void WeaponAltRelease() 
+    public override void WeaponAltRelease()
     {
-        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        WeaponRelease();
+        Debug.Log("HERE! RIGHT HERE!");
+
+        playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
+
+        m_chargingShot = false;
+        m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.LEFT, m_charge, true);
+        m_charge = 0.0f;
     }
 }

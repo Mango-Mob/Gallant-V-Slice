@@ -241,8 +241,16 @@ public class Player_Attack : MonoBehaviour
         Debug.Log("Pew");
         if (_left)
         {
-            if (m_leftWeapon)
-                m_leftWeapon.TriggerWeaponAlt(false);
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.TriggerWeaponAlt(false);
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                if (m_leftWeapon)
+                    m_leftWeapon.TriggerWeaponAlt(false);
+            }
         }
         else
         {
@@ -505,7 +513,9 @@ public class Player_Attack : MonoBehaviour
                 else
                 {
                     if (m_rightWeaponIcon != null)
+                    {
                         m_rightWeaponIcon.SetIconSprite(null);
+                    }
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
                     m_rightWeaponEffect = ItemEffect.NONE;
                 }
@@ -574,6 +584,8 @@ public class Player_Attack : MonoBehaviour
 
         ToggleTwohandedMode(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
 
+
+
         playerController.playerAudioAgent.EquipWeapon();
     }
 
@@ -600,7 +612,7 @@ public class Player_Attack : MonoBehaviour
             case Weapon.BOW:
                 return gameObject.AddComponent<Weapon_Bow>();
             case Weapon.GREATSWORD:
-                return gameObject.AddComponent<Weapon_Sword>();
+                return gameObject.AddComponent<Weapon_Greatsword>();
             default:
                 return null;
         }
