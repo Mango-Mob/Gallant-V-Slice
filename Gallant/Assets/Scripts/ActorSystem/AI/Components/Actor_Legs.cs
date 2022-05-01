@@ -281,7 +281,7 @@ namespace ActorSystem.AI.Components
                 }
                 Gizmos.color = (m_agent.updatePosition) ? Color.green : Color.red;
                 Gizmos.DrawSphere(m_agent.transform.position, 0.25f);
-                Gizmos.DrawLine(transform.position, transform.position + m_agent.velocity);
+                Gizmos.DrawLine(transform.position, transform.position + m_body.velocity);
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(transform.position, transform.position + m_targetRotation * Vector3.forward);
 
@@ -326,7 +326,7 @@ namespace ActorSystem.AI.Components
                     m_isKnocked = true;
                     m_body.isKinematic = false;
                     m_agent.updatePosition = false;
-                    m_body.velocity = force;
+                    m_body.velocity = transform.TransformVector(force);
                     return;
                 }
                 m_body.velocity = force;

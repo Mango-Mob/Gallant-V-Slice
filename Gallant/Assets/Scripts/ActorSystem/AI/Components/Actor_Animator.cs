@@ -27,7 +27,7 @@ namespace ActorSystem.AI.Components
             m_animator = GetComponent<Animator>();
 
             m_hasVelocity = (HasParameter("VelocityHorizontal") && HasParameter("VelocityVertical") && HasParameter("VelocityHaste"));
-            m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
+            m_hasHit = (HasParameter("Hit"));
             m_hasPivot = (HasParameter("Pivot"));
         }
 

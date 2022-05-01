@@ -262,6 +262,14 @@ namespace ActorSystem.AI.Components
         {
             if (IsDead)
                 return true;
+            
+            if(_damageLoc != null)
+            {
+                Vector3 direction = (_damageLoc.Value - transform.position).normalized;
+                direction.y = 0;
+                transform.forward = direction.normalized;
+                this.m_arms.m_brainLag = Mathf.Max(0.5f, m_arms.m_brainLag);
+            }
 
             switch (_type)
             {

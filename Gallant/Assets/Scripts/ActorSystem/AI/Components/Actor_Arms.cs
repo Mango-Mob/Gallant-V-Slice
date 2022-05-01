@@ -19,7 +19,7 @@ namespace ActorSystem.AI.Components
         public bool m_canUpdateAttack { get; set; } = true;
         private Actor m_mainComponent;
         private float[] m_cooldowns;
-        private float m_brainLag = 0f;
+        public float m_brainLag { get; set;} = 0f;
         public bool hasCancel { 
             get 
             {
