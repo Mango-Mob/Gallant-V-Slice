@@ -10,6 +10,8 @@ public class NavigationNode : MonoBehaviour
     public SceneData m_myData;
     public int m_myIndex = 0;
     public int m_myDepth = 0;
+
+    private bool IsCompleted = false;
     public struct Connection
     {
         public LineRenderer render;
@@ -45,6 +47,16 @@ public class NavigationNode : MonoBehaviour
         m_myConnections.Add(newConnection);
     }
 
+    public void Update()
+    {
+        for (int i = 0; i < m_myConnections.Count; i++)
+        {
+            Vector3 position2 = (m_myConnections[i].other.transform as RectTransform).localPosition - (transform as RectTransform).transform.localPosition;
+            position2.z = 1;
+            m_myConnections[i].render.SetPosition(1, position2);
+        }
+    }
+
     public void ActivateMyConnections()
     {
         foreach (var connection in m_myConnections)
@@ -73,17 +85,30 @@ public class NavigationNode : MonoBehaviour
         GetComponent<Button>().interactable = false;
     }
 
+    public void Navigate()
+    {
+        NavigationManager.Instance.MovePlayerIconTo(transform.position, LoadMyScene);
+        NavigationManager.Instance.DisableAll();
+        GetComponent<Button>().interactable = false;
+    }
+
     public void LoadMyScene()
     {
         NavigationManager.Instance.UpdateMap(m_myIndex);
-        NavigationManager.Instance.SetVisibility(false);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
         LevelManager.Instance.LoadNewLevel(m_myData.sceneToLoad);
+    }
+
+    public void MarkCompleted()
+    {
+        IsCompleted = true;
+        GetComponent<Image>().sprite = m_myData.sceneCompleteIcon;
     }
 
     public static GameObject CreateNode(SceneData data, Transform parent)
     {
         GameObject nodeObj = new GameObject();
+
         nodeObj.name = $"NavNode ({data.name})";
         nodeObj.transform.SetParent(parent);
         nodeObj.transform.localPosition = Vector3.zero;
@@ -93,15 +118,19 @@ public class NavigationNode : MonoBehaviour
         nodeObj.AddComponent(typeof(Button));
         nodeObj.GetComponent<Button>().targetGraphic = nodeObj.AddComponent(typeof(Image)) as Image;
         
-
         nodeObj.GetComponent<Image>().sprite = data.sceneIcon;
 
-        nodeObj.AddComponent<NavigationNode>();
-        nodeObj.GetComponent<NavigationNode>().m_myData = data;
-        nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().LoadMyScene);
+        NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
+        nav.m_myData = data;
+        nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
         nodeObj.GetComponent<Button>().interactable = false;
         return nodeObj;
     }
 
-    
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + transform.right);
+    }
+
 }

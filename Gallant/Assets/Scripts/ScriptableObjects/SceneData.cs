@@ -8,6 +8,7 @@ using ActorSystem;
 public class SceneData : ScriptableObject
 {
     public Sprite sceneIcon;
+    public Sprite sceneCompleteIcon;
     public string sceneToLoad;
     public GameObject prefabToLoad;
     public Vector3 navLocalPosition;
