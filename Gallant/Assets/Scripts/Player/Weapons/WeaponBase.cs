@@ -93,9 +93,13 @@ public abstract class WeaponBase : MonoBehaviour
         foreach (var particleSystem in m_weaponTrailParticles)
         {
             if (_active)
+            {
                 particleSystem.Play();
+            }
             else if (!_active)
+            { 
                 particleSystem.Stop();
+            }
         }
     }
     public virtual string GetWeaponName()
