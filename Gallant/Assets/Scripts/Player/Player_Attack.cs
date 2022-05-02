@@ -258,6 +258,45 @@ public class Player_Attack : MonoBehaviour
                 m_rightWeapon.TriggerWeapon(false);
         }
     }
+
+    public void StartWeaponSwing(bool _left)
+    {
+        if (_left)
+        {
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.SetTrailActive(true);
+            }
+            else
+            {
+                m_leftWeapon.SetTrailActive(true);
+            }
+        }
+        else
+        {
+            m_rightWeapon.SetTrailActive(true);
+        }
+    }
+    public void StopWeaponSwing(bool _left)
+    {
+        if (_left)
+        {
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.SetTrailActive(true);
+            }
+            else
+            {
+                if (m_leftWeapon)
+                    m_leftWeapon.SetTrailActive(true);
+            }
+        }
+        else
+        {
+            if (m_rightWeapon)
+                m_rightWeapon.SetTrailActive(true);
+        }
+    }
     public bool IsDuelWielding()
     {
         if (m_leftWeaponData != null && m_rightWeaponData != null)
@@ -831,12 +870,6 @@ public class Player_Attack : MonoBehaviour
         }
         return newObject;
     }
-
-    public void GetReadiedWeapon()
-    {
-
-    }
-
 }
 
 ///*******************

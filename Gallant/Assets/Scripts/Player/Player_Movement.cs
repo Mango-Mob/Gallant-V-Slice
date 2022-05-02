@@ -418,7 +418,7 @@ public class Player_Movement : MonoBehaviour
             if (!playerController.playerResources.m_isExhausted && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 playerController.playerResources.ChangeStamina(-m_rollCost);
-                //playerController.playerAudioAgent.PlayRoll(); // Audio
+                playerController.playerAudioAgent.PlayRoll(); // Audio
 
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
