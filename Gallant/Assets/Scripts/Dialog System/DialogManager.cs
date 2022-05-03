@@ -15,7 +15,7 @@ public enum DialogResult
 
 public class DialogManager : Singleton<DialogManager>
 {
-    public UnityEvent m_interact;
+    public List<UnityEvent> m_interact;
     public GameObject m_defaultSelected;
 
     private Player_Controller m_player; 
@@ -98,7 +98,7 @@ public class DialogManager : Singleton<DialogManager>
                 case DialogResult.INTERACT:
                     m_currentScene = result.nextDialog;
                     LoadScene(result.nextDialog);
-                    m_interact.Invoke();
+                    m_interact[Mathf.Min(0, result.interactVal)].Invoke();
                     break;
                 case DialogResult.END:
                     Hide();
@@ -119,7 +119,7 @@ public class DialogManager : Singleton<DialogManager>
             m_currentScene = 0;
             LoadScene(m_currentScene);
         }
-
+        m_interact.Clear();
         if (InputManager.Instance.isInGamepadMode)
         {
             EventSystem.current.SetSelectedGameObject(m_defaultSelected);
