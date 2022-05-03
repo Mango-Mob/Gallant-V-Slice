@@ -169,4 +169,9 @@ public static class Extentions
         navPoint = nHit.position;
         return true;
     }
+
+    public static bool CircleVsCircle(Vector2 a, Vector2 b, float rA, float rB)
+    {
+        return rA + rB > Vector2.Distance(a, b);
+    }
 }
