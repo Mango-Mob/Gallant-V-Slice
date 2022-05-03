@@ -24,11 +24,13 @@ public class Weapon_Boomerang : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         SpawnProjectileInTransform(Vector3.zero, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }

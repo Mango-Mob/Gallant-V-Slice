@@ -10,7 +10,7 @@ public class Interactable : MonoBehaviour
     public bool m_isReady = false;
     public float m_holdDuration = 1.0f;
 
-    public Image m_timeDisplay;
+    public UI_InteractDisplay display;
     private float m_timer = 0.0f;
     private Player_Controller m_player;
     // Start is called before the first frame update
@@ -22,7 +22,9 @@ public class Interactable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(m_isReady && m_interactFunction != null && !m_player.m_isDisabledInput)
+        display?.gameObject.SetActive(m_isReady);
+
+        if (m_isReady && m_interactFunction != null && !m_player.m_isDisabledInput)
         {
             if(InputManager.Instance.IsBindPressed("Interact", InputManager.Instance.GetAnyGamePad()))
             {
@@ -43,8 +45,8 @@ public class Interactable : MonoBehaviour
             m_timer = 0.0f;
         }
 
-        if(m_timeDisplay != null)
-            m_timeDisplay.fillAmount = m_timer / m_holdDuration;
+        if(display != null)
+            display.timer = m_timer / m_holdDuration;
     }
 
     public void Interact()

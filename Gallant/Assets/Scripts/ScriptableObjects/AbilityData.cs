@@ -120,6 +120,39 @@ public class AbilityData : ScriptableObject
 
         return data;
     }
+
+    public static AbilityData LoadAbilityData(Ability _abilityType, int _powerLevel)
+    {
+        // Ability
+        switch (_abilityType)
+        {
+            case Ability.NONE:
+                return null;
+            case Ability.FIREWAVE:
+                return Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
+            case Ability.SAND_MISSILE:
+                return Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
+            case Ability.LIGHTNING_BOLT:
+                return Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
+            case Ability.ICE_ROLL:
+                return Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
+            case Ability.HP_BUFF:
+                return Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
+            case Ability.THORNS:
+                return Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
+            case Ability.ARCANE_BOLT:
+                return Resources.Load<AbilityData>("Data/Abilities/arcanebolt" + _powerLevel.ToString());
+            case Ability.FLAME_ROLL:
+                return Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
+            case Ability.ROLL_BASH:
+                return Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
+            case Ability.WHIRLPOOL:
+                return Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
+            default:
+                return null;
+        }
+    }
+
     public void Clone(AbilityData other)
     {
         this.abilityName = other.abilityName;

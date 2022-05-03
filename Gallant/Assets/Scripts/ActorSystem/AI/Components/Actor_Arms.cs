@@ -19,6 +19,7 @@ namespace ActorSystem.AI.Components
         public bool m_canUpdateAttack { get; set; } = true;
         private Actor m_mainComponent;
         private float[] m_cooldowns;
+        public float m_brainLag { get; set;} = 0f;
         public bool hasCancel { 
             get 
             {
@@ -52,6 +53,9 @@ namespace ActorSystem.AI.Components
             {
                 m_myData[m_activeAttack.Value].UpdateActor(m_mainComponent);
             }
+
+            if(m_brainLag > 0)
+                m_brainLag = Mathf.Clamp(m_brainLag - Time.deltaTime, 0f, float.MaxValue);
         }
 
         public override void SetEnabled(bool status)
@@ -84,20 +88,19 @@ namespace ActorSystem.AI.Components
         public void End()
         {
             if(m_activeAttack.HasValue)
+            {
                 m_myData[m_activeAttack.Value].EndActor(m_mainComponent);
+                m_brainLag += m_myData[m_activeAttack.Value].brainLag;
+            }
 
             m_activeAttack = null;
-        }
-        private void DealDamage(Collider _target, CombatSystem.DamageType _type)
-        {
-            if(_target.gameObject.layer == LayerMask.NameToLayer("Player"))
-            {
-                _target.GetComponent<Player_Controller>()?.DamagePlayer(m_myData[m_activeAttack.Value].baseDamage * (m_baseDamageMod), CombatSystem.DamageType.Physical, gameObject);
-            }
         }
 
         public int GetNextAttack()
         {
+            if (m_brainLag > 0)
+                return -1;
+
             for (int i = 0; i < m_myData.Count; i++)
             {
                 if (m_myData[i] == null)

@@ -27,7 +27,7 @@ namespace ActorSystem.AI.Components
             m_animator = GetComponent<Animator>();
 
             m_hasVelocity = (HasParameter("VelocityHorizontal") && HasParameter("VelocityVertical") && HasParameter("VelocityHaste"));
-            m_hasHit = (HasParameter("Hit") && HasParameter("HitVertical") && HasParameter("HitHorizontal"));
+            m_hasHit = (HasParameter("Hit"));
             m_hasPivot = (HasParameter("Pivot"));
         }
 
@@ -47,10 +47,16 @@ namespace ActorSystem.AI.Components
             return false;
         }
 
+        public bool IsMutexSet()
+        {
+            return m_animator.GetBool("Mutex");
+        }
+
         public void Update()
         {
             if (m_setDelay > 0)
                 m_setDelay -= Time.deltaTime;
+            
         }
 
         public override void SetEnabled(bool status)
@@ -75,7 +81,7 @@ namespace ActorSystem.AI.Components
          */
         public void SetFloat(string name, float value, float lerpDuration = 0)
         {
-            if (lerpDuration > 0)
+            if (lerpDuration > 0 && m_animator.GetFloat(name) != value)
             {
                 if (name != "")
                     StartCoroutine(BlendFloatValue(name, value, lerpDuration));
@@ -109,6 +115,11 @@ namespace ActorSystem.AI.Components
                 m_animator.SetFloat(xName, vector.x);
             if (yName != "")
                 m_animator.SetFloat(yName, vector.y);
+        }
+
+        public int GetInteger(string name)
+        {
+            return m_animator.GetInteger(name);
         }
 
         /*******************

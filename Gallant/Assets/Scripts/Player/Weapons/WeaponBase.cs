@@ -8,7 +8,6 @@ public abstract class WeaponBase : MonoBehaviour
     public Player_Controller playerController { private set; get; }
     public GameObject m_weaponObject;
     public WeaponData m_weaponData;
-
     public bool m_isInUse { private set; get; } = false;
 
     public GameObject m_objectPrefab;
@@ -24,6 +23,8 @@ public abstract class WeaponBase : MonoBehaviour
     protected bool m_isVFXColored = false;
     protected bool m_isAltVFXColored = false;
 
+    public ParticleSystem[] m_weaponTrailParticles;
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -32,11 +33,25 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected void Start()
     {
+        m_weaponTrailParticles = m_weaponObject.GetComponentsInChildren<ParticleSystem>();
+        if (m_weaponData.abilityData != null)
+        {
+            foreach (var particleSystem in m_weaponTrailParticles)
+            {
+                ParticleSystem.MainModule mainModule = particleSystem.main;
+                Color newColor = m_weaponData.abilityData.droppedEnergyColor;
+                newColor.a = mainModule.startColor.color.a;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+            }
+        }
     }
     // Update is called once per frame
     protected void Update()
     {
-        
+        if (!playerController.animator.GetBool((m_hand == Hand.LEFT) ? "UsingLeft" : "UsingRight"))
+        {
+            SetTrailActive(false);
+        }
     }
     private void OnDestroy()
     {
@@ -46,7 +61,6 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (_active)
         {
-            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             WeaponFunctionality();
         }
         else
@@ -54,14 +68,17 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public void TriggerWeaponAlt(bool _active)
     {
+        Debug.Log($"Triggering Alt Attack: {_active}");
         if (_active)
         {
             playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost);
-            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             WeaponAltFunctionality();
         }
         else
+        {
+            Debug.Log("Release Navidad");
             WeaponAltRelease();
+        }
     }
 
     public abstract void WeaponFunctionality();
@@ -71,7 +88,20 @@ public abstract class WeaponBase : MonoBehaviour
 
     public void SetHand(Hand _hand) { m_hand = _hand; }
     public void SetInUse(bool _inUse) { m_isInUse = _inUse; }
-
+    public void SetTrailActive(bool _active)
+    {
+        foreach (var particleSystem in m_weaponTrailParticles)
+        {
+            if (_active)
+            {
+                particleSystem.Play();
+            }
+            else if (!_active)
+            { 
+                particleSystem.Stop();
+            }
+        }
+    }
     public virtual string GetWeaponName()
     {
         if (m_weaponData.overrideAnimation =="")
@@ -98,7 +128,7 @@ public abstract class WeaponBase : MonoBehaviour
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
                 Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
-                actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
+                //actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
 
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
                 if (statusContainer != null && _status != null)

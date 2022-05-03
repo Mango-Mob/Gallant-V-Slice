@@ -11,38 +11,42 @@ namespace ActorSystem.AI.Components.SpawnMethods
         private bool m_hasResentlySpawnned;
         private float m_timer;
         private GameObject m_spawn;
-
+        private Actor m_myActor;
+        public void Awake()
+        {
+            m_myActor = GetComponent<Actor>();
+        }
         public override void StartSpawn(Vector3 spawnLoc)
         {
             m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
-            m_spawn.transform.localScale = Vector3.one * GetComponent<Actor>().m_myData.radius;
+            m_spawn.transform.localScale = Vector3.one * m_myActor.m_myData.radius;
+
             ////Play animation
-            GetComponent<Actor_Brain>().m_ragDoll?.DisableRagdoll();
+            m_myActor.m_myBrain.m_ragDoll?.DisableRagdoll();
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
             //m_spawnning = true;
         }
 
-        //
         protected override void Update()
         {
             base.Update();
             m_timer -= Time.deltaTime;
-            if(m_hasResentlySpawnned && m_timer <= 0 && !GetComponent<Actor_Brain>().m_animator.enabled)
+            if(m_hasResentlySpawnned && m_timer <= 0 && !m_myActor.m_myBrain.m_animator.enabled)
             {
                 transform.position = m_spawn.transform.position;
-                if(GetComponent<Actor_Brain>().m_target != null)
+                if(m_myActor.m_target != null)
                 {
-                    transform.rotation = Quaternion.LookRotation((GetComponent<Actor_Brain>().m_target.transform.position - transform.position).normalized, Vector3.up);
+                    transform.rotation = Quaternion.LookRotation((m_myActor.m_target.transform.position - transform.position).normalized, Vector3.up);
                 }
                 else
                 {
                     transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
                 }
 
-                GetComponent<Actor_Brain>().m_animator.SetEnabled(true);
-                GetComponent<Actor_Brain>().m_animator.SetBool("Spawn", true);
-                GetComponent<Actor_Brain>().m_animator.PlayAnimation("Spawn_Loop");
+                m_myActor.m_myBrain.m_animator.SetEnabled(true);
+                m_myActor.m_myBrain.m_animator.SetBool("Spawn", true);
+                m_myActor.m_myBrain.m_animator.PlayAnimation("Spawn_Loop");
             }
         }   
 
@@ -50,26 +54,10 @@ namespace ActorSystem.AI.Components.SpawnMethods
         {
             m_hasResentlySpawnned = false;
             m_spawnning = false;
-            GetComponent<Actor_Brain>().SetEnabled(true);
+            m_myActor.m_myBrain.SetEnabled(true);
+            m_myActor.m_myBrain.m_legs.SetTargetLocation(transform.position);
+            m_myActor.m_myBrain.m_legs.SetTargetRotation(transform.rotation);
             Destroy(m_spawn);
-        }
-
-        protected void FixedUpdate()
-        {
-            //if (m_spawnning)
-            //{
-            //    m_velocity += m_direction * m_acceleration * Time.fixedDeltaTime;
-            //    transform.position += m_velocity * Time.fixedDeltaTime;
-            //}
-            //else if (m_velocity != Vector3.zero)
-            //{
-            //    m_velocity -= m_direction * m_deceleration * Time.fixedDeltaTime;
-            //    transform.position += m_velocity * Time.fixedDeltaTime;
-            //}
-            //if(m_hasResentlySpawnned)
-            //{
-            //    transform.position += m_forwardCast * Time.fixedDeltaTime;
-            //}
         }
     }
 }

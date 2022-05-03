@@ -29,10 +29,19 @@ public class UI_BindDisplay : UI_Element
         if (m_keyMesh != null)
             m_keyMesh.text = InputManager.Instance.GetBindString(m_bindKey);
 
-        m_button.sprite = InputManager.Instance.GetBindImage(m_bindKey);
+        Sprite sprite;
+        if (InputManager.Instance.isInGamepadMode)
+        {
+            sprite = InputManager.Instance.GetBindImage(m_bindKey, true);
+        }
+        else
+        {
+            sprite = InputManager.Instance.GetBindImage(m_bindKey);
+        }
 
-        m_keyboardDisplay.SetActive(!InputManager.Instance.isInGamepadMode);
-        m_gamepadDisplay.SetActive(InputManager.Instance.isInGamepadMode);
+        m_button.sprite = sprite;
+        m_keyboardDisplay.SetActive(sprite == null);
+        m_gamepadDisplay.SetActive(sprite != null);
     }
 
     public override bool IsContainingVector(Vector2 _pos)

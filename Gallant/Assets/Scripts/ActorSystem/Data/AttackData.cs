@@ -12,6 +12,7 @@ namespace ActorSystem.Data
         public string animID = "";
         public uint priority = 10; //lower the better
         public float cooldown = 5;
+        public float brainLag = 2;
         public CombatSystem.DamageType damageType;
         public float baseDamage = 10;
         public GameObject postVFXPrefab;
@@ -20,6 +21,7 @@ namespace ActorSystem.Data
         public bool canBeCanceled = true;
         public bool canTrackTarget = true;
         public bool canAttackMove = true;
+        public bool isIdleAfterAttack = false;
         [SerializeField] private Hitbox detectCollider;
         [SerializeField] private Hitbox[] damageColliders;
 
@@ -115,7 +117,11 @@ namespace ActorSystem.Data
 
         public virtual void EndActor(Actor user)
         {
-            if (canAttackMove)
+            if(isIdleAfterAttack)
+            {
+                user.SetState(new State_Idle(user, brainLag * 0.5f));
+            }    
+            else if (canAttackMove)
             {
                 user.SetTargetLocation(user.m_target.transform.position, canTrackTarget);
             }

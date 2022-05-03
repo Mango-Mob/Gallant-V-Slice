@@ -35,10 +35,11 @@ public class Player_Controller : MonoBehaviour
     public Player_CombatAnimator playerCombatAnimator { private set; get; }
     public Player_ClassArmour playerClassArmour { private set; get; }
     public Player_Skills playerSkills { private set; get; }
+    public StatusEffectContainer statusEffectContainer { private set; get; }
 
     [Header("Dual Wielding Stats")]
     public float m_dualWieldSpeed = 1.3f;
-    private float m_dualWieldBonus = 1.0f;
+    public float m_dualWieldBonus { private set; get; } = 1.0f;
 
     [Header("Keyboard Movement")]
     private Vector3 m_currentVelocity = Vector3.zero;
@@ -72,7 +73,8 @@ public class Player_Controller : MonoBehaviour
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
-        m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
+        if (m_statsMenu == null)
+            m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
 
         playerMovement = GetComponent<Player_Movement>();
         playerAbilities = GetComponent<Player_Abilities>();
@@ -84,6 +86,7 @@ public class Player_Controller : MonoBehaviour
         playerCombatAnimator = GetComponent<Player_CombatAnimator>();
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
+        statusEffectContainer = GetComponent<StatusEffectContainer>();
     }
 
     // Start is called before the first frame update
@@ -122,9 +125,9 @@ public class Player_Controller : MonoBehaviour
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
         if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
-            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult);
-        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
-        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
+            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult * playerSkills.m_attackSpeedStatusBonus);
+        animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
+        animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
 
         bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID); 
         bool leftAttackHeld = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
@@ -202,8 +205,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeaponData, Hand.LEFT))
                     {
-                        playerAttack.PickUpWeapon(droppedWeapon, Hand.LEFT);
-                        playerPickup.RemoveDropFromList(droppedWeapon);
+                        HandlePickupDrop(droppedWeapon, Hand.LEFT);
                     }
                 }
             }
@@ -216,8 +218,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeaponData, Hand.RIGHT))
                     {
-                        playerAttack.PickUpWeapon(droppedWeapon, Hand.RIGHT);
-                        playerPickup.RemoveDropFromList(droppedWeapon);
+                        HandlePickupDrop(droppedWeapon, Hand.RIGHT);
                     }
                 }
             }
@@ -397,6 +398,54 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    private void HandlePickupDrop(DroppedWeapon _drop, Hand _hand)
+    {
+        switch (_drop.m_dropType)
+        {
+            case DropSpawner.DropType.WEAPON:
+                playerAttack.PickUpWeapon(_drop, _hand);
+                break;
+            case DropSpawner.DropType.UPGRADE:
+                if (_hand == Hand.LEFT)
+                {
+                    if (playerAttack.m_leftWeaponData != null)
+                    {
+                        playerAttack.m_leftWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_leftWeaponData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                else
+                {
+                    if (playerAttack.m_rightWeaponData != null)
+                    {
+                        playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                playerAttack.ApplyWeaponData(_hand);
+                break;
+            case DropSpawner.DropType.SPELLBOOK:
+                if (_hand == Hand.LEFT)
+                {
+                    if (playerAttack.m_leftWeaponData != null)
+                    {
+                        WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, _drop.m_abilityData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                else
+                {
+                    if (playerAttack.m_rightWeaponData != null)
+                    {
+                        WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, _drop.m_abilityData);
+                        Destroy(_drop.gameObject);
+                    }
+                }
+                playerAttack.ApplyWeaponData(_hand);
+                break;
+        }
+        playerPickup.RemoveDropFromList(_drop);
+    }
     public void StartHeal() { animator.SetBool("IsHealing", true); }
 
     /*******************

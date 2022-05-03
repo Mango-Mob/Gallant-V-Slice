@@ -8,6 +8,7 @@ using TMPro;
 public class SkillTreeDisplayControl : MonoBehaviour
 {
     public Canvas m_lineCanvas;
+    public Camera m_skillTreeCamera;
     public static SkillTreeDisplayControl _instance { get; private set; }
 
     [SerializeField] private InkmanClass m_selectedTree;
@@ -44,6 +45,17 @@ public class SkillTreeDisplayControl : MonoBehaviour
     [SerializeField] private GameObject m_hunterTree;
 
     private EventSystem eventSystem;
+    private Vector3 m_canvasStartPos;
+
+    [Header("Navigation Values")]
+    public float m_maxZoom = 100.0f;
+    public float m_minZoom = 30.0f;
+    public float m_boundsDistance = 200.0f;
+    public float m_allowedLockonDistance = 5.0f;
+    public float m_controllerMoveSpeed = 100.0f;
+    public float m_controllerZoomSpeed = 1.0f;
+    public float m_mouseDragSpeed = 0.1f;
+    public float m_mouseZoomSpeed = 1.0f;
 
     private void Awake()
     {
@@ -53,6 +65,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         {
             _instance = this;
         }
+        m_canvasStartPos = transform.position;
     }
 
     // Start is called before the first frame update
@@ -123,13 +136,95 @@ public class SkillTreeDisplayControl : MonoBehaviour
         if (InputManager.Instance.IsGamepadButtonDown(ButtonType.NORTH, gamepadID))
         {
             m_selectedTreeManager.RefundTree();
+            SelectSkillButton(m_selectedTreeManager.m_rootSkill);
         }
 #endif
 
         m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+
+        Navigation(gamepadID);
+    }
+
+    public void Navigation(int _gamepadID)
+    {
+        if (InputManager.Instance.isInGamepadMode)
+        {
+            //transform.localScale += Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime;
+            float zoom = InputManager.Instance.GetGamepadStick(StickType.RIGHT, _gamepadID).y;
+
+            if (m_currentlyDisplayedButton != null)
+            {
+                ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime);
+
+                Vector3 direction = (m_canvasStartPos - m_currentlyDisplayedButton.transform.position);
+                float distance = direction.magnitude;
+
+                if (distance > m_allowedLockonDistance)
+                {
+                    direction.Normalize();
+                    transform.position += new Vector3(direction.x, direction.y, 0) * Time.deltaTime * m_controllerMoveSpeed;
+                }
+            }
+            else
+            {
+                transform.localScale += Vector3.one * zoom * m_controllerZoomSpeed * Time.deltaTime;
+            }
+        }
+        else
+        {
+            if (m_currentlyDisplayedButton != null)
+            {
+                ScaleAround(transform, m_currentlyDisplayedButton.transform, transform.localScale + Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed);
+            }
+            else
+            {
+                transform.localScale += Vector3.one * InputManager.Instance.GetMouseScrollDelta() * m_mouseZoomSpeed;
+            }
+            if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
+            {
+                Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * m_mouseDragSpeed;
+                transform.position += new Vector3(mouseDelta.x, mouseDelta.y, 0);
+            }
+        }
+        AfterNavigationUpdate();
+    }
+    private void ScaleAround(Transform target, Transform pivot, Vector3 scale)
+    {
+        Transform pivotParent = pivot.parent;
+        Vector3 pivotPos = pivot.position;
+        pivot.SetParent(target);
+        target.localScale = scale;
+        target.localScale = Vector3.one * Mathf.Clamp(target.localScale.x, m_minZoom, m_maxZoom);
+        target.position += pivotPos - pivot.position;
+        pivot.SetParent(pivotParent);
+    }
+
+    private void AfterNavigationUpdate()
+    {
+        float boundDist = m_boundsDistance * transform.localScale.x;
+
+        // x bounds
+        if (transform.position.x > m_canvasStartPos.x + boundDist)
+            transform.position = new Vector3(m_canvasStartPos.x + boundDist, transform.position.y, transform.position.z);
+        if (transform.position.x < m_canvasStartPos.x - boundDist)
+            transform.position = new Vector3(m_canvasStartPos.x - boundDist, transform.position.y, transform.position.z);
+
+        // y bounds
+        if (transform.position.y > m_canvasStartPos.y + boundDist)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y + boundDist, transform.position.z);
+        if (transform.position.y < m_canvasStartPos.y - boundDist)
+            transform.position = new Vector3(transform.position.x, m_canvasStartPos.y - boundDist, transform.position.z);
+
+        foreach (var button in m_selectedTreeManager.m_buttons)
+        {
+            button.UpdateLinkPosition();
+        }
     }
     public void SelectSkillButton(SkillButton _button)
     {
+        if (m_currentlyDisplayedButton)
+            m_currentlyDisplayedButton.ToggleTooltip(false);
+
         if (_button == null)
         {
             m_currentlyDisplayedButton = null;
@@ -140,25 +235,29 @@ public class SkillTreeDisplayControl : MonoBehaviour
         if (!_button.IsAvailable())
             return;
 
+        m_currentlyDisplayedButton = _button;
+        m_currentlyDisplayedButton.ToggleTooltip(true);
+
         //Debug.Log($"{_button.m_skillData.skillName} button");
 
-        m_skillCost.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
-        m_upgradeButtonSprite.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
+        //m_skillCost.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
+        //m_upgradeButtonSprite.enabled = !(_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1);
 
-        m_upgradeInfoObject.SetActive(true);
+        //m_upgradeInfoObject.SetActive(true);
 
-        m_currentlyDisplayedButton = _button;
+        //m_currentlyDisplayedButton = _button;
 
-        m_skillName.text = _button.m_skillData.skillName;
-        m_skillDescription.text = SkillData.EvaluateDescription(_button.m_skillData);
-        m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_skillData.upgradeMaximum}";
-        m_skillCost.text = $"Upgrade Cost: {_button.m_skillData.upgradeCost}";
-        m_skillIcon.sprite = _button.m_icon.sprite;
+        //m_skillName.text = _button.m_skillData.skillName;
+        //m_skillDescription.text = SkillData.EvaluateDescription(_button.m_skillData);
+        //m_skillUpgradeAmount.text = $"Upgrade {_button.m_upgradeAmount}/{_button.m_skillData.upgradeMaximum}";
+        //m_skillCost.text = $"Upgrade Cost: {_button.m_skillData.upgradeCost}";
+        //m_skillIcon.sprite = _button.m_icon.sprite;
 
-        if (_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1)
-        {
-            m_skillCost.enabled = false;
-        }
+        //if (_button.m_skillData.upgradeMaximum < _button.m_upgradeAmount + 1)
+        //{
+        //    m_skillCost.enabled = false;
+        //}
+
 
         eventSystem.SetSelectedGameObject(_button.gameObject);
     }

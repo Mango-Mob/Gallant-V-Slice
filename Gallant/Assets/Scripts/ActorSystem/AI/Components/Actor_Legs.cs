@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -24,6 +22,7 @@ namespace ActorSystem.AI.Components
         public float m_speedModifier = 1.0f;
         public bool m_canBeKnocked = true;
         public bool m_isKnocked = false;
+        public bool m_canRotate = true;
 
         private bool m_isSeekingMesh = false;
 
@@ -34,12 +33,14 @@ namespace ActorSystem.AI.Components
         public Vector3 scaledVelocity { get { return localVelocity / m_agent.speed; } }
 
         //Statistics:
-        public float m_rotationAccel = 5f;
-        private float m_rotationSpeed = 0f;
+        public float m_rotationSpeed = 5f;
+
+        public float m_rotationDirection { get; protected set; } = 0f;
 
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
         public float m_pivotMin = 160;
+        protected bool m_isPivot = false;
         public float m_idealDistance { get{ return m_agent.stoppingDistance; } }
         protected Rigidbody m_body;
 
@@ -48,8 +49,8 @@ namespace ActorSystem.AI.Components
         protected Quaternion m_targetRotation;
 
         private float m_delayTimer = 0f;
-        private float m_baseStopDist;
-
+        public float m_baseStopDist { get; private set; }
+        
         // Start is called before the first frame update
         protected virtual void Awake()
         {
@@ -58,7 +59,7 @@ namespace ActorSystem.AI.Components
             m_body.isKinematic = true;
             m_agent.updateRotation = false;
             m_targetPosition = transform.position;
-
+            m_targetRotation = transform.rotation;
             if (m_agent.isOnNavMesh)
                 m_agent.SetDestination(transform.position);
 
@@ -67,7 +68,7 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Start()
         {
-
+            
         }
 
         // Update is called once per frame
@@ -80,6 +81,13 @@ namespace ActorSystem.AI.Components
 
             if(!m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
             {
+                if (m_isPivot)
+                {
+                    Halt();
+                    m_targetRotation = transform.rotation;
+                    return;
+                }
+
                 NavMeshHit hit;
                 if (NavMesh.FindClosestEdge(transform.position, out hit, m_agent.areaMask))
                 {
@@ -99,15 +107,29 @@ namespace ActorSystem.AI.Components
                     m_agent.speed = m_baseSpeed * m_speedModifier;
                 }
 
-                if (Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                if (m_canRotate && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
                 {
-                    m_rotationSpeed += m_rotationAccel * Time.fixedDeltaTime;
-
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * Time.fixedDeltaTime);
+
+                    if(Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
+                    {
+                        if (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0)
+                        {
+                            m_rotationDirection = 1.0f;
+                        }
+                        else
+                        {
+                            m_rotationDirection = -1.0f;
+                        }
+                    }
+                    else
+                    {
+                        m_rotationDirection = 0.0f;
+                    }
                 }
                 else
                 {
-                    m_rotationSpeed = 0f;
+                    m_rotationDirection = 0f;
                 }
             }
                 
@@ -259,7 +281,7 @@ namespace ActorSystem.AI.Components
                 }
                 Gizmos.color = (m_agent.updatePosition) ? Color.green : Color.red;
                 Gizmos.DrawSphere(m_agent.transform.position, 0.25f);
-                Gizmos.DrawLine(transform.position, transform.position + m_agent.velocity);
+                Gizmos.DrawLine(transform.position, transform.position + m_body.velocity);
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(transform.position, transform.position + m_targetRotation * Vector3.forward);
 
@@ -283,10 +305,12 @@ namespace ActorSystem.AI.Components
                 Gizmos.DrawLine(transform.position, transform.position + m_body.velocity);
             }
         }
+
         public bool ShouldPivot()
         {
             return Vector3.Angle(transform.forward, m_targetRotation * Vector3.forward) > m_pivotMin;
         }
+
         public bool IsGrounded()
         {
             return Physics.OverlapSphere(transform.position, m_agent.radius, 1 << LayerMask.NameToLayer("Default")).Length > 0;
@@ -302,7 +326,7 @@ namespace ActorSystem.AI.Components
                     m_isKnocked = true;
                     m_body.isKinematic = false;
                     m_agent.updatePosition = false;
-                    m_body.velocity = force;
+                    m_body.velocity = transform.TransformVector(force);
                     return;
                 }
                 m_body.velocity = force;
@@ -316,6 +340,11 @@ namespace ActorSystem.AI.Components
         public void OverrideStopDist(float val)
         {
             m_agent.stoppingDistance = val;
+        }
+
+        public void SetPivotStatus(bool status)
+        {
+            m_isPivot = status;
         }
     }
 }

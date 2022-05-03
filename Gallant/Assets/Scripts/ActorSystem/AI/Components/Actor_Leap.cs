@@ -23,7 +23,9 @@ namespace ActorSystem.AI.Components
         private float remainDist = 0;
         private float startDist = 0;
         private bool isLeaping = false;
-
+        private float rotMod = 1.0f;
+        public LeapState m_currentState = LeapState.Ready;
+        public enum LeapState { Ready, Start, Landing };
         // Start is called before the first frame update
         protected override void Start()
         {
@@ -31,6 +33,7 @@ namespace ActorSystem.AI.Components
             m_animator = GetComponentInChildren<Actor_Animator>();
             m_agent.updatePosition = false;
             m_agent.updateRotation = false;
+            m_canRotate = false;
             startPos = transform.position;
             endPos = transform.position;
         }
@@ -40,15 +43,17 @@ namespace ActorSystem.AI.Components
         {
             base.Update();
             m_agent.isStopped = true;
-            if (InputManager.Instance.IsKeyDown(KeyType.J))
-            {
-                m_animator.SetInteger("LeapingPart", 1);
-            }
-            if(isLeaping)
+            m_animator.SetInteger("LeapingPart", (int)m_currentState);
+
+            if (isLeaping)
             {
                 transform.position = MathParabola.Parabola(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 1.0f - remainDist/startDist);
             }
-            
+
+            if(!isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 10f)
+            {
+                StartRotationLeap();
+            }
         }
 
         protected override void FixedUpdate()
@@ -57,18 +62,25 @@ namespace ActorSystem.AI.Components
             {
                 float mod = (remainDist / startDist < 0.5f) ? 0.75f : 1.35f;
                 speed += accel * mod * Time.fixedDeltaTime;
-                remainDist -= speed * Time.fixedDeltaTime;
+                remainDist = Mathf.Clamp(remainDist - speed * Time.fixedDeltaTime, 0, float.MaxValue);
 
-                if (remainDist / startDist < 1.0f - endPointStart)
-                {
-                    m_animator.SetInteger("LeapingPart", 2);
-                }
-                if (remainDist < 0)
+                if (remainDist <= startDist * (1.0f - endPointStart))
                 {
                     transform.position = endPos;
-                    m_animator.SetInteger("LeapingPart", 2);
-                    isLeaping = false;
+                    m_currentState = LeapState.Landing;
+                    return;
                 }
+
+                m_rotationDirection = 0.0f;
+                if (isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                {
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * rotMod * Time.fixedDeltaTime);
+
+                    if (Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
+                    {
+                        m_rotationDirection = (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0) ? 1.0f : -1.0f;
+                    }
+                }       
             }
             else
             {
@@ -88,20 +100,20 @@ namespace ActorSystem.AI.Components
                 return;
 
             Vector3 direction = target - transform.position;
+            direction.y = 0;
             Vector3 destination = transform.position + direction.normalized * Mathf.Min(maxJumpDist * m_speedModifier, direction.magnitude);
             m_targetPosition = destination;
 
-            NavMeshHit hit;
-            if(NavMesh.SamplePosition(destination, out hit, m_agent.radius, m_agent.areaMask))
-            {
-                endPos = hit.position;
-                m_animator.SetInteger("LeapingPart", 1);
-            }
-
             if (lookAtTarget)
             {
-                direction.y = 0;
-                SetTargetRotation(Quaternion.LookRotation(direction.normalized, Vector3.up));
+                SetTargetRotation(Quaternion.LookRotation(direction.normalized, Vector3.up)); 
+            }
+
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(destination, out hit, m_agent.radius, m_agent.areaMask))
+            {
+                endPos = hit.position;
+                m_currentState = LeapState.Start;
             }
         }
 
@@ -112,6 +124,20 @@ namespace ActorSystem.AI.Components
             startPos = transform.position;
             startDist = MathParabola.ParabolaDistance(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 10);
             remainDist = startDist;
+            rotMod = 1.0f;
+        }
+        
+        public void EndLeap()
+        {
+            m_currentState = LeapState.Ready;
+            isLeaping = false;
+        }
+
+        public void StartRotationLeap()
+        {
+            endPos = transform.position;
+            m_currentState = LeapState.Start;
+            rotMod = 3.0f;
         }
 
         public override void DrawGizmos()

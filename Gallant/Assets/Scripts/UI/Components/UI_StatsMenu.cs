@@ -72,7 +72,7 @@ public class UI_StatsMenu : UI_Element
         //backgroundColor.a = 0.85f * m_offsetLerp;
         //m_background.color = backgroundColor;
 
-        m_runeGroup.position = new Vector3(m_runeStartPosX + Mathf.Lerp(-m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z);
+        //m_runeGroup.position = new Vector3(m_runeStartPosX + Mathf.Lerp(-m_deactiveOffset, 0, m_offsetLerp), m_runeGroup.position.y, m_runeGroup.position.z);
         m_weaponGroup.position = new Vector3(m_weaponStartPosX + Mathf.Lerp(m_deactiveOffset, 0, m_offsetLerp), m_weaponGroup.position.y, m_weaponGroup.position.z);
     }
 
@@ -101,6 +101,8 @@ public class UI_StatsMenu : UI_Element
     {
         m_active = !m_active;
         GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks = m_active;
+
+        GetComponentInChildren<CharSheetManager>()?.SetActive(m_active);
     }
 
     public void UpdateList()

@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class State_Idle : State
 {
-    public State_Idle(StateMachine _user) : base(_user) { }
+    public State_Idle(StateMachine _user) : base(_user) { m_delay = 0; }
+    public State_Idle(StateMachine _user, float delay) : base(_user) { m_delay = delay; }
 
     private float m_delay = 1.5f; //In seconds
     public override void Start()
     {
         m_myUser.m_activeStateText = "IDLE";
-        m_myActor.SetTargetVelocity(Vector3.zero);
+        m_myActor.m_myBrain.m_legs?.Halt();
+        m_myActor.m_myBrain.m_legs?.SetTargetRotation(m_myActor.transform.rotation);
     }
 
     public override void Update()
     {
         m_delay -= Time.deltaTime;
+
+        if (m_delay > 0)
+            return;
 
         //Check if there is a target to move to.
         if(m_myActor.m_target != null && m_myActor.m_states.Contains(Type.MOVE_TO_TARGET))

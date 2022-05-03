@@ -34,6 +34,7 @@ public class ProjectileObject : MonoBehaviour
     private void FixedUpdate()
     {
         GetComponent<Rigidbody>().velocity = m_velocity;
+        transform.forward = m_velocity.normalized;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -51,5 +52,11 @@ public class ProjectileObject : MonoBehaviour
             AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);
             Destroy(gameObject);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position, transform.position + transform.forward);
     }
 }

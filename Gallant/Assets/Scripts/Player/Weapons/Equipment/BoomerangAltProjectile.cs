@@ -46,7 +46,7 @@ public class BoomerangAltProjectile : BasePlayerProjectile
             ProjectileCollide(other);
         }
     }
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
         // ¯\_(ツ)_/¯
     }

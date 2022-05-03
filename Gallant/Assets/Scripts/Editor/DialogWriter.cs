@@ -9,7 +9,7 @@ using System;
 
 public class DialogWriter : EditorWindow
 {
-    private TextAsset m_currentFile = null;
+    private string m_currentPath = "";
     private DialogFile m_fileData;
 
     private CharacterData m_character;
@@ -27,6 +27,7 @@ public class DialogWriter : EditorWindow
 
     public List<DialogOption> m_options;
 
+    private GUIStyle m_wrapLabel;
     [MenuItem("Tools/Dialog Writer")]
     public static void Init()
     {
@@ -35,8 +36,11 @@ public class DialogWriter : EditorWindow
 
     public void Awake()
     {
-        m_currentFile = null;
+        m_currentPath = "";
         m_options = new List<DialogOption>();
+
+        m_wrapLabel = EditorStyles.label;
+        m_wrapLabel.wordWrap = true;
     }
 
     private void Update()
@@ -48,169 +52,199 @@ public class DialogWriter : EditorWindow
     {
         if(m_fileData == null)
         {
-            TextAsset current = EditorGUILayout.ObjectField("Load File: ", m_currentFile, typeof(TextAsset), true) as TextAsset;
-            if(TryLoadFile(current))
-            {
-                
-            }
+            InitialGUI();
+            return;
         }
         else
         {
-            if (m_currentFile == null)
-                return;
-
-            EditorGUILayout.LabelField($"Load File: {m_currentFile.name}");
-
-            if (m_fileData != null)
-            {
-                m_character = EditorGUILayout.ObjectField("Character Data: ", m_character, typeof(CharacterData), true) as CharacterData;
-
-                GUI.enabled = m_maxIndex > 0;
-                if (m_character != null)
-                {
-                    EditorGUILayout.LabelField(m_character.m_name);
-                    m_character?.DrawToGUI(new Rect(0, 40, 150, 150), m_bodyIndex, m_faceIndex);
-                }
-                else
-                {
-                    EditorGUILayout.LabelField("NullCharacter");
-                }
-                m_activeDialog = GUI.TextArea(new Rect(95, 45, position.width - 100, 150), m_activeDialog);
-
-                GUILayout.Space(125);
-
-                if(m_character != null)
-                {
-                    m_bodyIndex = EditorGUILayout.IntSlider("Body:", m_bodyIndex, 0, m_character.m_characterBody.Length - 1);
-                    m_faceIndex = EditorGUILayout.IntSlider("Face:", m_faceIndex, 0, m_character.m_characterFace.Length - 1);
-                }
-
-                EditorGUILayout.LabelField($"Index: {m_currentIndex + 1} (of {m_maxIndex})");
-
-                GUILayout.BeginHorizontal();
-                m_displayFoldout = EditorGUILayout.Foldout(m_displayFoldout, "Player options");
-                EditorGUILayout.Space();
-                int count = EditorGUILayout.IntField(m_options != null ? m_options.Count : 0);
-                GUILayout.EndHorizontal();
-
-                if (m_options == null && count >= 0)
-                    m_options = new List<DialogOption>();
-
-                while (count > m_options.Count)
-                    m_options.Add(new DialogOption(m_currentIndex));
-                while (count < m_options.Count) 
-                    m_options.RemoveAt(m_options.Count - 1);
-
-                if(m_displayFoldout)
-                {
-                    m_scrollPos = EditorGUILayout.BeginScrollView(m_scrollPos);
-                    for (int i = 0; i < m_options.Count; i++)
-                    {
-                        EditorGUILayout.LabelField($"Option {i}:");
-                        m_options[i].text = EditorGUILayout.TextField(m_options[i].text);
-                        m_options[i].result = (DialogResult)EditorGUILayout.EnumPopup(m_options[i].result);
-
-                        if (m_options[i].result == DialogResult.TRANSFER)
-                        {
-                            m_options[i].nextDialog = EditorGUILayout.IntField("Transfer to:", m_options[i].nextDialog);
-                        }
-                        Rect rect = EditorGUILayout.GetControlRect(false, 1);
-                        EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
-                    }
-                    EditorGUILayout.EndScrollView();
-                }
-                
-                GUILayout.BeginHorizontal();
-                GUI.enabled = m_currentIndex > 0;
-                if (GUILayout.Button("Prev", GUILayout.Width((position.width - 15) / 4)))
-                {
-                    SaveItem();
-                    m_currentIndex--;
-                    LoadItem(m_currentIndex);
-                }
-                GUI.enabled = m_currentIndex < m_maxIndex - 1;
-                if (GUILayout.Button("Next", GUILayout.Width((position.width - 15) / 4)))
-                {
-                    SaveItem();
-                    m_currentIndex++;
-                    LoadItem(m_currentIndex);
-                }
-                GUI.enabled = true;
-                if (GUILayout.Button("New", GUILayout.Width((position.width - 15) / 4)))
-                {
-                    if (m_currentIndex >= 0)
-                        SaveItem();
-
-                    m_currentIndex = m_maxIndex;
-                    m_fileData.AddNewEntry();
-                    m_maxIndex = m_fileData.m_list.Count;
-                    LoadItem(m_currentIndex);
-                }
-                if (GUILayout.Button("Delete", GUILayout.Width((position.width - 15) / 4)))
-                {
-                    m_fileData.RemoveEntry(m_currentIndex);
-                    m_maxIndex = m_fileData.m_list.Count;
-                    LoadItem((m_maxIndex == m_currentIndex) ? --m_currentIndex : m_currentIndex);
-                }
-                GUILayout.EndHorizontal();
-            }
-            if (GUILayout.Button("Save", GUILayout.Width((position.width - 5))))
-            {
-                if (m_currentIndex >= 0)
-                    SaveItem();
-
-                SaveFile(m_currentFile);
-            }
-            if (GUILayout.Button("Close file and save", GUILayout.Width((position.width - 5))))
-            {
-                if (m_currentIndex >= 0)
-                    SaveItem();
-
-                SaveFile(m_currentFile);
-                Clear();
-                m_currentFile = null;
-            }
-        }
-
-        if (GUILayout.Button("Create blank file", GUILayout.Width((position.width - 5))))
-        {
-            string path = Application.dataPath + "/NewDialog.json";
-            File.CreateText(path);
+            MainGUI();
+            return;
         }
     }
 
-    private void SaveFile(TextAsset currentFile)
+    private void Header()
     {
-        DateTime start = DateTime.Now;
-        SaveItem();
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("New  "))
+        {
+            string path = Application.dataPath + "Assets/Dialog/NewDialog.json";
+            File.CreateText(path);
+
+            if (TryLoadFile(path))
+            {
+
+            }
+        }
+        if (GUILayout.Button("Load "))
+        {
+            string path = EditorUtility.OpenFilePanel("Select dialog", "Assets/Dialog/", "json");
+            if (TryLoadFile(path))
+            {
+
+            }
+        }
+        GUI.enabled = m_fileData != null;
+        if (GUILayout.Button("Save "))
+        {
+            SaveFile();
+        }
+        GUI.enabled = m_fileData != null;
+        if (GUILayout.Button("Close"))
+        {
+            m_fileData = null;
+            m_currentPath = "";
+        }
+        GUI.enabled = true;
+        GUILayout.EndHorizontal();
+
+        EditorExtentions.DrawLineOnGUI();
+    }
+
+    private void InitialGUI()
+    {
+        Header();
+    }
+
+    private void MainGUI()
+    {
+        Header();
+
+        m_character = EditorGUILayout.ObjectField("Character Data: ", m_character, typeof(CharacterData), true) as CharacterData;
+        
+        GUI.enabled = m_maxIndex > 0;
         if (m_character != null)
         {
-            m_fileData.m_characterFile = "Data/Characters/" + m_character.name;
+            EditorGUILayout.LabelField(m_character.m_name, EditorStyles.boldLabel);
+            m_character?.DrawToGUI(new Rect(0, 60, 150, 150), m_bodyIndex, m_faceIndex);
         }
+        else
+        {
+            EditorGUILayout.LabelField("NullCharacter");
+        }
+        m_activeDialog = GUI.TextArea(new Rect(95, 65, position.width - 98, 150), m_activeDialog);
+        
+        GUILayout.Space(140);
 
-        File.WriteAllText(AssetDatabase.GetAssetPath(m_currentFile), JsonUtility.ToJson(m_fileData));
+        if (m_character != null)
+        {
+            m_bodyIndex = EditorGUILayout.IntSlider("Body:", m_bodyIndex, 0, m_character.m_characterBody.Length - 1);
+            m_faceIndex = EditorGUILayout.IntSlider("Face:", m_faceIndex, 0, m_character.m_characterFace.Length - 1);
+        }
+        
+        EditorGUILayout.LabelField($"Index: {m_currentIndex + 1} (of {m_maxIndex})");
+        EditorExtentions.DrawLineOnGUI();
 
-        Debug.Log($"Saved dialog file {m_currentFile.name} in: {(DateTime.Now - start).TotalMilliseconds}ms");
+        GUILayout.BeginHorizontal();
+        m_displayFoldout = EditorGUILayout.Foldout(m_displayFoldout, "Player options");
+        EditorGUILayout.Space();
+        int count = EditorGUILayout.IntField(m_options != null ? m_options.Count : 0);
+        GUILayout.EndHorizontal();
+        
+        if (m_options == null && count >= 0)
+            m_options = new List<DialogOption>();
+        
+        while (count > m_options.Count)
+            m_options.Add(new DialogOption(m_currentIndex));
+        while (count < m_options.Count) 
+            m_options.RemoveAt(m_options.Count - 1);
+        
+        if(m_displayFoldout)
+        {
+            m_scrollPos = EditorGUILayout.BeginScrollView(m_scrollPos);
+            for (int i = 0; i < m_options.Count; i++)
+            {
+                EditorGUILayout.LabelField($"Option {i}:");
+                m_options[i].text = EditorGUILayout.TextField(m_options[i].text);
+                m_options[i].result = (DialogResult)EditorGUILayout.EnumPopup(m_options[i].result);
+        
+                if (m_options[i].result == DialogResult.TRANSFER)
+                {
+                    m_options[i].nextDialog = EditorGUILayout.IntField("Transfer to:", m_options[i].nextDialog);
+                }
+                else if(m_options[i].result == DialogResult.INTERACT)
+                {
+                    m_options[i].interactVal = EditorGUILayout.IntField("Event:", m_options[i].interactVal);
+                }
+                Rect rect = EditorGUILayout.GetControlRect(false, 1);
+                EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
+            }
+            EditorGUILayout.EndScrollView();
+        }
+        
+        GUILayout.BeginHorizontal();
+        GUI.enabled = m_currentIndex > 0;
+        if (GUILayout.Button("Prev", GUILayout.Width((position.width - 15) / 4)))
+        {
+            SaveItem();
+            m_currentIndex--;
+            LoadItem(m_currentIndex);
+        }
+        GUI.enabled = m_currentIndex < m_maxIndex - 1;
+        if (GUILayout.Button("Next", GUILayout.Width((position.width - 15) / 4)))
+        {
+            SaveItem();
+            m_currentIndex++;
+            LoadItem(m_currentIndex);
+        }
+        GUI.enabled = true;
+        if (GUILayout.Button("New", GUILayout.Width((position.width - 15) / 4)))
+        {
+            if (m_currentIndex >= 0)
+                SaveItem();
+        
+            m_currentIndex = m_maxIndex;
+            m_fileData.AddNewEntry();
+            m_maxIndex = m_fileData.m_list.Count;
+            LoadItem(m_currentIndex);
+        }
+        if (GUILayout.Button("Delete", GUILayout.Width((position.width - 15) / 4)))
+        {
+            m_fileData.RemoveEntry(m_currentIndex);
+            m_maxIndex = m_fileData.m_list.Count;
+            LoadItem((m_maxIndex == m_currentIndex) ? --m_currentIndex : m_currentIndex);
+        }
+        GUILayout.EndHorizontal();
     }
 
-    public bool TryLoadFile(TextAsset file)
+    private void SaveFile()
     {
-        if (file == null)
+        if(m_currentPath != "")
+        {
+            DateTime start = DateTime.Now;
+            SaveItem();
+            if (m_character != null)
+            {
+                m_fileData.m_characterFile = "Data/Characters/" + m_character.name;
+            }
+            StreamWriter sw = new StreamWriter(m_currentPath);
+            sw.Write(JsonUtility.ToJson(m_fileData, true));
+            sw.Close();
+            Debug.Log($"Saved dialog file {m_currentPath} in: {(DateTime.Now - start).TotalMilliseconds}ms");
+        }
+
+    }
+
+    public bool TryLoadFile(string filePath)
+    {
+        if (filePath == "")
             return false;
 
         DateTime start = DateTime.Now;
+        StreamReader sr = new StreamReader(filePath);
+        string data = sr.ReadToEnd();
+        sr.Close();
 
-        if (file.text.Length == 0)
+        if (data == "")
         {
             //Fresh file
             m_fileData = new DialogFile();
             return true;
         }
-        m_fileData = JsonUtility.FromJson<DialogFile>(file.text);
+        m_fileData = JsonUtility.FromJson<DialogFile>(data);
         if(m_fileData == null)
         {
             //Other file
-            Debug.LogError($"Failed to load dialog file: {file.name}");
+            Debug.LogError($"Failed to load dialog file: {filePath}");
             return false;
         }
         m_character = Resources.Load<CharacterData>(m_fileData.m_characterFile);
@@ -219,8 +253,8 @@ public class DialogWriter : EditorWindow
         m_maxIndex = m_fileData.m_list.Count;
         LoadItem(m_currentIndex);
 
-        m_currentFile = file;
-        Debug.Log($"Loaded dialog file {m_currentFile.name} in: {(DateTime.Now - start).TotalMilliseconds}ms");
+        m_currentPath = filePath;
+        Debug.Log($"Loaded dialog file {m_currentPath} in: {(DateTime.Now - start).TotalMilliseconds}ms");
         return true;
     }
 

@@ -27,11 +27,13 @@ public class Weapon_Shield : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         ThrowWeapon(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         MeleeAttack(m_weaponData, transform.position);
         BeginBlock();
     }

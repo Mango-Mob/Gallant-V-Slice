@@ -5,8 +5,6 @@ using UnityEngine;
 public class ClassChanger : MonoBehaviour
 {
     public ClassData m_classData;
-    [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
 
     private Interactable m_myInterface;
 
@@ -17,9 +15,7 @@ public class ClassChanger : MonoBehaviour
     }
     private void Update()
     {
-        m_keyboardInput.transform.parent.gameObject.SetActive(m_myInterface.m_isReady);
-        m_keyboardInput.gameObject.SetActive(m_myInterface.m_isReady && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_myInterface.m_isReady && InputManager.Instance.isInGamepadMode);
+        
     }
 
     private void OnTriggerEnter(Collider other)

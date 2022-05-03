@@ -24,6 +24,7 @@ public class UI_AbilityIcon : UI_Element
     [SerializeField] private GameObject[] m_stars;
     [SerializeField] private TextMeshProUGUI m_text;
     [SerializeField] private TextMeshProUGUI m_textshad;
+    [SerializeField] private GameObject[] m_bindButtonObjects;
 
     [Header("Frames")]
     [SerializeField] private GameObject m_activeFrame;
@@ -95,6 +96,13 @@ public class UI_AbilityIcon : UI_Element
         }
     }
 
+    public void SetBindDisplayActive(bool _active)
+    {
+        foreach (var item in m_bindButtonObjects)
+        {
+            item.SetActive(_active);
+        }
+    }
 
     #region Parent override functions
     public override bool IsContainingVector(Vector2 _pos)

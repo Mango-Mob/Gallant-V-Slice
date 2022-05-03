@@ -5,8 +5,9 @@ using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEditor.Experimental.SceneManagement;
 
-public class SkillButton : MonoBehaviour, IPointerEnterHandler
+public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Skill Information")]
     public SkillData m_skillData;
@@ -27,10 +28,27 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     [SerializeField] private Transform m_lineExit;
 
     [Header("Components")]
+    [SerializeField] private Image m_purchaseProgressBar;
     private Button m_button;
     private CanvasGroup m_canvasGroup;
 
     [SerializeField] private bool m_permaLocked = false;
+
+    [Header("Tooltip")]
+    [SerializeField] private GameObject m_tooltipObject;
+    [SerializeField] private TextMeshProUGUI m_tooltipName;
+    [SerializeField] private TextMeshProUGUI m_tooltipDesc;
+    [SerializeField] private TextMeshProUGUI m_tooltipCost;
+    [SerializeField] private TextMeshProUGUI m_tooltipCurrentLevel;
+    private bool m_tooltipsActive = false;
+    private float m_tooltipLerp = 0.0f;
+    [SerializeField] private float m_tooltipLerpSpeed = 4.0f;
+
+    private bool m_hiddenMode = false;
+    private bool m_isMouseHovering = false;
+    private bool m_purchaseFlag = false;
+    private float m_purchaseProgress = 0.0f;
+    private MultiAudioAgent m_audioAgent;
 
     // Start is called before the first frame update
     void Start()
@@ -38,8 +56,10 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         m_manager = GetComponentInParent<SkillTreeManager>();
         m_canvasGroup = GetComponent<CanvasGroup>();
         m_button = GetComponent<Button>();
+        m_audioAgent = GetComponent<MultiAudioAgent>();
 
         m_icon.sprite = m_skillData.skillIcon;
+        m_tooltipObject.SetActive(true);
     }
 
     // Update is called once per frame
@@ -60,23 +80,134 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             }
         }
 
-        m_canvasGroup.alpha = IsAvailable() ? 1.0f : 0.0f;
+        m_canvasGroup.alpha = (IsAvailable()) ? 1.0f : 0.0f;
         m_button.enabled = IsAvailable();
         foreach (var link in m_dependencyLink)
         {
-            link.ToggleAvailability(IsAvailable());
+            link.ToggleAvailability((IsAvailable()) && link.m_dependency.IsAvailable());
         }
-        
 
+        if (m_hiddenMode)
+        {
+            m_upgradeNumberText.text = "?";
+            m_icon.color = Color.black;
+
+            m_tooltipName.text = "???";
+            m_tooltipDesc.text = "???";
+
+            m_tooltipCost.gameObject.SetActive(true);
+            m_tooltipCost.text = "???";
+        }
+        else
+        {
+            m_upgradeNumberText.text = m_upgradeAmount.ToString();
+            m_icon.color = Color.white;
+
+            // Tooltip update
+            m_tooltipName.text = $"{m_skillData.skillName} {m_upgradeAmount}/{m_skillData.upgradeMaximum}";
+            m_tooltipDesc.text = SkillData.EvaluateDescription(m_skillData);
+
+            if (m_upgradeAmount < m_skillData.upgradeMaximum)
+            {
+                m_tooltipCost.text = $"{GetCurrentCost()}";
+                m_tooltipCost.gameObject.SetActive(true);
+            }
+            else
+            {
+                m_tooltipCost.gameObject.SetActive(false);
+            }
+        }
+        m_tooltipLerp = Mathf.Clamp01(m_tooltipLerp + (m_tooltipsActive ? 1.0f : -1.0f) * Time.deltaTime * m_tooltipLerpSpeed);
+        m_tooltipObject.transform.localScale = new Vector3(m_tooltipLerp, m_tooltipObject.transform.localScale.y, m_tooltipObject.transform.localScale.z);
+
+        if (IsUnlockable())
+        {
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                if (InputManager.Instance.IsGamepadButtonPressed(ButtonType.SOUTH, 0) && m_tooltipsActive)
+                {
+                    ProcessPurchase();
+                }
+                else
+                {
+                    m_purchaseProgress = 0.0f;
+                    m_purchaseFlag = false;
+                }
+            }
+            else if (m_isMouseHovering)
+            {
+                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
+                {
+                    ProcessPurchase();
+                }
+                else
+                {
+                    m_purchaseProgress = 0.0f;
+                    m_purchaseFlag = false;
+                }
+            }
+            else
+            {
+                m_purchaseProgress = 0.0f;
+            }
+        }
+        else
+        {
+            m_purchaseProgress = 0.0f;
+        }
+        m_purchaseProgressBar.fillAmount = m_purchaseProgress;
+        if (m_purchaseProgress == 0.0f && m_audioAgent.IsAudioPlaying("StartPurchase"))
+        {
+            m_audioAgent.StopAudio("StartPurchase");
+        }
     }
+    private void ProcessPurchase()
+    {
+        if (m_purchaseFlag)
+            return;
+
+        if (!m_audioAgent.IsAudioPlaying("StartPurchase"))
+        {
+            m_audioAgent.Play("StartPurchase");
+        }
+
+        m_purchaseProgress += Time.deltaTime * 2.0f;
+        m_purchaseProgress = Mathf.Clamp01(m_purchaseProgress);
+
+
+        if (m_purchaseProgress >= 1.0f)
+        {
+            m_audioAgent.Play("PurchaseSkill");
+            PurchaseSkill();
+            m_purchaseProgress = 0.0f;
+            m_purchaseFlag = true;
+        }
+    }
+    private int GetCurrentCost()
+    {
+        return (int)(m_skillData.upgradeCost * (m_upgradeAmount > 0 ? m_upgradeAmount * m_skillData.upgradeMultiplier : 1.0f));
+    }
+    public void ToggleTooltip(bool _active)
+    {
+        m_tooltipsActive = _active;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
+        m_isMouseHovering = true;
         if (!InputManager.Instance.isInGamepadMode)
         {
             SelectSkill();
         }
     }
-
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        m_isMouseHovering = false;
+    }
+    public void OnPointerStay(PointerEventData eventData)
+    {
+        Debug.Log(m_skillData.skillName);
+    }
     public void SelectSkill()
     {
         SkillTreeDisplayControl._instance.SelectSkillButton(this);
@@ -85,24 +216,28 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
     {
         if (IsUnlockable()) 
         {
+            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - GetCurrentCost());
             m_upgradeAmount++;
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - m_skillData.upgradeCost);
-            
+
             SkillTreeReader.instance.UnlockSkill(m_manager.m_treeClass, m_skillData.name);
         }
-        SelectSkill();
+        //SelectSkill();
     }
     public void RefundSkill()
     {
-        PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_upgradeAmount * m_skillData.upgradeCost);
+        while (m_upgradeAmount > 0)
+        {
+            m_upgradeAmount--;
+            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + GetCurrentCost());
+        }
         m_upgradeAmount = 0;
         m_upgradeNumberText.text = m_upgradeAmount.ToString();
     }
 
     public bool IsUnlockable()
     {
-        if (PlayerPrefs.GetInt("Player Balance") < m_skillData.upgradeCost || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
+        if (PlayerPrefs.GetInt("Player Balance") < GetCurrentCost() || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
         {
             return false;
         }
@@ -127,6 +262,25 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         if (m_permaLocked)
             return false;
 
+        // Hidden check
+        m_hiddenMode = false;
+        foreach (var dependency in m_unlockDependencies)
+        {
+            if (dependency.m_unlockDependencies.Count == 0)
+                m_hiddenMode = true;
+
+            foreach (var item in dependency.m_unlockDependencies)
+            {
+                if (item.m_upgradeAmount > 0)
+                {
+                    m_hiddenMode = true;
+                    break;
+                }
+            }
+            if (m_hiddenMode)
+                break;
+        }
+
         if (m_unlockDependencies.Count == 0)
             return true;
 
@@ -139,6 +293,11 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
                 unlockable = true;
             }
         }
+
+        if (!unlockable && m_hiddenMode)
+            return true;
+        else
+            m_hiddenMode = false;
 
         return unlockable;
     }
@@ -157,10 +316,20 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
             Vector3 difference = m_lineEnterance.position - dependency.m_lineExit.position;
             newObject.transform.rotation = Quaternion.Euler(0, 0, Mathf.Rad2Deg * Mathf.Atan(difference.y / difference.x) + 90.0f);
 
-            m_dependencyLink.Add(newObject.GetComponent<SkillButtonLink>());
-            
-           newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 20.0f);
-           newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 20.0f);
+            SkillButtonLink linkScript = newObject.GetComponent<SkillButtonLink>();
+            m_dependencyLink.Add(linkScript);
+            linkScript.SetPoints(m_lineEnterance, dependency.m_lineExit);
+            linkScript.m_dependency = dependency;
+           //newObject.GetComponent<LineRenderer>().SetPosition(0, m_lineEnterance.position + Vector3.forward * 20.0f);
+           //newObject.GetComponent<LineRenderer>().SetPosition(1, dependency.m_lineExit.position + Vector3.forward * 20.0f);
+        }
+        UpdateLinkPosition();
+    }
+    public void UpdateLinkPosition()
+    {
+        foreach (var dependency in m_dependencyLink)
+        {
+            dependency.UpdatePositions();
         }
     }
     public void SetUpgradeLevel(int _level)
@@ -182,8 +351,15 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler
         {
             Gizmos.DrawLine(transform.position, other.transform.position);
         }
-        Gizmos.color = Color.white;
+
+#if UNITY_EDITOR
+        Handles.color = Color.white;
         Handles.Label(transform.position, m_skillData ? m_skillData.skillName : "EMPTY");
-        gameObject.name = m_skillData ? m_skillData.name : "emptyButton";
+
+        if (PrefabStageUtility.GetCurrentPrefabStage() == null || PrefabStageUtility.GetCurrentPrefabStage().scene.name != "SkillButton")
+        {
+            gameObject.name = m_skillData ? m_skillData.name : "emptyButton";
+        }
+#endif
     }
 }

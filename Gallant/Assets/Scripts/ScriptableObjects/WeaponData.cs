@@ -289,46 +289,48 @@ public class WeaponData : ScriptableObject
     }
     public static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
     {
+        _data.abilityData = AbilityData.LoadAbilityData(_abilityType, _powerLevel);
+
         // Ability
-        switch (_abilityType)
-        {
-            case Ability.NONE:
-                _data.abilityData = null;
-                break;
-            case Ability.FIREWAVE:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
-                break;
-            case Ability.SAND_MISSILE:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
-                break;
-            case Ability.LIGHTNING_BOLT:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
-                break;
-            case Ability.ICE_ROLL:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
-                break;
-            case Ability.HP_BUFF:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
-                break;
-            case Ability.THORNS:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
-                break;
-            case Ability.ARCANE_BOLT:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/arcanebolt" + _powerLevel.ToString());
-                break;
-            case Ability.FLAME_ROLL:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
-                break;
-            case Ability.ROLL_BASH:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
-                break;
-            case Ability.WHIRLPOOL:
-                _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
-                break;
-            default:
-                Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
-                break;
-        }
+        //switch (_abilityType)
+        //{
+        //    case Ability.NONE:
+        //        _data.abilityData = null;
+        //        break;
+        //    case Ability.FIREWAVE:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.SAND_MISSILE:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.LIGHTNING_BOLT:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.ICE_ROLL:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.HP_BUFF:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.THORNS:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.ARCANE_BOLT:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/arcanebolt" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.FLAME_ROLL:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.ROLL_BASH:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
+        //        break;
+        //    case Ability.WHIRLPOOL:
+        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
+        //        break;
+        //    default:
+        //        Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
+        //        break;
+        //}
 
 
         if (_data.weaponType == Weapon.STAFF && _data.abilityData?.overwriteStaffIcon != null)
@@ -377,7 +379,6 @@ public class WeaponData : ScriptableObject
                 tags += tag.ToString().Replace('_', ' ') + ", ";
             }
         }
-        Debug.Log(tags);
         return tags;
     }
     public string GetPassiveEffectDescription()

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class NavigationManager : SingletonPersistent<NavigationManager>
@@ -25,6 +26,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     private List<NavigationNode> m_activeNodes = new List<NavigationNode>();
     private Camera m_myCamera;
     private Canvas m_myCanvas;
+
+    public Image m_playerIcon;
 
     protected override void Awake()
     {
@@ -55,14 +58,17 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         if (m_myCamera.enabled)
         {
-            float scrollDelta;
+            float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
             {
                 scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
             }
-            else
+            else if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
             {
-                scrollDelta = InputManager.Instance.GetMouseScrollDelta();
+                scrollDelta = -InputManager.Instance.GetMouseDelta().y * 10f;
+            }else
+            {
+                scrollDelta = InputManager.Instance.GetMouseScrollDelta() * 5f;
             }
            
             if (scrollDelta != 0)
@@ -77,6 +83,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     private void OnLevelWasLoaded(int level)
     {
         ConstructScene();
+        Instance.SetVisibility(false);
     }
 
     public void SetVisibility(bool status)
@@ -91,33 +98,69 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                 m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
         HUDManager.Instance.gameObject.SetActive(!m_myCamera.enabled);
-        GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
+
+        if(GameManager.Instance.m_player != null)
+            GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
+
+        if(status)
+            m_activeNodes[index].ActivateMyConnections();
+    }
+
+    public void MovePlayerIconTo(Vector3 position, System.Action loadToScene)
+    {
+        StartCoroutine(MovePlayerIcon(position, loadToScene));
+    }
+
+    private IEnumerator MovePlayerIcon(Vector3 position, System.Action loadToScene)
+    {
+        Vector3 start = m_playerIcon.transform.position;
+        float speed = 15f;
+        float distance = Vector3.Distance(start, position);
+        float dt = speed / distance;
+        float t = 0;
+        while(t < 1.0f)
+        {
+            t += dt * Time.deltaTime;
+            m_playerIcon.transform.position = Vector3.Lerp(start, position, t);
+            yield return new WaitForEndOfFrame();
+        }
+        loadToScene.Invoke();
+        yield return null;
     }
 
     public void UpdateMap(int newIndex)
     {
         if(index >= 0)
             m_activeNodes[index].DeactivateMyConnections();
-        if(newIndex >= 0)
-            m_activeNodes[newIndex].ActivateMyConnections();
         index = newIndex;
     }
+
     public void ConstructScene()
     {
-        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 && m_activeNodes[index].m_myData.prefabToLoad != null)
-            Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+        if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 )
+        {
+            if (SceneManager.GetActiveScene().name == m_activeNodes[index].m_myData.sceneToLoad && m_activeNodes[index].m_myData.prefabToLoad != null)
+            {
+                m_activeNodes[index].ActivateMyConnections();
+                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+            }
+        }
     }
 
     public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
     {
         Clear(false);
         float heightStep = height / (sectDiv + 1);
+        index = 0;
 
         if (m_rootNode == null)
             SetRoot(m_sceneData[Random.Range(0, m_sceneData.Length)]);
 
         m_activeNodes.Add(m_rootNode);
 
+        m_playerIcon.transform.position = m_activeNodes[0].transform.position;
+
+        m_rootNode.MarkCompleted();
         List<NavigationNode> prevNodes = new List<NavigationNode>(m_activeNodes);
 
         //For each mid section
@@ -125,13 +168,21 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         {
             List<NavigationNode> nextNodes = new List<NavigationNode>();
             int nodesToCreate = 0;
-            if((Random.Range(0, 1000) > 1000 * 0.5f && prevNodes.Count != maxPerSect) || prevNodes.Count <= minPerSect)
+            float probOfPeak = 80;
+            float probOfIncrease = (probOfPeak * Mathf.Cos(0.5f * (i - sectDiv/2)))/100f;
+            if((Random.Range(0, 1000) > 1000 * probOfIncrease && prevNodes.Count != maxPerSect) || prevNodes.Count <= minPerSect)
             {
-                nodesToCreate = Random.Range(prevNodes.Count, (int)maxPerSect+1);
+                //Increase 
+                int min = Mathf.Min(prevNodes.Count + 1, (int)maxPerSect);
+                int max = Mathf.Min(prevNodes.Count + 2, (int)maxPerSect);
+                nodesToCreate = Random.Range(min, max);
             }
             else
             {
-                nodesToCreate = Random.Range((int)minPerSect, prevNodes.Count);
+                //Decrease
+                int min = Mathf.Max(prevNodes.Count - 2, (int)minPerSect);
+                int max = Mathf.Max(prevNodes.Count - 1, (int)minPerSect);
+                nodesToCreate = Random.Range(min, max + 1);
             }
             float widthStep = width / nodesToCreate;
             for (int j = 0; j < nodesToCreate; j++)
@@ -161,6 +212,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         {
             prev.AddLink(m_endNode, m_linePrefab);
         }
+        
+        Reposition();
         CleanUp();
     }
 
@@ -183,6 +236,29 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_rootNode = m_activeNodes[0];
         m_endNode = m_activeNodes[m_activeNodes.Count - 1];
         m_endNode.transform.localPosition = new Vector3(0, height, 0);
+    }
+
+    public void Reposition()
+    {
+        float radius = 5;
+        for (int i = 0; i < m_activeNodes.Count; i++)
+        {
+            NavigationNode a = m_activeNodes[i];
+            for (int j = 0; j < m_activeNodes.Count; j++)
+            {
+                NavigationNode b = m_activeNodes[j];
+                if (i == j)
+                    break;
+
+                if (Extentions.CircleVsCircle(a.transform.position, b.transform.position, radius, radius))
+                {
+                    Vector3 forwardVect = (b.transform.position - a.transform.position) * 0.5f;
+
+                    a.transform.position -= forwardVect.normalized * (forwardVect.magnitude);
+                    b.transform.position += forwardVect.normalized * (forwardVect.magnitude);
+                }
+            }
+        }
     }
 
     public void CleanUp()
@@ -227,6 +303,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                 }
             }
         }
+    }
+
+    public void DisableAll()
+    {
+        m_activeNodes[index].DeactivateMyConnections();
     }
 
     public void SetRoot(SceneData data)

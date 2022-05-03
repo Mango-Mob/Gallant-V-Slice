@@ -43,5 +43,12 @@ public class DropSpawnerArray : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.white;
+
+        int width = System.Enum.GetValues(typeof(Weapon)).Length - 1;
+        int height = System.Enum.GetValues(typeof(Ability)).Length - 1;
+        Vector3 size = new Vector3(height, 0, width) * m_spacing;
+
+        Gizmos.DrawWireCube(transform.position + size * 0.5f, size);
     }
 }

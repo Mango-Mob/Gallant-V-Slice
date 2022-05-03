@@ -228,7 +228,9 @@ namespace ActorSystem.AI
         public virtual void Kill()
         {
             if(!m_myBrain.IsDead)
-                m_myBrain.HandleDamage(float.MaxValue, 0, CombatSystem.DamageType.True);
+            {
+                DealDamageSilent(float.MaxValue, CombatSystem.DamageType.True);
+            }
         }
 
         public void DestroySelf()

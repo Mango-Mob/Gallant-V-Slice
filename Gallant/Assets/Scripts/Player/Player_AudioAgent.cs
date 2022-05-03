@@ -164,4 +164,9 @@ public class Player_AudioAgent : MultiAudioAgent
                 break;
         }
     }
+
+    public void PlayRoll()
+    {
+        base.PlayOnce("PlayerRoll", false, Random.Range(0.95f, 1.05f));
+    }
 }

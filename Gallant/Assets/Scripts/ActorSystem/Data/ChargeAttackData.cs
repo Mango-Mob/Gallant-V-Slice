@@ -38,6 +38,7 @@ namespace ActorSystem.Data
             base.BeginActor(user);
             if (user.m_myBrain.m_legs != null)
             {
+                user.m_myBrain.m_legs.m_agent.velocity = user.m_myBrain.transform.forward * user.m_myBrain.m_legs.m_agent.velocity.magnitude;
                 user.m_myBrain.m_legs.OverrideStopDist(0);
                 user.m_myBrain.m_legs.m_canBeKnocked = false;
                 user.m_myBrain.m_legs.m_agent.speed = speedOverride;

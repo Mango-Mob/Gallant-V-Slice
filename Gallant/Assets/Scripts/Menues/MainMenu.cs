@@ -57,7 +57,6 @@ public class MainMenu : MonoBehaviour
             
             PlayerPrefs.SetInt("SwampLevel", 0);
             PlayerPrefs.SetInt("CastleLevel", 0);
-            PlayerPrefs.SetInt("FrostLevel", 0);
             PlayerPrefs.SetInt("MagmaLevel", 0);
             EndScreenMenu.Restart();
             LevelManager.Instance.LoadNewLevel("Tutorial");

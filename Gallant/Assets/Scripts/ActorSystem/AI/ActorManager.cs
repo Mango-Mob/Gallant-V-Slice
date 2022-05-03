@@ -141,6 +141,7 @@ namespace ActorSystem.AI
                             break;
                         }
                     }
+
                     if(!found)
                         return null;
                 }

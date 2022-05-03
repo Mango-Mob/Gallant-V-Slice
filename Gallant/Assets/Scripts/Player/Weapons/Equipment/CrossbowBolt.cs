@@ -37,9 +37,10 @@ public class CrossbowBolt : BasePlayerProjectile
             Destruct();
         }
     }
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
-        Destruct();
+        if (m_destructOnHit)
+            Destruct();
     }
     private void OnTriggerEnter(Collider other)
     {

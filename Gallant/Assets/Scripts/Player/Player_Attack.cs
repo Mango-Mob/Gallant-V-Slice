@@ -241,13 +241,60 @@ public class Player_Attack : MonoBehaviour
         Debug.Log("Pew");
         if (_left)
         {
-            if (m_leftWeapon)
-                m_leftWeapon.TriggerWeaponAlt(false);
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.TriggerWeaponAlt(false);
+                Debug.Log("SUCCESS");
+            }
+            else
+            {
+                if (m_leftWeapon)
+                    m_leftWeapon.TriggerWeaponAlt(false);
+            }
         }
         else
         {
             if (m_rightWeapon)
                 m_rightWeapon.TriggerWeapon(false);
+        }
+    }
+
+    public void StartWeaponSwing(bool _left)
+    {
+        if (_left)
+        {
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.SetTrailActive(true);
+            }
+            else
+            {
+                m_leftWeapon.SetTrailActive(true);
+            }
+        }
+        else
+        {
+            m_rightWeapon.SetTrailActive(true);
+        }
+    }
+    public void StopWeaponSwing(bool _left)
+    {
+        if (_left)
+        {
+            if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
+            {
+                m_rightWeapon.SetTrailActive(true);
+            }
+            else
+            {
+                if (m_leftWeapon)
+                    m_leftWeapon.SetTrailActive(true);
+            }
+        }
+        else
+        {
+            if (m_rightWeapon)
+                m_rightWeapon.SetTrailActive(true);
         }
     }
     public bool IsDuelWielding()
@@ -505,7 +552,9 @@ public class Player_Attack : MonoBehaviour
                 else
                 {
                     if (m_rightWeaponIcon != null)
+                    {
                         m_rightWeaponIcon.SetIconSprite(null);
+                    }
                     playerController.playerAbilities.SetAbility(null, Hand.RIGHT);
                     m_rightWeaponEffect = ItemEffect.NONE;
                 }
@@ -574,6 +623,8 @@ public class Player_Attack : MonoBehaviour
 
         ToggleTwohandedMode(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
 
+
+
         playerController.playerAudioAgent.EquipWeapon();
     }
 
@@ -600,7 +651,7 @@ public class Player_Attack : MonoBehaviour
             case Weapon.BOW:
                 return gameObject.AddComponent<Weapon_Bow>();
             case Weapon.GREATSWORD:
-                return gameObject.AddComponent<Weapon_Sword>();
+                return gameObject.AddComponent<Weapon_Greatsword>();
             default:
                 return null;
         }
@@ -642,6 +693,8 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
+        Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
+
         Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
         {
@@ -666,10 +719,10 @@ public class Player_Attack : MonoBehaviour
                 damageMult = 0.0f;
 
             bool killedEnemy = actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
+            actor.DealImpactDamage(_impactForce, _piercingVal, (actor.transform.position - damageSource).normalized, _damageType);
             playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
         }
 
-        Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
 
         Destructible destructible = _target.GetComponentInParent<Destructible>();
         if (destructible != null)
@@ -817,12 +870,6 @@ public class Player_Attack : MonoBehaviour
         }
         return newObject;
     }
-
-    public void GetReadiedWeapon()
-    {
-
-    }
-
 }
 
 ///*******************

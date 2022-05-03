@@ -27,6 +27,7 @@ public class Weapon_Sword : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         MeleeAttack(m_weaponData, transform.position);
     }
     public override void WeaponRelease() { }
@@ -34,6 +35,7 @@ public class Weapon_Sword : WeaponBase
     {
         if (m_attackReady)
         {
+            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             MeleeAttack(m_weaponData, transform.position);
             m_attackReady = false;
         }

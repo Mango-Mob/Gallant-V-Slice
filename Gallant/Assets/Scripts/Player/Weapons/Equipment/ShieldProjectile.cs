@@ -15,6 +15,7 @@ public class ShieldProjectile : BasePlayerProjectile
     public float m_bounceDetectRange = 8.0f;
 
     private float m_rotateSpeed = 1000.0f;
+    private bool m_canCatchOverride = false;
 
     // Start is called before the first frame update
     new private void Start()
@@ -33,6 +34,11 @@ public class ShieldProjectile : BasePlayerProjectile
     {
         // Rotate model as it moves
         m_modelTransform.Rotate(new Vector3(0, (m_hand == Hand.LEFT ? 1.0f : -1.0f) * m_rotateSpeed * Time.fixedDeltaTime, 0));
+
+        if (m_canCatchOverride && !m_returning)
+        {
+            CatchProjectile(1.0f);
+        }
 
         if (hitList.Count < 1 || m_returning)
         {
@@ -71,10 +77,16 @@ public class ShieldProjectile : BasePlayerProjectile
 
             transform.position += m_projectileSpeed * direction * Time.fixedDeltaTime; // Move projectile
         }
+
     }
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
-        m_returning = true;
+        //m_returning = true;
+        Vector3 wallNormal = _other.ClosestPoint(transform.position) - transform.position;
+        wallNormal.y = 0.0f;
+
+        transform.forward = Vector3.Reflect(transform.forward, wallNormal.normalized);
+        m_canCatchOverride = true;
     }
     private void OnTriggerEnter(Collider other)
     {

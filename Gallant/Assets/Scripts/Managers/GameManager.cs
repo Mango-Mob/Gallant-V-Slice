@@ -21,6 +21,13 @@ public class GameManager : Singleton<GameManager>
     public bool IsInCombat { get { return ActorManager.Instance.m_activeSpawnners.Count > 0; } }
     public int clearedArenas = 0;
 
+    // Run Info 
+    public static bool m_runActive = false;
+    public static float m_runTime = 0.0f;
+    public static int m_killCount = 0;
+    public static float m_damageDealt = 0.0f;
+    public static float m_healingDealt = 0.0f;
+
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
 
@@ -67,6 +74,63 @@ public class GameManager : Singleton<GameManager>
         GameManager.currentLevel += GameManager.deltaLevel;
         GameManager.Instance.clearedArenas++;
         PlayerPrefs.SetFloat("Level", GameManager.currentLevel);
+    }
+
+    public static void ResetRunInfo()
+    {
+        m_runTime = 0.0f;
+        m_killCount = 0;
+        m_damageDealt = 0.0f;
+        m_healingDealt = 0.0f;
+    }
+    public static string CalculateTimerString(float _time)
+    {
+        int seconds = Mathf.FloorToInt(_time % 60);
+        int minutes = Mathf.FloorToInt((_time / 60) % 60);
+        int hours = Mathf.FloorToInt(_time / 3600);
+
+        return $"{hours.ToString("00")}:{minutes.ToString("00")}:{seconds.ToString("00")}";
+    }
+    public static string CalculateTimeUnitString(float _time)
+    {
+        float minutes;
+        float hours;
+
+        if (_time > 60)
+        {
+            if (_time > 60 * 60)
+            {
+                hours = _time / (60 * 60);
+                return $"{hours.ToString().Substring(0, 4)} hours";
+            }
+            minutes = _time / 60;
+            return $"{minutes.ToString().Substring(0, 4)} minutes";
+        }
+        return $"{_time.ToString().Substring(0, 4)} seconds";
+    }
+    public static string CalculateNumberUnit(float _value)
+    {
+        int multiples = 0;
+        float tempVal = _value;
+
+        while (tempVal > 1000f)
+        {
+            tempVal /= 1000f;
+            multiples++;
+        }
+
+        switch (multiples)
+        {
+            default:
+            case 0:
+                return $"{_value.ToString()}";
+            case 1:
+                return $"{_value.ToString()}k";
+            case 2:
+                return $"{_value.ToString()}M";
+            case 3:
+                return $"{_value.ToString()}B";
+        }
     }
 
     #region Player Info Storage

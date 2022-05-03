@@ -75,8 +75,8 @@ namespace ActorSystem.AI.Users
             DialogManager.Instance.LoadDialog(m_dialog);
             if (!m_hasGivenReward)
             {
-                DialogManager.Instance.m_interact = new UnityEngine.Events.UnityEvent();
-                DialogManager.Instance.m_interact.AddListener(LoadNextScene);
+                DialogManager.Instance.m_interact.Add(new UnityEngine.Events.UnityEvent());
+                DialogManager.Instance.m_interact[0].AddListener(LoadNextScene);
             }
             GetComponentInChildren<Interactable>().m_isReady = false;
             DialogManager.Instance.Show();

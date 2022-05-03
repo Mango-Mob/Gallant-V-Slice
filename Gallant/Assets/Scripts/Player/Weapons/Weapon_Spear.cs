@@ -23,11 +23,13 @@ public class Weapon_Spear : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         LongMeleeAttack(m_weaponData, transform.position);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.LEFT);
     }
     public override void WeaponAltRelease() { }

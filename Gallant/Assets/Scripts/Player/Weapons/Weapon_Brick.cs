@@ -31,6 +31,7 @@ public class Weapon_Brick : WeaponBase
     }
     public override void WeaponFunctionality()
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         switch (m_currentAttack)
         {
             case 1:
@@ -49,6 +50,7 @@ public class Weapon_Brick : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality() 
     {
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         WeaponFunctionality();
     }
     public override void WeaponAltRelease() { }

@@ -33,7 +33,7 @@ public class BoomerangProjectile : BasePlayerProjectile
 
         ProjectileReturnUpdate();
     }
-    protected override void EnvironmentCollision()
+    protected override void EnvironmentCollision(Collider _other)
     {
         m_returning = true;
     }

@@ -240,6 +240,16 @@ public class Player_Movement : MonoBehaviour
         m_dashFaceDirection = _facingDirection;
     }
 
+    public void CancelDashMovement()
+    {
+        m_dashTimer = 0.0f;
+    }
+
+    public bool IsDashing()
+    {
+        return m_dashTimer > 0.0f;
+    }
+
     /*******************
      * StunPlayer : Prevents the player from moving for a set duration and knocks them backwards.
      * @author : William de Beer
@@ -330,11 +340,12 @@ public class Player_Movement : MonoBehaviour
         }
 
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
-            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease);
+            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease)
+            * playerController.playerSkills.m_movementSpeedStatusBonus;
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
-        if (!m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
+        if (m_dashTimer <= 0.0f && !m_isRolling && !m_isStunned) // If the player is rolling prevent other movement
         {
             if (m_currentTarget != null)
             {
@@ -407,7 +418,7 @@ public class Player_Movement : MonoBehaviour
             if (!playerController.playerResources.m_isExhausted && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
             {
                 playerController.playerResources.ChangeStamina(-m_rollCost);
-                //playerController.playerAudioAgent.PlayRoll(); // Audio
+                playerController.playerAudioAgent.PlayRoll(); // Audio
 
                 playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);

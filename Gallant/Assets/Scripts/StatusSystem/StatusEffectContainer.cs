@@ -44,7 +44,8 @@ public class StatusEffectContainer : MonoBehaviour
             else
                 current.effect.UpdateOnPlayer(m_player, Time.deltaTime);
 
-            current.element.SetValue(current.effect.m_startDuration, current.effect.m_duration);
+            if (current.element)
+                current.element.SetValue(current.effect.m_startDuration, current.effect.m_duration);
         }
     }
 
@@ -98,6 +99,7 @@ public class StatusEffectContainer : MonoBehaviour
         else
         {
             //Add with player context
+            effect.StartPlayer(m_player);
         }
         m_currentEffects.Add(new StatusDisplay(effect, bar));
     }
@@ -121,7 +123,12 @@ public class StatusEffectContainer : MonoBehaviour
         }
         else
         {
-            //Remove from player
+            //Remove vfx
+            if (display.effect.m_vfxInWorld != null)
+            {
+                Destroy(display.effect.m_vfxInWorld);
+            }
+            display.effect.EndPlayer(m_player);
         }
     }
 }

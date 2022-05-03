@@ -10,7 +10,10 @@ using UnityEngine;
  */
 public class DroppedWeapon : MonoBehaviour
 {
+    public DropSpawner.DropType m_dropType;
+
     public WeaponData m_weaponData; // Data of contained weapon
+    public AbilityData m_abilityData; // Data of contained spell
     [ColorUsage(true, true)] public Color m_defaultColor;
     public bool m_outlineEnabled = false;
 
@@ -19,6 +22,10 @@ public class DroppedWeapon : MonoBehaviour
     public GameObject m_weaponModel;
     public Renderer m_weaponBubble;
     public ParticleSystem m_particleSystem;
+
+    [Header("Floating Book (Only if spell drop)")]
+    public MeshRenderer m_bookCoverMesh;
+    public SpriteRenderer m_bookIconSprite;
 
     [Header("Display")]
     public InfoDisplay m_pickupDisplay;
@@ -77,6 +84,11 @@ public class DroppedWeapon : MonoBehaviour
                 }
             }
         }
+        else if (m_abilityData)
+        {
+            m_bookCoverMesh.material.color = m_abilityData.droppedEnergyColor;
+            m_bookIconSprite.sprite = m_abilityData.abilityIcon;
+        }
         ToggleDisplay(false);
     }
     private void FixedUpdate()
@@ -107,12 +119,61 @@ public class DroppedWeapon : MonoBehaviour
         if (droppedWeapon.GetComponent<DroppedWeapon>())
         {
             // Set weapon data
+            droppedWeapon.GetComponent<DroppedWeapon>().m_dropType = DropSpawner.DropType.WEAPON;
             droppedWeapon.GetComponent<DroppedWeapon>().m_weaponData = _data;
         }
         else
         {
-            Debug.Log("No dropped weapon component found on dropped object. Wrong prefab/resource being loaded.");
+            Debug.LogError("No dropped weapon component found on dropped object. Wrong prefab/resource being loaded.");
         }
+        return droppedWeapon;
+    }
+
+    /*******************
+     * CreateSpellUpgrade : Create a spell upgrade drop
+     * @author : William de Beer
+     * @param : (Vector3) Spawn position
+     * @return : (GameObject) Reference to created drop.
+     */
+    public static GameObject CreateSpellUpgrade(Vector3 _position, AbilityData _data)
+    {
+        GameObject prefab = Resources.Load<GameObject>("SpellbookDrop"); // Get prefab from resources.
+        GameObject droppedWeapon = Instantiate(prefab, _position, Quaternion.Euler(30, 0, 0)); // Instantiate object at given position
+
+        if (droppedWeapon.GetComponent<DroppedWeapon>())
+        {
+            // Set weapon data
+            droppedWeapon.GetComponent<DroppedWeapon>().m_dropType = DropSpawner.DropType.SPELLBOOK;
+            droppedWeapon.GetComponent<DroppedWeapon>().m_abilityData = _data;
+        }
+        else
+        {
+            Debug.LogError("No dropped weapon component found on dropped object. Wrong prefab/resource being loaded.");
+        }
+
+        return droppedWeapon;
+    }
+
+    /*******************
+     * CreateWeaponUpgrade : Create a weapon upgrade drop
+     * @author : William de Beer
+     * @param : (Vector3) Spawn position
+     * @return : (GameObject) Reference to created drop.
+     */
+    public static GameObject CreateWeaponUpgrade(Vector3 _position)
+    {
+        GameObject prefab = Resources.Load<GameObject>("WeaponUpgradeDrop"); // Get prefab from resources.
+        GameObject droppedWeapon = Instantiate(prefab, _position, Quaternion.Euler(30, 0, 0)); // Instantiate object at given position
+
+        if (droppedWeapon.GetComponent<DroppedWeapon>())
+        {
+            droppedWeapon.GetComponent<DroppedWeapon>().m_dropType = DropSpawner.DropType.UPGRADE;
+        }
+        else
+        {
+            Debug.LogError("No dropped weapon component found on dropped object. Wrong prefab/resource being loaded.");
+        }
+
         return droppedWeapon;
     }
 

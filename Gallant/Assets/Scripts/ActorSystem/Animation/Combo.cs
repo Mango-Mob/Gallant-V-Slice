@@ -8,6 +8,8 @@ public class Combo : StateMachineBehaviour
     public bool m_comboStarter = true;
     public AnimatorTransitionInfo[] leftTransitions;
     public AnimatorTransitionInfo[] rightTransitions;
+    private Player_Controller playerController;
+
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,9 +19,9 @@ public class Combo : StateMachineBehaviour
         //    if (name == "BRICK")
         //        continue;
 
-        //    animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
-        //    animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
-        //}
+            //    animator.SetBool("Right" + name[0] + name.Substring(1).ToLower(), false);
+            //    animator.SetBool("Left" + name[0] + name.Substring(1).ToLower(), false);
+            //}
 
         animator.SetBool("UsingLeft", false);
         animator.SetBool("UsingRight", false);
