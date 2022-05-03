@@ -67,9 +67,10 @@ public class DialogWriter : EditorWindow
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New  "))
         {
-            string path = Application.dataPath + "Assets/Dialog/NewDialog.json";
-            File.CreateText(path);
-
+            string path = Application.dataPath + $"/Dialog/NewDialog-{DateTime.Now.ToString("yyyyMMddTHHmmss")}.json";
+            StreamWriter sw = File.CreateText(path);
+            sw.Close();
+            AssetDatabase.Refresh();
             if (TryLoadFile(path))
             {
 
