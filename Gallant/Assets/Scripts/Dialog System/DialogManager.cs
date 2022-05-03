@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,11 +11,17 @@ public enum DialogResult
     PROGRESS,
     TRANSFER,
     INTERACT,
-    END
+    END, 
 }
 
 public class DialogManager : Singleton<DialogManager>
 {
+    private struct Options
+    {
+        public DialogResult onClickResult;
+        public int otherData;
+    }
+
     public List<UnityEvent> m_interact;
     public GameObject m_defaultSelected;
 
@@ -22,12 +29,13 @@ public class DialogManager : Singleton<DialogManager>
 
     [SerializeField] private GameObject m_window;
     [SerializeField] private Text m_characterName;
+
     [SerializeField] private Text m_dialog;
     [SerializeField] private Button[] m_options;
+    private DialogOption[] m_optionResults;
     [SerializeField] private Image m_characterBody;
     [SerializeField] private Image m_characterFace;
 
-    private DialogResult[] m_optionResult;
     private CharacterData m_activeCharacter;
     private DialogFile m_file;
 
@@ -38,7 +46,7 @@ public class DialogManager : Singleton<DialogManager>
     protected override void Awake()
     {
         base.Awake();
-        m_optionResult = new DialogResult[m_options.Length];
+        m_optionResults = new DialogOption[m_options.Length];
         m_player = FindObjectOfType<Player_Controller>();
         Hide();
     }
@@ -114,8 +122,7 @@ public class DialogManager : Singleton<DialogManager>
         m_file = JsonUtility.FromJson(file.text, typeof(DialogFile)) as DialogFile;
         if(m_file != null)
         {
-            m_activeCharacter = Resources.Load<CharacterData>(m_file.m_characterFile);
-            m_characterName.text = m_activeCharacter.m_name;
+            SetCharacter(Resources.Load<CharacterData>(m_file.m_characterFile));
             m_currentScene = 0;
             LoadScene(m_currentScene);
         }
@@ -127,6 +134,42 @@ public class DialogManager : Singleton<DialogManager>
         else if (!InputManager.Instance.isInGamepadMode)
         {
             EventSystem.current.SetSelectedGameObject(null);
+        }
+    }
+
+    public void SetCharacter(CharacterData data)
+    {
+        m_activeCharacter = data;
+        if (data == null)
+        {
+            m_characterBody.gameObject.SetActive(false);
+            m_characterFace.gameObject.SetActive(false);
+            m_characterName.transform.parent.gameObject.SetActive(false);
+        }
+        else
+        {
+            m_characterBody.gameObject.SetActive(true);
+            m_characterFace.gameObject.SetActive(true);
+            m_characterName.transform.parent.gameObject.SetActive(true);
+            m_characterBody.sprite = m_activeCharacter.m_characterBody[0];
+            m_characterFace.sprite = m_activeCharacter.m_characterFace[0];
+            m_characterName.text = m_activeCharacter.m_name;
+        }
+    }
+    public void SetDialogText(string text)
+    {
+        m_dialog.text = text;
+    }
+    public void SetButtonOption(int position, string buttonText, UnityEvent interact)
+    {
+        if (position > 4)
+            return;
+
+        m_options[position].GetComponentInChildren<Text>().text = buttonText;
+
+        if (interact == null)
+        {
+            m_options[position].interactable = false;
         }
     }
 
@@ -145,11 +188,17 @@ public class DialogManager : Singleton<DialogManager>
             m_characterBody.sprite = m_activeCharacter.m_characterBody[Mathf.Min(bodyId, m_activeCharacter.m_characterBody.Length - 1)];
             m_characterFace.sprite = m_activeCharacter.m_characterFace[Mathf.Min(faceID, m_activeCharacter.m_characterFace.Length - 1)];
 
-            m_dialog.text = m_file.m_list[index].m_dialog;
+            SetDialogText(m_file.m_list[index].m_dialog);
 
             for (int i = 0; i < m_options.Length; i++)
             {
-                if(i < m_file.m_list[index].results.Count)
+                //m_optionResults[i] = new DialogOption(m_currentScene,
+                //    m_file.m_list[index].results[i].resultText,
+                //    m_file.m_list[index].results[i].resultType,
+                //    m_file.m_list[index].results[i].other
+                //    );
+
+                if (i < m_file.m_list[index].results.Count)
                 {
                     m_options[i].GetComponentInChildren<Text>().text = m_file.m_list[index].results[i].resultText;
                     if (m_file.m_list[index].results[i].resultType == "INTERACT" && m_interact != null)
@@ -164,7 +213,6 @@ public class DialogManager : Singleton<DialogManager>
                     {
                         m_options[i].interactable = false;
                     }
-                    
                 }
                 else
                 {
