@@ -31,6 +31,8 @@ public class GameManager : Singleton<GameManager>
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
 
+    public static bool m_joystickCursorEnabled = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +58,9 @@ public class GameManager : Singleton<GameManager>
                 LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
             }
         }
+
+        Cursor.visible = !InputManager.Instance.isInGamepadMode && !m_joystickCursorEnabled;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void OnLevelWasLoaded(int level)
