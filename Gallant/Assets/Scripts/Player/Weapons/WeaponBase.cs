@@ -24,6 +24,7 @@ public abstract class WeaponBase : MonoBehaviour
     protected bool m_isAltVFXColored = false;
 
     public ParticleSystem[] m_weaponTrailParticles;
+    private bool m_trailActive = false;
 
     // Start is called before the first frame update
     protected void Awake()
@@ -91,10 +92,18 @@ public abstract class WeaponBase : MonoBehaviour
     public void SetInUse(bool _inUse) { m_isInUse = _inUse; }
     public void SetTrailActive(bool _active)
     {
+        if (m_trailActive == _active)
+        {
+            return;
+        }
+
+        m_trailActive = _active;
+        Debug.Log(_active ? "Start Trail" : "Stop Trail");
         foreach (var particleSystem in m_weaponTrailParticles)
         {
             if (_active)
             {
+                particleSystem.Clear();
                 particleSystem.Play();
             }
             else if (!_active)
