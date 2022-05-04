@@ -48,7 +48,8 @@ public abstract class WeaponBase : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        if (!playerController.animator.GetBool((m_hand == Hand.LEFT) ? "UsingLeft" : "UsingRight"))
+        //if (!playerController.animator.GetBool((m_hand == Hand.LEFT) ? "UsingLeft" : "UsingRight"))
+        if (!playerController.animator.GetBool("UsingLeft") && !playerController.animator.GetBool("UsingRight"))
         {
             SetTrailActive(false);
         }

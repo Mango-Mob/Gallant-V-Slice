@@ -283,18 +283,18 @@ public class Player_Attack : MonoBehaviour
         {
             if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
             {
-                m_rightWeapon.SetTrailActive(true);
+                m_rightWeapon.SetTrailActive(false);
             }
             else
             {
                 if (m_leftWeapon)
-                    m_leftWeapon.SetTrailActive(true);
+                    m_leftWeapon.SetTrailActive(false);
             }
         }
         else
         {
             if (m_rightWeapon)
-                m_rightWeapon.SetTrailActive(true);
+                m_rightWeapon.SetTrailActive(false);
         }
     }
     public bool IsDuelWielding()
