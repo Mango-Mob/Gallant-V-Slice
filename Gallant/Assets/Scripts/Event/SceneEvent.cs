@@ -4,8 +4,6 @@ using UnityEngine;
 
 public abstract class SceneEvent : MonoBehaviour
 {
-    public List<ItemData> m_data = new List<ItemData>();
-
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -13,9 +11,14 @@ public abstract class SceneEvent : MonoBehaviour
         DialogManager.Instance.Show();
     }
 
-    protected abstract void GenerateCase();
-    public abstract void Interact();
-    void Update()
+    public virtual void EndEvent()
+    {
+        NavigationManager.Instance.SetVisibility(true, false);
+        DialogManager.Instance.Hide();
+        Destroy(gameObject);
+    }
+
+    public void Update()
     {
         GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = true;
     }

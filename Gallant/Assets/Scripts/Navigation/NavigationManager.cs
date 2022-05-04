@@ -19,6 +19,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public float width;
     public float height;
 
+    [SerializeField] private Button m_mouseInput;
     [SerializeField] private UI_Text m_keyboardInput;
     [SerializeField] private UI_Image m_gamepadInput;
 
@@ -29,6 +30,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public Image m_playerIcon;
 
+    private bool m_canQuit = true;
     protected override void Awake()
     {
         base.Awake();
@@ -48,13 +50,13 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Update()
     {
-        if (IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
+        if (IsVisible && m_canQuit && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
         {
             SetVisibility(false);
         }
-
-        m_keyboardInput.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+        m_mouseInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
 
         if (m_myCamera.enabled)
         {
@@ -86,10 +88,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Instance.SetVisibility(false);
     }
 
-    public void SetVisibility(bool status)
+    public void SetVisibility(bool status, bool canQuit = true)
     {
         m_myCamera.enabled = status;
         m_myCanvas.enabled = status;
+        m_canQuit = canQuit;
+
         if (m_myCamera.enabled)
         {
             if(index > 0 && m_activeNodes.Count > 0)

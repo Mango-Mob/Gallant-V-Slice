@@ -9,7 +9,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "characterData", menuName = "Game Data/Character Data", order = 1)]
 public class CharacterData : ScriptableObject
 {
-    public string m_name;
+    public string[] m_names;
     public Sprite[] m_characterBody;
     public Sprite[] m_characterFace;
     public Vector2[] m_faceAnchor;
