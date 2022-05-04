@@ -154,6 +154,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
     {
         Clear(false);
+        NarrativeManager.Instance.Refresh();
         float heightStep = height / (sectDiv + 1);
         index = 0;
 
