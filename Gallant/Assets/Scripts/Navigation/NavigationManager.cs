@@ -147,6 +147,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             {
                 m_activeNodes[index].ActivateMyConnections();
                 Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+                if(m_activeNodes[index].m_myData.prefabPropsToLoad != null && m_activeNodes[index].m_myData.prefabPropsToLoad.Count > 0)
+                {
+                    int select = Random.Range(0, m_activeNodes[index].m_myData.prefabPropsToLoad.Count);
+                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity);
+                }
             }
         }
     }
