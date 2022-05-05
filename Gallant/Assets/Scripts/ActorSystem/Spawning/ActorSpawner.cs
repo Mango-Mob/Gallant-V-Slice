@@ -14,12 +14,8 @@ namespace ActorSystem.Spawning
      */
     public class ActorSpawner : MonoBehaviour
     {
-        public bool m_spawnOnAwake = false;
-        public float m_value;
-
         [Header("Wave Information")]
-        public bool m_generateWavesOnAwake = false;
-        public List<WaveData> m_waves = new List<WaveData>();
+        private List<WaveData> m_waves;
 
         protected List<WaveData> m_waveArchive;
 
@@ -32,15 +28,17 @@ namespace ActorSystem.Spawning
         //MonoBehaviour
         private void Awake()
         {
-            m_waveArchive = new List<WaveData>(m_waves);
-            foreach (var wave in m_waves)
-            {
-                m_value += wave.m_diffCost;
-            }
             m_generators = GetComponentsInChildren<SpawnDataGenerator>();
             m_myActors = new List<Actor>();
-            if (m_spawnOnAwake && m_waves.Count > 0)
+            if(NavigationManager.Instance.m_generatedLevel != null)
             {
+                LevelData data = NavigationManager.Instance.m_generatedLevel;
+                int floor = NavigationManager.Instance.GetFloor();
+                if (floor < 0)
+                    return;
+
+                m_waves = data.EvaluateCombat((uint)floor);
+                m_waveArchive = new List<WaveData>(m_waves);
                 StartCombat();
             }
         }
@@ -181,7 +179,7 @@ namespace ActorSystem.Spawning
                 if (m_waves.Count == 0 && spawnDelay <= 0)
                 {
                     Stop();
-                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
+                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
                     GameManager.Advance();
                     EndScreenMenu.roomsCleared++;
                 }

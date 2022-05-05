@@ -17,6 +17,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public float width;
     public float height;
 
+    public LevelData m_generatedLevel { get; private set; } = null;
+
     [SerializeField] private Button m_mouseInput;
     [SerializeField] private UI_Text m_keyboardInput;
     [SerializeField] private UI_Image m_gamepadInput;
@@ -137,6 +139,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         index = newIndex;
     }
 
+    public int GetFloor()
+    {
+        return m_activeNodes[index].m_myDepth;
+    }
+
     public void ConstructScene()
     {
         if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 )
@@ -157,6 +164,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void Generate(LevelData data)
     {
         Clear(false);
+
+        m_generatedLevel = data;
+
         NarrativeManager.Instance.Refresh();
         float heightStep = height / (data.m_levelFloors.Count);
         index = 0;
@@ -200,7 +210,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
                 newNavNode.m_myIndex = m_activeNodes.Count;
-                newNavNode.m_myDepth = i + 1;
+                newNavNode.m_myDepth = i;
                 nextNodes.Add(newNavNode);
                 m_activeNodes.Add(newNavNode);
 
@@ -216,7 +226,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes[Random.Range(0, data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes.Length)], transform);
         m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
-        m_endNode.m_myDepth = data.m_levelFloors.Count;
+        m_endNode.m_myDepth = data.m_levelFloors.Count - 1;
         m_endNode.transform.localPosition = new Vector3(0, height, 0);
         
         m_activeNodes.Add(m_endNode);
@@ -328,6 +338,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         nodeObj.transform.localPosition = new Vector3(0, 0, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;
+        nodeNav.m_myDepth = -1;
 
         if (m_rootNode != null)
             Destroy(m_endNode.gameObject);
@@ -350,6 +361,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Clear(bool clearAll = false)
     {
+        m_generatedLevel = null;
         for (int i = m_activeNodes.Count - 1; i >= 0; i--)
         {
             if(m_activeNodes[i] != m_endNode || m_activeNodes[i] != m_rootNode)

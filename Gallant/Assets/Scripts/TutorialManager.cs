@@ -25,8 +25,6 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public ClassData m_mage;
     public ClassData m_hunter;
 
-    public Room m_combatSection;
-
     public Transform m_respawn;
 
     public GameObject[] m_mainGameObject;

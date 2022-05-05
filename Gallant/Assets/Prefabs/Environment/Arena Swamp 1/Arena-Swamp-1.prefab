@@ -1,5 +1,107 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1404643775825150643
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6543965751635937018}
+  - component: {fileID: 7055667434316415666}
+  m_Layer: 0
+  m_Name: SpawnRange (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6543965751635937018
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404643775825150643}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15.14, y: 0, z: 16.86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5085834504378755927}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7055667434316415666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1404643775825150643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a7339ee95df684b911d00bc7b72f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isCircle: 1
+  m_sections: 15
+  m_spawnSize: 6.44
+  m_navSampleRadius: 1.5
+  m_overlapRadius: 0.35
+  spawnOverlapLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  portalVFXPrefab: {fileID: 0}
+--- !u!1 &1611958482005982031
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5085834504378755927}
+  - component: {fileID: 7834171821213655548}
+  m_Layer: 0
+  m_Name: Spawners
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5085834504378755927
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611958482005982031}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 8920896397899440799}
+  - {fileID: 6270574447365036343}
+  - {fileID: 6543965751635937018}
+  m_Father: {fileID: 3478941938750102677}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7834171821213655548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611958482005982031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7547f6c43cc1bf64ea36b1f6cf6efb0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_value: 0
+  m_generateWavesOnAwake: 0
+  m_waves: []
+  m_generators: []
 --- !u!1 &3478941937362353189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1982,6 +2084,7 @@ Transform:
   - {fileID: 8980689714985182250}
   - {fileID: 8980689715634237365}
   - {fileID: 8207155286976133348}
+  - {fileID: 5085834504378755927}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2580,6 +2683,110 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -15.168001, y: 136.259, z: 33.884003}
   m_TimeToStationary: 0.5
+--- !u!1 &7736628700664705488
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8920896397899440799}
+  - component: {fileID: 4024948794997777888}
+  m_Layer: 0
+  m_Name: SpawnRange
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8920896397899440799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7736628700664705488}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.32, y: 0, z: 1.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5085834504378755927}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4024948794997777888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7736628700664705488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a7339ee95df684b911d00bc7b72f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isCircle: 1
+  m_sections: 15
+  m_spawnSize: 6.16
+  m_navSampleRadius: 1.5
+  m_overlapRadius: 0.35
+  spawnOverlapLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  portalVFXPrefab: {fileID: 0}
+--- !u!1 &8084596105555678480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6270574447365036343}
+  - component: {fileID: 5372624678521693818}
+  m_Layer: 0
+  m_Name: SpawnRange (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6270574447365036343
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084596105555678480}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.85, y: 0, z: 7.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5085834504378755927}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5372624678521693818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8084596105555678480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64a7339ee95df684b911d00bc7b72f45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isCircle: 1
+  m_sections: 15
+  m_spawnSize: 9
+  m_navSampleRadius: 1.5
+  m_overlapRadius: 0.35
+  spawnOverlapLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  portalVFXPrefab: {fileID: 0}
 --- !u!1 &8789206283578876924
 GameObject:
   m_ObjectHideFlags: 0
