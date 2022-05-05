@@ -10,8 +10,6 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public NavigationNode m_rootNode;
     public NavigationNode m_endNode;
 
-    public SceneData[] m_sceneData;
-
     public int index = -1;
     public Vector2 iconNoise;
 
@@ -156,15 +154,15 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
     }
 
-    public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
+    public void Generate(LevelData data)
     {
         Clear(false);
         NarrativeManager.Instance.Refresh();
-        float heightStep = height / (sectDiv + 1);
+        float heightStep = height / (data.m_levelFloors.Count);
         index = 0;
 
         if (m_rootNode == null)
-            SetRoot(m_sceneData[Random.Range(0, m_sceneData.Length)]);
+            SetRoot(data.m_root);
 
         m_activeNodes.Add(m_rootNode);
 
@@ -172,39 +170,37 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         m_rootNode.MarkCompleted();
         List<NavigationNode> prevNodes = new List<NavigationNode>(m_activeNodes);
-
+        GameObject newNodeObj;
         //For each mid section
-        for (int i = 1; i < sectDiv + 1; i++)
+        for (int i = 0; i < data.m_levelFloors.Count - 1; i++)
         {
             List<NavigationNode> nextNodes = new List<NavigationNode>();
             int nodesToCreate = 0;
-            float probOfPeak = 80;
-            float probOfIncrease = (probOfPeak * Mathf.Cos(0.5f * (i - sectDiv/2)))/100f;
-            if((Random.Range(0, 1000) > 1000 * probOfIncrease && prevNodes.Count != maxPerSect) || prevNodes.Count <= minPerSect)
+            float probOfIncrease = data.Evaluate(i);
+            if((Random.Range(0, 10000) < 10000 * probOfIncrease && prevNodes.Count != data.m_maxRoomCount) || prevNodes.Count <= data.m_minRoomCount)
             {
                 //Increase 
-                int min = Mathf.Min(prevNodes.Count + 1, (int)maxPerSect);
-                int max = Mathf.Min(prevNodes.Count + 2, (int)maxPerSect);
+                int min = Mathf.Min(prevNodes.Count + 1, (int)data.m_maxRoomCount);
+                int max = Mathf.Min(prevNodes.Count + 2, (int)data.m_maxRoomCount);
                 nodesToCreate = Random.Range(min, max);
             }
             else
             {
                 //Decrease
-                int min = Mathf.Max(prevNodes.Count - 2, (int)minPerSect);
-                int max = Mathf.Max(prevNodes.Count - 1, (int)minPerSect);
+                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_minRoomCount);
+                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_minRoomCount);
                 nodesToCreate = Random.Range(min, max + 1);
             }
             float widthStep = width / nodesToCreate;
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                GameObject newNodeObj = NavigationNode.CreateNode(m_sceneData[Random.Range(0, m_sceneData.Length)], transform);
+                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].potentialScenes[Random.Range(0, data.m_levelFloors[i].potentialScenes.Length)], transform);
                 float xPos = widthStep * (j+0.5f) - (width/2) + Random.Range(-iconNoise.x, iconNoise.x);
-                (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * i + Random.Range(-iconNoise.y, iconNoise.y), 0);
+                (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
                 newNavNode.m_myIndex = m_activeNodes.Count;
-                newNavNode.m_myDepth = i;
-                newNavNode.m_myData = m_sceneData[Random.Range(0, m_sceneData.Length)];
+                newNavNode.m_myDepth = i + 1;
                 nextNodes.Add(newNavNode);
                 m_activeNodes.Add(newNavNode);
 
@@ -215,8 +211,14 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             }
             prevNodes = nextNodes;
         }
+
+        //Create end node
+        newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes[Random.Range(0, data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes.Length)], transform);
+        m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
+        m_endNode.m_myDepth = data.m_levelFloors.Count;
         m_endNode.transform.localPosition = new Vector3(0, height, 0);
+        
         m_activeNodes.Add(m_endNode);
         foreach (var prev in prevNodes)
         {

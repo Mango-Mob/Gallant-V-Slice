@@ -8,19 +8,16 @@ using UnityEngine;
 public class NavigationPortal : MonoBehaviour
 {
     public bool GenerateOnAwake = false;
-    public SceneData[] m_dataToGenerateFrom;
-    public SceneData m_endNode;
+    public LevelData m_levelToGenerate;
 
     private Interactable m_myInterface;
 
     private void Start()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
-        if(GenerateOnAwake && m_dataToGenerateFrom.Length != 0)
+        if(GenerateOnAwake && m_levelToGenerate != null)
         {
-            NavigationManager.Instance.m_sceneData = m_dataToGenerateFrom;
-            NavigationManager.Instance.SetEnd(m_endNode);
-            NavigationManager.Instance.Generate(6, 2, 6);
+            NavigationManager.Instance.Generate(m_levelToGenerate);
             NavigationManager.Instance.UpdateMap(0);
         }
     }

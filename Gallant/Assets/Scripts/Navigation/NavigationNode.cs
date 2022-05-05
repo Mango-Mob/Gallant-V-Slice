@@ -130,7 +130,7 @@ public class NavigationNode : MonoBehaviour
     public void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + transform.right);
+        Gizmos.DrawLine(transform.position, transform.position + transform.right * 5);
     }
 
 }
