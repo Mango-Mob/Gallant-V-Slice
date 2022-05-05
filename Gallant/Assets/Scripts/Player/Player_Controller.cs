@@ -70,6 +70,8 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float m_shakeAmount = 0.7f;
     [SerializeField] private float m_shakeDecreaseSpeed = 1.0f;
 
+    private CameraBounds m_cameraBounds;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
@@ -87,6 +89,8 @@ public class Player_Controller : MonoBehaviour
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
         statusEffectContainer = GetComponent<StatusEffectContainer>();
+
+        m_cameraBounds = FindObjectOfType<CameraBounds>();
     }
 
     // Start is called before the first frame update
@@ -115,9 +119,15 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
             return;
+
+
+        if (m_cameraBounds != null)
+        {
+            playerCamera.transform.localPosition = Vector3.zero;
+            playerCamera.transform.position = m_cameraBounds.RecalculateCameraLocation(playerCamera.transform.position);
+        }
 
         // Set gamepad being used
         int gamepadID = InputManager.Instance.GetAnyGamePad();
