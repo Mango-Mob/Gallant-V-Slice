@@ -12,26 +12,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9859c2ca88cf6842932e49cbef5a52e, type: 3}
   m_Name: Swamp
   m_EditorClassIdentifier: 
+  m_spawnableWaves: []
   m_root: {fileID: 11400000, guid: 71472a3b5aa1adc44bf4e0b2de4b9e20, type: 2}
   m_levelFloors:
   - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 250
+    minWaves: 2
+    maxWaves: 4
     potentialScenes:
     - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-  - type: 2
-    potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-  - type: 2
-    potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-  - type: 2
-    potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-  - type: 2
-    potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-  - type: 3
-    potentialScenes:
-    - {fileID: 11400000, guid: 08660d8526ce3c943b46e6d6df745e0b, type: 2}
   m_minRoomCount: 2
   m_maxRoomCount: 6
   m_probOfGrowth:

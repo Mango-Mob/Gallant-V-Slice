@@ -10,12 +10,17 @@ using UnityEditorInternal;
 [CreateAssetMenu(fileName = "levelData", menuName = "Game Data/Level Data", order = 1)]
 public class LevelData : ScriptableObject
 {
+    public List<WaveData> m_spawnableWaves;
     public enum FloorType { REST, EVENT, COMBAT, SPECIAL};
 
     [System.Serializable]
     public struct Floor
     {
         public FloorType type;
+        public AnimationCurve difficultyCurve;
+        public float difficultyBase;
+        public int minWaves;
+        public int maxWaves;
         public SceneData[] potentialScenes;
     }
 

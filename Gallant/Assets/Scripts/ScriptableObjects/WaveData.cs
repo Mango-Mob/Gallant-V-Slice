@@ -4,8 +4,8 @@ using UnityEngine;
 using System;
 using ActorSystem;
 
-[CreateAssetMenu(fileName = "roomData", menuName = "Game Data/Room Data", order = 1)]
-public class RoomData : ScriptableObject
+[CreateAssetMenu(fileName = "waveData", menuName = "Game Data/Wave Data", order = 1)]
+public class WaveData : ScriptableObject
 {
     [Serializable]
     public struct Actor
@@ -16,17 +16,7 @@ public class RoomData : ScriptableObject
 
     [Header("Wave Information")]
     public List<Actor> m_waveInformation;
-
-    public float CalculateCost()
-    {
-        float cost = 0;
-
-        if (m_waveInformation == null)
-            return 0;
-
-        return cost;
-    }
-
+    public float m_diffCost;
     public int Count()
     {
         int count = 0;
@@ -37,11 +27,11 @@ public class RoomData : ScriptableObject
         return count;
     }
 
-    public static int SortAlgorithm(RoomData a, RoomData b)
+    public static int SortAlgorithm(WaveData a, WaveData b)
     {
         //Edge cases where a room data is null:
-        int aCost = (a != null) ? Mathf.RoundToInt(a.CalculateCost()) : int.MaxValue;
-        int bCost = (b != null) ? Mathf.RoundToInt(b.CalculateCost()) : int.MaxValue;
+        int aCost = (a != null) ? Mathf.RoundToInt(a.m_diffCost) : int.MaxValue;
+        int bCost = (b != null) ? Mathf.RoundToInt(b.m_diffCost) : int.MaxValue;
 
         if (aCost == bCost)
             return 0;

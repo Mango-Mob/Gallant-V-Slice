@@ -19,10 +19,9 @@ namespace ActorSystem.Spawning
 
         [Header("Wave Information")]
         public bool m_generateWavesOnAwake = false;
-        public List<RoomData> m_waves = new List<RoomData>();
-        public List<RoomData> m_allWaves = new List<RoomData>();
+        public List<WaveData> m_waves = new List<WaveData>();
 
-        protected List<RoomData> m_waveArchive;
+        protected List<WaveData> m_waveArchive;
 
         public List<Actor> m_myActors { get; private set; }
         public bool m_hasStarted { get; private set; } = false;
@@ -33,10 +32,10 @@ namespace ActorSystem.Spawning
         //MonoBehaviour
         private void Awake()
         {
-            m_waveArchive = new List<RoomData>(m_waves);
+            m_waveArchive = new List<WaveData>(m_waves);
             foreach (var wave in m_waves)
             {
-                m_value += wave.CalculateCost();
+                m_value += wave.m_diffCost;
             }
             m_generators = GetComponentsInChildren<SpawnDataGenerator>();
             m_myActors = new List<Actor>();
@@ -110,7 +109,7 @@ namespace ActorSystem.Spawning
          */
         public void Restart()
         {
-            m_waves = new List<RoomData>(m_waveArchive);
+            m_waves = new List<WaveData>(m_waveArchive);
             Stop();
         }
 
@@ -129,7 +128,7 @@ namespace ActorSystem.Spawning
          * @author : Michael Jordan
          * @param (RoomData) The wave to spawn
          */
-        public void SpawnWave(RoomData wave)
+        public void SpawnWave(WaveData wave)
         {
             if (wave == null)
                 return;
