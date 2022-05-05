@@ -268,6 +268,11 @@ public class Player_Controller : MonoBehaviour
 
             if (!m_isDisabledAttacks && !m_isNearDrop)
             {
+                if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
+                    animator.SetTrigger("RightTrigger");
+                if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
+                    animator.SetTrigger("LeftTrigger");
+
                 // Weapon attacks
                 if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
                 {
@@ -291,6 +296,7 @@ public class Player_Controller : MonoBehaviour
                         playerAttack.StartUsing(Hand.LEFT);
                     }
                 }
+
 
                 // Ability attacks
                 if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
