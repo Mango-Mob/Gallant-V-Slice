@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,23 +16,19 @@ namespace ActorSystem.AI.Components
 
         private float m_timer = 0.0f;
         private float m_disolveTime = 7.5f;
-        public Color m_default { get; protected set; }
 
         private Coroutine m_hit;
-        private Color m_current;
 
         private void Awake()
         {
             m_myMesh = GetComponent<Renderer>();
             m_myMaterial = m_myMesh.material;
-            m_default = m_myMesh.material.color;
-            m_current = m_default;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-
+            
         }
 
         // Update is called once per frame
@@ -52,7 +49,8 @@ namespace ActorSystem.AI.Components
                         m_myMaterial.SetFloat("Fade", 0.0f);
                     m_isDisolving = false;
                 }
-            }
+                
+            } 
         }
 
         public override void SetEnabled(bool status)
@@ -74,16 +72,9 @@ namespace ActorSystem.AI.Components
                 Debug.LogWarning("Disolve called when texture isn't a disolve shader.");
             }
         }
-        public void SetColor(Color _col)
-        {
-            m_current = _col;
-            m_myMaterial.color = m_current;
-        }
 
         public void RefreshColor()
         {
-            m_current = m_default;
-            m_myMaterial.color = m_current;
             m_isDisolving = false;
             m_myMaterial.SetFloat("Fade", 1.0f);
         }

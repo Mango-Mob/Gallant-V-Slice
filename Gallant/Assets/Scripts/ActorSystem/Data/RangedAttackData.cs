@@ -13,6 +13,17 @@ namespace ActorSystem.Data
         public float projLifeTime = 5;
         public float projSpeed;
         public float requiredAngle = 180;
+        public LayerMask filter; 
+
+        public override bool CanAttack(Transform parent, GameObject target)
+        {
+            Vector3 forward = (target.transform.position - parent.transform.position).normalized;
+            Quaternion lookAt = Quaternion.LookRotation(forward, Vector3.up);
+            bool angleReq = Mathf.Abs(Quaternion.Angle(parent.transform.rotation, lookAt)) <= requiredAngle;
+            Collider hit = Extentions.GetClosestCollider(parent.gameObject, Physics.SphereCastAll(parent.transform.position, 2, forward, 100, filter));
+
+            return angleReq && hit.gameObject == target;
+        }
 
         public override bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1)
         {

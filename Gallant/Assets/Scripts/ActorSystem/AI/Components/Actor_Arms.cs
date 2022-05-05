@@ -96,7 +96,7 @@ namespace ActorSystem.AI.Components
             m_activeAttack = null;
         }
 
-        public int GetNextAttack()
+        public int GetNextAttack(GameObject target)
         {
             if (m_brainLag > 0)
                 return -1;
@@ -106,7 +106,7 @@ namespace ActorSystem.AI.Components
                 if (m_myData[i] == null)
                     continue;
 
-                if(m_cooldowns[i] <= 0 && m_myData[i].HasDetectedCollider(transform, m_targetMask))
+                if(m_cooldowns[i] <= 0 && m_myData[i].HasDetectedCollider(transform, m_targetMask) && m_myData[i].CanAttack(transform, target))
                 {
                     return i;
                 }
