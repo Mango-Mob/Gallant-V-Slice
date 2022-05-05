@@ -71,6 +71,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float m_shakeDecreaseSpeed = 1.0f;
 
     private CameraBounds m_cameraBounds;
+    public bool m_cameraFreeze = false;
 
     private void Awake()
     {
@@ -103,34 +104,52 @@ public class Player_Controller : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_shake > 0.0f)
+        if (!m_cameraFreeze)
         {
-            playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
-            m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+            if (m_shake > 0.0f)
+            {
+                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
 
-        }
-        else
-        {
-            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
-            m_shake = 0.0f;
+            }
+            else
+            {
+                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+                m_shake = 0.0f;
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Set gamepad being used
+        int gamepadID = InputManager.Instance.GetAnyGamePad();
+
+        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
+        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
+        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
+
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
+        {
+            animator.SetFloat("Horizontal", 0.0f);
+            animator.SetFloat("Vertical", 0.0f);
+
             return;
+        }
 
+        // Camera zoom;
+        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
+        {
+            m_zoomed = !m_zoomed;
+        }
 
-        if (m_cameraBounds != null)
+        if (m_cameraBounds != null && !m_cameraFreeze)
         {
             playerCamera.transform.localPosition = Vector3.zero;
             playerCamera.transform.position = m_cameraBounds.RecalculateCameraLocation(playerCamera.transform.position);
         }
 
-        // Set gamepad being used
-        int gamepadID = InputManager.Instance.GetAnyGamePad();
 
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
@@ -346,15 +365,6 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
-        // Camera zoom;
-        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
-        {
-            m_zoomed = !m_zoomed;
-        }
-        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
-        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
-        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
-
 #if UNITY_EDITOR
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
@@ -408,6 +418,10 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    public void ForceZoom(bool _active)
+    {
+        m_zoomed = _active;
+    }
     private void HandlePickupDrop(DroppedWeapon _drop, Hand _hand)
     {
         switch (_drop.m_dropType)
