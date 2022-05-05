@@ -147,24 +147,24 @@ namespace ActorSystem.AI.Components
         public void LoadData(ActorData _data, uint _level = 0)
         {
             //Brain
-            m_startHealth = _data.health + _data.deltaHealth * _level;
-            m_startStamina = _data.stamina + _data.deltaStamina * _level;
-            m_staminaRegen = _data.staminaReg + _data.deltaStaminaReg * _level;
-            m_basePhyResist = _data.phyResist + _data.deltaPhyResist * _level;
-            m_baseAbilResist = _data.abilResist + _data.deltaAbilResist * _level;
-            m_adrenalineGain = new FloatRange(_data.adrenalineGainMin + _data.deltaAdrenaline * _level, _data.adrenalineGainMax + _data.deltaAdrenaline * _level);
+            m_startHealth = _data.health;
+            m_startStamina = _data.stamina;
+            m_staminaRegen = _data.staminaReg;
+            m_basePhyResist = _data.phyResist;
+            m_baseAbilResist = _data.abilResist;
+            m_adrenalineGain = new FloatRange(_data.adrenalineGainMin, _data.adrenalineGainMax);
             m_isInvincible = _data.invincible;
             
             //Arms
             if(m_arms != null)
             {
-                m_arms.m_baseDamageMod = _data.m_damageModifier + _data.deltaDamageMod * _level;
+                m_arms.m_baseDamageMod = _data.m_damageModifier;
             }
 
             //Legs
             if (m_legs != null)
             {
-                m_legs.m_baseSpeed = _data.baseSpeed + _data.deltaSpeed * _level;
+                m_legs.m_baseSpeed = _data.baseSpeed;
             }
 
             //Animator
