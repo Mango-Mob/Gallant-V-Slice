@@ -15,24 +15,5 @@ public class CameraBounds : MonoBehaviour
     public Vector3 RecalculateCameraLocation(Vector3 _pos)
     {
         return m_collider.ClosestPoint(_pos);
-
-        bool containsCamera = false;
-
-        Collider[] colliders = Physics.OverlapSphere(_pos, 1.0f);
-        foreach (var collider in colliders)
-        {
-            if (collider == m_collider)
-            {
-                containsCamera = true;
-                break;
-            }
-        }
-
-        Debug.Log(containsCamera);
-
-        if (!containsCamera)
-        {
-        }
-        return _pos;
     }
 }
