@@ -138,6 +138,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+
+    public static int m_saveSlotInUse = 1;
     #region Player Info Storage
     [Serializable]
     private struct PlayerInfo
@@ -158,7 +160,6 @@ public class GameManager : Singleton<GameManager>
         public Color m_leftOutlineColor;
         public Color m_rightOutlineColor;
 
-        //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
     }
 
@@ -179,8 +180,8 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = false;
         m_playerInfo.m_validSave = false;
         currentLevel = 0;
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
     }
     public static void SavePlayerInfoToFile()
     {
@@ -193,15 +194,15 @@ public class GameManager : Singleton<GameManager>
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
         m_playerInfo.m_validSave = true;
 
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
     }
     public static void LoadPlayerInfoFromFile()
     {
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.json"))
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
         {
             // Read the json from the file into a string
-            string dataAsJson = File.ReadAllText(Application.persistentDataPath + "/playerInfo.json");
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json");
 
             // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
             m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
@@ -402,5 +403,53 @@ public class GameManager : Singleton<GameManager>
         PlayerPrefs.SetFloat("Level", 0);
     }
 
+    #endregion
+
+    #region Run Info Storage
+    [Serializable]
+    public struct SaveInfo
+    {
+        public bool m_validSave;
+
+        // ******
+        // Put desired stored variables here!
+        // V V V V V V
+
+        public int m_testValue;
+
+        // Ʌ Ʌ Ʌ Ʌ Ʌ Ʌ
+    }
+
+    static public bool m_containsRunInfo = false;
+    static public SaveInfo m_saveInfo;
+
+    public static void ClearSaveInfoFromFile()
+    {
+        m_saveInfo = new SaveInfo();
+        m_containsRunInfo = false;
+        m_saveInfo.m_validSave = false;
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void SaveSaveInfoToFile()
+    {
+        m_saveInfo.m_validSave = true;
+
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void LoadSaveInfoFromFile()
+    {
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json"))
+        {
+            // Read the json from the file into a string
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json");
+
+            // Pass the json to JsonUtility, and tell it to create a RunInfo object from it
+            m_saveInfo = JsonUtility.FromJson<SaveInfo>(dataAsJson);
+
+            m_containsPlayerInfo = true;
+        }
+    }
     #endregion
 }
