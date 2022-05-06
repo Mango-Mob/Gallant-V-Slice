@@ -1,4 +1,5 @@
-﻿using EPOOutline;
+﻿using ActorSystem.Data;
+using EPOOutline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -215,7 +216,7 @@ namespace ActorSystem.AI.Components
             if (m_arms == null)
                 return -1;
 
-            return m_arms.GetNextAttack();
+            return m_arms.GetNextAttack(m_target);
         }
         
         public void BeginAttack(int id)
@@ -226,9 +227,10 @@ namespace ActorSystem.AI.Components
             m_animator.ResetTrigger("Cancel");
             if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
-                if(m_arms.Begin(id) != null)
+                AttackData attack = m_arms.Begin(id);
+                if (attack != null)
                 {
-                    
+
                 }
             }
         }
@@ -255,7 +257,7 @@ namespace ActorSystem.AI.Components
 
         public void EndAttack()
         {
-            m_arms.End();
+            m_arms.End(); 
         }
 
         public bool HandleDamage(float damage, float piercingVal, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)

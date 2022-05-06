@@ -59,7 +59,7 @@ namespace ActorSystem.AI.Other
 
             if (!m_isAttacking && isVisible && !m_submergStatus)
             {
-                int nextAttack = m_myBrain.m_arms.GetNextAttack();
+                int nextAttack = m_myBrain.m_arms.GetNextAttack(m_target);
 
                 if (nextAttack != -1 && m_octoBrain.m_currentlyAttacking.Count < m_octoBrain.m_amountOfAttacks)
                 {

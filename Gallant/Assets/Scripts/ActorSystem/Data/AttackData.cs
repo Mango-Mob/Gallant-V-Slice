@@ -36,6 +36,8 @@ namespace ActorSystem.Data
         public Effect onHitEffect;
         public float effectPower;
 
+        public virtual bool CanAttack(Transform parent, GameObject target) { return true; }
+
         public bool HasDetectedCollider(Transform parent, int filter)
         {
             return GetDetectOverlap(parent, filter).Length > 0;

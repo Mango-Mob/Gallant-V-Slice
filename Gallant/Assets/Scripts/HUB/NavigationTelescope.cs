@@ -15,9 +15,11 @@ public class NavigationTelescope : MonoBehaviour
 
     [SerializeField] private Camera m_camera;
     [SerializeField] private GameObject m_useButton;
+    [SerializeField] private GameObject m_navCanvas;
     [SerializeField] private GameObject m_selectCanvas;
     [SerializeField] private Image m_crosshair;
     [SerializeField] private LevelPortal m_portal;
+    [SerializeField] private CanvasGroup m_transitionGroup;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -33,12 +35,14 @@ public class NavigationTelescope : MonoBehaviour
     private float m_selectProgress = 0.0f;
 
     private bool m_selectFlag = false;
+    private Animator m_animator;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = FindObjectOfType<Player_Controller>();
         m_camera.enabled = false;
+        m_animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -47,12 +51,14 @@ public class NavigationTelescope : MonoBehaviour
         m_useButton.SetActive(!m_isActive);
         m_selectCanvas.SetActive(m_isActive && m_targetIndex != -1);
 
+        m_navCanvas.SetActive(m_isActive);
+
         if (!m_isActive)
             return;
 
         if (InputManager.Instance.IsBindDown("Skill_Back"))
         {
-            CloseNavigation();
+            TriggerTransition(true);
         }
 
         Vector2 movementVector = GetMovementVector();
@@ -150,6 +156,30 @@ public class NavigationTelescope : MonoBehaviour
             return movement;
         }
     }
+    public void TriggerTransition(bool _closing)
+    {
+        if (!_closing)
+        {
+            playerController.ForceZoom(true);
+            m_animator.SetTrigger("Fade");
+        }
+        else
+        {
+            m_animator.SetTrigger("Fade");
+        }
+    }
+
+    public void ToggleNavigation()
+    {
+        if (m_isActive)
+        {
+            CloseNavigation();
+        }
+        else
+        {
+            OpenNavigation();
+        }
+    }
 
     public void OpenNavigation()
     {
@@ -166,6 +196,7 @@ public class NavigationTelescope : MonoBehaviour
     public void CloseNavigation()
     {
         m_isActive = false;
+        playerController.ForceZoom(false);
 
         playerController.playerCamera.enabled = true;
         StartCoroutine(DelayControl());
