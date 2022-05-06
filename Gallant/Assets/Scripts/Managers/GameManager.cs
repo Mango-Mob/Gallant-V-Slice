@@ -196,6 +196,8 @@ public class GameManager : Singleton<GameManager>
 
         string json = JsonUtility.ToJson(m_playerInfo, true);
         File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
+
+        SaveSaveInfoToFile();
     }
     public static void LoadPlayerInfoFromFile()
     {
