@@ -46,6 +46,9 @@ public class LevelData : ScriptableObject
         if (floor > m_levelFloors.Count)
             return null;
 
+        if (m_levelFloors[(int)floor].type != FloorType.COMBAT)
+            return null;
+
         List<WaveData> result = new List<WaveData>();
         List<WaveData> options = new List<WaveData>();
         List<WaveData> archive = new List<WaveData>(m_spawnableWaves);

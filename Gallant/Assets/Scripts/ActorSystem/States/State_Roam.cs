@@ -7,6 +7,7 @@ public class State_Roam : State
 {
     public State_Roam(StateMachine _user) : base(_user) { }
 
+    public Vector3 targetLoc;
     public override void Start()
     {
         m_myUser.m_activeStateText = "ROAM";
@@ -21,11 +22,13 @@ public class State_Roam : State
             targetPos = currPos + Random.insideUnitSphere * distance;
         } while (!NavMesh.SamplePosition(targetPos, out hit, 1.0f, 1));
 
-        m_myActor.SetTargetLocation(hit.position, true);
+        targetLoc = hit.position;
     }
 
     public override void Update()
     {
+        m_myActor.SetTargetLocation(targetLoc, true);
+
         //Check if target exists, then transition to it.
         if (m_myActor.m_target != null && m_myActor.m_states.Contains(Type.MOVE_TO_TARGET))
         {
@@ -37,7 +40,7 @@ public class State_Roam : State
         {
             if(m_myActor.m_states.Contains(Type.IDLE))
             {
-                m_myUser.SetState(new State_Idle(m_myUser));
+                m_myUser.SetState(new State_Idle(m_myUser, 3f));
             }
         }
     }

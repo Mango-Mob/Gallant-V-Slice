@@ -34,6 +34,11 @@ public class State_Idle : State
             m_myActor.SetState(new State_FleeFromTarget(m_myUser));
             return;
         }
+        else if (m_myActor.m_target == null && m_myActor.m_states.Contains(Type.ROAM))
+        {
+            m_myActor.SetState(new State_Roam(m_myUser));
+            return;
+        }
 
         if (m_delay <= 0)
         {
