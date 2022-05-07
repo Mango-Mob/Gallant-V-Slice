@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 
 public class LevelPortal : MonoBehaviour
 {
@@ -9,11 +10,20 @@ public class LevelPortal : MonoBehaviour
     public string m_prefRequire = "";
     public GameObject gate;
 
+    public Color portalColor;
+    private Color flairColor;
     private Interactable m_myInterface;
+
+    public SpriteRenderer icon;
+    public VisualEffect portalMain;
+    public VisualEffect portalFlair;
+    public VisualEffect portalBurst;
 
     private void Awake()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
+
+        SetColor(portalColor);
     }
 
     // Start is called before the first frame update
@@ -33,6 +43,18 @@ public class LevelPortal : MonoBehaviour
     public void Update()
     {
         GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
+    }
+
+    public void SetColor(Color color)
+    {
+        float darkenAmount = 50;
+        portalColor = color;
+        flairColor = new Color(Mathf.Clamp(color.r - darkenAmount, 0, 255), Mathf.Clamp(color.g - darkenAmount, 0, 255), Mathf.Clamp(color.b - darkenAmount, 0, 255));
+
+        icon.color = portalColor;
+        portalMain.SetVector4("Particle Color", portalColor);
+        portalBurst.SetVector4("Particle Color", flairColor);
+        portalFlair.SetVector4("Particle Color", flairColor);
     }
 
     public void Interact()

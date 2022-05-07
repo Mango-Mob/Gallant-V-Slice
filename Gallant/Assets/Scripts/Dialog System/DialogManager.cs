@@ -37,6 +37,7 @@ public class DialogManager : Singleton<DialogManager>
     [SerializeField] private Image m_characterBody;
     [SerializeField] private Image m_characterFace;
 
+    [SerializeField] private Image[] gamepadButtons;
     private CharacterData m_activeCharacter;
     private DialogFile m_file;
 
@@ -60,23 +61,16 @@ public class DialogManager : Singleton<DialogManager>
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
-        {
-            EventSystem.current.SetSelectedGameObject(m_defaultSelected);
-        }
-        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
-        }
-
         for (int i = 0; i < 3; i++)
         {
-            if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i))
+            gamepadButtons[i].enabled = InputManager.Instance.isInGamepadMode;
+            if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i) || InputManager.Instance.IsGamepadButtonDown(ButtonType.UP + i, 0))
             {
                 if (m_options[i].interactable)
                     m_options[i].onClick?.Invoke();
             }
         }
+        
     }
 
     public void Show()

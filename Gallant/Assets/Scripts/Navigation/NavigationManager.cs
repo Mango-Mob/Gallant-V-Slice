@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -54,6 +55,19 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         {
             SetVisibility(false);
         }
+
+        if(IsVisible)
+        {
+            if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(m_rootNode.m_myConnections[0].other.gameObject);
+            }
+            else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
+
         m_mouseInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
         m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
         m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);

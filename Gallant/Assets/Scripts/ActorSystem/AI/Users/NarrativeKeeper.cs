@@ -86,8 +86,8 @@ namespace ActorSystem.AI.Users
             if(!hasInteractedWith)
             {
                 hasInteractedWith = true;
-                NarrativeManager.Instance.m_visitNPC[m_myData.ActorName] = visits++;
-                PlayerPrefs.SetInt($"{m_myData.ActorName}Visits", visits);
+                NarrativeManager.Instance.m_visitNPC[m_myData.ActorName] = visits + 1;
+                PlayerPrefs.SetInt($"{m_myData.ActorName}Visits", visits + 1);
             }
 
             int select = UnityEngine.Random.Range(0, m_potentialDialogs.Count);
@@ -96,6 +96,8 @@ namespace ActorSystem.AI.Users
             DialogManager.Instance.m_onDialogFinish = new UnityEvent();
             DialogManager.Instance.m_onDialogFinish.AddListener(EndTalk);
             DialogManager.Instance.Show();
+
+            NarrativeManager.Instance.AddSeenDialog(m_potentialDialogs[select].dialog);
 
             this.SetTargetOrientaion(GameManager.Instance.m_player.transform.position);
             GetComponentInChildren<Interactable>().m_isReady = false;
