@@ -1407,7 +1407,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5808131754027325952}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -7.89, z: 0}
+  m_LocalPosition: {x: 0, y: -7, z: 0}
   m_LocalScale: {x: 314.99997, y: 14, z: 314.99997}
   m_Children:
   - {fileID: 4331917592240255890}
@@ -1739,6 +1739,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3207636555392495409}
     m_Modifications:
+    - target: {fileID: 1971416019638448272, guid: 8f603e321e37a4744a90e010698a1c47,
+        type: 3}
+      propertyPath: outlineTargets.Array.data[0].IsVisible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770252967708785742, guid: 8f603e321e37a4744a90e010698a1c47,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4395922905243162666, guid: 8f603e321e37a4744a90e010698a1c47,
         type: 3}
       propertyPath: myTutorialPosition
@@ -3859,10 +3869,40 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3207636555392495409}
     m_Modifications:
+    - target: {fileID: 2200736415089636382, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3401483718304044423, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3994744846972515341, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4072216525017360024, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5376047009146626761, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6149235524747671151, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
         type: 3}
       propertyPath: m_Name
       value: LevelPortal
+      objectReference: {fileID: 0}
+    - target: {fileID: 8304218851884176192, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8333315222035609440, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
         type: 3}
@@ -3919,8 +3959,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8980264205516202386, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: portalMain
+      value: 
+      objectReference: {fileID: 3061221509196526038}
+    - target: {fileID: 8980264205516202386, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: portalFlair
+      value: 
+      objectReference: {fileID: 6042697835966510463}
+    - target: {fileID: 8980264205516202386, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: portalColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8980264205516202386, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: portalColor.g
+      value: 0.50518686
+      objectReference: {fileID: 0}
+    - target: {fileID: 8980264205516202386, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+        type: 3}
+      propertyPath: portalColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b, type: 3}
+--- !u!2083052967 &6042697835966510463 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4196042727635838543, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7629290233209967408}
+  m_PrefabAsset: {fileID: 0}
+--- !u!2083052967 &3061221509196526038 stripped
+VisualEffect:
+  m_CorrespondingSourceObject: {fileID: 4871500297247646438, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7629290233209967408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1893003887017714768 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8333315222035609440, guid: 7f3b045fd6c7ee4478e4a06ba09ce77b,
@@ -4014,6 +4091,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3207636555392495409}
     m_Modifications:
+    - target: {fileID: 1971416019638448272, guid: 8f603e321e37a4744a90e010698a1c47,
+        type: 3}
+      propertyPath: outlineTargets.Array.data[0].IsVisible
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770252967708785742, guid: 8f603e321e37a4744a90e010698a1c47,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4395922905243162667, guid: 8f603e321e37a4744a90e010698a1c47,
         type: 3}
       propertyPath: m_Name

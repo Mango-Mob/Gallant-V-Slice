@@ -36,7 +36,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     {
         base.Awake();
         m_myCamera = GetComponentInChildren<Camera>();
-        m_myCamera.enabled = false;
+        m_myCamera.gameObject.SetActive(false);
         m_myCanvas = GetComponent<Canvas>();
         m_myCanvas.enabled = false;
         index = -1;
@@ -104,7 +104,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void SetVisibility(bool status, bool canQuit = true)
     {
-        m_myCamera.enabled = status;
+        m_myCamera.gameObject.SetActive(status);
         m_myCanvas.enabled = status;
         m_canQuit = canQuit;
 

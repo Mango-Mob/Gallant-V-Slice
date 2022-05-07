@@ -73,9 +73,8 @@ namespace ActorSystem.AI.Users
         {
             DialogManager.Instance.LoadDialog(m_dialog[TutorialManager.Instance.targetDialog]);
 
-            DialogManager.Instance.m_interact[0] = new UnityEvent();
-            DialogManager.Instance.m_interact[0].AddListener(CompleteDialog);
-
+            DialogManager.Instance.m_onDialogFinish = new UnityEvent();
+            DialogManager.Instance.m_onDialogFinish.AddListener(CompleteDialog);
             GetComponentInChildren<Interactable>().m_isReady = false;
             
             DialogManager.Instance.Show();

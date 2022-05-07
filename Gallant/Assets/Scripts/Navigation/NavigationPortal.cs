@@ -4,13 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class NavigationPortal : MonoBehaviour
 {
     public bool GenerateOnAwake = false;
     public LevelData m_levelToGenerate;
 
+    public Color portalColor;
+    private Color flairColor;
     private Interactable m_myInterface;
+
+    public SpriteRenderer icon;
+    public VisualEffect portalMain;
+    public VisualEffect portalFlair;
+    public VisualEffect portalBurst;
 
     private void Start()
     {
@@ -20,6 +28,8 @@ public class NavigationPortal : MonoBehaviour
             NavigationManager.Instance.Generate(m_levelToGenerate);
             NavigationManager.Instance.UpdateMap(0);
         }
+
+        SetColor(portalColor);
     }
 
     public void Update()
@@ -31,6 +41,18 @@ public class NavigationPortal : MonoBehaviour
     {
         NavigationManager.Instance.SetVisibility(true);
         m_myInterface.m_isReady = false;
+    }
+
+    public void SetColor(Color color)
+    {
+        float darkenAmount = 50;
+        portalColor = color;
+        flairColor = new Color(Mathf.Clamp(color.r - darkenAmount, 0, 255), Mathf.Clamp(color.g - darkenAmount, 0, 255), Mathf.Clamp(color.b - darkenAmount, 0, 255));
+
+        icon.color = portalColor;
+        portalMain.SetVector4("Particle Color", portalColor);
+        portalBurst.SetVector4("Particle Color", flairColor);
+        portalFlair.SetVector4("Particle Color", flairColor);
     }
 
     private void OnTriggerEnter(Collider other)
