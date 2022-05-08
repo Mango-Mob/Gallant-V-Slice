@@ -15,9 +15,13 @@ public class UI_BindDisplay : UI_Element
     private Image m_button;
     private void Awake()
     {
-        m_keyText = m_keyboardDisplay.GetComponent<Text>();
-        m_keyMesh = m_keyboardDisplay.GetComponent<TMP_Text>();
-        m_button = m_gamepadDisplay.GetComponent<Image>();
+        if (m_keyboardDisplay != null)
+        {
+            m_keyText = m_keyboardDisplay.GetComponent<Text>();
+            m_keyMesh = m_keyboardDisplay.GetComponent<TMP_Text>();
+        }
+        if (m_gamepadDisplay != null)
+            m_button = m_gamepadDisplay.GetComponent<Image>();
     }
 
     // Update is called once per frame

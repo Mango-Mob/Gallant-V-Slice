@@ -127,7 +127,7 @@ public class SkillTreeReader : MonoBehaviour
         }
         else
         {
-            File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class]));
+            File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class], true));
 
             Debug.Log("Created new skill tree file!");
 
@@ -140,7 +140,7 @@ public class SkillTreeReader : MonoBehaviour
 
     public void SaveSkillTree(InkmanClass _class)
     {
-        string json = JsonUtility.ToJson(m_skills[(int)_class]);
+        string json = JsonUtility.ToJson(m_skills[(int)_class], true);
         File.WriteAllText(GetSkillTreePath(_class), json);
     }
 

@@ -140,7 +140,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         }
 #endif
 
-        m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+        m_currencyText.text = $"{PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}")}";
 
         Navigation(gamepadID);
     }
