@@ -161,6 +161,9 @@ public class GameManager : Singleton<GameManager>
         public Color m_rightOutlineColor;
 
         public List<EffectsInfo> m_effects;
+
+        public float m_health;
+        public int m_orbs;
     }
 
     [Serializable]
@@ -215,7 +218,7 @@ public class GameManager : Singleton<GameManager>
         if (Instance?.m_player != null)
             Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect, float _health, int _orbs)
     {
         if (_leftWeapon != null)
         {
@@ -279,6 +282,9 @@ public class GameManager : Singleton<GameManager>
         //m_playerInfo.m_effects = _effects;
 
         m_playerInfo.m_classData = _class;
+
+        m_playerInfo.m_health = _health;
+        m_playerInfo.m_orbs = _orbs;
 
         m_containsPlayerInfo = true;
     }
@@ -391,6 +397,14 @@ public class GameManager : Singleton<GameManager>
         return m_playerInfo.m_classData;
     }
 
+    public static float RetrieveHealth()
+    {
+        return m_playerInfo.m_health;
+    }
+    public static int RetrieveOrbCount()
+    {
+        return m_playerInfo.m_orbs;
+    }
     public static void ResetPlayerInfo()
     {
         m_playerInfo.m_leftWeapon = null;
