@@ -50,7 +50,7 @@ namespace ActorSystem.AI.Users
 
         protected override void Update()
         {
-            isVisible = TutorialManager.Instance.tutorialPosition == myTutorialPosition && !isDone;
+            isVisible = TutorialManager.Instance.tutorialPosition == myTutorialPosition && !isDone && !GameManager.Instance.IsInCombat;
             m_myBrain.m_animator.SetBool("IsVisible", isVisible);
             GetComponent<Collider>().enabled = isVisible;
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
@@ -73,11 +73,18 @@ namespace ActorSystem.AI.Users
         {
             DialogManager.Instance.LoadDialog(m_dialog[TutorialManager.Instance.targetDialog]);
 
+            DialogManager.Instance.m_interact[0] = new UnityEvent();
+            DialogManager.Instance.m_interact[0].AddListener(InteractFunc);
             DialogManager.Instance.m_onDialogFinish = new UnityEvent();
             DialogManager.Instance.m_onDialogFinish.AddListener(CompleteDialog);
             GetComponentInChildren<Interactable>().m_isReady = false;
             
             DialogManager.Instance.Show();
+        }
+
+        public void InteractFunc()
+        {
+            TutorialManager.Instance.InteractFunction();
         }
 
         public void CompleteDialog()

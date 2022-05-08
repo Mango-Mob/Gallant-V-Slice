@@ -322,7 +322,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_activeStateText: 
-  m_myFaction: 0
   m_toReserveOnLoad: 0
   m_myLevel: 0
   m_name: 
@@ -342,9 +341,11 @@ MonoBehaviour:
   m_oilPhaseAttacks: []
   m_inkSlam:
     start: {x: 0, y: 0, z: 0}
+    center: {x: 0, y: 0, z: 0}
     end: {x: 0, y: 0, z: 0}
     type: 0
-    size: 0
+    size: {x: 0, y: 0, z: 0}
+    radius: 0
 --- !u!114 &7473522537975490883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,7 +390,55 @@ MonoBehaviour:
         m_CallState: 2
   eventThree:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Bosses.Boss_Swamp, Assembly-CSharp
+        m_MethodName: IgniteInk
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3626508731828100027}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
+        m_MethodName: DamageInSlam
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Bosses.Boss_Swamp, Assembly-CSharp
+        m_MethodName: Slam
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3626508731828100027}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
+        m_MethodName: PlaySlam
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   eventFour:
     m_PersistentCalls:
       m_Calls: []
@@ -411,8 +460,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_canBeTarget: 1
   m_forceShowUI: 0
-  m_agility: 0
   m_currHealth: 0
+  m_currStamina: 0
   m_currPhyResist: 0
   m_currAbilResist: 0
   m_target: {fileID: 0}
@@ -444,6 +493,7 @@ MonoBehaviour:
   m_targetMask:
     serializedVersion: 2
     m_Bits: 0
+  m_attackSource: {fileID: 0}
   m_baseDamageMod: 1
   m_lastAttackName: 
   m_myData: []

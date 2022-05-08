@@ -23,6 +23,7 @@ namespace ActorSystem.Spawning
         public bool m_hasStarted { get; private set; } = false;
         public SpawnDataGenerator[] m_generators;
 
+        private bool hasAReward = true;
         private int activeRoutines = 0;
         private float spawnDelay = 0.5f;
         //MonoBehaviour
@@ -47,9 +48,10 @@ namespace ActorSystem.Spawning
          * StartCombat : Starts combat for the player
          * @author : Michael Jordan
          */
-        public bool StartCombat()
+        public bool StartCombat(bool giveReward = true)
         {
-            if(m_waves.Count > 0 || m_myActors.Count != 0)
+            hasAReward = giveReward;
+            if (m_waves.Count > 0 || m_myActors.Count != 0)
             {
                 m_hasStarted = true;
 
@@ -179,9 +181,12 @@ namespace ActorSystem.Spawning
                 if (m_waves.Count == 0 && spawnDelay <= 0)
                 {
                     Stop();
-                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
-                    GameManager.Advance();
-                    EndScreenMenu.roomsCleared++;
+                    if(hasAReward)
+                    {
+                        RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                        GameManager.Advance();
+                        EndScreenMenu.roomsCleared++;
+                    }
                 }
                 else if (spawnDelay <= 0)
                 {

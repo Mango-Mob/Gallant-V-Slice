@@ -76,20 +76,23 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             targetDialog = 0;
         }
     }
+    public void InteractFunction()
+    {
+        if (tutorialPosition == 3)
+            RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
+    }
 
     public bool AdvanceTutorial()
     {
         if (tutorialPosition < 3 || tutorialPosition == 4)
         {
             tutorialPosition++;
-            if (tutorialPosition == 3)
-                RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return true;
         }
         
         if(tutorialPosition == 3)
         {
-            RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
+            //RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return false;
         }
         

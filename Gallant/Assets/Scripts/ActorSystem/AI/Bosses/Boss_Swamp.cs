@@ -1,5 +1,6 @@
 ﻿using ActorSystem.AI.Components;
 using ActorSystem.AI.Other;
+using ActorSystem.Spawning;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,11 +26,14 @@ namespace ActorSystem.AI.Bosses
         public Tentacle_AI m_tentacleI;
         public List<Actor_Material> m_holdingTentacles;
 
+        public ActorSpawner m_mySpawnner;
         private Transform m_restingTransformL;
         private Transform m_restingTransformR;
 
-        public enum Phase { HEAD, TENTACLE, INK, DEAD}
+        public enum Phase { HEAD, TENTACLE, INK, SUMMON, DEAD}
         public Phase m_mode { get; private set; } = Phase.HEAD;
+
+        public OctopusShipControls m_ship;
 
         public int m_currentOrient = 0;
 
@@ -179,6 +183,10 @@ namespace ActorSystem.AI.Bosses
                 case Phase.INK:
                     StartCoroutine(CreateInk(5, 2f, 0.05f));
                     m_inkPhaseTimer.Start(m_inkAttackDuration);
+                    break;
+                case Phase.SUMMON:
+                    m_mySpawnner.Restart();
+                    m_mySpawnner.StartCombat(false);
                     break;
                 case Phase.DEAD:
                     Submerge();
@@ -396,8 +404,24 @@ namespace ActorSystem.AI.Bosses
             GameManager.Instance.FinishLevel();
         }
 
-        public override void Slam()
+        public void Slam(int tentacleId)
         {
+            if (tentacleId == 3)
+            {
+                //Lantern
+                m_ship.Slam(true);
+            }
+            else if (m_currentOrient == 0 || m_currentOrient == 3)
+            {
+                //Oct at the back
+                m_ship.Slam(tentacleId == 2); //id = 2 is the opposite side
+            }
+            else
+            {
+                //Oct at the front
+                m_ship.Slam(tentacleId != 2);
+            }
+
             GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(8, 0.3f);
         }
     }

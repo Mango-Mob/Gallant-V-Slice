@@ -648,6 +648,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  m_ship: {fileID: 0}
   m_currentOrient: 0
 --- !u!114 &6787086130878318304
 MonoBehaviour:
@@ -663,8 +664,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_canBeTarget: 1
   m_forceShowUI: 1
-  m_agility: 0
   m_currHealth: 0
+  m_currStamina: 0
   m_currPhyResist: 0
   m_currAbilResist: 0
   m_target: {fileID: 0}
@@ -731,7 +732,7 @@ MonoBehaviour:
   IsImmuneToFrost: 0
   IsImmuneToFlame: 0
   IsImmuneToStun: 1
-  IsImmuneToPin: 1
+  IsImmuneToWeaken: 0
 --- !u!1 &6787086131004846691
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,7 +870,7 @@ PrefabInstance:
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
       propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
@@ -965,6 +966,11 @@ PrefabInstance:
         type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
+        type: 3}
+      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
@@ -1315,22 +1321,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
@@ -1350,11 +1341,6 @@ PrefabInstance:
       objectReference: {fileID: 6787086130878318305}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 603681902475781674}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 603681902475781674}
@@ -1365,16 +1351,6 @@ PrefabInstance:
       objectReference: {fileID: 603681902475781674}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -1382,16 +1358,6 @@ PrefabInstance:
         type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Slam
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: PlaySlam
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
@@ -1405,16 +1371,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Bosses.Boss_Swamp, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
       objectReference: {fileID: 0}
@@ -1422,16 +1378,6 @@ PrefabInstance:
         type: 3}
       propertyPath: animEvents.Array.data[1]._event.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
-        type: 3}
-      propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
@@ -1822,129 +1768,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
         type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
       propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6787086130878318305}
     - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
         type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 919132149611560309}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
       propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 6787086130878318305}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_Target
-      value: 
-      objectReference: {fileID: 919132149611560309}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: IgniteInk
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DamageInSlam
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: Slam
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
-      value: PlaySlam
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Bosses.Boss_Swamp, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Bosses.Boss_Swamp, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
-      value: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 7473522537975490883, guid: 764f67aff3073624280e1fd55284390e,
-        type: 3}
-      propertyPath: eventThree.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 8371575852711292169, guid: 764f67aff3073624280e1fd55284390e,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2365,7 +2196,7 @@ PrefabInstance:
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
       propertyPath: animEvents.Array.data[0]._event.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2695535844105113941, guid: 15f0c9cf02386304a8c7e8d31c4c53c7,
         type: 3}
