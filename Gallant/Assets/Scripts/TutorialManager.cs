@@ -25,8 +25,6 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public ClassData m_mage;
     public ClassData m_hunter;
 
-    public Room m_combatSection;
-
     public Transform m_respawn;
 
     public GameObject[] m_mainGameObject;
@@ -67,39 +65,10 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     // Update is called once per frame
     public void Update()
     {
-        //if (m_guide == null)
-        //    return;
-        //
-        //if(Vector3.Distance(m_guide.transform.position, m_tutorialPositions[current].position) < 0.5f)
-        //{
-        //    m_guide.m_myBrain.m_myOutline.enabled = true;
-        //}
-        //
-        //if(m_combatSection.IsComplete() && !GameManager.Instance.IsInCombat && current == 3)
-        //{
-        //    current++;
-        //    m_guide.transform.position = m_tutorialPositions[current].position;
-        //    m_guide.m_myBrain.m_myOutline.enabled = false;
-        //    (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current - 1];
-        //}
-        //
         if(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerResources.m_dead && !m_isRespawning)
         {
             StartCoroutine(RespawnPlayer());
         }
-        //
-        //if(InputManager.Instance.IsKeyDown(KeyType.P))
-        //{
-        //    GameManager.Instance.m_player.GetComponent<Player_Controller>().RespawnPlayerTo(transform.position);
-        //    GameManager.Instance.m_player.transform.forward = transform.forward;
-        //    (m_guide as LoreKeeper).m_dialog = m_tutorialDialog[current];
-        //
-        //    foreach (var item in m_mainGameObject)
-        //    {
-        //        item.SetActive(false);
-        //    }
-        //    PlayerPrefs.SetInt("NewPlayer", 0);
-        //}
 
         if(NavigationManager.Instance.index == 3 && tutorialPosition == 3)
         {
@@ -107,20 +76,23 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             targetDialog = 0;
         }
     }
+    public void InteractFunction()
+    {
+        if (tutorialPosition == 3)
+            RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
+    }
 
     public bool AdvanceTutorial()
     {
         if (tutorialPosition < 3 || tutorialPosition == 4)
         {
             tutorialPosition++;
-            if (tutorialPosition == 3)
-                RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return true;
         }
         
         if(tutorialPosition == 3)
         {
-            RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
+            //RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return false;
         }
         

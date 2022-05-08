@@ -1,4 +1,5 @@
-﻿using EPOOutline;
+﻿using ActorSystem.Data;
+using EPOOutline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,7 +79,7 @@ namespace ActorSystem.AI.Components
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
-            m_myOutline = GetComponent<Outlinable>();
+            m_myOutline = GetComponentInChildren<Outlinable>();
 
             SetOutlineEnabled(false);
         }
@@ -147,24 +148,24 @@ namespace ActorSystem.AI.Components
         public void LoadData(ActorData _data, uint _level = 0)
         {
             //Brain
-            m_startHealth = _data.health + _data.deltaHealth * _level;
-            m_startStamina = _data.stamina + _data.deltaStamina * _level;
-            m_staminaRegen = _data.staminaReg + _data.deltaStaminaReg * _level;
-            m_basePhyResist = _data.phyResist + _data.deltaPhyResist * _level;
-            m_baseAbilResist = _data.abilResist + _data.deltaAbilResist * _level;
-            m_adrenalineGain = new FloatRange(_data.adrenalineGainMin + _data.deltaAdrenaline * _level, _data.adrenalineGainMax + _data.deltaAdrenaline * _level);
+            m_startHealth = _data.health;
+            m_startStamina = _data.stamina;
+            m_staminaRegen = _data.staminaReg;
+            m_basePhyResist = _data.phyResist;
+            m_baseAbilResist = _data.abilResist;
+            m_adrenalineGain = new FloatRange(_data.adrenalineGainMin, _data.adrenalineGainMax);
             m_isInvincible = _data.invincible;
             
             //Arms
             if(m_arms != null)
             {
-                m_arms.m_baseDamageMod = _data.m_damageModifier + _data.deltaDamageMod * _level;
+                m_arms.m_baseDamageMod = _data.m_damageModifier;
             }
 
             //Legs
             if (m_legs != null)
             {
-                m_legs.m_baseSpeed = _data.baseSpeed + _data.deltaSpeed * _level;
+                m_legs.m_baseSpeed = _data.baseSpeed;
             }
 
             //Animator
@@ -215,7 +216,7 @@ namespace ActorSystem.AI.Components
             if (m_arms == null)
                 return -1;
 
-            return m_arms.GetNextAttack();
+            return m_arms.GetNextAttack(m_target);
         }
         
         public void BeginAttack(int id)
@@ -226,9 +227,10 @@ namespace ActorSystem.AI.Components
             m_animator.ResetTrigger("Cancel");
             if (m_animator.PlayAnimation(m_arms.m_myData[id].animID))
             {
-                if(m_arms.Begin(id) != null)
+                AttackData attack = m_arms.Begin(id);
+                if (attack != null)
                 {
-                    
+
                 }
             }
         }
@@ -255,7 +257,7 @@ namespace ActorSystem.AI.Components
 
         public void EndAttack()
         {
-            m_arms.End();
+            m_arms.End(); 
         }
 
         public bool HandleDamage(float damage, float piercingVal, CombatSystem.DamageType _type, Vector3? _damageLoc = null, bool playAudio = true, bool canCancel = true, bool hitIndicator = true)
@@ -263,12 +265,19 @@ namespace ActorSystem.AI.Components
             if (IsDead)
                 return true;
             
-            if(_damageLoc != null)
+            if(_damageLoc != null && m_legs != null)
             {
                 Vector3 direction = (_damageLoc.Value - transform.position).normalized;
                 direction.y = 0;
                 transform.forward = direction.normalized;
-                this.m_arms.m_brainLag = Mathf.Max(0.5f, m_arms.m_brainLag);
+
+                if(m_arms != null)
+                    this.m_arms.m_brainLag = Mathf.Max(0.5f, m_arms.m_brainLag);
+
+                if(m_target == null)
+                {
+                    m_target = GameManager.Instance.m_player;
+                }
             }
 
             switch (_type)
@@ -306,11 +315,14 @@ namespace ActorSystem.AI.Components
             EndScreenMenu.damageDealt += damage;
             GameManager.m_damageDealt += damage;
 
-            if (playAudio && IsDead)
+            if(IsDead)
             {
                 GameManager.m_killCount++;
-                m_audioAgent?.PlayDeath();
+                m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
+
+                if (playAudio)
+                    m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
             {
@@ -327,7 +339,7 @@ namespace ActorSystem.AI.Components
 
             if(!m_canStagger)
             {
-                m_legs.KnockBack(direction * damage);
+                m_legs?.KnockBack(direction * damage);
                 return false;
             }
 
@@ -349,12 +361,12 @@ namespace ActorSystem.AI.Components
 
             if (m_currStamina == 0)
             {
-                m_legs.KnockBack(direction * damage);
+                m_legs?.KnockBack(direction * damage);
                 return true;
             }
             else
             {
-                m_legs.KnockBack(direction * damage * 0.5f);
+                m_legs?.KnockBack(direction * damage * 0.5f);
                 return false;
             }
         }

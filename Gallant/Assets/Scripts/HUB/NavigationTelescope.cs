@@ -10,7 +10,7 @@ public class NavigationTelescope : MonoBehaviour
     {
         public string sceneName;
         public float locationAngle;
-        public Material m_portalMat;
+        public Color m_portalColor;
     }
 
     [SerializeField] private Camera m_camera;
@@ -129,7 +129,7 @@ public class NavigationTelescope : MonoBehaviour
     {
         // Change portal destination
         m_portal.m_portalDestination = _destination.sceneName;
-        m_portal.gate.GetComponent<MeshRenderer>().material = _destination.m_portalMat;
+        m_portal.SetColor(_destination.m_portalColor);
 
         // Trigger animation
 

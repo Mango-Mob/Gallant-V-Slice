@@ -24,6 +24,8 @@ namespace ActorSystem.AI.Other
         public List<AttackData> m_oilPhaseAttacks;
         public Hitbox m_inkSlam;
 
+        public bool m_needsToUpdateAttacks = false;
+
         private bool m_submergStatus = true;
         private Vector3 m_velocity;
         private Boss_Swamp m_octoBrain;
@@ -45,6 +47,7 @@ namespace ActorSystem.AI.Other
         {
             base.Start();
             m_player = GameManager.Instance.m_player;
+           m_myBrain.m_target = m_player;
             if (emergeOnAwake)
                 Emerge();
         }
@@ -59,7 +62,7 @@ namespace ActorSystem.AI.Other
 
             if (!m_isAttacking && isVisible && !m_submergStatus)
             {
-                int nextAttack = m_myBrain.m_arms.GetNextAttack();
+                int nextAttack = m_myBrain.m_arms.GetNextAttack(m_target);
 
                 if (nextAttack != -1 && m_octoBrain.m_currentlyAttacking.Count < m_octoBrain.m_amountOfAttacks)
                 {
@@ -76,8 +79,14 @@ namespace ActorSystem.AI.Other
                 m_canRotate = true;
                 m_octoBrain.m_currentlyAttacking.Remove(this);
             }
+            else if(m_myBrain.m_arms.m_activeAttack == null && m_needsToUpdateAttacks)
+            {
+                UpdateAttacks();
+                m_needsToUpdateAttacks = false;
+            }
         }
-        public void UpdateAttacks()
+
+        private void UpdateAttacks()
         {
             for (int i = 0; i < m_myBrain.m_arms.m_myData.Count; i++)
             {
@@ -121,6 +130,12 @@ namespace ActorSystem.AI.Other
             m_myBrain.m_animator.SetBool("Visible", !m_submergStatus, Random.Range(0f, 2f));
             m_idealLocation = transform.position;
             m_emergeRotation = transform.rotation;
+
+            foreach (var collider in GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = true;
+            }
+
             m_velocity = Vector3.zero;
         }
 
@@ -132,7 +147,7 @@ namespace ActorSystem.AI.Other
             if (refresh && m_myBrain.IsDead)
             {
                 m_myBrain.Refresh();
-                m_myBrain.m_animator.SetFloat("playSpeed", 1.0f);
+                m_myBrain.m_animator.SetFloat("playSpeed", 1.0f);                
             }
         }
 
@@ -169,11 +184,12 @@ namespace ActorSystem.AI.Other
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     foreach (var material in m_myBrain.m_materials)
                     {
-                        material.StartDisolve(2f);
+                        material.StartDisolve();
                     }
                     Submerge(false);
                     after = m_myBrain.m_currHealth;
                     m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
+                    m_octoBrain.m_currentlyAttacking.Remove(this);
                     return true;
                 }
 
@@ -202,7 +218,7 @@ namespace ActorSystem.AI.Other
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     foreach (var material in m_myBrain.m_materials)
                     {
-                        material.StartDisolve(2f);
+                        material.StartDisolve();
                     }
                     Submerge(false);
                     after = m_myBrain.m_currHealth;
@@ -213,6 +229,11 @@ namespace ActorSystem.AI.Other
                 m_octoBrain.DealDamageSilent(before - after, _type);
             }
             return false;
+        }
+
+        public override void DealImpactDamage(float amount, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
+        {
+            
         }
 
         public void DamageInSlam()
@@ -255,7 +276,7 @@ namespace ActorSystem.AI.Other
             base.Kill();
             foreach (var material in m_myBrain.m_materials)
             {
-                material.StartDisolve(2f);
+                material.StartDisolve();
             }
             m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
         }
@@ -281,29 +302,32 @@ namespace ActorSystem.AI.Other
                 }
             }
 
-            Vector3 direction = m_idealLocation - transform.position;
-            direction.y = 0;
-
-            if (direction == Vector3.zero)
-                return;
-
-            if(direction.magnitude > m_stoppingDist)
+            if(!m_myBrain.m_arms.m_activeAttack.HasValue)
             {
-                m_velocity += m_acceleration * direction.normalized * Time.fixedDeltaTime;
-            }
-            else
-            {
-                float decel = -m_velocity.magnitude / (direction.magnitude / (m_velocity.magnitude * 0.5f));
-                m_velocity += decel * direction.normalized * Time.fixedDeltaTime;
-            }
+                Vector3 direction = m_idealLocation - transform.position;
+                direction.y = 0;
 
-            if(direction.magnitude < 0.25f)
-            {
-                m_velocity = Vector3.zero;
-                TeleportToIdeal();
-            }
+                if (direction == Vector3.zero)
+                    return;
 
-            transform.position += m_velocity * Time.fixedDeltaTime;
+                if (direction.magnitude > m_stoppingDist)
+                {
+                    m_velocity += m_acceleration * direction.normalized * Time.fixedDeltaTime;
+                }
+                else
+                {
+                    float decel = -m_velocity.magnitude / (direction.magnitude / (m_velocity.magnitude * 0.5f));
+                    m_velocity += decel * direction.normalized * Time.fixedDeltaTime;
+                }
+
+                if (direction.magnitude < 0.25f)
+                {
+                    m_velocity = Vector3.zero;
+                    TeleportToIdeal();
+                }
+
+                transform.position += m_velocity * Time.fixedDeltaTime;
+            }
         }
 
         public void PlaySlam()

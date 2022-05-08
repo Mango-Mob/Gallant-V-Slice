@@ -8,8 +8,8 @@ public class DialogOption
 {
     public string text;
     public int nextDialog;
+    public int interact = 0;
     public DialogResult result;
-    public int interactVal = 0;
 
     public DialogOption(int currentScene)
     {
@@ -34,7 +34,7 @@ public class DialogOption
             case "INTERACT":
                 result = DialogResult.INTERACT;
                 nextDialog = currentScene + 1;
-                interactVal = int.Parse(other);
+                interact = int.Parse(other);
                 return;
             case "TRANSFER":
                 result = DialogResult.TRANSFER;

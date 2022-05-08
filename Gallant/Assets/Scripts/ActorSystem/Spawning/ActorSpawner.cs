@@ -14,34 +14,33 @@ namespace ActorSystem.Spawning
      */
     public class ActorSpawner : MonoBehaviour
     {
-        public bool m_spawnOnAwake = false;
-        public float m_value;
-
         [Header("Wave Information")]
-        public bool m_generateWavesOnAwake = false;
-        public List<RoomData> m_waves = new List<RoomData>();
-        public List<RoomData> m_allWaves = new List<RoomData>();
+        private List<WaveData> m_waves;
 
-        protected List<RoomData> m_waveArchive;
+        protected List<WaveData> m_waveArchive;
 
         public List<Actor> m_myActors { get; private set; }
         public bool m_hasStarted { get; private set; } = false;
         public SpawnDataGenerator[] m_generators;
 
+        public bool isSpawnning = false;
+        private bool hasAReward = true;
         private int activeRoutines = 0;
         private float spawnDelay = 0.5f;
         //MonoBehaviour
         private void Awake()
         {
-            m_waveArchive = new List<RoomData>(m_waves);
-            foreach (var wave in m_waves)
-            {
-                m_value += wave.CalculateCost();
-            }
             m_generators = GetComponentsInChildren<SpawnDataGenerator>();
             m_myActors = new List<Actor>();
-            if (m_spawnOnAwake && m_waves.Count > 0)
+            if(NavigationManager.Instance.m_generatedLevel != null)
             {
+                LevelData data = NavigationManager.Instance.m_generatedLevel;
+                int floor = NavigationManager.Instance.GetFloor();
+                if (floor < 0)
+                    return;
+
+                m_waves = data.EvaluateCombat((uint)floor);
+                m_waveArchive = new List<WaveData>(m_waves);
                 StartCombat();
             }
         }
@@ -50,9 +49,10 @@ namespace ActorSystem.Spawning
          * StartCombat : Starts combat for the player
          * @author : Michael Jordan
          */
-        public bool StartCombat()
+        public bool StartCombat(bool giveReward = true)
         {
-            if(m_waves.Count > 0 || m_myActors.Count != 0)
+            hasAReward = giveReward;
+            if (m_waves.Count > 0 || m_myActors.Count != 0)
             {
                 m_hasStarted = true;
 
@@ -110,7 +110,7 @@ namespace ActorSystem.Spawning
          */
         public void Restart()
         {
-            m_waves = new List<RoomData>(m_waveArchive);
+            m_waves = new List<WaveData>(m_waveArchive);
             Stop();
         }
 
@@ -129,7 +129,7 @@ namespace ActorSystem.Spawning
          * @author : Michael Jordan
          * @param (RoomData) The wave to spawn
          */
-        public void SpawnWave(RoomData wave)
+        public void SpawnWave(WaveData wave)
         {
             if (wave == null)
                 return;
@@ -143,6 +143,7 @@ namespace ActorSystem.Spawning
 
         private IEnumerator SpawnActors(ActorData actor, float delay, int qantity)
         {
+            isSpawnning = true;
             if (ActorManager.Instance.m_reserved.ContainsKey(actor.ActorName))
             {
                 activeRoutines++;
@@ -168,6 +169,7 @@ namespace ActorSystem.Spawning
 
                 activeRoutines--;
             }
+            isSpawnning = false;
             yield return null;
         }
 
@@ -182,9 +184,12 @@ namespace ActorSystem.Spawning
                 if (m_waves.Count == 0 && spawnDelay <= 0)
                 {
                     Stop();
-                    RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), GetComponentInParent<Room>().m_rewardType);
-                    GameManager.Advance();
-                    EndScreenMenu.roomsCleared++;
+                    if(hasAReward)
+                    {
+                        RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                        GameManager.Advance();
+                        EndScreenMenu.roomsCleared++;
+                    }
                 }
                 else if (spawnDelay <= 0)
                 {

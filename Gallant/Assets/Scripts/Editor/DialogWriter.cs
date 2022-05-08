@@ -18,6 +18,7 @@ public class DialogWriter : EditorWindow
 
     private int m_bodyIndex = 0;
     private int m_faceIndex = 0;
+    private int m_nameIndex = 0;
 
     private int m_currentIndex;
     private int m_maxIndex;
@@ -67,9 +68,10 @@ public class DialogWriter : EditorWindow
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("New  "))
         {
-            string path = Application.dataPath + "Assets/Dialog/NewDialog.json";
-            File.CreateText(path);
-
+            string path = Application.dataPath + $"/Dialog/NewDialog-{DateTime.Now.ToString("yyyyMMddTHHmmss")}.json";
+            StreamWriter sw = File.CreateText(path);
+            sw.Close();
+            AssetDatabase.Refresh();
             if (TryLoadFile(path))
             {
 
@@ -114,7 +116,7 @@ public class DialogWriter : EditorWindow
         GUI.enabled = m_maxIndex > 0;
         if (m_character != null)
         {
-            EditorGUILayout.LabelField(m_character.m_name, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(m_character.m_names[m_nameIndex], EditorStyles.boldLabel);
             m_character?.DrawToGUI(new Rect(0, 60, 150, 150), m_bodyIndex, m_faceIndex);
         }
         else
@@ -127,6 +129,7 @@ public class DialogWriter : EditorWindow
 
         if (m_character != null)
         {
+            m_nameIndex = EditorGUILayout.IntSlider("Name:", m_nameIndex, 0, m_character.m_names.Length - 1);
             m_bodyIndex = EditorGUILayout.IntSlider("Body:", m_bodyIndex, 0, m_character.m_characterBody.Length - 1);
             m_faceIndex = EditorGUILayout.IntSlider("Face:", m_faceIndex, 0, m_character.m_characterFace.Length - 1);
         }
@@ -163,7 +166,7 @@ public class DialogWriter : EditorWindow
                 }
                 else if(m_options[i].result == DialogResult.INTERACT)
                 {
-                    m_options[i].interactVal = EditorGUILayout.IntField("Event:", m_options[i].interactVal);
+                    m_options[i].interact = EditorGUILayout.IntField("Event:", m_options[i].interact);
                 }
                 Rect rect = EditorGUILayout.GetControlRect(false, 1);
                 EditorGUI.DrawRect(rect, new Color(0.5f, 0.5f, 0.5f, 1));
@@ -262,6 +265,7 @@ public class DialogWriter : EditorWindow
     {
         if(index < m_maxIndex)
         {
+            m_nameIndex = m_fileData.m_list[index].nameID;
             m_bodyIndex = m_fileData.m_list[index].bodyID;
             m_faceIndex = m_fileData.m_list[index].faceID;
             m_activeDialog = m_fileData.m_list[index].m_dialog;
@@ -281,6 +285,7 @@ public class DialogWriter : EditorWindow
 
     public void SaveItem()
     {
+        m_fileData.m_list[m_currentIndex].nameID = m_nameIndex;
         m_fileData.m_list[m_currentIndex].bodyID = m_bodyIndex;
         m_fileData.m_list[m_currentIndex].faceID = m_faceIndex;
         m_fileData.m_list[m_currentIndex].m_dialog = m_activeDialog;
@@ -292,7 +297,16 @@ public class DialogWriter : EditorWindow
         {
             m_fileData.m_list[m_currentIndex].results[i].resultText = m_options[i].text;
             m_fileData.m_list[m_currentIndex].results[i].resultType = m_options[i].GetTypeText();
-            m_fileData.m_list[m_currentIndex].results[i].other = (m_options[i].nextDialog - 1).ToString();
+            
+            if (m_fileData.m_list[m_currentIndex].results[i].resultType == "INTERACT")
+            {
+                m_fileData.m_list[m_currentIndex].results[i].other = (m_options[i].interact).ToString();
+            }
+            else
+            {
+                m_fileData.m_list[m_currentIndex].results[i].other = (m_options[i].nextDialog - 1).ToString();
+            }
+            
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using ActorSystem.AI.Components;
 using ActorSystem.AI.Other;
+using ActorSystem.Spawning;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,11 +26,16 @@ namespace ActorSystem.AI.Bosses
         public Tentacle_AI m_tentacleI;
         public List<Actor_Material> m_holdingTentacles;
 
+
+        public ActorSpawner m_mySpawnner;
+        public WaveData m_waveToSpawn;
         private Transform m_restingTransformL;
         private Transform m_restingTransformR;
 
-        public enum Phase { HEAD, TENTACLE, INK, DEAD}
+        public enum Phase { HEAD, TENTACLE, INK, SUMMON, DEAD}
         public Phase m_mode { get; private set; } = Phase.HEAD;
+
+        public OctopusShipControls m_ship;
 
         public int m_currentOrient = 0;
 
@@ -45,9 +51,10 @@ namespace ActorSystem.AI.Bosses
         protected override void Awake()
         {
             base.Awake();
+            ActorManager.Instance.m_actorDeathTime = 5f;
             m_restingTransformL = m_tentacleL.transform.parent;
             m_restingTransformR = m_tentacleR.transform.parent;
-
+            
             foreach (var splatter in m_inkSplatter)
             {
                 splatter.SetActive(false);
@@ -71,11 +78,13 @@ namespace ActorSystem.AI.Bosses
         public void Submerge()
         {
             m_myBrain.m_animator.SetBool("Visible", false);
+            m_myBrain.m_myOutline.enabled = false;
         }
 
         public void Emerge()
         {
             m_myBrain.m_animator.SetBool("Visible", true);
+            m_myBrain.m_myOutline.enabled = true;
         }
 
         public void SetVisible(bool status)
@@ -90,10 +99,10 @@ namespace ActorSystem.AI.Bosses
 
             m_mode = phase;
 
-            m_tentacleL.UpdateAttacks();
-            m_tentacleR.UpdateAttacks();
-            m_tentacleO.UpdateAttacks();
-            m_tentacleI.UpdateAttacks();
+            m_tentacleL.m_needsToUpdateAttacks = true;
+            m_tentacleR.m_needsToUpdateAttacks = true;
+            m_tentacleO.m_needsToUpdateAttacks = true;
+            m_tentacleI.m_needsToUpdateAttacks = true;
 
             if (isCompletelySubmerged)
                 SelectRandomOrientation();
@@ -177,14 +186,25 @@ namespace ActorSystem.AI.Bosses
                     Submerge();
                     break;
                 case Phase.INK:
+                    m_tentacleL.Submerge(false);
+                    m_tentacleR.Submerge(false);
+                    m_tentacleO.Submerge(false);
                     StartCoroutine(CreateInk(5, 2f, 0.05f));
                     m_inkPhaseTimer.Start(m_inkAttackDuration);
+                    break;
+                case Phase.SUMMON:
+                    m_mySpawnner.SpawnWave(m_waveToSpawn);
+                    m_tentacleL.Submerge(false);
+                    m_tentacleR.Submerge(false);
+                    m_tentacleO.Submerge(false);
+                    m_tentacleI.Submerge(false);
+                    Submerge();
                     break;
                 case Phase.DEAD:
                     Submerge();
                     foreach (var material in m_myBrain.m_materials)
                     {
-                        material.StartDisolve(5f);
+                        material.StartDisolve();
                     }
 
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
@@ -197,7 +217,7 @@ namespace ActorSystem.AI.Bosses
 
                     foreach (var hold in m_holdingTentacles)
                     {
-                        hold.StartDisolve(5f);
+                        hold.StartDisolve();
                     }
 
                     PlayerPrefs.SetInt("SwampLevel", 1);
@@ -223,6 +243,10 @@ namespace ActorSystem.AI.Bosses
             m_tentaclePhaseTimer.Update();
             m_inkPhaseTimer.Update();
 
+            if(this.m_mode == Phase.SUMMON && !m_mySpawnner.isSpawnning && m_mySpawnner.m_myActors.Count == 0)
+            {
+                TransitionToPhase(Phase.HEAD);
+            }
             if (m_tentacleL.m_myBrain.IsDead && m_tentacleR.m_myBrain.IsDead && m_tentacleO.m_myBrain.IsDead)
             {
                 StartCoroutine(ChangeOrientation(m_mode, 1f));
@@ -279,6 +303,11 @@ namespace ActorSystem.AI.Bosses
             m_currentOrient = Random.Range(0, m_myBrain.m_patrol.m_targetOrientations.Count);
         }
 
+        public override void DealImpactDamage(float amount, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
+        {
+
+        }
+
         public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
             if (!m_myBrain.IsDead)
@@ -304,7 +333,14 @@ namespace ActorSystem.AI.Bosses
                         {
                             if(m_myBrain.m_currHealth/m_myBrain.m_startHealth < 0.65f && Random.Range(0, 1000) < (1.0f - m_myBrain.m_currHealth / m_myBrain.m_startHealth) * 1000)
                             {
-                                TransitionToPhase(Phase.INK);
+                                if(Random.Range(0, 10000) < 10000 * 0.5)
+                                {
+                                    TransitionToPhase(Phase.INK);
+                                }
+                                else
+                                {
+                                    StartCoroutine(ChangeOrientation(Phase.SUMMON, 1f));
+                                }
                             }
                             else
                             {
@@ -330,7 +366,7 @@ namespace ActorSystem.AI.Bosses
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     foreach (var material in m_myBrain.m_materials)
                     {
-                        material.StartDisolve(2f);
+                        material.StartDisolve();
                     }
                     Submerge();
                     return true;
@@ -393,11 +429,28 @@ namespace ActorSystem.AI.Bosses
 
         private void End()
         {
+            ActorManager.Instance.m_actorDeathTime = 7f;
             GameManager.Instance.FinishLevel();
         }
 
-        public override void Slam()
+        public void Slam(int tentacleId)
         {
+            if (tentacleId == 3)
+            {
+                //Lantern
+                m_ship.Slam(true);
+            }
+            else if (m_currentOrient == 0 || m_currentOrient == 3)
+            {
+                //Oct at the back
+                m_ship.Slam(tentacleId == 2); //id = 2 is the opposite side
+            }
+            else
+            {
+                //Oct at the front
+                m_ship.Slam(tentacleId != 2);
+            }
+
             GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(8, 0.3f);
         }
     }

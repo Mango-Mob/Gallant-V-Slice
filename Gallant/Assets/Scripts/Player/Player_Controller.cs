@@ -677,7 +677,7 @@ public class Player_Controller : MonoBehaviour
         playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
-        Debug.Log($"Player is damaged: {_damage} points of health.");
+        //Debug.Log($"Player is damaged: {_damage} points of health.");
         if (!m_godMode)
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 

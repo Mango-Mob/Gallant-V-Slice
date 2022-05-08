@@ -214,11 +214,6 @@ namespace Exceed.Debug
                 m_detailActorView.gameObject.SetActive(true);
                 m_detailActorView.SetReference(m_selected.GetComponent<Actor>());
             }
-            else if (m_selected.GetComponent<Room>() != null)
-            {
-                m_detailRoomView.SetActive(true);
-                return;
-            }
             else
             {
                 return;
@@ -310,13 +305,7 @@ namespace Exceed.Debug
         {
             if (m_detailRoomView.activeInHierarchy)
             {
-                var room = m_selected.GetComponent<Room>();
 
-                if (room.m_mySpawnner.m_waves != null)
-                    m_roomWaves.text = room.m_mySpawnner.m_waves.Count.ToString();
-                m_roomCost.text = room.m_mySpawnner.m_value.ToString();
-
-                m_toggleButtonImage.color = (room.m_mySpawnner.enabled) ? new Color(0, 176, 0) : new Color(197, 0, 0);
             }
         }
 
@@ -325,20 +314,17 @@ namespace Exceed.Debug
         #region ButtonFunctions
         public void ResetRoom()
         {
-            var room = m_selected.GetComponent<Room>();
-            room.m_mySpawnner.Restart();
+            
         }
 
         public void ToggleRoom()
         {
-            var room = m_selected.GetComponent<Room>();
-            room.m_mySpawnner.enabled = !room.m_mySpawnner.enabled;
+
         }
 
         public void ForceRoom()
         {
-            var room = m_selected.GetComponent<Room>();
-            room.m_mySpawnner.ForceWave();
+            
         }
         #endregion
     }

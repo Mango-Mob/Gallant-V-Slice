@@ -17,8 +17,9 @@ public class DialogFile
     [Serializable]
     public class Dialog
     {
-        public int bodyID;
-        public int faceID;
+        public int nameID = 0;
+        public int bodyID = 0;
+        public int faceID = 0;
         public string m_dialog;
         public List<Result> results;
 

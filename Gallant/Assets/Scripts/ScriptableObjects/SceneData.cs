@@ -12,4 +12,6 @@ public class SceneData : ScriptableObject
     public string sceneToLoad;
     public GameObject prefabToLoad;
     public Vector3 navLocalPosition;
+
+    public List<GameObject> prefabPropsToLoad = new List<GameObject>();
 }
