@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dfa1dfadb91e8544a7ef6e4536d0e97, type: 3}
   m_Name: OctoSwipe
   m_EditorClassIdentifier: 
-  debugShow: 0
+  debugShow: 1
   animID: Swipe
   priority: 8
   cooldown: 5
+  brainLag: 2
   damageType: 0
   baseDamage: 40
   postVFXPrefab: {fileID: 0}
@@ -23,6 +24,7 @@ MonoBehaviour:
   canBeCanceled: 0
   canTrackTarget: 0
   canAttackMove: 0
+  isIdleAfterAttack: 0
   detectCollider:
     start: {x: 0, y: 0, z: 0}
     center: {x: 0, y: 4, z: 4}

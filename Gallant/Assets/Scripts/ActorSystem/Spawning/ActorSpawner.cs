@@ -23,6 +23,7 @@ namespace ActorSystem.Spawning
         public bool m_hasStarted { get; private set; } = false;
         public SpawnDataGenerator[] m_generators;
 
+        public bool isSpawnning = false;
         private bool hasAReward = true;
         private int activeRoutines = 0;
         private float spawnDelay = 0.5f;
@@ -142,6 +143,7 @@ namespace ActorSystem.Spawning
 
         private IEnumerator SpawnActors(ActorData actor, float delay, int qantity)
         {
+            isSpawnning = true;
             if (ActorManager.Instance.m_reserved.ContainsKey(actor.ActorName))
             {
                 activeRoutines++;
@@ -167,6 +169,7 @@ namespace ActorSystem.Spawning
 
                 activeRoutines--;
             }
+            isSpawnning = false;
             yield return null;
         }
 

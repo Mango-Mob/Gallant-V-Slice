@@ -79,7 +79,7 @@ namespace ActorSystem.AI.Components
             m_patrol = GetComponentInChildren<Actor_PatrolData>();
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
-            m_myOutline = GetComponent<Outlinable>();
+            m_myOutline = GetComponentInChildren<Outlinable>();
 
             SetOutlineEnabled(false);
         }
@@ -265,7 +265,7 @@ namespace ActorSystem.AI.Components
             if (IsDead)
                 return true;
             
-            if(_damageLoc != null)
+            if(_damageLoc != null && m_legs != null)
             {
                 Vector3 direction = (_damageLoc.Value - transform.position).normalized;
                 direction.y = 0;
@@ -315,11 +315,14 @@ namespace ActorSystem.AI.Components
             EndScreenMenu.damageDealt += damage;
             GameManager.m_damageDealt += damage;
 
-            if (playAudio && IsDead)
+            if(IsDead)
             {
                 GameManager.m_killCount++;
-                m_audioAgent?.PlayDeath();
+                m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
+
+                if (playAudio)
+                    m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
             {
@@ -336,7 +339,7 @@ namespace ActorSystem.AI.Components
 
             if(!m_canStagger)
             {
-                m_legs.KnockBack(direction * damage);
+                m_legs?.KnockBack(direction * damage);
                 return false;
             }
 
@@ -358,12 +361,12 @@ namespace ActorSystem.AI.Components
 
             if (m_currStamina == 0)
             {
-                m_legs.KnockBack(direction * damage);
+                m_legs?.KnockBack(direction * damage);
                 return true;
             }
             else
             {
-                m_legs.KnockBack(direction * damage * 0.5f);
+                m_legs?.KnockBack(direction * damage * 0.5f);
                 return false;
             }
         }

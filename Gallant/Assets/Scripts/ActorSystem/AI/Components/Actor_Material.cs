@@ -60,9 +60,9 @@ namespace ActorSystem.AI.Components
                 m_timer = 0.0f;
         }
 
-        public void StartDisolve(float time = 7.5f)
+        public void StartDisolve()
         {
-            m_disolveTime = time;
+            m_disolveTime = ActorManager.Instance.m_actorDeathTime;
             if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = true;
