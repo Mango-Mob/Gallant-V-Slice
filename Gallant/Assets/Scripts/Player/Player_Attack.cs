@@ -283,18 +283,18 @@ public class Player_Attack : MonoBehaviour
         {
             if (m_rightWeapon != null && m_rightWeapon.m_weaponData.isTwoHanded)
             {
-                m_rightWeapon.SetTrailActive(true);
+                m_rightWeapon.SetTrailActive(false);
             }
             else
             {
                 if (m_leftWeapon)
-                    m_leftWeapon.SetTrailActive(true);
+                    m_leftWeapon.SetTrailActive(false);
             }
         }
         else
         {
             if (m_rightWeapon)
-                m_rightWeapon.SetTrailActive(true);
+                m_rightWeapon.SetTrailActive(false);
         }
     }
     public bool IsDuelWielding()
@@ -718,8 +718,11 @@ public class Player_Attack : MonoBehaviour
             if (_target.gameObject.layer == LayerMask.NameToLayer("Rubble"))
                 damageMult = 0.0f;
 
+            Vector3 impactDirection = actor.transform.position - damageSource;
+            impactDirection.y = 0.0f;
+
             bool killedEnemy = actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
-            actor.DealImpactDamage(_impactForce, _piercingVal, (actor.transform.position - damageSource).normalized, _damageType);
+            actor.DealImpactDamage(_impactForce, _piercingVal, impactDirection.normalized, _damageType);
             playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
         }
 

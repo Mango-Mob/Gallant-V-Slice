@@ -85,16 +85,16 @@ public class SkillTreeReader : MonoBehaviour
         switch (_class)
         {
             case InkmanClass.GENERAL:
-                path += "/generalTree.json";
+                path += $"/saveSlot{GameManager.m_saveSlotInUse}/generalTree.json";
                 break;
             case InkmanClass.KNIGHT:
-                path += "/knightTree.json";
+                path += $"/saveSlot{GameManager.m_saveSlotInUse}/knightTree.json";
                 break;
             case InkmanClass.MAGE:
-                path += "/mageTree.json";
+                path += $"/saveSlot{GameManager.m_saveSlotInUse}/mageTree.json";
                 break;
             case InkmanClass.HUNTER:
-                path += "/hunterTree.json";
+                path += $"/saveSlot{GameManager.m_saveSlotInUse}/hunterTree.json";
                 break;
         }
 
@@ -127,7 +127,7 @@ public class SkillTreeReader : MonoBehaviour
         }
         else
         {
-            File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class]));
+            File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class], true));
 
             Debug.Log("Created new skill tree file!");
 
@@ -140,7 +140,7 @@ public class SkillTreeReader : MonoBehaviour
 
     public void SaveSkillTree(InkmanClass _class)
     {
-        string json = JsonUtility.ToJson(m_skills[(int)_class]);
+        string json = JsonUtility.ToJson(m_skills[(int)_class], true);
         File.WriteAllText(GetSkillTreePath(_class), json);
     }
 
@@ -187,7 +187,8 @@ public class SkillTreeReader : MonoBehaviour
 
     public void EmptySkillTree(InkmanClass _class)
     {
-        m_skills[(int)_class].skills.Clear();
+        if (m_skills[(int)_class] != null && m_skills[(int)_class].skills != null)
+            m_skills[(int)_class].skills.Clear();
 
         SaveSkillTree(_class);
     }

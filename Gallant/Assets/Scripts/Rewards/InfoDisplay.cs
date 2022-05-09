@@ -22,6 +22,7 @@ public class InfoDisplay : MonoBehaviour
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
     public Color m_lesserColor = Color.red;
+    public Color hoverColor;
     public Color selectColor;
     public AudioClip m_collectAudio;
     public Button[] m_flipBtns;
@@ -157,33 +158,28 @@ public class InfoDisplay : MonoBehaviour
             }
         }
 
-
-        if(m_selected || IsADrop || IsEquip)
+        foreach (var item in m_flipBtns)
         {
-            foreach (var item in m_controllerFlips)
-            {
-                item.enabled = InputManager.Instance.isInGamepadMode && IsAWeapon;
-            }
+            item.image.enabled = IsAWeapon;
+        }
 
-            foreach (var item in m_flipBtns)
-            {
-                item.image.enabled = !InputManager.Instance.isInGamepadMode && IsAWeapon;
-            }
+        foreach (var item in m_controllerFlips)
+        {
+            item.enabled = InputManager.Instance.isInGamepadMode && IsAWeapon;
+        }
 
-            if (IsAWeapon)
+        if (IsAWeapon)
+        {
+            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0) && !IsLeft)
             {
-                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0) && !IsLeft)
-                {
-                    Flip();
-                }
-                else if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0) && IsLeft)
-                {
-                    Flip();
-                }
+                Flip();
+            }
+            else if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0) && IsLeft)
+            {
+                Flip();
             }
         }
     }
-
     public void LoadWeapon(WeaponData data)
     {
         IsAWeapon = true;
@@ -451,7 +447,7 @@ public class InfoDisplay : MonoBehaviour
     {
         foreach (var item in m_backgrounds)
         {
-            item.color = (status) ? selectColor : (m_selected) ? selectColor : Color.white;
+            item.color = (m_selected) ? selectColor : ((status) ? hoverColor : Color.white);
         }
     }
 

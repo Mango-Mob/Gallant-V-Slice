@@ -82,58 +82,6 @@ public class ActorEditor : Editor
         //}
     }
 
-    private void OnTestView()
-    {
-        testLevel = EditorGUILayout.IntSlider("Level: ", testLevel, 0, 20);
-
-        EditorGUILayout.Space();
-        EditorExtentions.DrawLineOnGUI();
-
-        float health = m_data.health + m_data.deltaHealth * testLevel;
-        EditorGUILayout.LabelField($"Health: {health}", EditorStyles.label);
-        EditorGUILayout.LabelField($"Damage Modifer: {m_data.m_damageModifier + m_data.deltaDamageMod * testLevel}", EditorStyles.label);
-        EditorGUILayout.LabelField($"Speed: {m_data.baseSpeed + m_data.deltaSpeed * testLevel}", EditorStyles.label);
-
-        float PhyResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Physical, m_data.phyResist + m_data.deltaPhyResist * testLevel, 0);
-        EditorGUILayout.LabelField($"Physical Resist: {m_data.phyResist + m_data.deltaPhyResist * testLevel} ({Mathf.FloorToInt((PhyResistPercent * 100)).ToString()}%)", EditorStyles.label);
-
-        float AbilResistPercent = CombatSystem.CalculateDamageNegated(CombatSystem.DamageType.Ability, m_data.abilResist + m_data.deltaAbilResist * testLevel, 0);
-        EditorGUILayout.LabelField($"Ability Resist: {m_data.abilResist + m_data.deltaAbilResist * testLevel} ({Mathf.FloorToInt((AbilResistPercent * 100)).ToString()}%)", EditorStyles.label);
-
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField($"Min Adrenaline: {m_data.adrenalineGainMin + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
-        EditorGUILayout.LabelField($"Average Adrenaline: {(m_data.adrenalineGainMax + m_data.adrenalineGainMin)/2f + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
-        EditorGUILayout.LabelField($"Max Adrenaline: {m_data.adrenalineGainMax + m_data.deltaAdrenaline * testLevel}", EditorStyles.label);
-        EditorGUILayout.Space();
-        EditorExtentions.DrawLineOnGUI();
-
-        EditorGUILayout.LabelField("Player Input: ", EditorStyles.boldLabel);
-        EditorExtentions.DoubleFloatField("Physical Damage | Speed", ref testPlayerPhyDamage, ref testPlayerAttSped);
-        EditorExtentions.DoubleFloatField("Ability Damage(per Second) | Seconds", ref testPlayerAbilDamage, ref testPlayerAbilPerSecond);
-
-        EditorGUILayout.Space();
-        EditorExtentions.DrawLineOnGUI();
-
-        EditorGUILayout.LabelField("Physical Result: ", EditorStyles.boldLabel);
-        if(testPlayerPhyDamage > 0 && testPlayerAttSped > 0)
-        {
-            int hitsRequired = Mathf.CeilToInt(health / (testPlayerPhyDamage * (1.0f - PhyResistPercent)));
-            EditorGUILayout.LabelField($"   Maximum physical hits to kill: {hitsRequired}", EditorStyles.label);
-            EditorGUILayout.LabelField($"   Maximum seconds till death: {(float)(hitsRequired/testPlayerAttSped)} seconds", EditorStyles.label);
-        }
-        EditorGUILayout.Space();
-
-        EditorGUILayout.LabelField("Ability Result: ", EditorStyles.boldLabel);
-        if (testPlayerAbilDamage > 0 && testPlayerAbilPerSecond > 0)
-        {
-            int hitsRequired = Mathf.CeilToInt(health / (testPlayerAbilDamage * (1.0f - AbilResistPercent)));
-            EditorGUILayout.LabelField($"   Maximum casts hits to kill: {hitsRequired}", EditorStyles.label);
-            EditorGUILayout.LabelField($"   Maximum seconds till death: {(float)(hitsRequired / testPlayerAbilPerSecond)} seconds", EditorStyles.label);
-        }
-        EditorGUILayout.Space();
-    }
-
     private void ToggleField(string label, ref bool data)
     {
         EditorGUILayout.BeginHorizontal();

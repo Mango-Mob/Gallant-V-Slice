@@ -92,13 +92,12 @@ public class Player_Movement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        playerController = GetComponent<Player_Controller>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        playerController = GetComponent<Player_Controller>();
-        
         // Skill implementation.
         m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
         m_rollDistanceMult *= playerController.playerSkills.m_rollDistanceIncrease;

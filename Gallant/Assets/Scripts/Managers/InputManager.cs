@@ -32,7 +32,7 @@ public enum ButtonType
     NORTH, SOUTH, EAST, WEST,
     START, SELECT, 
     LT, LB, LS, RT, RB, RS,
-    UP, DOWN, LEFT, RIGHT,
+    UP, RIGHT, DOWN, LEFT,
     NONE
 }
 
@@ -251,7 +251,7 @@ public class InputManager : SingletonPersistent<InputManager>
         m_binds.Add("Right_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.E), new Bind(typeof(ButtonType), (int)ButtonType.RT) });
 
         //Other
-        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
+        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.WEST) });
         m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });

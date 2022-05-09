@@ -10,14 +10,16 @@ public class NavigationTelescope : MonoBehaviour
     {
         public string sceneName;
         public float locationAngle;
-        public Material m_portalMat;
+        public Color m_portalColor;
     }
 
     [SerializeField] private Camera m_camera;
     [SerializeField] private GameObject m_useButton;
+    [SerializeField] private GameObject m_navCanvas;
     [SerializeField] private GameObject m_selectCanvas;
     [SerializeField] private Image m_crosshair;
     [SerializeField] private LevelPortal m_portal;
+    [SerializeField] private CanvasGroup m_transitionGroup;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -33,12 +35,16 @@ public class NavigationTelescope : MonoBehaviour
     private float m_selectProgress = 0.0f;
 
     private bool m_selectFlag = false;
+    private Animator m_animator;
+
+    public float m_angleClamp = 60.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = FindObjectOfType<Player_Controller>();
         m_camera.enabled = false;
+        m_animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -47,12 +53,14 @@ public class NavigationTelescope : MonoBehaviour
         m_useButton.SetActive(!m_isActive);
         m_selectCanvas.SetActive(m_isActive && m_targetIndex != -1);
 
+        m_navCanvas.SetActive(m_isActive);
+
         if (!m_isActive)
             return;
 
         if (InputManager.Instance.IsBindDown("Skill_Back"))
         {
-            CloseNavigation();
+            TriggerTransition(true);
         }
 
         Vector2 movementVector = GetMovementVector();
@@ -60,6 +68,11 @@ public class NavigationTelescope : MonoBehaviour
         if (Mathf.Abs(movementVector.x) > 0.0f)
         {
             m_camera.transform.Rotate(transform.up, movementVector.x * m_turnSpeed * Time.deltaTime);
+            
+            m_camera.transform.localRotation = Quaternion.Euler(m_camera.transform.localRotation.eulerAngles.x,
+                Mathf.Clamp(m_camera.transform.localRotation.eulerAngles.y, 180.0f + -m_angleClamp, 180.0f + m_angleClamp),
+                m_camera.transform.localRotation.eulerAngles.z);
+
             m_targetIndex = -1;
         }
         else
@@ -109,6 +122,8 @@ public class NavigationTelescope : MonoBehaviour
                     SelectDestination(m_destinations[m_targetIndex]);
                     m_selectProgress = 0.0f;
                     m_selectFlag = true;
+
+                    TriggerTransition(true);
                 }
             }
         }
@@ -123,7 +138,7 @@ public class NavigationTelescope : MonoBehaviour
     {
         // Change portal destination
         m_portal.m_portalDestination = _destination.sceneName;
-        m_portal.gate.GetComponent<MeshRenderer>().material = _destination.m_portalMat;
+        m_portal.SetColor(_destination.m_portalColor);
 
         // Trigger animation
 
@@ -150,6 +165,30 @@ public class NavigationTelescope : MonoBehaviour
             return movement;
         }
     }
+    public void TriggerTransition(bool _closing)
+    {
+        if (!_closing)
+        {
+            playerController.ForceZoom(true);
+            m_animator.SetTrigger("Fade");
+        }
+        else
+        {
+            m_animator.SetTrigger("Fade");
+        }
+    }
+
+    public void ToggleNavigation()
+    {
+        if (m_isActive)
+        {
+            CloseNavigation();
+        }
+        else
+        {
+            OpenNavigation();
+        }
+    }
 
     public void OpenNavigation()
     {
@@ -166,6 +205,7 @@ public class NavigationTelescope : MonoBehaviour
     public void CloseNavigation()
     {
         m_isActive = false;
+        playerController.ForceZoom(false);
 
         playerController.playerCamera.enabled = true;
         StartCoroutine(DelayControl());

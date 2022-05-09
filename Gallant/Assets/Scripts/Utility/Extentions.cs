@@ -4,6 +4,26 @@ using UnityEngine.AI;
 
 public static class Extentions
 { 
+    public static Collider GetClosestCollider(GameObject userObj, RaycastHit[] hits)
+    {
+        float dist = float.MaxValue;
+        int closest = -1;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            float currDist = Vector3.Distance(userObj.transform.position, hits[i].point);
+            if(dist > currDist && hits[i].collider.gameObject != userObj)
+            {
+                dist = currDist;
+                closest = i;
+            }
+        }
+
+        if (closest < 0)
+            return null;
+
+        return hits[closest].collider;
+    }
+
     public static Vector3 DirectionTo(this Vector3 from, Vector3 to)
     {
         return (to - from).normalized;

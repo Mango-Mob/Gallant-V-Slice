@@ -70,6 +70,9 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private float m_shakeAmount = 0.7f;
     [SerializeField] private float m_shakeDecreaseSpeed = 1.0f;
 
+    private CameraBounds m_cameraBounds;
+    public bool m_cameraFreeze = false;
+
     private void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
@@ -87,6 +90,8 @@ public class Player_Controller : MonoBehaviour
         playerClassArmour = GetComponent<Player_ClassArmour>();
         playerSkills = GetComponent<Player_Skills>();
         statusEffectContainer = GetComponent<StatusEffectContainer>();
+
+        m_cameraBounds = FindObjectOfType<CameraBounds>();
     }
 
     // Start is called before the first frame update
@@ -99,28 +104,52 @@ public class Player_Controller : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (m_shake > 0.0f)
+        if (!m_cameraFreeze)
         {
-            playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
-            m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+            if (m_shake > 0.0f)
+            {
+                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
 
-        }
-        else
-        {
-            playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
-            m_shake = 0.0f;
+            }
+            else
+            {
+                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+                m_shake = 0.0f;
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
-            return;
-
         // Set gamepad being used
         int gamepadID = InputManager.Instance.GetAnyGamePad();
+
+        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
+        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
+        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
+
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
+        {
+            animator.SetFloat("Horizontal", 0.0f);
+            animator.SetFloat("Vertical", 0.0f);
+
+            return;
+        }
+
+        // Camera zoom;
+        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
+        {
+            m_zoomed = !m_zoomed;
+        }
+
+        if (m_cameraBounds != null && !m_cameraFreeze)
+        {
+            playerCamera.transform.localPosition = Vector3.zero;
+            playerCamera.transform.position = m_cameraBounds.RecalculateCameraLocation(playerCamera.transform.position);
+        }
+
 
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
@@ -239,6 +268,11 @@ public class Player_Controller : MonoBehaviour
 
             if (!m_isDisabledAttacks && !m_isNearDrop)
             {
+                if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
+                    animator.SetTrigger("RightTrigger");
+                if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
+                    animator.SetTrigger("LeftTrigger");
+
                 // Weapon attacks
                 if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
                 {
@@ -262,6 +296,7 @@ public class Player_Controller : MonoBehaviour
                         playerAttack.StartUsing(Hand.LEFT);
                     }
                 }
+
 
                 // Ability attacks
                 if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
@@ -336,15 +371,6 @@ public class Player_Controller : MonoBehaviour
             playerAttack.SwapWeapons();
         }
 
-        // Camera zoom;
-        if (InputManager.Instance.IsBindDown("Toggle_Zoom", gamepadID))
-        {
-            m_zoomed = !m_zoomed;
-        }
-        m_zoomLerp += Time.deltaTime * m_zoomSpeed * (m_zoomed ? 1.0f : -1.0f);
-        m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
-        playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
-
 #if UNITY_EDITOR
         // Debug controls
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
@@ -398,6 +424,10 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    public void ForceZoom(bool _active)
+    {
+        m_zoomed = _active;
+    }
     private void HandlePickupDrop(DroppedWeapon _drop, Hand _hand)
     {
         switch (_drop.m_dropType)
@@ -647,7 +677,7 @@ public class Player_Controller : MonoBehaviour
         playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
         playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_RECIEVED, (_attacker != null) ? _attacker.gameObject : null, _damage);
 
-        Debug.Log($"Player is damaged: {_damage} points of health.");
+        //Debug.Log($"Player is damaged: {_damage} points of health.");
         if (!m_godMode)
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
@@ -669,7 +699,7 @@ public class Player_Controller : MonoBehaviour
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
-            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect);
+            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect, playerResources.m_health, playerResources.m_adrenaline);
     }
     public void LoadPlayerInfo()
     {
@@ -695,6 +725,9 @@ public class Player_Controller : MonoBehaviour
             m_inkmanClass = GameManager.RetrieveClassData();
 
             playerStats.EvaluateEffects();
+
+            playerResources.SetHealth(GameManager.RetrieveHealth());
+            playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
         }
         playerSkills.EvaluateSkills();
 
@@ -708,6 +741,7 @@ public class Player_Controller : MonoBehaviour
             playerClassArmour.SetClassArmour(m_inkmanClass.inkmanClass);
         else
             playerClassArmour.SetClassArmour(InkmanClass.GENERAL);
+
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)

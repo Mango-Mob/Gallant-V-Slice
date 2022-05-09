@@ -18,7 +18,7 @@ namespace ActorSystem.Data
             switch (type)
             {
                 case HitType.Box:
-                    return Physics.OverlapBox(parent.position + parent.TransformVector(center), size / 2f, parent.rotation, filterLayer);
+                    return Physics.OverlapBox(parent.position + parent.TransformVector(center), (size / 2f), parent.rotation, filterLayer);
                 default:
                 case HitType.Sphere:
                     return Physics.OverlapSphere(parent.position + parent.TransformVector(center), radius, filterLayer);
@@ -43,7 +43,6 @@ namespace ActorSystem.Data
         public void DrawGizmos(Transform parent)
         {
             Gizmos.matrix = parent.localToWorldMatrix;
-
             switch (type)
             {
                 case HitType.Box:

@@ -5,7 +5,10 @@ using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+
+#if UNITY_EDITOR
 using UnityEditor.Experimental.SceneManagement;
+#endif
 
 public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -216,7 +219,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (IsUnlockable()) 
         {
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") - GetCurrentCost());
+            PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") - GetCurrentCost());
             m_upgradeAmount++;
             m_upgradeNumberText.text = m_upgradeAmount.ToString();
 
@@ -229,7 +232,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         while (m_upgradeAmount > 0)
         {
             m_upgradeAmount--;
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + GetCurrentCost());
+            PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") + GetCurrentCost());
         }
         m_upgradeAmount = 0;
         m_upgradeNumberText.text = m_upgradeAmount.ToString();
@@ -237,7 +240,8 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool IsUnlockable()
     {
-        if (PlayerPrefs.GetInt("Player Balance") < GetCurrentCost() || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
+        Debug.Log(PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}"));
+        if (PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") < GetCurrentCost() || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
         {
             return false;
         }

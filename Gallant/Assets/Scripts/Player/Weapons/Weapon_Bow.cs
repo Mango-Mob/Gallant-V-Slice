@@ -18,6 +18,8 @@ public class Weapon_Bow : WeaponBase
     new private void Start()
     {
         base.Start();
+        if (m_weaponObject != null)
+            m_weaponObject.name = "Bow";
     }
 
     // Update is called once per frame

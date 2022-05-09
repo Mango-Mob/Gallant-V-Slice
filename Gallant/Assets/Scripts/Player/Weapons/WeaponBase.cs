@@ -24,6 +24,7 @@ public abstract class WeaponBase : MonoBehaviour
     protected bool m_isAltVFXColored = false;
 
     public ParticleSystem[] m_weaponTrailParticles;
+    private bool m_trailActive = false;
 
     // Start is called before the first frame update
     protected void Awake()
@@ -48,7 +49,8 @@ public abstract class WeaponBase : MonoBehaviour
     // Update is called once per frame
     protected void Update()
     {
-        if (!playerController.animator.GetBool((m_hand == Hand.LEFT) ? "UsingLeft" : "UsingRight"))
+        //if (!playerController.animator.GetBool((m_hand == Hand.LEFT) ? "UsingLeft" : "UsingRight"))
+        if (!playerController.animator.GetBool("UsingLeft") && !playerController.animator.GetBool("UsingRight"))
         {
             SetTrailActive(false);
         }
@@ -90,10 +92,17 @@ public abstract class WeaponBase : MonoBehaviour
     public void SetInUse(bool _inUse) { m_isInUse = _inUse; }
     public void SetTrailActive(bool _active)
     {
+        if (m_trailActive == _active)
+        {
+            return;
+        }
+
+        m_trailActive = _active;
         foreach (var particleSystem in m_weaponTrailParticles)
         {
             if (_active)
             {
+                particleSystem.Clear();
                 particleSystem.Play();
             }
             else if (!_active)
@@ -127,7 +136,7 @@ public abstract class WeaponBase : MonoBehaviour
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
-                Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
+                //Debug.Log("Hit " + collider.name + " with " + _data.weaponType + " for " + _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f));
                 //actor.KnockbackActor((actor.transform.position - _source).normalized * _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f));
 
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();

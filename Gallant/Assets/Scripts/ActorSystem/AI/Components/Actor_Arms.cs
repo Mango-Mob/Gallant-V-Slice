@@ -33,7 +33,7 @@ namespace ActorSystem.AI.Components
         private void Awake()
         {
             m_myData.Sort(new AttackPrioritySort());
-            m_mainComponent = GetComponentInParent<Actor>();
+            m_mainComponent = GetComponent<Actor>();
             m_cooldowns = new float[m_myData.Count];
             for (int i = 0; i < m_cooldowns.Length; i++)
             {
@@ -51,7 +51,7 @@ namespace ActorSystem.AI.Components
 
             if(m_canUpdateAttack && m_activeAttack.HasValue)
             {
-                m_myData[m_activeAttack.Value].UpdateActor(m_mainComponent);
+                m_myData[m_activeAttack.Value]?.UpdateActor(m_mainComponent);
             }
 
             if(m_brainLag > 0)
@@ -87,7 +87,7 @@ namespace ActorSystem.AI.Components
         }
         public void End()
         {
-            if(m_activeAttack.HasValue)
+            if(m_activeAttack.HasValue && m_myData[m_activeAttack.Value] != null)
             {
                 m_myData[m_activeAttack.Value].EndActor(m_mainComponent);
                 m_brainLag += m_myData[m_activeAttack.Value].brainLag;
@@ -96,7 +96,7 @@ namespace ActorSystem.AI.Components
             m_activeAttack = null;
         }
 
-        public int GetNextAttack()
+        public int GetNextAttack(GameObject target)
         {
             if (m_brainLag > 0)
                 return -1;
@@ -106,7 +106,7 @@ namespace ActorSystem.AI.Components
                 if (m_myData[i] == null)
                     continue;
 
-                if(m_cooldowns[i] <= 0 && m_myData[i].HasDetectedCollider(transform, m_targetMask))
+                if(m_cooldowns[i] <= 0 && m_myData[i].HasDetectedCollider(transform, m_targetMask) && m_myData[i].CanAttack(transform, target))
                 {
                     return i;
                 }

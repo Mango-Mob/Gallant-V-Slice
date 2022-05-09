@@ -10,6 +10,7 @@ public class RuneCountDisplay : MonoBehaviour
     private static Player_Controller playerController;
     public ItemData m_runeItem;
     public Image m_icon;
+    [SerializeField] private RectTransform m_rectTransform;
 
     [Header("Tally Mode")]
     public Image[] m_tallyMarks;
@@ -19,11 +20,17 @@ public class RuneCountDisplay : MonoBehaviour
     public TextMeshProUGUI m_fractionNumberValue;
     public Image m_runeFill;
 
+    [Header("Highlight Elements")]
+    public CharSheetInfo[] m_hoverHighlightElements;
+
     // Start is called before the first frame update
     void Start()
     {
         if (playerController == null)
             playerController = FindObjectOfType<Player_Controller>();
+
+        if (m_rectTransform)
+            m_rectTransform = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
@@ -47,6 +54,20 @@ public class RuneCountDisplay : MonoBehaviour
 
             if (m_icon != null)
                 m_icon.sprite = m_runeItem.itemIcon;
+        }
+    }
+    public bool CheckJoystickCursorInRange(Vector3 _position)
+    {
+        return (_position.x < (m_rectTransform.position.x + m_rectTransform.rect.xMax)
+            && _position.x > (m_rectTransform.position.x + m_rectTransform.rect.xMin)
+            && _position.y < (m_rectTransform.position.y + m_rectTransform.rect.yMax)
+            && _position.y > (m_rectTransform.position.y + m_rectTransform.rect.yMin));
+    }
+    public void SetHighlightElementsActive(bool _active)
+    {
+        foreach (var elements in m_hoverHighlightElements)
+        {
+            elements.SetHighlightActive(_active);
         }
     }
 }

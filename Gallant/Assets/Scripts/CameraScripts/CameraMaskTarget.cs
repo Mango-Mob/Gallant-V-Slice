@@ -30,6 +30,7 @@ public class CameraMaskTarget : MonoBehaviour
         GameObject newObject = new GameObject("Phantom");
         newObject.transform.SetParent(transform);
         newObject.transform.localPosition = Vector3.zero;
+        newObject.transform.localRotation = Quaternion.identity;
         newObject.transform.localScale = Vector3.one;
         newObject.AddComponent<MeshFilter>().mesh = GetComponent<MeshFilter>().mesh;
         m_phantomMeshRenderer = newObject.AddComponent<MeshRenderer>();

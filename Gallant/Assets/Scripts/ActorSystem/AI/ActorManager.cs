@@ -8,6 +8,7 @@ namespace ActorSystem.AI
 {
     public class ActorManager : SingletonPersistent<ActorManager>
     {
+        public float m_actorDeathTime = 7.0f;
         public List<Actor> m_subscribed { get; private set; } = new List<Actor>();
         public List<ActorSpawner> m_activeSpawnners = new List<ActorSpawner>();
 

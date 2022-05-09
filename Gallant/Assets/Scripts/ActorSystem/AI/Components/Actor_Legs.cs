@@ -210,12 +210,6 @@ namespace ActorSystem.AI.Components
         {
             if (m_agent.enabled && m_agent.isOnNavMesh)
                 m_agent.isStopped = true;
-
-            if (m_isKnocked)
-            {
-                m_isKnocked = false;
-                m_delayTimer = 0.25f;
-            }
         }
 
         /*******************

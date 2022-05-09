@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CharSheetManager : MonoBehaviour
 {
     private Player_Controller playerController;
     private bool m_isActive = false;
+
+    [SerializeField] private GameObject m_joystickCursor;
+    [SerializeField] private float m_joystickSpeed = 10.0f;
+    [SerializeField] private TextMeshProUGUI m_tooltipDesc;
+    private RuneCountDisplay m_selectedRuneDisplay;
+
+    [Header("Runes")]
+    [SerializeField] private RuneCountDisplay[] m_runeCountDisplays;
 
     [Header("Run Information")]
     [SerializeField] private CharSheetInfo m_class;
@@ -48,12 +57,49 @@ public class CharSheetManager : MonoBehaviour
     public void SetActive(bool _active)
     {
         m_isActive = _active;
+        GameManager.m_joystickCursorEnabled = m_isActive;
     }
     // Update is called once per frame
     void Update()
     {
+        m_joystickCursor.SetActive(m_isActive);
+
         if (m_isActive)
         {
+            bool runeSelected = false;
+            foreach (var rune in m_runeCountDisplays)
+            {
+                if (rune.CheckJoystickCursorInRange(m_joystickCursor.transform.position))
+                {
+                    if (m_selectedRuneDisplay != null)
+                        m_selectedRuneDisplay.SetHighlightElementsActive(false);
+
+                    rune.SetHighlightElementsActive(true);
+                    m_selectedRuneDisplay = rune;
+                    runeSelected = true;
+
+                    m_tooltipDesc.text = rune.m_runeItem.description;
+                }
+            }
+
+            if (!runeSelected)
+            {
+                if (m_selectedRuneDisplay != null)
+                    m_selectedRuneDisplay.SetHighlightElementsActive(false);
+
+                m_tooltipDesc.text = "";
+            }
+
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                Vector2 direction = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0);
+                m_joystickCursor.transform.position += new Vector3(direction.x * m_joystickSpeed, direction.y * m_joystickSpeed, 0);
+            }
+            else
+            {
+                m_joystickCursor.transform.position = InputManager.Instance.GetMousePositionInScreen();
+            }
+
             if (playerController.m_inkmanClass != null)
             {
                 m_class.SetInformation(playerController.m_inkmanClass.m_className);

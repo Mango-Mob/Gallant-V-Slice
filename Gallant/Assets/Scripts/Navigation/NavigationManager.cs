@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,8 +11,6 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public NavigationNode m_rootNode;
     public NavigationNode m_endNode;
 
-    public SceneData[] m_sceneData;
-
     public int index = -1;
     public Vector2 iconNoise;
 
@@ -19,6 +18,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public float width;
     public float height;
 
+    public LevelData m_generatedLevel { get; private set; } = null;
+
+    [SerializeField] private Button m_mouseInput;
     [SerializeField] private UI_Text m_keyboardInput;
     [SerializeField] private UI_Image m_gamepadInput;
 
@@ -29,11 +31,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public Image m_playerIcon;
 
+    private bool m_canQuit = true;
     protected override void Awake()
     {
         base.Awake();
         m_myCamera = GetComponentInChildren<Camera>();
-        m_myCamera.enabled = false;
+        m_myCamera.gameObject.SetActive(false);
         m_myCanvas = GetComponent<Canvas>();
         m_myCanvas.enabled = false;
         index = -1;
@@ -48,20 +51,33 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Update()
     {
-        if (IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
+        if (IsVisible && m_canQuit && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
         {
             SetVisibility(false);
         }
 
-        m_keyboardInput.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+        if(IsVisible)
+        {
+            if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            {
+                EventSystem.current.SetSelectedGameObject(m_rootNode.m_myConnections[0].other.gameObject);
+            }
+            else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
+        }
+
+        m_mouseInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
 
         if (m_myCamera.enabled)
         {
             float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
             {
-                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
+                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 15f;
             }
             else if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
             {
@@ -86,10 +102,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Instance.SetVisibility(false);
     }
 
-    public void SetVisibility(bool status)
+    public void SetVisibility(bool status, bool canQuit = true)
     {
-        m_myCamera.enabled = status;
+        m_myCamera.gameObject.SetActive(status);
         m_myCanvas.enabled = status;
+        m_canQuit = canQuit;
+
         if (m_myCamera.enabled)
         {
             if(index > 0 && m_activeNodes.Count > 0)
@@ -97,13 +115,15 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             else
                 m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
-        HUDManager.Instance.gameObject.SetActive(!m_myCamera.enabled);
+        HUDManager.Instance.gameObject.SetActive(!m_myCamera.gameObject.activeInHierarchy);
 
         if(GameManager.Instance.m_player != null)
             GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
 
         if(status)
             m_activeNodes[index].ActivateMyConnections();
+        else
+            EventSystem.current.SetSelectedGameObject(null);
     }
 
     public void MovePlayerIconTo(Vector3 position, System.Action loadToScene)
@@ -135,6 +155,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         index = newIndex;
     }
 
+    public int GetFloor()
+    {
+        return m_activeNodes[index].m_myDepth;
+    }
+
     public void ConstructScene()
     {
         if(m_activeNodes.Count > 0 && index < m_activeNodes.Count && index >= 0 )
@@ -143,18 +168,27 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             {
                 m_activeNodes[index].ActivateMyConnections();
                 Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+                if(m_activeNodes[index].m_myData.prefabPropsToLoad != null && m_activeNodes[index].m_myData.prefabPropsToLoad.Count > 0)
+                {
+                    int select = Random.Range(0, m_activeNodes[index].m_myData.prefabPropsToLoad.Count);
+                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity);
+                }
             }
         }
     }
 
-    public void Generate(uint sectDiv, uint minPerSect, uint maxPerSect)
+    public void Generate(LevelData data)
     {
         Clear(false);
-        float heightStep = height / (sectDiv + 1);
+
+        m_generatedLevel = data;
+
+        NarrativeManager.Instance.Refresh();
+        float heightStep = height / (data.m_levelFloors.Count);
         index = 0;
 
         if (m_rootNode == null)
-            SetRoot(m_sceneData[Random.Range(0, m_sceneData.Length)]);
+            SetRoot(data.m_root);
 
         m_activeNodes.Add(m_rootNode);
 
@@ -162,39 +196,37 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         m_rootNode.MarkCompleted();
         List<NavigationNode> prevNodes = new List<NavigationNode>(m_activeNodes);
-
+        GameObject newNodeObj;
         //For each mid section
-        for (int i = 1; i < sectDiv + 1; i++)
+        for (int i = 0; i < data.m_levelFloors.Count - 1; i++)
         {
             List<NavigationNode> nextNodes = new List<NavigationNode>();
             int nodesToCreate = 0;
-            float probOfPeak = 80;
-            float probOfIncrease = (probOfPeak * Mathf.Cos(0.5f * (i - sectDiv/2)))/100f;
-            if((Random.Range(0, 1000) > 1000 * probOfIncrease && prevNodes.Count != maxPerSect) || prevNodes.Count <= minPerSect)
+            float probOfIncrease = data.Evaluate(i);
+            if((Random.Range(0, 10000) < 10000 * probOfIncrease && prevNodes.Count != data.m_maxRoomCount) || prevNodes.Count <= data.m_minRoomCount)
             {
                 //Increase 
-                int min = Mathf.Min(prevNodes.Count + 1, (int)maxPerSect);
-                int max = Mathf.Min(prevNodes.Count + 2, (int)maxPerSect);
+                int min = Mathf.Min(prevNodes.Count + 1, (int)data.m_maxRoomCount);
+                int max = Mathf.Min(prevNodes.Count + 2, (int)data.m_maxRoomCount);
                 nodesToCreate = Random.Range(min, max);
             }
             else
             {
                 //Decrease
-                int min = Mathf.Max(prevNodes.Count - 2, (int)minPerSect);
-                int max = Mathf.Max(prevNodes.Count - 1, (int)minPerSect);
+                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_minRoomCount);
+                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_minRoomCount);
                 nodesToCreate = Random.Range(min, max + 1);
             }
             float widthStep = width / nodesToCreate;
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                GameObject newNodeObj = NavigationNode.CreateNode(m_sceneData[Random.Range(0, m_sceneData.Length)], transform);
+                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].potentialScenes[Random.Range(0, data.m_levelFloors[i].potentialScenes.Length)], transform);
                 float xPos = widthStep * (j+0.5f) - (width/2) + Random.Range(-iconNoise.x, iconNoise.x);
-                (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * i + Random.Range(-iconNoise.y, iconNoise.y), 0);
+                (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
                 newNavNode.m_myIndex = m_activeNodes.Count;
                 newNavNode.m_myDepth = i;
-                newNavNode.m_myData = m_sceneData[Random.Range(0, m_sceneData.Length)];
                 nextNodes.Add(newNavNode);
                 m_activeNodes.Add(newNavNode);
 
@@ -205,8 +237,14 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             }
             prevNodes = nextNodes;
         }
+
+        //Create end node
+        newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes[Random.Range(0, data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes.Length)], transform);
+        m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
+        m_endNode.m_myDepth = data.m_levelFloors.Count - 1;
         m_endNode.transform.localPosition = new Vector3(0, height, 0);
+        
         m_activeNodes.Add(m_endNode);
         foreach (var prev in prevNodes)
         {
@@ -316,6 +354,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         nodeObj.transform.localPosition = new Vector3(0, 0, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;
+        nodeNav.m_myDepth = -1;
 
         if (m_rootNode != null)
             Destroy(m_endNode.gameObject);
@@ -338,6 +377,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Clear(bool clearAll = false)
     {
+        m_generatedLevel = null;
         for (int i = m_activeNodes.Count - 1; i >= 0; i--)
         {
             if(m_activeNodes[i] != m_endNode || m_activeNodes[i] != m_rootNode)

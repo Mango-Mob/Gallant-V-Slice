@@ -7,8 +7,6 @@ namespace ActorSystem.Spawning
 {
     public class PortalSpawnData : SpawnDataGenerator
     {
-        public GameObject portalVFXPrefab;
-
         public override bool GetASpawnPoint(float actorSize, out Vector3 spawnPos)
         {
             Collider[] overlapCheck = null;
@@ -35,7 +33,7 @@ namespace ActorSystem.Spawning
             } while (safetyCheck > 5 && overlapCheck.Length > 0);
 
             //isValid point
-            if(overlapCheck.Length == 0 && safetyCheck != 0)
+            if(overlapCheck != null && overlapCheck.Length == 0 && safetyCheck != 0)
             {
                 spawnPos = hit.position;
                 return true;

@@ -31,6 +31,8 @@ public class GameManager : Singleton<GameManager>
     public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
 
+    public static bool m_joystickCursorEnabled = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +58,9 @@ public class GameManager : Singleton<GameManager>
                 LevelManager.Instance.LoadNewLevel("EndScreen", LevelManager.Transition.YOUDIED);
             }
         }
+
+        Cursor.visible = !InputManager.Instance.isInGamepadMode && !m_joystickCursorEnabled;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void OnLevelWasLoaded(int level)
@@ -133,6 +138,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+
+    public static int m_saveSlotInUse = 1;
     #region Player Info Storage
     [Serializable]
     private struct PlayerInfo
@@ -153,8 +160,10 @@ public class GameManager : Singleton<GameManager>
         public Color m_leftOutlineColor;
         public Color m_rightOutlineColor;
 
-        //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
+
+        public float m_health;
+        public int m_orbs;
     }
 
     [Serializable]
@@ -174,8 +183,8 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = false;
         m_playerInfo.m_validSave = false;
         currentLevel = 0;
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
     }
     public static void SavePlayerInfoToFile()
     {
@@ -188,15 +197,17 @@ public class GameManager : Singleton<GameManager>
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
         m_playerInfo.m_validSave = true;
 
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
+
+        SaveSaveInfoToFile();
     }
     public static void LoadPlayerInfoFromFile()
     {
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.json"))
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
         {
             // Read the json from the file into a string
-            string dataAsJson = File.ReadAllText(Application.persistentDataPath + "/playerInfo.json");
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json");
 
             // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
             m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
@@ -207,7 +218,7 @@ public class GameManager : Singleton<GameManager>
         if (Instance?.m_player != null)
             Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect, float _health, int _orbs)
     {
         if (_leftWeapon != null)
         {
@@ -271,6 +282,9 @@ public class GameManager : Singleton<GameManager>
         //m_playerInfo.m_effects = _effects;
 
         m_playerInfo.m_classData = _class;
+
+        m_playerInfo.m_health = _health;
+        m_playerInfo.m_orbs = _orbs;
 
         m_containsPlayerInfo = true;
     }
@@ -383,6 +397,14 @@ public class GameManager : Singleton<GameManager>
         return m_playerInfo.m_classData;
     }
 
+    public static float RetrieveHealth()
+    {
+        return m_playerInfo.m_health;
+    }
+    public static int RetrieveOrbCount()
+    {
+        return m_playerInfo.m_orbs;
+    }
     public static void ResetPlayerInfo()
     {
         m_playerInfo.m_leftWeapon = null;
@@ -397,5 +419,53 @@ public class GameManager : Singleton<GameManager>
         PlayerPrefs.SetFloat("Level", 0);
     }
 
+    #endregion
+
+    #region Run Info Storage
+    [Serializable]
+    public struct SaveInfo
+    {
+        public bool m_validSave;
+
+        // ******
+        // Put desired stored variables here!
+        // V V V V V V
+
+        public int m_testValue;
+
+        // Ʌ Ʌ Ʌ Ʌ Ʌ Ʌ
+    }
+
+    static public bool m_containsRunInfo = false;
+    static public SaveInfo m_saveInfo;
+
+    public static void ClearSaveInfoFromFile()
+    {
+        m_saveInfo = new SaveInfo();
+        m_containsRunInfo = false;
+        m_saveInfo.m_validSave = false;
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void SaveSaveInfoToFile()
+    {
+        m_saveInfo.m_validSave = true;
+
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void LoadSaveInfoFromFile()
+    {
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json"))
+        {
+            // Read the json from the file into a string
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json");
+
+            // Pass the json to JsonUtility, and tell it to create a RunInfo object from it
+            m_saveInfo = JsonUtility.FromJson<SaveInfo>(dataAsJson);
+
+            m_containsPlayerInfo = true;
+        }
+    }
     #endregion
 }

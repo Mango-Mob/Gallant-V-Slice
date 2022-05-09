@@ -126,8 +126,8 @@ public class WeaponData : ScriptableObject
     private static int m_minDamagePerLevel = 1;
     private static int m_maxDamagePerLevel = 2;
 
-    private static float m_minSpeedPerLevel = 0.05f;
-    private static float m_maxSpeedPerLevel = 0.2f;
+    private static float m_minSpeedPerLevel = 0.01f;
+    private static float m_maxSpeedPerLevel = 0.03f;
 
 
     public static WeaponData GenerateWeapon(int _level)
