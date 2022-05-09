@@ -123,7 +123,7 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleR.transform.localRotation = Quaternion.identity;
                     m_tentacleO.m_idealLocation = opposingTransform.position + opposingTransform.forward * 4.5f;
                     m_tentacleO.transform.rotation = opposingTransform.rotation;
-
+                    m_amountOfAttacks = 2;
                     if (isCompletelySubmerged)
                     {
                         m_tentacleL.transform.localPosition = Vector3.zero;
@@ -137,7 +137,7 @@ namespace ActorSystem.AI.Bosses
                 case Phase.TENTACLE:
                     //Timer
                     m_tentaclePhaseTimer.Start(m_tentaclePhaseDuration);
-
+                    m_amountOfAttacks = 1;
                     m_myModel.transform.position = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].position;
                     m_myModel.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[m_currentOrient].rotation;
                     switch (select)

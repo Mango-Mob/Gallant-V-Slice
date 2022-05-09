@@ -14,6 +14,7 @@ namespace ActorSystem.AI.Other
         public float m_acceleration = 12f;
         public float m_stoppingDist = 0f;
         public bool isLantern = false;
+        public bool isHold = false;
         public bool emergeOnAwake = true;
 
         public Vector3 m_idealLocation { get; set; }
@@ -28,7 +29,7 @@ namespace ActorSystem.AI.Other
 
         private bool m_submergStatus = true;
         private Vector3 m_velocity;
-        private Boss_Swamp m_octoBrain;
+        public Boss_Swamp m_octoBrain;
         private bool m_isAttacking = false;
         private bool m_canRotate = true;
         private GameObject m_player;
@@ -39,7 +40,8 @@ namespace ActorSystem.AI.Other
             base.Awake();
 
             m_idealLocation = transform.position;
-            m_octoBrain = GetComponentInParent<Boss_Swamp>();
+            if(!isHold)
+                m_octoBrain = GetComponentInParent<Boss_Swamp>();
         }
 
         // Start is called before the first frame update
@@ -47,7 +49,7 @@ namespace ActorSystem.AI.Other
         {
             base.Start();
             m_player = GameManager.Instance.m_player;
-           m_myBrain.m_target = m_player;
+            m_myBrain.m_target = m_player;
             if (emergeOnAwake)
                 Emerge();
         }
@@ -57,7 +59,7 @@ namespace ActorSystem.AI.Other
         {
             base.Update();
 
-            if (m_myBrain.IsDead)
+            if (m_myBrain.IsDead || isHold)
                 return;
 
             if (!m_isAttacking && isVisible && !m_submergStatus)
@@ -88,6 +90,7 @@ namespace ActorSystem.AI.Other
 
         private void UpdateAttacks()
         {
+            m_myBrain.m_arms.m_brainLag = 0.75f;
             for (int i = 0; i < m_myBrain.m_arms.m_myData.Count; i++)
             {
                 m_myBrain.m_arms.m_myData[i] = null;
@@ -122,10 +125,12 @@ namespace ActorSystem.AI.Other
 
         public void Emerge()
         {
-            if (m_myBrain.IsDead)
+            if (m_myBrain.IsDead || isHold)
                 return;
 
             m_submergStatus = false;
+
+            m_myBrain.m_arms.m_brainLag = 0.75f;
 
             m_myBrain.m_animator.SetBool("Visible", !m_submergStatus, Random.Range(0f, 2f));
             m_idealLocation = transform.position;
@@ -142,12 +147,12 @@ namespace ActorSystem.AI.Other
         public void Submerge(bool refresh)
         {
             m_submergStatus = true;
-            m_myBrain.m_animator.SetBool("Visible", !m_submergStatus);
-            
+            m_myBrain.m_animator?.SetBool("Visible", !m_submergStatus);
+
             if (refresh && m_myBrain.IsDead)
             {
                 m_myBrain.Refresh();
-                m_myBrain.m_animator.SetFloat("playSpeed", 1.0f);                
+                m_myBrain.m_animator?.SetFloat("playSpeed", 1.0f);
             }
         }
 
@@ -181,7 +186,7 @@ namespace ActorSystem.AI.Other
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
+                    m_myBrain.m_animator?.SetFloat("playSpeed", 0.25f);
                     foreach (var material in m_myBrain.m_materials)
                     {
                         material.StartDisolve();
@@ -283,7 +288,7 @@ namespace ActorSystem.AI.Other
 
         private void FixedUpdate()
         {
-            if (!isVisible)
+            if (!isVisible || m_myBrain.IsDead || isHold)
                 return;
 
             if(m_canRotate && m_rotationDeg > 0)
@@ -295,10 +300,6 @@ namespace ActorSystem.AI.Other
                 if (Mathf.Abs(Quaternion.Angle(m_emergeRotation, rotate)) <= m_rotationDeg)
                 {
                     transform.rotation = rotate;
-                }
-                else
-                {
-                    Debug.Log($"rotation needed: {Quaternion.Angle(m_emergeRotation, rotate)}" );
                 }
             }
 
