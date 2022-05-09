@@ -38,6 +38,10 @@ public class RewardManager : Singleton<RewardManager>
     public Player_Controller m_player;
     public float m_pressDuration = 1.0f;
 
+    public Animator m_inventoryAnimator;
+    public Image m_inventoryImage;
+
+    private int m_hover;
     private int m_select = -1;
     private float m_timer = 0.0f;
 
@@ -86,10 +90,45 @@ public class RewardManager : Singleton<RewardManager>
 
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.Instance.isInGamepadMode && m_select != -1);
-
-        if(m_window.activeInHierarchy)
+        m_inventoryImage.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+        if (m_window.activeInHierarchy)
         {
-            if(m_select >= 0)
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                if (m_hover == -1)
+                    m_hover = 0;
+
+                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0))
+                {
+                    m_inventoryAnimator.SetTrigger("Visible");
+                }
+                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RIGHT, 0))
+                {
+                    m_hover++;
+                }
+                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LEFT, 0))
+                {
+                    m_hover--;
+                }
+
+                Mathf.Clamp(m_hover, 0, 2);
+
+                for (int i = 0; i < m_rewardSlots.Length; i++)
+                {
+                    m_rewardSlots[i].Hover(m_hover == i);
+                }
+
+                if (InputManager.Instance.IsGamepadButtonDown(ButtonType.SOUTH, 0))
+                {
+                    Select(m_hover);
+                }
+            }
+            else
+            {
+                m_hover = -1;
+            }
+
+            if (m_select >= 0)
             {
                 if (InputManager.Instance.IsGamepadButtonPressed(ButtonType.WEST, 0))
                 {
@@ -107,15 +146,6 @@ public class RewardManager : Singleton<RewardManager>
                 {
                     m_pressDurationImage.fillAmount = 0.0f;
                     m_timer = 0.0f;
-                }
-
-                if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
-                {
-                    EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].transform.parent.gameObject);
-                }
-                else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
-                {
-                    EventSystem.current.SetSelectedGameObject(null);
                 }
             }
         }

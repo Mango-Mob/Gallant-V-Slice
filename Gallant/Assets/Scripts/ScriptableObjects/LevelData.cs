@@ -19,6 +19,7 @@ public class LevelData : ScriptableObject
         public FloorType type;
         public AnimationCurve difficultyCurve;
         public float difficultyBase;
+        public float minDiffCost;
         public int minWaves;
         public int maxWaves;
         public SceneData[] potentialScenes;
@@ -61,11 +62,12 @@ public class LevelData : ScriptableObject
         {
             //Determine the budget for this wave
             float budget = m_levelFloors[(int)floor].difficultyBase * m_levelFloors[(int)floor].difficultyCurve.Evaluate((float)i/waveCount) + overflow;
+            float limit = m_levelFloors[(int)floor].minDiffCost * m_levelFloors[(int)floor].difficultyCurve.Evaluate((float)i / waveCount);
 
             if (archive.Count == 0)
                 archive = new List<WaveData>(m_spawnableWaves);
 
-            options = GetWavesUnderBudget(archive, budget);
+            options = GetWavesUnderBudget(archive, budget, limit);
 
             //Randomly select a wave available.
             WaveData toAdd = null;
@@ -88,7 +90,7 @@ public class LevelData : ScriptableObject
                 budget -= options[select].m_diffCost;
                 options.RemoveAt(select);
 
-                options = GetWavesUnderBudget(options, budget);
+                options = GetWavesUnderBudget(options, budget, limit);
             }
 
             if(toAdd != null)
@@ -103,13 +105,13 @@ public class LevelData : ScriptableObject
         return result;
     }
 
-    private List<WaveData> GetWavesUnderBudget(List<WaveData> archive, float budget)
+    private List<WaveData> GetWavesUnderBudget(List<WaveData> archive, float budget, float limit = 0)
     {
         List<WaveData> result = new List<WaveData>(archive);
         //Calculate which options are available.
         for (int j = result.Count - 1; j >= 0; j--)
         {
-            if (result[j].m_diffCost > budget)
+            if (result[j].m_diffCost > budget || result[j].m_diffCost < limit)
             {
                 result.RemoveAt(j);
             }

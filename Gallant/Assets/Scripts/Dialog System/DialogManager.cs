@@ -61,16 +61,18 @@ public class DialogManager : Singleton<DialogManager>
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 3; i++)
+        if(m_window.activeInHierarchy)
         {
-            gamepadButtons[i].enabled = InputManager.Instance.isInGamepadMode;
-            if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i) || InputManager.Instance.IsGamepadButtonDown(ButtonType.UP + i, 0))
+            for (int i = 0; i < 3; i++)
             {
-                if (m_options[i].interactable)
-                    m_options[i].onClick?.Invoke();
+                gamepadButtons[i].enabled = InputManager.Instance.isInGamepadMode;
+                if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i) || InputManager.Instance.IsGamepadButtonDown(ButtonType.UP + i, 0))
+                {
+                    if (m_options[i].interactable)
+                        m_options[i].onClick?.Invoke();
+                }
             }
         }
-        
     }
 
     public void Show()
@@ -129,15 +131,6 @@ public class DialogManager : Singleton<DialogManager>
         for (int i = 0; i < 4; i++)
         {
             m_interact[i] = null;
-        }
-
-        if (InputManager.Instance.isInGamepadMode)
-        {
-            EventSystem.current.SetSelectedGameObject(m_defaultSelected);
-        }
-        else if (!InputManager.Instance.isInGamepadMode)
-        {
-            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 

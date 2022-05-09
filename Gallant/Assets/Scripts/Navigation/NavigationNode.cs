@@ -119,7 +119,8 @@ public class NavigationNode : MonoBehaviour
         nodeObj.GetComponent<Button>().targetGraphic = nodeObj.AddComponent(typeof(Image)) as Image;
 
         ColorBlock temp = nodeObj.GetComponent<Button>().colors;
-        temp.selectedColor = Color.yellow;
+        temp.selectedColor = Color.cyan;
+        temp.disabledColor = Color.gray;
         nodeObj.GetComponent<Button>().colors = temp;
 
         nodeObj.GetComponent<Image>().sprite = data.sceneIcon;

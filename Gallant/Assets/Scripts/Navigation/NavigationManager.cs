@@ -77,7 +77,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
             {
-                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 10f;
+                scrollDelta = InputManager.Instance.GetGamepadStick(StickType.RIGHT, 0).y * 15f;
             }
             else if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT))
             {
@@ -122,6 +122,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
         if(status)
             m_activeNodes[index].ActivateMyConnections();
+        else
+            EventSystem.current.SetSelectedGameObject(null);
     }
 
     public void MovePlayerIconTo(Vector3 position, System.Action loadToScene)

@@ -15,6 +15,7 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public Actor m_guide;
     public ActorSpawner m_spawner;
 
+    public LevelData m_tutorialLevel;
     public SceneData[] m_sceneData;
 
     public int tutorialPosition = 0;
@@ -57,7 +58,7 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         {
             conData[i] = (i, i + 1);
         }
-        NavigationManager.Instance.Generate(m_sceneData, conData);
+        NavigationManager.Instance.Generate(m_tutorialLevel);
         NavigationManager.Instance.UpdateMap(0);
         NavigationManager.Instance.ConstructScene();
     }
