@@ -19,6 +19,9 @@ public class MainMenu : MonoBehaviour
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
 
+    [Header("Saves")]
+    public GameObject m_saveMenu;
+
     [Header("Collection")]
     public GameObject m_collectionMenu;
 
@@ -74,18 +77,28 @@ public class MainMenu : MonoBehaviour
 
     public void MainDisplay()
     {
+        m_saveMenu.SetActive(false);
         m_settingsMenu.gameObject.SetActive(false);
         m_collectionMenu.SetActive(false);
         m_mainDisplay.SetActive(true);
     }
+    public void Saves()
+    {
+        m_settingsMenu.gameObject.SetActive(false);
+        m_saveMenu.SetActive(true);
+        m_collectionMenu.SetActive(false);
+        m_mainDisplay.SetActive(false);
+    }
     public void Settings()
     {
+        m_saveMenu.SetActive(false);
         m_settingsMenu.gameObject.SetActive(true);
         m_mainDisplay.SetActive(false);
         m_collectionMenu.SetActive(false);
     }
     public void Collection()
     {
+        m_saveMenu.SetActive(false);
         m_collectionMenu.SetActive(true);
         m_mainDisplay.SetActive(false);
         m_settingsMenu.gameObject.SetActive(false);

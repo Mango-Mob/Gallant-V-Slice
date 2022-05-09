@@ -699,7 +699,7 @@ public class Player_Controller : MonoBehaviour
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
-            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect);
+            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect, playerResources.m_health, playerResources.m_adrenaline);
     }
     public void LoadPlayerInfo()
     {
@@ -725,6 +725,9 @@ public class Player_Controller : MonoBehaviour
             m_inkmanClass = GameManager.RetrieveClassData();
 
             playerStats.EvaluateEffects();
+
+            playerResources.SetHealth(GameManager.RetrieveHealth());
+            playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
         }
         playerSkills.EvaluateSkills();
 
@@ -738,6 +741,7 @@ public class Player_Controller : MonoBehaviour
             playerClassArmour.SetClassArmour(m_inkmanClass.inkmanClass);
         else
             playerClassArmour.SetClassArmour(InkmanClass.GENERAL);
+
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
