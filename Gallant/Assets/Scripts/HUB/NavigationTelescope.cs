@@ -37,6 +37,8 @@ public class NavigationTelescope : MonoBehaviour
     private bool m_selectFlag = false;
     private Animator m_animator;
 
+    public float m_angleClamp = 60.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +68,11 @@ public class NavigationTelescope : MonoBehaviour
         if (Mathf.Abs(movementVector.x) > 0.0f)
         {
             m_camera.transform.Rotate(transform.up, movementVector.x * m_turnSpeed * Time.deltaTime);
+            
+            m_camera.transform.localRotation = Quaternion.Euler(m_camera.transform.localRotation.eulerAngles.x,
+                Mathf.Clamp(m_camera.transform.localRotation.eulerAngles.y, 180.0f + -m_angleClamp, 180.0f + m_angleClamp),
+                m_camera.transform.localRotation.eulerAngles.z);
+
             m_targetIndex = -1;
         }
         else
@@ -115,6 +122,8 @@ public class NavigationTelescope : MonoBehaviour
                     SelectDestination(m_destinations[m_targetIndex]);
                     m_selectProgress = 0.0f;
                     m_selectFlag = true;
+
+                    TriggerTransition(true);
                 }
             }
         }
