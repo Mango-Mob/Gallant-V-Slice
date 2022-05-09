@@ -40,11 +40,12 @@ public class UI_BindDisplay : UI_Element
         }
         else
         {
-            sprite = InputManager.Instance.GetBindImage(m_bindKey);
+            sprite = InputManager.Instance.GetBindImage(m_bindKey, false);
         }
 
         m_button.sprite = sprite;
-        m_keyboardDisplay.SetActive(sprite == null);
+        if (m_keyboardDisplay != null)
+            m_keyboardDisplay.SetActive(sprite == null);
         m_gamepadDisplay.SetActive(sprite != null);
     }
 
