@@ -252,4 +252,8 @@ public class Player_Resources : MonoBehaviour
     public void SetHealth(float _health) { m_health = _health; }
     public void SetOrbCount(int _orbs) { m_adrenaline = _orbs; }
 
+    public float GetPotentialHealth()
+    {
+        return m_health + m_adrenaline * m_adrenalineHeal;
+    }
 }
