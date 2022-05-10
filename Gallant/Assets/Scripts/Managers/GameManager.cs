@@ -184,7 +184,8 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo.m_validSave = false;
         currentLevel = 0;
         string json = JsonUtility.ToJson(m_playerInfo, true);
-        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
+            File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
     }
     public static void SavePlayerInfoToFile()
     {
@@ -198,6 +199,10 @@ public class GameManager : Singleton<GameManager>
         m_playerInfo.m_validSave = true;
 
         string json = JsonUtility.ToJson(m_playerInfo, true);
+
+        if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/");
+
         File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
 
         SaveSaveInfoToFile();
@@ -445,17 +450,22 @@ public class GameManager : Singleton<GameManager>
         m_containsRunInfo = false;
         m_saveInfo.m_validSave = false;
         string json = JsonUtility.ToJson(m_saveInfo, true);
-        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
+            File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
     }
     public static void SaveSaveInfoToFile()
     {
         m_saveInfo.m_validSave = true;
+
+        if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/");
 
         string json = JsonUtility.ToJson(m_saveInfo, true);
         File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
     }
     public static void LoadSaveInfoFromFile()
     {
+        m_saveInfo.m_validSave = false;
         if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json"))
         {
             // Read the json from the file into a string
