@@ -52,7 +52,7 @@ public class MainMenu : MonoBehaviour
         //    }
         //}
 
-        if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        if (InputManager.Instance.isInGamepadMode && (EventSystem.current.currentSelectedGameObject == null || !EventSystem.current.currentSelectedGameObject.activeInHierarchy))
         {
             if (m_mainDisplay.activeInHierarchy)
             {
@@ -62,14 +62,17 @@ public class MainMenu : MonoBehaviour
             else if (m_settingsMenu.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSettingsButton.gameObject);
+                Debug.Log("Settings");
             }
             else if (m_saveMenu.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSaveButton.gameObject);
+                Debug.Log("Save");
             }
             else if (m_collectionMenu.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstCollectionButton.gameObject);
+                Debug.Log("Collection");
             }
         }
         else if (!InputManager.Instance.isInGamepadMode)
