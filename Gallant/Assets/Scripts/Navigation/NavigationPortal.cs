@@ -27,9 +27,16 @@ public class NavigationPortal : MonoBehaviour
         {
             NavigationManager.Instance.Generate(m_levelToGenerate);
             NavigationManager.Instance.UpdateMap(0);
+            SetColor(m_levelToGenerate.m_portalColor);
         }
-
-        SetColor(portalColor);
+        else if (NavigationManager.Instance.m_generatedLevel != null)
+        {
+            SetColor(NavigationManager.Instance.m_generatedLevel.m_portalColor);
+        }
+        else
+        {
+            SetColor(portalColor);
+        }
     }
 
     public void Update()

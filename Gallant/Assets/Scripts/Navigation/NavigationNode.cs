@@ -12,6 +12,7 @@ public class NavigationNode : MonoBehaviour
     public int m_myDepth = 0;
 
     private bool IsCompleted = false;
+    private Image mainIconLoc;
     public struct Connection
     {
         public LineRenderer render;
@@ -102,33 +103,40 @@ public class NavigationNode : MonoBehaviour
     public void MarkCompleted()
     {
         IsCompleted = true;
-        GetComponent<Image>().sprite = m_myData.sceneCompleteIcon;
+        mainIconLoc.sprite = m_myData.sceneCompleteIcon;
     }
 
     public static GameObject CreateNode(SceneData data, Transform parent)
     {
         GameObject nodeObj = new GameObject();
+        GameObject nodeImage = new GameObject();
+        GameObject nodeBackground = new GameObject();
+        nodeBackground.transform.SetParent(nodeObj.transform);
+        nodeImage.transform.SetParent(nodeObj.transform);
 
         nodeObj.name = $"NavNode ({data.name})";
+        nodeObj.AddComponent<RectTransform>();
         nodeObj.transform.SetParent(parent);
         nodeObj.transform.localPosition = Vector3.zero;
         nodeObj.transform.localRotation = Quaternion.identity;
         nodeObj.transform.localScale = Vector3.one;
 
         nodeObj.AddComponent(typeof(Button));
-        nodeObj.GetComponent<Button>().targetGraphic = nodeObj.AddComponent(typeof(Image)) as Image;
+        nodeBackground.AddComponent<Image>().sprite = data.iconBack;
 
         ColorBlock temp = nodeObj.GetComponent<Button>().colors;
         temp.selectedColor = Color.cyan;
         temp.disabledColor = Color.gray;
         nodeObj.GetComponent<Button>().colors = temp;
 
-        nodeObj.GetComponent<Image>().sprite = data.sceneIcon;
-
         NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
         nav.m_myData = data;
         nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
         nodeObj.GetComponent<Button>().interactable = false;
+        nav.mainIconLoc = nodeImage.AddComponent<Image>();
+        nodeObj.GetComponent<Button>().targetGraphic = nav.mainIconLoc;
+        nodeImage.GetComponent<Image>().sprite = data.sceneIcon;
+
         return nodeObj;
     }
 

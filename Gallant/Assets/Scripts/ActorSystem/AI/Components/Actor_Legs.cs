@@ -79,7 +79,7 @@ namespace ActorSystem.AI.Components
             if(m_delayTimer > 0)
                 return;
 
-            if(!m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
+            if(m_agent.enabled && !m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
             {
                 if (m_isPivot)
                 {

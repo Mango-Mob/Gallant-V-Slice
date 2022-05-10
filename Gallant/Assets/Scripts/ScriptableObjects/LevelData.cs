@@ -11,6 +11,7 @@ using UnityEditorInternal;
 public class LevelData : ScriptableObject
 {
     public List<WaveData> m_spawnableWaves;
+    public Color m_portalColor;
     public enum FloorType { REST, EVENT, COMBAT, SPECIAL};
 
     [System.Serializable]
