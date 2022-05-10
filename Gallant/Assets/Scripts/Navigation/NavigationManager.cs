@@ -10,6 +10,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public GameObject m_linePrefab;
     public NavigationNode m_rootNode;
     public NavigationNode m_endNode;
+    public GameObject m_mapObj;
 
     public int index = -1;
     public Vector2 iconNoise;
@@ -221,7 +222,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].potentialScenes[Random.Range(0, data.m_levelFloors[i].potentialScenes.Length)], transform);
+                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].SelectScene(), m_mapObj.transform);
                 float xPos = widthStep * (j+0.5f) - (width/2) + Random.Range(-iconNoise.x, iconNoise.x);
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
@@ -350,7 +351,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void SetRoot(SceneData data)
     {
-        GameObject nodeObj = NavigationNode.CreateNode(data, transform);
+        GameObject nodeObj = NavigationNode.CreateNode(data, m_mapObj.transform);
         nodeObj.transform.localPosition = new Vector3(0, 0, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;
@@ -364,7 +365,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void SetEnd(SceneData data)
     {
-        GameObject nodeObj = NavigationNode.CreateNode(data, transform);
+        GameObject nodeObj = NavigationNode.CreateNode(data, m_mapObj.transform);
         nodeObj.transform.localPosition = new Vector3(0, height, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;

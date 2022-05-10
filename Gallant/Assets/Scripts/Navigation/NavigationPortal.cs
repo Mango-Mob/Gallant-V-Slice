@@ -9,11 +9,13 @@ using UnityEngine.VFX;
 public class NavigationPortal : MonoBehaviour
 {
     public bool GenerateOnAwake = false;
-    public LevelData m_levelToGenerate;
+    public LevelData[] m_levelToGenerate;
 
     public Color portalColor;
     private Color flairColor;
     private Interactable m_myInterface;
+
+    public GameObject m_portalMainObj;
 
     public SpriteRenderer icon;
     public VisualEffect portalMain;
@@ -25,9 +27,10 @@ public class NavigationPortal : MonoBehaviour
         m_myInterface = GetComponentInChildren<Interactable>();
         if(GenerateOnAwake && m_levelToGenerate != null)
         {
-            NavigationManager.Instance.Generate(m_levelToGenerate);
+            int select = UnityEngine.Random.Range(0, m_levelToGenerate.Length);
+            NavigationManager.Instance.Generate(m_levelToGenerate[select]);
             NavigationManager.Instance.UpdateMap(0);
-            SetColor(m_levelToGenerate.m_portalColor);
+            SetColor(m_levelToGenerate[select].m_portalColor);
         }
         else if (NavigationManager.Instance.m_generatedLevel != null)
         {
@@ -41,6 +44,7 @@ public class NavigationPortal : MonoBehaviour
 
     public void Update()
     {
+        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat);
         GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
     }
 

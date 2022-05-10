@@ -15,7 +15,7 @@ public abstract class SceneEvent : MonoBehaviour
     {
         NavigationManager.Instance.SetVisibility(true, false);
         DialogManager.Instance.Hide();
-        Destroy(gameObject);
+        Destroy(this);
     }
 
     public void Update()

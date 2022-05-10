@@ -40,6 +40,13 @@ namespace ActorSystem.Spawning
                     return;
 
                 m_waves = data.EvaluateCombat((uint)floor);
+
+                if(m_waves == null)
+                {
+                    Destroy(this);
+                    return;
+                }
+
                 m_waveArchive = new List<WaveData>(m_waves);
                 StartCombat();
             }

@@ -24,6 +24,27 @@ public class LevelData : ScriptableObject
         public int minWaves;
         public int maxWaves;
         public SceneData[] potentialScenes;
+        public float[] probability;
+
+        public SceneData SelectScene()
+        {
+            int rollMax = 10000;
+            float roll = Random.Range(0, rollMax);
+            float rollOver = 0;
+            if (potentialScenes.Length == 1)
+                return potentialScenes[0];
+            for (int i = 0; i < probability.Length; i++)
+            {
+                if(roll < (probability[i] + rollOver) * rollMax)
+                {
+                    //Select
+                    return potentialScenes[i];
+                }
+                rollOver += probability[i];
+            }
+
+            return null;
+        }
     }
 
     public SceneData m_root;
