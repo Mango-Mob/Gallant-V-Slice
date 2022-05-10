@@ -57,22 +57,18 @@ public class MainMenu : MonoBehaviour
             if (m_mainDisplay.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
-                Debug.Log("Main");
             }
             else if (m_settingsMenu.gameObject.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSettingsButton.gameObject);
-                Debug.Log("Settings");
             }
             else if (m_saveMenu.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSaveButton.gameObject);
-                Debug.Log("Save");
             }
             else if (m_collectionMenu.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstCollectionButton.gameObject);
-                Debug.Log("Collection");
             }
         }
         else if (!InputManager.Instance.isInGamepadMode)
