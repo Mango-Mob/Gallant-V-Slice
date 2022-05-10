@@ -171,7 +171,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowDisplay()
     {
         Refresh();
-        m_displayBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_displayBtn.GetComponent<Image>().color = m_bumperColor;
         m_displayBtn.interactable = false;
         m_displayMenu.SetActive(true);
 
@@ -188,7 +188,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowAudio()
     {
         Refresh();
-        m_audioBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_audioBtn.GetComponent<Image>().color = m_bumperColor;
         m_audioBtn.interactable = false;
         m_audioMenu.SetActive(true);
 
@@ -205,7 +205,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowControls()
     {
         Refresh();
-        m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
         m_controlsBtn.interactable = false;
         m_controlsMenu.SetActive(true);
     }
