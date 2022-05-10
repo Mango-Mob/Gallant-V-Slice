@@ -198,6 +198,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public void OnPointerEnter(PointerEventData eventData)
     {
         m_isMouseHovering = true;
+        Debug.Log("HOVERING");
         if (!InputManager.Instance.isInGamepadMode)
         {
             SelectSkill();
@@ -240,7 +241,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public bool IsUnlockable()
     {
-        Debug.Log(PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}"));
+        //Debug.Log(PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}"));
         if (PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") < GetCurrentCost() || m_skillData.upgradeMaximum < m_upgradeAmount + 1)
         {
             return false;

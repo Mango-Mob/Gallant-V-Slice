@@ -18,12 +18,15 @@ public class MainMenu : MonoBehaviour
 
     [Header("Settings")]
     public SettingsMenu m_settingsMenu;
+    public Dropdown m_firstSettingsButton;
 
     [Header("Saves")]
     public GameObject m_saveMenu;
+    public Button m_firstSaveButton;
 
     [Header("Collection")]
     public GameObject m_collectionMenu;
+    public Button m_firstCollectionButton;
 
     // Start is called before the first frame update
     void Start()
@@ -37,16 +40,40 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(m_mainDisplay.activeInHierarchy)
+        //if(m_mainDisplay.activeInHierarchy)
+        //{
+        //    if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+        //    {
+        //        EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
+        //    }
+        //    else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        //    {
+        //        EventSystem.current.SetSelectedGameObject(null);
+        //    }
+        //}
+
+        if (InputManager.Instance.isInGamepadMode && (EventSystem.current.currentSelectedGameObject == null || !EventSystem.current.currentSelectedGameObject.activeInHierarchy))
         {
-            if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
+            if (m_mainDisplay.activeInHierarchy)
             {
                 EventSystem.current.SetSelectedGameObject(m_firstSelectedButton.gameObject);
             }
-            else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+            else if (m_settingsMenu.gameObject.activeInHierarchy)
             {
-                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(m_firstSettingsButton.gameObject);
             }
+            else if (m_saveMenu.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(m_firstSaveButton.gameObject);
+            }
+            else if (m_collectionMenu.activeInHierarchy)
+            {
+                EventSystem.current.SetSelectedGameObject(m_firstCollectionButton.gameObject);
+            }
+        }
+        else if (!InputManager.Instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
 

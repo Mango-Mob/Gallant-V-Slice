@@ -154,32 +154,32 @@ public class WeaponData : ScriptableObject
 
         // Random ability and power level is assigned.
         Ability newAbilityType;
-        int iter = 0;
-        do
-        {
-            newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 1);
+        //int iter = 0;
+        //do
+        //{
+        newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 3);
         
-            int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
-            int result = Mathf.Max(_level + curve, 0);
+        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
+        int result = Mathf.Max(_level + curve, 0);
 
-            // Power level
-            int powerLevel = 0;
-            if (result < 3)
-                powerLevel = 1;
-            else if (result < 6)
-                powerLevel = 2;
-            else
-                powerLevel = 3;
+        // Power level
+        int powerLevel = 0;
+        if (result < 3)
+            powerLevel = 1;
+        else if (result < 6)
+            powerLevel = 2;
+        else
+            powerLevel = 3;
 
-            // Ability
-            ApplyAbilityData(data, newAbilityType, powerLevel);
-            iter++; 
-            if (iter > 20)
-            {
-                ApplyAbilityData(data, Ability.ARCANE_BOLT, powerLevel);
-                break;
-            }
-        } while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
+        // Ability
+        ApplyAbilityData(data, newAbilityType, powerLevel);
+        //    iter++; 
+        //    if (iter > 20)
+        //    {
+        //        ApplyAbilityData(data, Ability.ARCANE_BOLT, powerLevel);
+        //        break;
+        //    }
+        //} while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
         
 
         // Create weapon name
