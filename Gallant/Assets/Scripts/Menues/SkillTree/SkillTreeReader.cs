@@ -127,6 +127,9 @@ public class SkillTreeReader : MonoBehaviour
         }
         else
         {
+            if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{ GameManager.m_saveSlotInUse}/"))
+                Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{ GameManager.m_saveSlotInUse}/");
+
             File.WriteAllText(GetSkillTreePath(_class), JsonUtility.ToJson(m_skills[(int)_class], true));
 
             Debug.Log("Created new skill tree file!");
