@@ -104,11 +104,8 @@ GameObject:
   - component: {fileID: 413747602781867472}
   - component: {fileID: 8266730024680987167}
   - component: {fileID: 4677801292968336669}
-  - component: {fileID: 1549617315979062133}
   - component: {fileID: 1731840947}
-  - component: {fileID: 1500385950199337142}
   - component: {fileID: 8160885422492826057}
-  - component: {fileID: 3676226687033309575}
   m_Layer: 9
   m_Name: Perception
   m_TagString: Untagged
@@ -179,20 +176,6 @@ MonoBehaviour:
   m_currPhyResist: 0
   m_currAbilResist: 0
   m_target: {fileID: 0}
---- !u!136 &1549617315979062133
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413747602781867310}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.55
-  m_Height: 2.9435792
-  m_Direction: 1
-  m_Center: {x: 0, y: 1.4717896, z: 0}
 --- !u!114 &1731840947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,28 +265,6 @@ MonoBehaviour:
     fillPass:
       shader: {fileID: 0}
       serializedProperties: []
---- !u!195 &1500385950199337142
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413747602781867310}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!54 &8160885422492826057
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -320,25 +281,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3676226687033309575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413747602781867310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf4be17ea1b79b14eaae30d813140256, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_baseSpeed: 0
-  m_speedModifier: 1
-  m_canBeKnocked: 0
-  m_isKnocked: 0
-  m_canRotate: 0
-  m_rotationSpeed: 270
-  m_pivotMin: 160
 --- !u!1 &413747603708313577
 GameObject:
   m_ObjectHideFlags: 0
