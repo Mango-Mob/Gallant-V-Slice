@@ -23,10 +23,14 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
         return m_seenDialogList.Contains(seen);
     }
 
-    public void Start()
+    protected override void Awake()
     {
+        base.Awake();
         m_visitNPC.Add("Rowan", PlayerPrefs.GetInt("RowanVisits", 0));
         m_deadNPCs.Add("Rowan", false);
+
+        m_visitNPC.Add("Perception", PlayerPrefs.GetInt("PerceptionVisits", 0));
+        m_deadNPCs.Add("Perception", false);
     }
 
     public void Refresh()

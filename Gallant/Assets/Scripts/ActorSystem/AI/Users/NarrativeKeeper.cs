@@ -73,6 +73,7 @@ namespace ActorSystem.AI.Users
 
         protected override void Update()
         {
+            m_myBrain.m_myOutline.enabled = m_potentialDialogs.Count > 0;
             m_interactDisplay.m_isReady = m_showUI && !isWaiting && m_potentialDialogs.Count > 0;
             m_myBrain.SetEnabled(!isWaiting);
             base.Update();
