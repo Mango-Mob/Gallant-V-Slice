@@ -52,6 +52,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Update()
     {
+        if (InputManager.Instance == null)
+            return;
+
         if (IsVisible && m_canQuit && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsKeyDown(KeyType.Q) || InputManager.Instance.IsGamepadButtonDown(ButtonType.EAST, 0)))
         {
             SetVisibility(false);
@@ -116,7 +119,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             else
                 m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
-        HUDManager.Instance.gameObject.SetActive(!m_myCamera.gameObject.activeInHierarchy);
+        HUDManager.Instance.gameObject?.SetActive(!m_myCamera.gameObject.activeInHierarchy);
 
         if(GameManager.Instance.m_player != null)
             GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;

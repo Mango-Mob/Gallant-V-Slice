@@ -26,7 +26,6 @@ public class JukeboxAgent : AudioAgent
     private int currentIndex;
     private bool isPlaying = false;
 
-
     protected AudioManager.VolumeChannel type = AudioManager.VolumeChannel.MUSIC;
     protected AudioPlayer player;
     protected AudioPlayer backPlayer;
@@ -85,6 +84,9 @@ public class JukeboxAgent : AudioAgent
 
     private void CheckAudioPlayer()
     {
+        if (player == null)
+            return;
+
         if (hasFadeTransitions && player.TimeLeft() < 5.0f && player.IsPlaying())
         {
             float time = player.TimeLeft();
