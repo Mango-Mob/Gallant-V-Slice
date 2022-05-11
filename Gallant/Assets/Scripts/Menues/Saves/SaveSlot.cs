@@ -181,6 +181,13 @@ public class SaveSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         PlayerPrefs.SetInt("CastleLevel", 0);
         PlayerPrefs.SetInt("MagmaLevel", 0);
 
+        var files = Directory.GetFiles(Application.persistentDataPath + $"/saveSlot{GameManager.m_saveSlotInUse}/");
+        for (int i = 0; i < files.Length; i++)
+        {
+            File.Delete(files[i]);
+        }
+        Directory.Delete(Application.persistentDataPath + $"/saveSlot{GameManager.m_saveSlotInUse}/");
+
         PlayerPrefs.SetInt($"Player Balance {m_slotNumber}", 0);
 
         if (_alterVisuals)
