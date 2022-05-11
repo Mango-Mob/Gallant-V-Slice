@@ -37,6 +37,7 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         if (m_saveInfo == null) { m_saveInfo = new SaveInfo(); }
+        Debug.Log("Init bruv");
     }
     // Start is called before the first frame update
     void Start()
@@ -481,6 +482,8 @@ public class GameManager : Singleton<GameManager>
     }
     public static void LoadSaveInfoFromFile()
     {
+        Debug.Log("Load");
+
         m_saveInfo.m_validSave = false;
         if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json"))
         {

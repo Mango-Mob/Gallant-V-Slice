@@ -245,7 +245,7 @@ public class InputManager : SingletonPersistent<InputManager>
         //Attack
         m_binds.Add("Aim", new Bind[] { new Bind(typeof(StickType), (int)StickType.RIGHT) });
         m_binds.Add("Toggle_Lockon", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_ALT), new Bind(typeof(ButtonType), (int)ButtonType.RS) });
-        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.LB) });
+        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.LB), new Bind(typeof(MouseButton), (int)MouseButton.RIGHT) });
         m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });
         m_binds.Add("Left_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Q), new Bind(typeof(ButtonType), (int)ButtonType.LT) });
         m_binds.Add("Right_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.E), new Bind(typeof(ButtonType), (int)ButtonType.RT) });
@@ -359,14 +359,6 @@ public class InputManager : SingletonPersistent<InputManager>
         {
             foreach (var bind in result)
             {
-                if (bind.enumType == typeof(KeyType))
-                {
-                    resultImage = GetKeyImage((KeyType)bind.value);
-                }
-                else if (bind.enumType == typeof(MouseButton))
-                {
-                    resultImage = GetMouseButtonSprite((MouseButton)bind.value);
-                }
                 if(includeGamepad)
                 {
                     if (bind.enumType == typeof(ButtonType))
@@ -376,6 +368,17 @@ public class InputManager : SingletonPersistent<InputManager>
                     else if (bind.enumType == typeof(StickType))
                     {
                         resultImage = GetGameStickSprite((StickType)bind.value);
+                    }
+                }
+                else
+                {
+                    if (bind.enumType == typeof(KeyType))
+                    {
+                        resultImage = GetKeyImage((KeyType)bind.value);
+                    }
+                    else if (bind.enumType == typeof(MouseButton))
+                    {
+                        resultImage = GetMouseButtonSprite((MouseButton)bind.value);
                     }
                 }
 
@@ -1193,7 +1196,7 @@ public class InputManager : SingletonPersistent<InputManager>
         {
             case MouseButton.LEFT: { return m_leftClick; }
             case MouseButton.MIDDLE: { return null; }
-            case MouseButton.RIGHT: { return m_leftClick; }
+            case MouseButton.RIGHT: { return m_rightClick; }
 
             default:
             case MouseButton.NONE: { return null; }
