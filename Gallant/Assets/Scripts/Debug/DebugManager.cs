@@ -136,6 +136,9 @@ namespace Exceed.Debug
         // Update is called once per frame
         void Update()
         {
+            if (InputManager.Instance == null)
+                return;
+
             UpdateRoomDetails();
             GetComponent<Animator>().SetBool("IsMinimised", m_isMinimised);
             if (InputManager.Instance.IsKeyDown(KeyType.TILDE))

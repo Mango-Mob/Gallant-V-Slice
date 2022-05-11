@@ -14,6 +14,7 @@ public enum ItemEffect
     ABILITY_DEFENCE,
     DAMAGE_RESISTANCE,
     ARCANE_FOCUS,
+    ORB_GAIN,
 }
 /****************
  * Player_Stats: Manages the stats of the player including effects

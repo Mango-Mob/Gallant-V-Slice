@@ -48,6 +48,9 @@ public class GameManager : Singleton<GameManager>
     // Update is called once per frame
     void Update()
     {
+        if (InputManager.Instance == null)
+            return;
+
         int gamepadID = InputManager.Instance.GetAnyGamePad();
         
         if(!m_sceneHasTutorial && m_player.GetComponent<Player_Controller>().playerResources.m_dead)

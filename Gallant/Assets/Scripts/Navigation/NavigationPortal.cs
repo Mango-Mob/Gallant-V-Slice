@@ -68,12 +68,12 @@ public class NavigationPortal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if((m_myInterface != null && other.gameObject.layer == LayerMask.NameToLayer("Player")))
             m_myInterface.m_isReady = !GameManager.Instance.IsInCombat;
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (m_myInterface != null && other.gameObject.layer == LayerMask.NameToLayer("Player"))
             m_myInterface.m_isReady = false;
     }
 }
