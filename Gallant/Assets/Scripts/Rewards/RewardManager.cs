@@ -25,15 +25,12 @@ public class RewardManager : Singleton<RewardManager>
     private Image m_pressDurationImage;
 
     public List<ItemData> m_items = new List<ItemData>();
+    public List<AbilityData> m_abilityBooks = new List<AbilityData>();
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
 
     public InfoDisplay m_leftHand;
     public InfoDisplay m_rightHand;
-
-    private const float probFirstWeapon = 1.0f;
-    private const float probSecondWeapon = 0.6666f;
-    private const float probThirdWeapon = 0.05f;
 
     public Player_Controller m_player;
     public float m_pressDuration = 1.0f;
@@ -53,6 +50,15 @@ public class RewardManager : Singleton<RewardManager>
         GENERAL,    //Completely random
         WEAPONS,    //Three weapons garenteeds
         RUNE,       //No Weapon garenteed
+        BOOK,
+        TEST,
+    }
+
+    public enum Utility
+    {
+        BOOK,
+        FORGE,
+        ORB,
     }
 
     protected void Start()
@@ -224,6 +230,20 @@ public class RewardManager : Singleton<RewardManager>
                         rewards.Add(GenerateItem(rewards));
                     }
                     break;
+                case RewardType.BOOK:
+                    //Only Abilities
+                    for (int i = 0; i < 3; i++)
+                    {
+                        rewards.Add(GenerateBook(rewards));
+                    }
+                    break;
+                case RewardType.TEST:
+                    //Only Abilities
+                    for (int i = 0; i < 3; i++)
+                    {
+                        rewards.Add(GenerateItem(rewards, false));
+                    }
+                    break;
                 default:
                     break;
             }
@@ -237,6 +257,10 @@ public class RewardManager : Singleton<RewardManager>
                 if (rewards[i].GetType() == typeof(WeaponData))
                 {
                     m_rewardSlots[i].LoadWeapon(rewards[i] as WeaponData);
+                }
+                else if (rewards[i].GetType() == typeof(AbilityData))
+                {
+                    m_rewardSlots[i].LoadAbility(rewards[i] as AbilityData);
                 }
                 else
                 {
@@ -266,15 +290,54 @@ public class RewardManager : Singleton<RewardManager>
         return weapon;
     }
 
-    public ItemData GenerateItem(List<ScriptableObject> currentList)
+    public Utility GenerateUtility()
+    {
+        float potent = m_player.playerResources.GetPotentialHealth();
+        float max = m_player.playerResources.m_maxHealth + 5 * m_player.playerResources.m_adrenalineHeal;
+        float probOrb = 1.0f - potent / max;
+
+        float weaponCurr = m_player.playerAttack.GetAverageLevel();
+        float weaponMax = GameManager.currentLevel + 1;
+        float probForge = 1.0f - weaponCurr / weaponMax;
+
+        return (Utility)Random.Range(0, 3);
+    }
+
+    public AbilityData GenerateBook(List<ScriptableObject> currentList)
     {
         int select;
         do
         {
-            select = Random.Range(0, m_items.Count);
-        } while (!IsUniqueItem(currentList, m_items[select]));
+            select = Random.Range(0, m_abilityBooks.Count);
+        } while (!IsUniqueAbility(currentList, m_abilityBooks[select]));
 
-        return m_items[select];
+        return m_abilityBooks[select];
+    }
+
+    public ItemData GenerateItem(List<ScriptableObject> currentList, bool runesAllowed = true)
+    {
+        List<ItemData> options = new List<ItemData>(m_items);
+        for (int i = options.Count - 1; i >= 0; i--)
+        {
+            if (!runesAllowed && options[i].itemType == ItemData.UtilityType.RUNE)
+                options.RemoveAt(i);
+        }
+
+        int select;
+
+        if (runesAllowed)
+        {
+            do
+            {
+                select = Random.Range(0, options.Count);
+            } while (!IsUniqueItem(currentList, options[select]));
+        }
+        else
+        {
+            select = Random.Range(0, options.Count);
+        }
+
+        return options[select];
     }
 
     public void Select(int item)
@@ -343,4 +406,22 @@ public class RewardManager : Singleton<RewardManager>
         }
         return true;
     }
+
+
+    private bool IsUniqueAbility(List<ScriptableObject> list, AbilityData data)
+    {
+        foreach (var reward in list)
+        {
+            AbilityData abilityReward = reward as AbilityData;
+            if (abilityReward != null)
+            {
+                if (abilityReward.abilityPower == data.abilityPower)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }
