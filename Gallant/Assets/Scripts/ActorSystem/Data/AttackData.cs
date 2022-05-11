@@ -22,8 +22,8 @@ namespace ActorSystem.Data
         public bool canTrackTarget = true;
         public bool canAttackMove = true;
         public bool isIdleAfterAttack = false;
-        [SerializeField] private Hitbox detectCollider;
-        [SerializeField] private Hitbox[] damageColliders;
+        [SerializeField] protected Hitbox detectCollider;
+        [SerializeField] protected Hitbox[] damageColliders;
 
         public enum Effect
         {
@@ -133,6 +133,19 @@ namespace ActorSystem.Data
             }
         }
 
+        public virtual void PostInvoke(Transform user, uint id)
+        {
+            if (postVFXPrefab != null)
+            {
+                Vector3 hitloc = GetHitLocation(user, id);
+                RaycastHit hit;
+                if (Physics.Raycast(hitloc, Vector3.down, out hit, 15f, 1 << LayerMask.NameToLayer("Environment")))
+                {
+                    GameObject vfx = Instantiate(postVFXPrefab, hit.point, Quaternion.identity);
+                    vfx.transform.forward = user.forward;
+                }
+            }
+        }
         public abstract bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1);
     }
 

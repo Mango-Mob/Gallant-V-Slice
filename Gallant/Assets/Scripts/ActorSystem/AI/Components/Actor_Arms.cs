@@ -32,6 +32,12 @@ namespace ActorSystem.AI.Components
         }
         private void Awake()
         {
+            List<AttackData> dupes = new List<AttackData>();
+            foreach (var attack in m_myData)
+            {
+                dupes.Add(Instantiate(attack));
+            }
+            m_myData = dupes;
             m_myData.Sort(new AttackPrioritySort());
             m_mainComponent = GetComponent<Actor>();
             m_cooldowns = new float[m_myData.Count];
@@ -125,16 +131,7 @@ namespace ActorSystem.AI.Components
 
         public void PostInvoke(uint id)
         {
-            if (m_myData[m_activeAttack.Value].postVFXPrefab != null)
-            {
-                Vector3 hitloc = m_myData[m_activeAttack.Value].GetHitLocation(transform, id);
-                RaycastHit hit;
-                if(Physics.Raycast(hitloc, Vector3.down, out hit, 15f, 1 << LayerMask.NameToLayer("Environment")))
-                {
-                    GameObject vfx = Instantiate(m_myData[m_activeAttack.Value].postVFXPrefab, hit.point, Quaternion.identity);
-                    vfx.transform.forward = transform.forward;
-                }
-            }
+            m_myData[m_activeAttack.Value].PostInvoke(transform, id);
         }
     }
 }
