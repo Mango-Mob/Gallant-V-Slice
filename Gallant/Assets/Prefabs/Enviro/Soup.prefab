@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 6850453491902905567}
   - component: {fileID: 7041151507765115777}
   - component: {fileID: 1536515301499736247}
+  - component: {fileID: 223258986070855967}
   m_Layer: 0
   m_Name: Soup
   m_TagString: Untagged
@@ -206,6 +207,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 223258986070855967}
+        m_TargetAssemblyTypeName: SoloAudioAgent, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_isReady: 0
   m_holdDuration: 1
   display: {fileID: 1991051554143945981}
@@ -222,6 +235,24 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.75
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &223258986070855967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5696929484036909679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024ecd21f977d0b4cbfd71ce0c41f316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 0.5
+  isMuted: 0
+  mainClip: {fileID: 8300000, guid: cfad7abc09593a343bd8b66b25d5daef, type: 3}
+  channel: 1
+  isPlayOnAwake: 0
+  isLooping: 0
 --- !u!1 &5871899248568202957
 GameObject:
   m_ObjectHideFlags: 0
