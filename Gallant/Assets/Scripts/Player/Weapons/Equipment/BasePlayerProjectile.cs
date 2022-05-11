@@ -43,6 +43,8 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     [SerializeField] protected GameObject m_overrideHitVFX;
     public bool m_overrideHitVFXColor = false;
 
+    [SerializeField] protected bool m_useAbilityTrailColor = true;
+
     [Header("Status")]
     public EnemyStatus m_appliedStatusOnHit;
     public float m_statusStrengthMult = 1.0f;
@@ -57,6 +59,31 @@ public abstract class BasePlayerProjectile : MonoBehaviour
         m_startScale = transform.localScale;
 
         StartCoroutine(Spawning());
+
+        if (m_useAbilityTrailColor && m_weaponData.abilityData != null)
+        {
+            Color newColor = m_weaponData.abilityData.droppedEnergyColor;
+            foreach (var effect in m_effects)
+            {
+                ParticleSystem particleSystem = effect.GetComponentInChildren<ParticleSystem>();
+                if (particleSystem != null)
+                {
+                    ParticleSystem.MainModule mainModule = particleSystem.main;
+                    newColor.a = mainModule.startColor.color.a;
+                    mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+                }
+
+                TrailRenderer trailRenderer = effect.GetComponentInChildren<TrailRenderer>();
+                if (trailRenderer != null)
+                {
+                    newColor.a = trailRenderer.startColor.a;
+                    trailRenderer.startColor = newColor;
+
+                    newColor.a = trailRenderer.endColor.a;
+                    trailRenderer.endColor = newColor;
+                }
+            }
+        }
     }
     private void Update()
     {
