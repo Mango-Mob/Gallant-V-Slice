@@ -87,7 +87,7 @@ namespace ActorSystem.AI.Components
         {
             if (m_activeAttack != null)
             {
-                return m_myData[m_activeAttack.Value].InvokeAttack(transform, m_attackSource, m_targetMask, id, m_baseDamageMod);
+                return m_myData[m_activeAttack.Value].InvokeAttack(transform, ref m_attackSource, m_targetMask, id, m_baseDamageMod);
             }
             return false;
         }

@@ -25,7 +25,7 @@ namespace ActorSystem.Data
             return angleReq && hit.gameObject == target;
         }
 
-        public override bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1)
+        public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             int i = projCount;
             Collider[] targets = GetDamageOverlap(parent, filter, id);

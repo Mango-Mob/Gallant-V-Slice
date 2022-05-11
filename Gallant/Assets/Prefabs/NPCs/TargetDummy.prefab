@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 3356147638544673890}
   - component: {fileID: 1028010017793307944}
   - component: {fileID: 5742023275758704543}
+  - component: {fileID: 7349580169347054930}
   m_Layer: 9
   m_Name: TargetDummy
   m_TagString: Untagged
@@ -294,6 +295,63 @@ MonoBehaviour:
   IsImmuneToFlame: 0
   IsImmuneToStun: 0
   IsImmuneToWeaken: 0
+--- !u!114 &7349580169347054930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028010017793307945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe91dc294731a9428c0941ea7579110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  complexMaskingMode: 0
+  drawingMode: 1
+  outlineLayer: 0
+  outlineTargets:
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 3954500855261366033}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  renderStyle: 1
+  outlineParameters:
+    enabled: 1
+    color: {r: 0.9716981, g: 0.027149746, b: 0, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  backParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
+  frontParameters:
+    enabled: 1
+    color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    dilateShift: 1
+    blurShift: 1
+    fillPass:
+      shader: {fileID: 0}
+      serializedProperties: []
 --- !u!1 &2000336016340713234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,6 +1112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6096994435061639786}
   - component: {fileID: 3954500855261366033}
+  - component: {fileID: 5466516377776763430}
   m_Layer: 0
   m_Name: TargetDummy
   m_TagString: Untagged
@@ -1140,6 +1199,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -1.4398382, y: -0.04618579, z: 0.15161523}
     m_Extent: {x: 1.4386933, y: 1.5013618, z: 0.6462084}
   m_DirtyAABB: 0
+--- !u!114 &5466516377776763430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6734032584826534301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7088623929324446998
 GameObject:
   m_ObjectHideFlags: 0

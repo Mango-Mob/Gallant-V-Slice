@@ -18,7 +18,7 @@ namespace ActorSystem.Data
         private float m_startIntensity;
         private Vector3 targetPoint;
         private GameObject m_proj; 
-        public override bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1)
+        public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             switch (m_type)
             {
