@@ -7,7 +7,8 @@ using UnityEngine.VFX;
 public class LevelPortal : MonoBehaviour
 {
     public string m_portalDestination = "";
-    public string m_prefRequire = "";
+    public enum PortalRequire { NONE, SWAMP, CASTLE};
+    public PortalRequire require;
     public GameObject gate;
 
     public Color portalColor;
@@ -29,14 +30,28 @@ public class LevelPortal : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (m_prefRequire == "")
-            return;
-
-        if(PlayerPrefs.GetInt(m_prefRequire, 0) != 1)
+        switch (require)
         {
-            this.enabled = false;
-            gate.SetActive(false);
-            GetComponent<Collider>().enabled = false;
+            case PortalRequire.NONE:
+                return;
+            case PortalRequire.SWAMP:
+                if(GameManager.m_saveInfo.m_completedSwamp == 0)
+                {
+                    this.enabled = false;
+                    gate.SetActive(false);
+                    GetComponent<Collider>().enabled = false;
+                }
+                break;
+            case PortalRequire.CASTLE:
+                if (GameManager.m_saveInfo.m_completedCastle == 0)
+                {
+                    this.enabled = false;
+                    gate.SetActive(false);
+                    GetComponent<Collider>().enabled = false;
+                }
+                break;
+            default:
+                break;
         }
     }
 

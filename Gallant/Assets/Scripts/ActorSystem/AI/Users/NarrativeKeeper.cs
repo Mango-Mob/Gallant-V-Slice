@@ -36,15 +36,6 @@ namespace ActorSystem.AI.Users
             }
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            if(NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName])
-            {
-                gameObject.SetActive(false);
-            }
-        }
-
         private void EvaluateDialogOptions(int visits)
         {
             for (int i = m_potentialDialogs.Count - 1; i >= 0; i--)
@@ -66,6 +57,10 @@ namespace ActorSystem.AI.Users
         protected override void Start()
         {
             base.Start();
+            if (NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName])
+            {
+                gameObject.SetActive(false);
+            }
             m_player = GameManager.Instance.m_player;
             visits = NarrativeManager.Instance.m_visitNPC[m_myData.ActorName];
             EvaluateDialogOptions(visits);
@@ -87,7 +82,7 @@ namespace ActorSystem.AI.Users
             if(!hasInteractedWith)
             {
                 hasInteractedWith = true;
-                NarrativeManager.Instance.m_visitNPC[m_myData.ActorName] = visits + 1;
+                NarrativeManager.Instance.UpdateVisit(m_myData.ActorName, visits + 1);
                 PlayerPrefs.SetInt($"{m_myData.ActorName}Visits", visits + 1);
             }
 

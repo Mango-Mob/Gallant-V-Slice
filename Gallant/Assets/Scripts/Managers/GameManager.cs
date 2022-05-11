@@ -33,6 +33,11 @@ public class GameManager : Singleton<GameManager>
 
     public static bool m_joystickCursorEnabled = false;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        if (m_saveInfo == null) { m_saveInfo = new SaveInfo(); }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -431,15 +436,23 @@ public class GameManager : Singleton<GameManager>
 
     #region Run Info Storage
     [Serializable]
-    public struct SaveInfo
+    public class SaveInfo
     {
         public bool m_validSave;
-
         // ******
         // Put desired stored variables here!
         // V V V V V V
 
         public int m_testValue;
+
+        //LEVELS
+        public int m_completedTutorial = 0;
+        public int m_completedSwamp = 0;
+        public int m_completedCastle = 0;
+
+        //NPCs
+        public int m_rowanVisits = 0;
+        public int m_perceptionVisits = 0;
 
         // Ʌ Ʌ Ʌ Ʌ Ʌ Ʌ
     }
