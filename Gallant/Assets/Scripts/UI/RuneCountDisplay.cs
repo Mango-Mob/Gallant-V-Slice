@@ -58,8 +58,8 @@ public class RuneCountDisplay : MonoBehaviour
     }
     public bool CheckJoystickCursorInRange(Vector3 _position)
     {
-        return (_position.x < (m_rectTransform.position.x + m_rectTransform.rect.xMax)
-            && _position.x > (m_rectTransform.position.x + m_rectTransform.rect.xMin)
+        return (_position.x < (m_rectTransform.position.x + 100)
+            && _position.x > (m_rectTransform.position.x - 150)
             && _position.y < (m_rectTransform.position.y + m_rectTransform.rect.yMax)
             && _position.y > (m_rectTransform.position.y + m_rectTransform.rect.yMin));
     }
