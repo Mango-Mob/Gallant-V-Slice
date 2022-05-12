@@ -22,6 +22,10 @@ public class Weapon_Greatsword : Weapon_Sword
     new private void Update()
     {
         base.Update();
+        if (!playerController.animator.GetBool("UsingLeft") && m_attackReady)
+        {
+            m_attackReady = false;
+        }
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
