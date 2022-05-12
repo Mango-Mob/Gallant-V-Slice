@@ -22,8 +22,8 @@ public class FadeDualAgent : AudioAgent
     protected override void Awake()
     {
         base.Awake();
-        playerA = new AudioPlayer(gameObject, audioClipA);
-        playerB = new AudioPlayer(gameObject, audioClipB);
+        playerA = new AudioPlayer(gameObject, audioClipA, 0);
+        playerB = new AudioPlayer(gameObject, audioClipB, 0);
 
         if(playOnAwake)
         {
