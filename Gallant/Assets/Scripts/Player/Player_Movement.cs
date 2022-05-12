@@ -584,9 +584,12 @@ public class Player_Movement : MonoBehaviour
         if (closestTarget == null)
             Debug.Log("Could not find target");
         else
+        {
             Debug.Log("Found target " + closestTarget.name);
-
+            playerController.playerAudioAgent.PlayLockOn();
+        }
         m_currentTarget = closestTarget;
+        
 
         if (!m_currentTarget)
             return;

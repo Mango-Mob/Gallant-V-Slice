@@ -154,6 +154,11 @@ public class Player_AudioAgent : MultiAudioAgent
     {
         base.PlayOnce("PlayerDeath", false, Random.Range(0.95f, 1.05f));
     }
+
+    public void PlayLockOn()
+    {
+        base.PlayOnce("Lock", false, Random.Range(0.95f, 1.05f));
+    }
     #endregion
 
     public void PlayBasicFootstep(int state)
