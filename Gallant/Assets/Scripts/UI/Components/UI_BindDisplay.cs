@@ -37,12 +37,10 @@ public class UI_BindDisplay : UI_Element
         if (InputManager.Instance.isInGamepadMode)
         {
             sprite = InputManager.Instance.GetBindImage(m_bindKey, true);
-            Debug.Log("GAMERMODE");
         }
         else
         {
             sprite = InputManager.Instance.GetBindImage(m_bindKey, false);
-            Debug.Log("KEYBOARD");
 
         }
 
