@@ -45,6 +45,7 @@ public class RewardManager : Singleton<RewardManager>
     private int m_hover;
     private int m_select = -1;
     private float m_timer = 0.0f;
+    private SoloAudioAgent m_audio;
 
     private UnityAction<int> m_onResult;
     public bool IsVisible { get { return m_window.activeInHierarchy; } }
@@ -68,7 +69,7 @@ public class RewardManager : Singleton<RewardManager>
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
         m_pressDurationImage.fillAmount = 0.0f;
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
-
+        m_audio = GetComponent<SoloAudioAgent>();
         if (giveRewardUponLoad)
         {
             Show(Mathf.FloorToInt(GameManager.currentLevel));
@@ -176,6 +177,7 @@ public class RewardManager : Singleton<RewardManager>
 
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
+        m_audio.Play();
         m_window.SetActive(true);
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);

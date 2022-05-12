@@ -754,6 +754,7 @@ GameObject:
   - component: {fileID: 3138227222214540012}
   - component: {fileID: 3138227222214540003}
   - component: {fileID: 3138227222214540015}
+  - component: {fileID: 3476337387345345415}
   m_Layer: 5
   m_Name: RoomRewardWindow
   m_TagString: Untagged
@@ -898,6 +899,24 @@ MonoBehaviour:
   m_pressDuration: 1
   m_inventoryAnimator: {fileID: 2529031286514130144}
   m_inventoryImage: {fileID: 5249618102969517290}
+--- !u!114 &3476337387345345415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3138227222214540002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024ecd21f977d0b4cbfd71ce0c41f316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  mainClip: {fileID: 8300000, guid: ceca475ad454daa498c6a6b6218025a8, type: 3}
+  channel: 1
+  isPlayOnAwake: 0
+  isLooping: 0
 --- !u!1 &3138227222922930188
 GameObject:
   m_ObjectHideFlags: 0
@@ -7039,6 +7058,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f40965f1006a6c64da7cb87b6a975047, type: 3}
+--- !u!224 &1598780983010890221 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7828004579910930627, guid: f40965f1006a6c64da7cb87b6a975047,
+    type: 3}
+  m_PrefabInstance: {fileID: 8832309172339687726}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2223278389464717222 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7226027320025519752, guid: f40965f1006a6c64da7cb87b6a975047,
@@ -7051,9 +7076,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb1c8662d2ebcc478ee6bee4494cd60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &1598780983010890221 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7828004579910930627, guid: f40965f1006a6c64da7cb87b6a975047,
-    type: 3}
-  m_PrefabInstance: {fileID: 8832309172339687726}
-  m_PrefabAsset: {fileID: 0}

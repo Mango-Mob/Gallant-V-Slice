@@ -19,7 +19,7 @@ public class LevelPortal : MonoBehaviour
     public VisualEffect portalMain;
     public VisualEffect portalFlair;
     public VisualEffect portalBurst;
-
+    public SoloAudioAgent m_audio;
     private void Awake()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
@@ -74,6 +74,7 @@ public class LevelPortal : MonoBehaviour
 
     public void Interact()
     {
+        m_audio.Play();
         NavigationManager.Instance.Clear(true);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
 
@@ -83,7 +84,7 @@ public class LevelPortal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-            m_myInterface.m_isReady = !GameManager.Instance.IsInCombat;
+            m_myInterface.m_isReady = gate.activeInHierarchy;
     }
     private void OnTriggerExit(Collider other)
     {
