@@ -44,7 +44,7 @@ public class NavigationPortal : MonoBehaviour
 
     public void Update()
     {
-        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat);
+        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
         GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
     }
 

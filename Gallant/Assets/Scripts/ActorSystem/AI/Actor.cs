@@ -139,7 +139,7 @@ namespace ActorSystem.AI
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
-                m_mySpawn.StopSpawning();
+                return false;
             }
             if (!m_myBrain.IsDead)
             {
@@ -165,7 +165,7 @@ namespace ActorSystem.AI
         {
             if (m_mySpawn != null && m_mySpawn.m_spawnning)
             {
-                m_mySpawn.StopSpawning();
+                return false;
             }
             if (!m_myBrain.IsDead)
             {
@@ -188,7 +188,11 @@ namespace ActorSystem.AI
             if (m_currentState is State_Staggered)
                 return;
 
-            if(m_myBrain.HandleImpactDamage(amount, piercingVal, direction, _type))
+            if (m_mySpawn != null && m_mySpawn.m_spawnning)
+            {
+                return;
+            }
+            if (m_myBrain.HandleImpactDamage(amount, piercingVal, direction, _type))
             {
                 SetState(new State_Staggered(this));
                 return;

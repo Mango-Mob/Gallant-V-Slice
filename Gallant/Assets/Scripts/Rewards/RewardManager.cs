@@ -10,6 +10,8 @@ public class RewardManager : Singleton<RewardManager>
     public static bool giveRewardUponLoad = false;
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
+    
+
     public GameObject m_window;
     public InfoDisplay[] m_rewardSlots;
 
@@ -45,7 +47,7 @@ public class RewardManager : Singleton<RewardManager>
     private float m_timer = 0.0f;
 
     private UnityAction<int> m_onResult;
-
+    public bool IsVisible { get { return m_window.activeInHierarchy; } }
     public enum RewardType
     {
         STANDARD,   //One weapon garenteed

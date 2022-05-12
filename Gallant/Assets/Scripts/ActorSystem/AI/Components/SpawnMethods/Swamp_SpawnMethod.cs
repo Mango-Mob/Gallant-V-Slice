@@ -28,6 +28,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.m_myBrain.m_ragDoll?.DisableRagdoll();
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
+            GetComponent<Collider>().enabled = false;
             //m_spawnning = true;
         }
 
@@ -60,6 +61,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.m_myBrain.SetEnabled(true);
             m_myActor.m_myBrain.m_legs.SetTargetLocation(transform.position);
             m_myActor.m_myBrain.m_legs.SetTargetRotation(transform.rotation);
+            GetComponent<Collider>().enabled = true;
             Destroy(m_spawn);
         }
 
