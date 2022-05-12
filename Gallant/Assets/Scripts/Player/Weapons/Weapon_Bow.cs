@@ -6,7 +6,7 @@ public class Weapon_Bow : WeaponBase
 {
     private bool m_chargingShot = false;
     private float m_charge = 0.0f;
-    private float m_chargeRate = 0.5f;
+    private float m_chargeRate = 0.8f;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
@@ -26,6 +26,8 @@ public class Weapon_Bow : WeaponBase
     new private void Update()
     {
         base.Update();
+
+
         if (m_chargingShot && m_charge < 1.0f)
         {
             m_charge += Time.deltaTime * m_chargeRate * playerController.animator.GetFloat(m_hand == Hand.LEFT ? "LeftAttackSpeed" : "RightAttackSpeed");
@@ -38,7 +40,9 @@ public class Weapon_Bow : WeaponBase
         }
         if (m_chargingShot)
         {
-            playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost * Time.deltaTime);
+            if (!playerController.animator.GetBool("UsingLeft"))
+                m_chargingShot = false;
+            playerController.playerResources.ChangeStamina(-10.0f * Time.deltaTime);
         }
     }
     public override void WeaponFunctionality()

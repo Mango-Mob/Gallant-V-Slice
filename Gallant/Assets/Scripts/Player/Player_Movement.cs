@@ -216,6 +216,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_dashTimer > 0.0f)
         {
+            playerController.animator.SetFloat("Horizontal", 0.0f);
+            playerController.animator.SetFloat("Vertical", 0.0f); 
+
             if (m_dashFaceDirection == Vector3.zero)
             {
                 RotateToFaceDirection(new Vector3(m_dashFaceDirection.x, 0, m_dashFaceDirection.z));

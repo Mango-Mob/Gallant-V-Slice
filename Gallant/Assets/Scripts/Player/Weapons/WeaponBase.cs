@@ -189,8 +189,8 @@ public abstract class WeaponBase : MonoBehaviour
             currentHand = _overrideHand;
 
         Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset);
-        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize,
-            currentHand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
+        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitSize : _data.hitSize),
+            1.0f, playerController.playerAttack.m_attackTargets);
 
         
         DamageColliders(_data, _source, colliders, currentHand, _status);
