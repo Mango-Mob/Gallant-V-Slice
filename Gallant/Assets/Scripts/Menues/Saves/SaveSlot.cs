@@ -146,7 +146,7 @@ public class SaveSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             m_titleText.text = "Empty Slot";
             m_currencyText.transform.parent.gameObject.SetActive(false);
-            m_slotBackground.sprite = m_emptySlotSprite;
+            //m_slotBackground.sprite = m_emptySlotSprite;
 
             SetButtonStates(SaveSlotButtonState.EMPTY);
         }
