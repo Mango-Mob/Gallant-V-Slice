@@ -187,16 +187,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
             }
 
-            Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
-
-            foreach (var item in destruct)
-            {
-                Destructible dest = item.GetComponentInParent<Destructible>();
-                if (dest != null && dest.m_letRollDestroy)
-                {
-                    dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
-                }
-            }
+            DestructibleDetection();
         }
         else
         {
@@ -227,7 +218,23 @@ public class Player_Movement : MonoBehaviour
             // Move player in stored direction while dash is active
             characterController.Move(m_dashVelocity * Time.fixedDeltaTime);
 
+            DestructibleDetection();
+
             m_dashTimer -= Time.fixedDeltaTime;
+        }
+    }
+
+    public void DestructibleDetection()
+    {
+        Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
+
+        foreach (var item in destruct)
+        {
+            Destructible dest = item.GetComponentInParent<Destructible>();
+            if (dest != null && dest.m_letRollDestroy)
+            {
+                dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
+            }
         }
     }
 
@@ -314,6 +321,12 @@ public class Player_Movement : MonoBehaviour
     {
         m_isRolling = false;
     }
+
+    public void QuickSetAttackMoveSpeedLerp(float _lerp)
+    {
+        m_currentMoveSpeedLerp = 1.0f;
+    }
+
     /*******************
      * Move : Contains logic to move the player, aiming and starting roll.
      * @author : William de Beer

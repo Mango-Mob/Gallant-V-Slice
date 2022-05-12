@@ -113,7 +113,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public virtual string GetWeaponName()
     {
-        if (m_weaponData.overrideAnimation =="")
+        if (m_weaponData.overrideAnimation =="" || m_hand == Hand.LEFT)
             return m_weaponData.weaponType.ToString()[0] + m_weaponData.weaponType.ToString().Substring(1).ToLower();
         else
         {
