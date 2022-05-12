@@ -6,7 +6,7 @@ public class Weapon_Spear : WeaponBase
 {
     new private void Awake()
     {
-        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
+        //m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
         base.Awake();
     }
 
@@ -30,7 +30,7 @@ public class Weapon_Spear : WeaponBase
     public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.LEFT);
+        MeleeAttack(m_weaponData, transform.position, Hand.LEFT);
     }
     public override void WeaponAltRelease() { }
     private void OnDrawGizmos()
