@@ -42,7 +42,7 @@ public class Player_AudioAgent : MultiAudioAgent
                 switch (_sound)
                 {
                     case 1:
-                        base.PlayOnce("HammerHit", false, Random.Range(0.95f, 1.05f));
+                        base.PlayOnce("HammerHit2", false, Random.Range(0.95f, 1.05f));
                         break;
                     case 2:
                         base.PlayOnce("StaffHit", false, Random.Range(0.95f, 1.05f));

@@ -93,6 +93,8 @@ public class WeaponData : ScriptableObject
 
     public List<WeaponTag> m_tags = new List<WeaponTag>();
 
+    public Vector3 m_backHolsterRotationOffset;
+
     [Header("Alt Attack Info")]
     public string m_altAttackName = "None";
     [TextArea(10, 15)]
@@ -454,6 +456,8 @@ public class WeaponData : ScriptableObject
         this.overrideAnimation = other.overrideAnimation;
 
         this.m_tags = other.m_tags;
+
+        this.m_backHolsterRotationOffset = other.m_backHolsterRotationOffset;
 
         this.m_altAttackName = other.m_altAttackName;
         this.m_altAttackDesc = other.m_altAttackDesc;

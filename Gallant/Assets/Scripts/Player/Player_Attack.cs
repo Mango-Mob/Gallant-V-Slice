@@ -795,6 +795,10 @@ public class Player_Attack : MonoBehaviour
         {
             m_leftWeapon.m_weaponObject.transform.localPosition = Vector3.zero;
             m_leftWeapon.m_weaponObject.transform.localRotation = Quaternion.identity;
+            if (_active)
+            {
+                m_leftWeapon.m_weaponObject.transform.localRotation= Quaternion.Euler(m_leftWeapon.m_weaponData.m_backHolsterRotationOffset);
+            }
         }
     }
 
