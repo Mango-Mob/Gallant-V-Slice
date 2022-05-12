@@ -252,7 +252,9 @@ namespace ActorSystem.AI
 
         public void Respawn(bool fullRefresh = false)
         {
-            Debug.LogError("TODO");
+            if(fullRefresh)
+                m_myBrain.Refresh();
+            m_mySpawn.Respawn();
         }
         public virtual void Slam()
         {
