@@ -137,6 +137,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     private IEnumerator MovePlayerIcon(Vector3 position, System.Action loadToScene)
     {
+        m_canQuit = false;
         Vector3 start = m_playerIcon.transform.position;
         float speed = 15f;
         float distance = Vector3.Distance(start, position);
@@ -148,6 +149,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             m_playerIcon.transform.position = Vector3.Lerp(start, position, t);
             yield return new WaitForEndOfFrame();
         }
+        m_canQuit = true;
         loadToScene.Invoke();
         yield return null;
     }

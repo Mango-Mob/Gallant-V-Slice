@@ -39,7 +39,8 @@ namespace ActorSystem.AI.Components
             List<AttackData> dupes = new List<AttackData>();
             foreach (var attack in m_myData)
             {
-                dupes.Add(Instantiate(attack));
+                if(attack != null)
+                    dupes.Add(Instantiate(attack));
             }
             m_myData = dupes;
             m_myData.Sort(new AttackPrioritySort());

@@ -93,12 +93,22 @@ namespace ActorSystem.AI.Users
             DialogManager.Instance.m_onDialogFinish.AddListener(EndTalk);
             DialogManager.Instance.Show();
 
+            DialogManager.Instance.m_interact.Add(new UnityEvent());
+            DialogManager.Instance.m_interact[0].AddListener(Reward);
+            
             NarrativeManager.Instance.AddSeenDialog(m_potentialDialogs[select].dialog);
 
             this.SetTargetOrientaion(GameManager.Instance.m_player.transform.position);
             GetComponentInChildren<Interactable>().m_isReady = false;
 
             m_potentialDialogs.RemoveAt(select);
+        }
+
+        private void Reward()
+        {
+            DialogManager.Instance.Hide();
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.RUNE);
+            DialogManager.Instance.m_interact = null;
         }
 
         public void EndTalk()
