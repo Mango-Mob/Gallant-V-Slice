@@ -25,6 +25,8 @@ public class RewardManager : Singleton<RewardManager>
     private Image m_pressDurationImage;
 
     public List<ItemData> m_items = new List<ItemData>();
+    public ItemData m_forgeItem;
+    public ItemData m_orbItem;
     public List<AbilityData> m_abilityBooks = new List<AbilityData>();
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
@@ -50,8 +52,7 @@ public class RewardManager : Singleton<RewardManager>
         GENERAL,    //Completely random
         WEAPONS,    //Three weapons garenteeds
         RUNE,       //No Weapon garenteed
-        BOOK,
-        TEST,
+        BOOK,       //Books only
     }
 
     public enum Utility
@@ -60,7 +61,6 @@ public class RewardManager : Singleton<RewardManager>
         FORGE,
         ORB,
     }
-
     protected void Start()
     {
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
@@ -198,7 +198,7 @@ public class RewardManager : Singleton<RewardManager>
                         }
                         else
                         {
-                            rewards.Add(GenerateItem(rewards));
+                            rewards.Add(GenerateUtility(rewards, level));
                         }
                     }
                     break;
@@ -212,7 +212,7 @@ public class RewardManager : Singleton<RewardManager>
                         }
                         else
                         {
-                            rewards.Add(GenerateItem(rewards));
+                            rewards.Add(GenerateUtility(rewards, level));
                         }
                     }
                     break;
@@ -235,13 +235,6 @@ public class RewardManager : Singleton<RewardManager>
                     for (int i = 0; i < 3; i++)
                     {
                         rewards.Add(GenerateBook(rewards));
-                    }
-                    break;
-                case RewardType.TEST:
-                    //Only Abilities
-                    for (int i = 0; i < 3; i++)
-                    {
-                        rewards.Add(GenerateItem(rewards, false));
                     }
                     break;
                 default:
@@ -290,17 +283,52 @@ public class RewardManager : Singleton<RewardManager>
         return weapon;
     }
 
-    public Utility GenerateUtility()
+    public ScriptableObject GenerateUtility(List<ScriptableObject> currentList, int level, float weaponWeight = 50f, float spellWeight = 50f)
     {
         float potent = m_player.playerResources.GetPotentialHealth();
         float max = m_player.playerResources.m_maxHealth + 5 * m_player.playerResources.m_adrenalineHeal;
-        float probOrb = 1.0f - potent / max;
+        if (!IsUniqueItem(currentList, m_orbItem))
+            potent = max;
 
         float weaponCurr = m_player.playerAttack.GetAverageLevel();
-        float weaponMax = GameManager.currentLevel + 1;
-        float probForge = 1.0f - weaponCurr / weaponMax;
+        float weaponMax = GameManager.currentLevel + 2;
+        if (!IsUniqueItem(currentList, m_forgeItem))
+            weaponCurr = weaponMax;
 
-        return (Utility)Random.Range(0, 3);
+        //Orb, forge, weapon, spell
+        (string, float)[] weights = { ("orb", 100 * (1.0f - potent / max)), ("forge", 100 * (1.0f - weaponCurr / weaponMax)), ("weapon", weaponWeight), ("spell", spellWeight) };
+        System.Array.Sort(weights, (a, b) => { return (int)((100 * b.Item2) - (a.Item2 * 100)); });
+
+        float weightTotal = 0;
+        foreach (var option in weights)
+            weightTotal += option.Item2;
+
+        float select = Random.Range(1, weightTotal + 1);
+        string selectName = "";
+        for (int i = 0; i < weights.Length; i++)
+        {
+            select -= weights[i].Item2;
+            if(select <= 0)
+            {
+                selectName = weights[i].Item1;
+                break;
+            }  
+        }
+
+        switch (selectName)
+        {
+            case "orb":
+                return m_orbItem;
+            case "forge":
+                return m_forgeItem;
+            case "weapon":
+                return GenerateWeapon(currentList, level);
+            case "spell":
+                return GenerateBook(currentList);
+            default:
+                break;
+        }
+        return null;
     }
 
     public AbilityData GenerateBook(List<ScriptableObject> currentList)
@@ -317,6 +345,8 @@ public class RewardManager : Singleton<RewardManager>
     public ItemData GenerateItem(List<ScriptableObject> currentList, bool runesAllowed = true)
     {
         List<ItemData> options = new List<ItemData>(m_items);
+        options.Add(m_orbItem);
+        options.Add(m_forgeItem);
         for (int i = options.Count - 1; i >= 0; i--)
         {
             if (!runesAllowed && options[i].itemType == ItemData.UtilityType.RUNE)
@@ -351,7 +381,6 @@ public class RewardManager : Singleton<RewardManager>
             }
         }
     }
-
     public void Confirm()
     {
         if(m_onResult != null)
