@@ -230,7 +230,7 @@ public class Player_Resources : MonoBehaviour
      */
     public void UseAdrenaline()
     {
-        if (m_adrenaline >= 1)
+        if (m_adrenaline >= 1 && m_health > 0.0f)
         {
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             Debug.Log(m_adrenalineHeal * (m_maxHealth / 100.0f) * playerController.playerStats.m_maximumHealth);
