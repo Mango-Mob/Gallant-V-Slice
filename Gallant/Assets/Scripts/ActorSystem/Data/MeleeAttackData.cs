@@ -10,7 +10,7 @@ namespace ActorSystem.Data
         public int hitsCount = 1;
         public bool ignoreIFrames = false;
 
-        public override bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1)
+        public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             int i = hitsCount;
             Collider[] targets = GetDamageOverlap(parent, filter, id);

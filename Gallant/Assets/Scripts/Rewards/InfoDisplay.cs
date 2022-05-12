@@ -31,7 +31,7 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image[] m_backgrounds;
     [SerializeField] private Image m_foreground;
     [SerializeField] private Text m_title;
-    [SerializeField] private Text m_level;
+    [SerializeField] private TMP_Text m_level;
     [SerializeField] private TagDetails[] m_allTags;
 
     [Header("Weapon Information")]
@@ -196,7 +196,8 @@ public class InfoDisplay : MonoBehaviour
         m_upgradeAbilityDetailsLoc.SetActive(false);
 
         m_title.text = data.weaponName;
-        m_level.text = "Level: " + (data.m_level + 1).ToString();
+        m_level.gameObject.SetActive(true);
+        m_level.SetText("Level: " + (data.m_level + 1).ToString());
         m_weaponImageLoc.sprite = data.weaponIcon;
         m_altTitle.SetText(data.m_altAttackName);
         m_altDescription.SetText(WeaponData.EvaluateDescription(data));
@@ -284,7 +285,8 @@ public class InfoDisplay : MonoBehaviour
             m_weaponDetailsLoc.SetActive(false);
             m_upgradeAbilityDetailsLoc.SetActive(data != null);
 
-            m_level.text = "Replace or Upgrade a spell";
+            m_level.gameObject.SetActive(true);
+            m_level.SetText("Replace or Upgrade a spell");
             m_abilityData = data;
             m_title.text = m_abilityData.abilityName;
 
@@ -324,7 +326,7 @@ public class InfoDisplay : MonoBehaviour
         m_level.gameObject.SetActive(true);
 
         if (data.itemType == ItemData.UtilityType.RUNE)
-            m_level.text = "Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString();
+            m_level.SetText("Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString());
         else
             m_level.gameObject.SetActive(false);
 

@@ -90,7 +90,7 @@ namespace ActorSystem.AI.Other
 
         private void UpdateAttacks()
         {
-            m_myBrain.m_arms.m_brainLag = 0.75f;
+            m_myBrain.m_arms.SetBrainLag(0.75f);
             for (int i = 0; i < m_myBrain.m_arms.m_myData.Count; i++)
             {
                 m_myBrain.m_arms.m_myData[i] = null;
@@ -130,7 +130,7 @@ namespace ActorSystem.AI.Other
 
             m_submergStatus = false;
 
-            m_myBrain.m_arms.m_brainLag = 0.75f;
+            m_myBrain.m_arms.SetBrainLag(0.75f);
 
             m_myBrain.m_animator.SetBool("Visible", !m_submergStatus, Random.Range(0f, 2f));
             m_idealLocation = transform.position;

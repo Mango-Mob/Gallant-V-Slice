@@ -146,7 +146,7 @@ namespace ActorSystem.Data
                 }
             }
         }
-        public abstract bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1);
+        public abstract bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1);
     }
 
     /****************
