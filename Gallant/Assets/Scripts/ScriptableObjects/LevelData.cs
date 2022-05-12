@@ -10,6 +10,7 @@ using UnityEditorInternal;
 [CreateAssetMenu(fileName = "levelData", menuName = "Game Data/Level Data", order = 1)]
 public class LevelData : ScriptableObject
 {
+    public float m_width = 1024, m_height = 900;
     public List<WaveData> m_spawnableWaves;
     public Color m_portalColor;
     public enum FloorType { REST, EVENT, COMBAT, SPECIAL};
