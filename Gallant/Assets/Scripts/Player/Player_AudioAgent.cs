@@ -23,6 +23,17 @@ public class Player_AudioAgent : MultiAudioAgent
             case Weapon.STAFF:
                 base.PlayOnce("BarrierLaunch", false, Random.Range(0.95f, 1.05f));
                 break;
+            case Weapon.GREATSWORD:
+                switch (_sound)
+                {
+                    case 1:
+                        base.PlayOnce("WeaponSwing", false, Random.Range(0.55f, 0.65f));
+                        break;
+                    case 2:
+                        base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
+                        break;
+                }
+                break;
             default:
                 base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
                 break;
