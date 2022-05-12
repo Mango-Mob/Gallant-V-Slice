@@ -728,7 +728,11 @@ public class Player_Controller : MonoBehaviour
 
             playerStats.EvaluateEffects();
 
-            playerResources.SetHealth(GameManager.RetrieveHealth());
+            if (GameManager.RetrieveHealth() <= 0.0f)
+                playerResources.SetHealth(1.0f);
+            else
+                playerResources.SetHealth(GameManager.RetrieveHealth());
+
             playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
         }
         playerSkills.EvaluateSkills();
