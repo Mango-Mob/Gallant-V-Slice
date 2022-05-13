@@ -119,7 +119,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             else
                 m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
-        HUDManager.Instance.gameObject?.SetActive(!m_myCamera.gameObject.activeInHierarchy);
+        if (HUDManager.Instance != null)
+            HUDManager.Instance.gameObject?.SetActive(!m_myCamera.gameObject.activeInHierarchy);
 
         if(GameManager.Instance.m_player != null)
             GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;

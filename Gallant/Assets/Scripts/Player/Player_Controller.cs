@@ -347,6 +347,8 @@ public class Player_Controller : MonoBehaviour
                     playerMovement.m_currentTarget = closestActor;
                     playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
                     m_hasSwappedTarget = true;
+
+                    playerAudioAgent.PlayLockOn();
                 }
             }
             else if (aim.magnitude < 1.0f)
