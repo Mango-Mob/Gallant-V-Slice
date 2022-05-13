@@ -7997,6 +7997,7 @@ GameObject:
   - component: {fileID: 8980264205516202386}
   - component: {fileID: 2282093104560609418}
   - component: {fileID: 1824834010406835721}
+  - component: {fileID: 573657968529917165}
   m_Layer: 0
   m_Name: NavPortal
   m_TagString: Untagged
@@ -8049,6 +8050,7 @@ MonoBehaviour:
   portalMain: {fileID: 4871500297247646438}
   portalFlair: {fileID: 4196042727635838543}
   portalBurst: {fileID: 4167405080357757473}
+  m_audio: {fileID: 573657968529917165}
 --- !u!114 &2282093104560609418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8092,6 +8094,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3, y: 4.5926137, z: 1.2904524}
   m_Center: {x: 6.784747e-18, y: 2.2963068, z: 0.004383683}
+--- !u!114 &573657968529917165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6149235524747671151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024ecd21f977d0b4cbfd71ce0c41f316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  mainClip: {fileID: 8300000, guid: 25a2eb85660c0d04594666721c8f8e4c, type: 3}
+  channel: 1
+  isPlayOnAwake: 0
+  isLooping: 0
 --- !u!1 &6546389410798460716
 GameObject:
   m_ObjectHideFlags: 0

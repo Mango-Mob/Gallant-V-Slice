@@ -18,7 +18,19 @@ public class Player_CombatAnimator : MonoBehaviour
         if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
             !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
         {
-            playerController.animator.CrossFade(_animName, m_durationTransition, playerController.animator.GetLayerIndex("Arm"));
+            float transitionDuration = m_durationTransition;
+            if (_animName == "Left Hammer")
+            {
+                transitionDuration = 0.2f;
+            }
+            if (_animName == "Left Hammer" || _animName == "Left Greatsword")
+            {
+                playerController.animator.SetLayerWeight(playerController.animator.GetLayerIndex("Arm"), 0.0f);
+                playerController.animator.SetLayerWeight(playerController.animator.GetLayerIndex("StandArm"), 1.0f);
+
+                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(1.0f);
+            }
+            playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
 
             if (_animName[0] == 'L')
             {

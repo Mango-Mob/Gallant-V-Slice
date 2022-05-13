@@ -153,10 +153,12 @@ public class Player_Controller : MonoBehaviour
 
         // Set animation speeds based on stats
         //animator.SetFloat("MovementSpeed", playerStats.m_movementSpeed);
-        if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
-            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult * playerSkills.m_attackSpeedStatusBonus);
         animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_leftWeaponData == null ? 1.0f : playerAttack.m_leftWeaponData.m_speed * playerAttack.m_leftWeaponData.m_altSpeedMult));
         animator.SetFloat("RightAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerSkills.m_attackSpeedStatusBonus * (playerAttack.m_rightWeaponData == null ? 1.0f : playerAttack.m_rightWeaponData.m_speed));
+
+        // Two handed attack speed
+        if (playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
+            animator.SetFloat("LeftAttackSpeed", m_dualWieldBonus * playerStats.m_attackSpeed * playerAttack.m_rightWeaponData.m_speed * playerAttack.m_rightWeaponData.m_altSpeedMult * playerSkills.m_attackSpeedStatusBonus);
 
         bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID); 
         bool leftAttackHeld = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
@@ -345,6 +347,8 @@ public class Player_Controller : MonoBehaviour
                     playerMovement.m_currentTarget = closestActor;
                     playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
                     m_hasSwappedTarget = true;
+
+                    playerAudioAgent.PlayLockOn();
                 }
             }
             else if (aim.magnitude < 1.0f)
@@ -726,7 +730,11 @@ public class Player_Controller : MonoBehaviour
 
             playerStats.EvaluateEffects();
 
-            playerResources.SetHealth(GameManager.RetrieveHealth());
+            if (GameManager.RetrieveHealth() <= 0.0f)
+                playerResources.SetHealth(1.0f);
+            else
+                playerResources.SetHealth(GameManager.RetrieveHealth());
+
             playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
         }
         playerSkills.EvaluateSkills();

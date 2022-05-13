@@ -131,7 +131,7 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             yield return new WaitForEndOfFrame();
             m_fade.color = new Color(0, 0, 0, 1.0f - timeIn / 3.0f);
         }       
-        player.GetComponent<Player_Controller>().RespawnPlayerTo(m_respawn.position, true);
+        player.GetComponent<Player_Controller>().RespawnPlayerTo(Vector3.zero, true);
         m_fade.enabled = false;
         NavigationManager.Instance.UpdateMap(1);
         LevelManager.Instance.LoadNewLevel("Tutorial");

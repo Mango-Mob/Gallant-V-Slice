@@ -27,11 +27,12 @@ public class AudioPlayer
     private bool isDelayed = false;
 
     //Constructor
-    public AudioPlayer(GameObject owner, AudioClip clip)
+    public AudioPlayer(GameObject owner, AudioClip clip, float startVolume)
     {
         source = owner.AddComponent<AudioSource>();
         source.pitch = AudioManager.Instance.m_globalPitch * m_localPitch;
         source.playOnAwake = false;
+        source.volume = startVolume;
         source.clip = clip;
     }
 

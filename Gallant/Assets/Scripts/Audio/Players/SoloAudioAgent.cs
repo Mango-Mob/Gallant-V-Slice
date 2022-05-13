@@ -27,7 +27,7 @@ public class SoloAudioAgent : AudioAgent
     protected override void Awake()
     {
         base.Awake();
-        player = new AudioPlayer(this.gameObject, mainClip);
+        player = new AudioPlayer(this.gameObject, mainClip, AudioManager.Instance.GetVolume(channel, this) * localVolume);
 
         Update();
 
