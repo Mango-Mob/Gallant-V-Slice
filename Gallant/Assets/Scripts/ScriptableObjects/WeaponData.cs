@@ -159,7 +159,7 @@ public class WeaponData : ScriptableObject
         //int iter = 0;
         //do
         //{
-        newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 3);
+        newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 4);
         
         int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
         int result = Mathf.Max(_level + curve, 0);
@@ -183,14 +183,6 @@ public class WeaponData : ScriptableObject
         //    }
         //} while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
         
-
-        // Create weapon name
-        if (data.abilityData != null)
-        { 
-            data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
-            data.abilityData.lastCooldown = 0.0f;
-        }
-
         //Return new weapon.
         return data;
     }
