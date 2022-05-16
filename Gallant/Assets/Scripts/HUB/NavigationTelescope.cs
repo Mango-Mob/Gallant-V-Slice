@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class NavigationTelescope : MonoBehaviour
 {
     [System.Serializable]
     public struct Destination
     {
+        public string levelTitle;
         public string sceneName;
         public float locationAngle;
+        public int dangerLevel;
         public Color m_portalColor;
     }
 
@@ -26,6 +29,11 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private float m_turnSpeed = 45.0f;
     [SerializeField] private float m_targetThreshold = 10.0f;
     [SerializeField] private float m_selectSpeed = 0.5f;
+    public float m_angleClamp = 60.0f;
+
+    [Header("Text Elements")]
+    [SerializeField] private TextMeshProUGUI m_levelTitleText;
+    [SerializeField] private TextMeshProUGUI m_dangerLevelText;
 
     private Player_Controller playerController;
     private bool m_isActive = false;
@@ -37,7 +45,6 @@ public class NavigationTelescope : MonoBehaviour
     private bool m_selectFlag = false;
     private Animator m_animator;
 
-    public float m_angleClamp = 60.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +59,11 @@ public class NavigationTelescope : MonoBehaviour
     {
         m_useButton.SetActive(!m_isActive);
         m_selectCanvas.SetActive(m_isActive && m_targetIndex != -1);
+        if (m_selectCanvas.activeInHierarchy && m_targetIndex != -1)
+        {
+            m_levelTitleText.text = m_destinations[m_targetIndex].levelTitle;
+            m_dangerLevelText.text = $"Danger Level: {m_destinations[m_targetIndex].dangerLevel}";
+        }
 
         m_navCanvas.SetActive(m_isActive);
 
@@ -84,12 +96,12 @@ public class NavigationTelescope : MonoBehaviour
             {
                 if (i == 0)
                 {
-                    closestDistance = Mathf.DeltaAngle(m_camera.transform.eulerAngles.y, m_destinations[i].locationAngle);
+                    closestDistance = Mathf.DeltaAngle(m_camera.transform.localEulerAngles.y, m_destinations[i].locationAngle);
                     closestDestinationIndex = 0;
                     continue;
                 }
 
-                float distance = Mathf.DeltaAngle(m_camera.transform.eulerAngles.y, m_destinations[i].locationAngle);
+                float distance = Mathf.DeltaAngle(m_camera.transform.localEulerAngles.y, m_destinations[i].locationAngle);
                 if (Mathf.Abs(distance) < Mathf.Abs(closestDistance))
                 {
                     closestDistance = distance;
@@ -100,8 +112,8 @@ public class NavigationTelescope : MonoBehaviour
 
             if (closestDestinationIndex != -1 && Mathf.Abs(closestDistance) < m_targetThreshold)
             {
-                float newRot = Mathf.SmoothDampAngle(m_camera.transform.eulerAngles.y, m_destinations[closestDestinationIndex].locationAngle, ref m_currentVelocity, 0.1f);
-                m_camera.transform.eulerAngles = new Vector3(0, newRot, 0);
+                float newRot = Mathf.SmoothDampAngle(m_camera.transform.localEulerAngles.y, m_destinations[closestDestinationIndex].locationAngle, ref m_currentVelocity, 0.1f);
+                m_camera.transform.localEulerAngles = new Vector3(m_camera.transform.localRotation.eulerAngles.x, newRot, m_camera.transform.localRotation.eulerAngles.z);
                 m_targetIndex = closestDestinationIndex;
             }
             else
@@ -137,9 +149,13 @@ public class NavigationTelescope : MonoBehaviour
     private void SelectDestination(Destination _destination)
     {
         // Change portal destination
-        m_portal.m_portalDestination = _destination.sceneName;
-        m_portal.SetColor(_destination.m_portalColor);
+        //m_portal.m_portalDestination = _destination.sceneName;
+        //m_portal.SetColor(_destination.m_portalColor);
 
+        NavigationManager.Instance.Clear(true);
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
+
+        LevelManager.Instance.LoadNewLevel(_destination.sceneName);
         // Trigger animation
 
         // Play audio
