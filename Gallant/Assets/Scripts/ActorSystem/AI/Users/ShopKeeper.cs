@@ -74,14 +74,19 @@ namespace ActorSystem.AI.Users
 
         public void Interact()
         {
-            DialogManager.Instance.LoadDialog(m_dialog);
+            //DialogManager.Instance.LoadDialog(m_dialog);
             if (!m_hasGivenReward)
             {
-                DialogManager.Instance.m_interact.Add(new UnityEngine.Events.UnityEvent());
-                DialogManager.Instance.m_interact[0].AddListener(Reward);
+                //DialogManager.Instance.m_interact.Add(new UnityEngine.Events.UnityEvent());
+                //DialogManager.Instance.m_interact[0].AddListener(Reward);
+
+                RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), m_myShopType);
+                m_hasGivenReward = true;
             }
-            GetComponentInChildren<Interactable>().m_isReady = false;
-            DialogManager.Instance.Show();
+
+            this.SetTargetOrientaion(GameManager.Instance.m_player.transform.position);
+            //GetComponentInChildren<Interactable>().m_isReady = false;
+            //DialogManager.Instance.Show();
         }
 
         private void Reward()

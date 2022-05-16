@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : Singleton<GameManager>
 {
     public static float currentLevel = 0;
-    public static float deltaLevel = 1/2f;
+    public static float deltaLevel = 1.25f;
     
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
@@ -33,6 +33,12 @@ public class GameManager : Singleton<GameManager>
 
     public static bool m_joystickCursorEnabled = false;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        if (m_saveInfo == null) { m_saveInfo = new SaveInfo(); }
+        Debug.Log("Init bruv");
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -42,12 +48,16 @@ public class GameManager : Singleton<GameManager>
 
         for (int i = 0; i < 31; i++)
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Water"), i);
-        
+
+        m_sceneHasTutorial = FindObjectOfType<TutorialManager>() != null;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (InputManager.Instance == null)
+            return;
+
         int gamepadID = InputManager.Instance.GetAnyGamePad();
         
         if(!m_sceneHasTutorial && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
@@ -138,6 +148,8 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+
+    public static int m_saveSlotInUse = 1;
     #region Player Info Storage
     [Serializable]
     private struct PlayerInfo
@@ -158,8 +170,10 @@ public class GameManager : Singleton<GameManager>
         public Color m_leftOutlineColor;
         public Color m_rightOutlineColor;
 
-        //public Dictionary<EffectData, int> m_effects;
         public List<EffectsInfo> m_effects;
+
+        public float m_health;
+        public int m_orbs;
     }
 
     [Serializable]
@@ -179,8 +193,9 @@ public class GameManager : Singleton<GameManager>
         m_containsPlayerInfo = false;
         m_playerInfo.m_validSave = false;
         currentLevel = 0;
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
+            File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
     }
     public static void SavePlayerInfoToFile()
     {
@@ -193,15 +208,21 @@ public class GameManager : Singleton<GameManager>
         Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
         m_playerInfo.m_validSave = true;
 
-        string json = JsonUtility.ToJson(m_playerInfo);
-        File.WriteAllText(Application.persistentDataPath + "/playerInfo.json", json);
+        string json = JsonUtility.ToJson(m_playerInfo, true);
+
+        if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/");
+
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json", json);
+
+        SaveSaveInfoToFile();
     }
     public static void LoadPlayerInfoFromFile()
     {
-        if (File.Exists(Application.persistentDataPath + "/playerInfo.json"))
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
         {
             // Read the json from the file into a string
-            string dataAsJson = File.ReadAllText(Application.persistentDataPath + "/playerInfo.json");
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json");
 
             // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
             m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
@@ -212,7 +233,7 @@ public class GameManager : Singleton<GameManager>
         if (Instance?.m_player != null)
             Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
-    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect)
+    public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect, float _health, int _orbs)
     {
         if (_leftWeapon != null)
         {
@@ -276,6 +297,9 @@ public class GameManager : Singleton<GameManager>
         //m_playerInfo.m_effects = _effects;
 
         m_playerInfo.m_classData = _class;
+
+        m_playerInfo.m_health = _health;
+        m_playerInfo.m_orbs = _orbs;
 
         m_containsPlayerInfo = true;
     }
@@ -388,6 +412,14 @@ public class GameManager : Singleton<GameManager>
         return m_playerInfo.m_classData;
     }
 
+    public static float RetrieveHealth()
+    {
+        return m_playerInfo.m_health;
+    }
+    public static int RetrieveOrbCount()
+    {
+        return m_playerInfo.m_orbs;
+    }
     public static void ResetPlayerInfo()
     {
         m_playerInfo.m_leftWeapon = null;
@@ -402,5 +434,68 @@ public class GameManager : Singleton<GameManager>
         PlayerPrefs.SetFloat("Level", 0);
     }
 
+    #endregion
+
+    #region Run Info Storage
+    [Serializable]
+    public class SaveInfo
+    {
+        public bool m_validSave;
+        // ******
+        // Put desired stored variables here!
+        // V V V V V V
+
+        public int m_testValue;
+
+        //LEVELS
+        public int m_completedTutorial = 0;
+        public int m_completedSwamp = 0;
+        public int m_completedCastle = 0;
+
+        //NPCs
+        public int m_rowanVisits = 0;
+        public int m_perceptionVisits = 0;
+
+        // Ʌ Ʌ Ʌ Ʌ Ʌ Ʌ
+    }
+
+    static public bool m_containsRunInfo = false;
+    static public SaveInfo m_saveInfo;
+
+    public static void ClearSaveInfoFromFile()
+    {
+        m_saveInfo = new SaveInfo();
+        m_containsRunInfo = false;
+        m_saveInfo.m_validSave = false;
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
+            File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void SaveSaveInfoToFile()
+    {
+        m_saveInfo.m_validSave = true;
+
+        if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/");
+
+        string json = JsonUtility.ToJson(m_saveInfo, true);
+        File.WriteAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json", json);
+    }
+    public static void LoadSaveInfoFromFile()
+    {
+        Debug.Log("Load");
+
+        m_saveInfo.m_validSave = false;
+        if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json"))
+        {
+            // Read the json from the file into a string
+            string dataAsJson = File.ReadAllText(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/saveInfo.json");
+
+            // Pass the json to JsonUtility, and tell it to create a RunInfo object from it
+            m_saveInfo = JsonUtility.FromJson<SaveInfo>(dataAsJson);
+
+            m_containsPlayerInfo = true;
+        }
+    }
     #endregion
 }

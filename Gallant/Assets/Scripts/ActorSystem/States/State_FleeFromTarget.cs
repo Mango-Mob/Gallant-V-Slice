@@ -25,6 +25,8 @@ public class State_FleeFromTarget : State
         }
         
         float idealDist = m_myActor.m_myBrain.m_legs.m_agent.stoppingDistance;
+        if (idealDist == 0)
+            idealDist = 20f;
         float currDist = Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position);
         Vector3 forward = (m_myActor.m_target.transform.position - m_myActor.transform.position).normalized;
         Vector3 sampleLoc = Vector3.zero;

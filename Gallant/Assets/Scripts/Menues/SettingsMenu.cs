@@ -49,7 +49,7 @@ public class SettingsMenu : MonoBehaviour
         int selected = 0;
         for (int i = 0; i < m_localResolutions.Length; i++)
         {
-            resOptions.Add($"{m_localResolutions[i].width}x{m_localResolutions[i].height} @ {m_localResolutions[i].refreshRate}Hz");
+            resOptions.Add($"{m_localResolutions[i].width} x {m_localResolutions[i].height} @ {m_localResolutions[i].refreshRate}Hz");
             
             if(m_localResolutions[i].width == ApplicationManager.instance.m_width 
                 && m_localResolutions[i].height == ApplicationManager.instance.m_height
@@ -171,7 +171,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowDisplay()
     {
         Refresh();
-        m_displayBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_displayBtn.GetComponent<Image>().color = m_bumperColor;
         m_displayBtn.interactable = false;
         m_displayMenu.SetActive(true);
 
@@ -188,7 +188,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowAudio()
     {
         Refresh();
-        m_audioBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_audioBtn.GetComponent<Image>().color = m_bumperColor;
         m_audioBtn.interactable = false;
         m_audioMenu.SetActive(true);
 
@@ -205,7 +205,7 @@ public class SettingsMenu : MonoBehaviour
     public void ShowControls()
     {
         Refresh();
-        m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
+        //m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
         m_controlsBtn.interactable = false;
         m_controlsMenu.SetActive(true);
     }

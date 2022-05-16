@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UI_PauseMenu : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class UI_PauseMenu : MonoBehaviour
     public Pause_TomeDisplay m_tomeList;
     public GameObject m_defaultButton;
     public GameObject m_settingsPannel;
+    public Button m_returnToHubButton;
+
+
+    public Button[] m_allButtons;
+    public GameObject m_confirmPannel;
 
     public void SetPause(bool state)
     {
@@ -28,6 +34,7 @@ public class UI_PauseMenu : MonoBehaviour
     void Start()
     {
         m_window.SetActive(false);
+        m_returnToHubButton.interactable = (SceneManager.GetActiveScene().name != "HubWorld");
     }
 
     // Update is called once per frame
@@ -67,8 +74,11 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void ReturnToHub()
     {
-        GameManager.SavePlayerInfoToFile();
-        LevelManager.Instance.LoadHubWorld();
+        m_confirmPannel.SetActive(true);
+        foreach (var item in m_allButtons)
+        {
+            item.interactable = false;
+        }
     }
 
     public void Quit()
@@ -78,5 +88,19 @@ public class UI_PauseMenu : MonoBehaviour
         SetPause(false);
         ActorManager.Instance.ClearActors();
         SceneManager.LoadScene(0);
+    }
+
+    public void Confirm()
+    {
+        LevelManager.Instance.LoadHubWorld(true);
+    }
+
+    public void Decline()
+    {
+        m_confirmPannel.SetActive(false);
+        foreach (var item in m_allButtons)
+        {
+            item.interactable = true;
+        }
     }
 }

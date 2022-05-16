@@ -47,13 +47,13 @@ public class UI_StatsMenu : UI_Element
         m_runeStartPosX = m_runeGroup.position.x;
         m_weaponStartPosX = m_weaponGroup.position.x;
 
-        m_displayedBalance = PlayerPrefs.GetInt("Player Balance");
+        m_displayedBalance = PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}");
     }
 
     // Update is called once per frame
     void Update()
     {
-        float balanceDifference = PlayerPrefs.GetInt("Player Balance") - m_displayedBalance;
+        float balanceDifference = PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") - m_displayedBalance;
         m_displayedBalance += (balanceDifference * Time.deltaTime * m_balanceChangeSpeed);
 
         m_currencyText.text = $"{Mathf.RoundToInt(m_displayedBalance)}";

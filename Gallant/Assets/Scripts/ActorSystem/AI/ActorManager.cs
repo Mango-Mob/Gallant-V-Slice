@@ -8,6 +8,7 @@ namespace ActorSystem.AI
 {
     public class ActorManager : SingletonPersistent<ActorManager>
     {
+        public float m_actorDeathTime = 7.0f;
         public List<Actor> m_subscribed { get; private set; } = new List<Actor>();
         public List<ActorSpawner> m_activeSpawnners = new List<ActorSpawner>();
 
@@ -89,6 +90,9 @@ namespace ActorSystem.AI
         {
             if(!m_subscribed.Contains(user))
                 m_subscribed.Add(user);
+
+            if (m_reserved == null)
+                m_reserved = new Dictionary<string, List<Actor>>();
 
             if (!m_reserved.ContainsKey(user.m_myData.ActorName))
                 m_reserved.Add(user.m_myData.ActorName, new List<Actor>());

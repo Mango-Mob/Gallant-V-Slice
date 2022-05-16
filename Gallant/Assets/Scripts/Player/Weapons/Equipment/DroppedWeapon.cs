@@ -88,6 +88,7 @@ public class DroppedWeapon : MonoBehaviour
         {
             m_bookCoverMesh.material.color = m_abilityData.droppedEnergyColor;
             m_bookIconSprite.sprite = m_abilityData.abilityIcon;
+            m_pickupDisplay.LoadAbility(m_abilityData);
         }
         ToggleDisplay(false);
     }

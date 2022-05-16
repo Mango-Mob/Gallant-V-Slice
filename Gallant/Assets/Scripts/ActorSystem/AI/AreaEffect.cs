@@ -8,6 +8,7 @@ public class AreaEffect: MonoBehaviour
 {
     public GameObject m_EffectVFX;
     public AudioClip m_clip;
+    public Vector3 m_targetLocation;
 
     public float delay;
     public float damage;

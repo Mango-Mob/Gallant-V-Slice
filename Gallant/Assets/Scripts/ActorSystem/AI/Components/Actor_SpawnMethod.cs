@@ -23,5 +23,7 @@ namespace ActorSystem.AI.Components
         {
             //this.enabled = status;
         }
+
+        public abstract void Respawn();
     }
 }

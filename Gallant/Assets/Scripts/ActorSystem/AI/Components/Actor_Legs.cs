@@ -79,20 +79,13 @@ namespace ActorSystem.AI.Components
             if(m_delayTimer > 0)
                 return;
 
-            if(!m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
+            if(m_agent.enabled && !m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
             {
                 if (m_isPivot)
                 {
                     Halt();
                     m_targetRotation = transform.rotation;
                     return;
-                }
-
-                NavMeshHit hit;
-                if (NavMesh.FindClosestEdge(transform.position, out hit, m_agent.areaMask))
-                {
-                    if(IsGrounded())
-                        m_body.velocity += transform.position.DirectionTo(hit.position).normalized * m_agent.acceleration;
                 }
             }
         }
@@ -139,16 +132,17 @@ namespace ActorSystem.AI.Components
             if(m_isKnocked)
             {
                 m_body.velocity -= (m_body.velocity.normalized * m_agent.acceleration * Time.fixedDeltaTime);
+
+                NavMeshHit hitInfo;
+                if (m_body.velocity.magnitude < 1.0f && NavMesh.SamplePosition(transform.position, out hitInfo, m_agent.radius * 0.75f, NavMesh.AllAreas))
+                {
+                    m_isKnocked = false;
+                    m_delayTimer = 0.25f;
+                }
             }
             
             m_agent.updatePosition = !m_isKnocked && !m_isSeekingMesh;
             m_body.isKinematic = !m_isKnocked && !m_isSeekingMesh;
-            
-            if (m_isKnocked && m_body.velocity.magnitude < 1.0f)
-            {
-                m_isKnocked = false;
-                m_delayTimer = 0.25f;
-            }
         }
 
         public void SetTargetVelocity(Vector3 moveVector)
@@ -210,12 +204,6 @@ namespace ActorSystem.AI.Components
         {
             if (m_agent.enabled && m_agent.isOnNavMesh)
                 m_agent.isStopped = true;
-
-            if (m_isKnocked)
-            {
-                m_isKnocked = false;
-                m_delayTimer = 0.25f;
-            }
         }
 
         /*******************
@@ -329,7 +317,7 @@ namespace ActorSystem.AI.Components
                     m_body.velocity = transform.TransformVector(force);
                     return;
                 }
-                m_body.velocity = force;
+                m_body.velocity = transform.TransformVector(force);
             }
         }
 

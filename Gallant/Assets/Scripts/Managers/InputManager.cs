@@ -32,7 +32,7 @@ public enum ButtonType
     NORTH, SOUTH, EAST, WEST,
     START, SELECT, 
     LT, LB, LS, RT, RB, RS,
-    UP, DOWN, LEFT, RIGHT,
+    UP, RIGHT, DOWN, LEFT,
     NONE
 }
 
@@ -245,17 +245,19 @@ public class InputManager : SingletonPersistent<InputManager>
         //Attack
         m_binds.Add("Aim", new Bind[] { new Bind(typeof(StickType), (int)StickType.RIGHT) });
         m_binds.Add("Toggle_Lockon", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.L_ALT), new Bind(typeof(ButtonType), (int)ButtonType.RS) });
-        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.LB) });
-        m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });
+        m_binds.Add("Left_Attack", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.LB), new Bind(typeof(MouseButton), (int)MouseButton.RIGHT) });
+        m_binds.Add("Right_Attack", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.RB) });
         m_binds.Add("Left_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Q), new Bind(typeof(ButtonType), (int)ButtonType.LT) });
         m_binds.Add("Right_Ability", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.E), new Bind(typeof(ButtonType), (int)ButtonType.RT) });
 
         //Other
-        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
+        m_binds.Add("Interact", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.X), new Bind(typeof(ButtonType), (int)ButtonType.WEST) });
         m_binds.Add("Switch", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Y), new Bind(typeof(ButtonType), (int)ButtonType.UP) });
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
         m_binds.Add("Toggle_Zoom", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Z), new Bind(typeof(ButtonType), (int)ButtonType.LS) });
+        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
+        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
 
         //SkillTree
         m_binds.Add("Skill_Select", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
@@ -359,14 +361,6 @@ public class InputManager : SingletonPersistent<InputManager>
         {
             foreach (var bind in result)
             {
-                if (bind.enumType == typeof(KeyType))
-                {
-                    resultImage = GetKeyImage((KeyType)bind.value);
-                }
-                else if (bind.enumType == typeof(MouseButton))
-                {
-                    resultImage = GetMouseButtonSprite((MouseButton)bind.value);
-                }
                 if(includeGamepad)
                 {
                     if (bind.enumType == typeof(ButtonType))
@@ -376,6 +370,17 @@ public class InputManager : SingletonPersistent<InputManager>
                     else if (bind.enumType == typeof(StickType))
                     {
                         resultImage = GetGameStickSprite((StickType)bind.value);
+                    }
+                }
+                else
+                {
+                    if (bind.enumType == typeof(KeyType))
+                    {
+                        resultImage = GetKeyImage((KeyType)bind.value);
+                    }
+                    else if (bind.enumType == typeof(MouseButton))
+                    {
+                        resultImage = GetMouseButtonSprite((MouseButton)bind.value);
                     }
                 }
 
@@ -1193,7 +1198,7 @@ public class InputManager : SingletonPersistent<InputManager>
         {
             case MouseButton.LEFT: { return m_leftClick; }
             case MouseButton.MIDDLE: { return null; }
-            case MouseButton.RIGHT: { return m_leftClick; }
+            case MouseButton.RIGHT: { return m_rightClick; }
 
             default:
             case MouseButton.NONE: { return null; }

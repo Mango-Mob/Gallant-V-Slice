@@ -1,4 +1,5 @@
 ﻿
+using ActorSystem.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ public class State_Dead : State
             m_myActor.DestroySelf();
         }
 
-        if(m_timer > 5.0f)
+        if(m_timer > ActorManager.Instance.m_actorDeathTime)
         {
             m_myActor.DestroySelf();
         }

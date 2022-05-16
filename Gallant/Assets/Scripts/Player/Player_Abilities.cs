@@ -7,12 +7,13 @@ public enum Ability
     SAND_MISSILE,
     LIGHTNING_BOLT,
     ICE_ROLL,
-    HP_BUFF,
     THORNS,
-    ARCANE_BOLT,
     FLAME_ROLL,
     ROLL_BASH,
     WHIRLPOOL,
+
+    ARCANE_BOLT,
+    HP_BUFF,
 
     NONE,
 }

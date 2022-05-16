@@ -12,6 +12,7 @@ public class ActorData : ScriptableObject
     public float stamina;
     public float staminaReg;
     public float radius;
+    public int tier = 1;
 
     public string ActorName;
     public float baseSpeed;
@@ -30,16 +31,6 @@ public class ActorData : ScriptableObject
     public float abilResist;
 
     public float m_damageModifier = 1.0f;
-
-    [Header("Changes per room level")]
-    public float deltaHealth = 0;
-    public float deltaStamina = 0;
-    public float deltaStaminaReg;
-    public float deltaSpeed = 0;
-    public float deltaAdrenaline = 0;
-    public float deltaPhyResist = 0;
-    public float deltaAbilResist = 0;
-    public float deltaDamageMod = 0;
 
     [Header("Sound Effects")]
     public AudioClip[] deathSounds;

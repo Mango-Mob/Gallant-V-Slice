@@ -13,7 +13,7 @@ namespace ActorSystem.Data
         public int attackCount;
         public float delay;
 
-        public override bool InvokeAttack(Transform parent, GameObject source, int filter, uint id = 0, float damageMod = 1)
+        public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             int i = attackCount;
             Collider[] targets = GetDamageOverlap(parent, filter, id);

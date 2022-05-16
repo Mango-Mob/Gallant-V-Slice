@@ -26,7 +26,6 @@ public class JukeboxAgent : AudioAgent
     private int currentIndex;
     private bool isPlaying = false;
 
-
     protected AudioManager.VolumeChannel type = AudioManager.VolumeChannel.MUSIC;
     protected AudioPlayer player;
     protected AudioPlayer backPlayer;
@@ -34,9 +33,8 @@ public class JukeboxAgent : AudioAgent
     protected override void Awake()
     {
         base.Awake();
-        player = new AudioPlayer(gameObject, null);
-        player.SetVolume(AudioManager.Instance.GetVolume(type, this) * localVolume);
-        backPlayer = new AudioPlayer(gameObject, null);
+        player = new AudioPlayer(gameObject, null, AudioManager.Instance.GetVolume(type, this) * localVolume);
+        backPlayer = new AudioPlayer(gameObject, null, 0);
         currentList = new List<AudioClip>();
         foreach (var clip in audioClips)
         {
@@ -85,6 +83,9 @@ public class JukeboxAgent : AudioAgent
 
     private void CheckAudioPlayer()
     {
+        if (player == null)
+            return;
+
         if (hasFadeTransitions && player.TimeLeft() < 5.0f && player.IsPlaying())
         {
             float time = player.TimeLeft();

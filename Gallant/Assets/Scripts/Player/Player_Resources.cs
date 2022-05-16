@@ -61,12 +61,11 @@ public class Player_Resources : MonoBehaviour
         m_defaultAdrenaline = m_startingAdrenaline;
         m_adrenaline = m_startingAdrenaline;
 
+        playerController = GetComponent<Player_Controller>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        playerController = GetComponent<Player_Controller>();
-
         // Skill implementation.
         m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
         m_maxHealth += playerController.playerSkills.m_healthIncrease;
@@ -231,7 +230,7 @@ public class Player_Resources : MonoBehaviour
      */
     public void UseAdrenaline()
     {
-        if (m_adrenaline >= 1)
+        if (m_adrenaline >= 1 && m_health > 0.0f)
         {
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             Debug.Log(m_adrenalineHeal * (m_maxHealth / 100.0f) * playerController.playerStats.m_maximumHealth);
@@ -248,5 +247,13 @@ public class Player_Resources : MonoBehaviour
     {
         m_health = m_maxHealth;
         m_dead = false;
+    }
+
+    public void SetHealth(float _health) { m_health = _health; }
+    public void SetOrbCount(int _orbs) { m_adrenaline = _orbs; }
+
+    public float GetPotentialHealth()
+    {
+        return m_health + m_adrenaline * m_adrenalineHeal;
     }
 }

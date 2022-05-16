@@ -92,13 +92,12 @@ public class Player_Movement : MonoBehaviour
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        playerController = GetComponent<Player_Controller>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        playerController = GetComponent<Player_Controller>();
-        
         // Skill implementation.
         m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
         m_rollDistanceMult *= playerController.playerSkills.m_rollDistanceIncrease;
@@ -188,16 +187,7 @@ public class Player_Movement : MonoBehaviour
                 playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.END_ROLL);
             }
 
-            Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
-
-            foreach (var item in destruct)
-            {
-                Destructible dest = item.GetComponentInParent<Destructible>();
-                if (dest != null && dest.m_letRollDestroy)
-                {
-                    dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
-                }
-            }
+            DestructibleDetection();
         }
         else
         {
@@ -217,6 +207,9 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_dashTimer > 0.0f)
         {
+            playerController.animator.SetFloat("Horizontal", 0.0f);
+            playerController.animator.SetFloat("Vertical", 0.0f); 
+
             if (m_dashFaceDirection == Vector3.zero)
             {
                 RotateToFaceDirection(new Vector3(m_dashFaceDirection.x, 0, m_dashFaceDirection.z));
@@ -225,7 +218,23 @@ public class Player_Movement : MonoBehaviour
             // Move player in stored direction while dash is active
             characterController.Move(m_dashVelocity * Time.fixedDeltaTime);
 
+            DestructibleDetection();
+
             m_dashTimer -= Time.fixedDeltaTime;
+        }
+    }
+
+    public void DestructibleDetection()
+    {
+        Collider[] destruct = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
+
+        foreach (var item in destruct)
+        {
+            Destructible dest = item.GetComponentInParent<Destructible>();
+            if (dest != null && dest.m_letRollDestroy)
+            {
+                dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
+            }
         }
     }
 
@@ -312,6 +321,12 @@ public class Player_Movement : MonoBehaviour
     {
         m_isRolling = false;
     }
+
+    public void QuickSetAttackMoveSpeedLerp(float _lerp)
+    {
+        m_currentMoveSpeedLerp = 1.0f;
+    }
+
     /*******************
      * Move : Contains logic to move the player, aiming and starting roll.
      * @author : William de Beer
@@ -569,9 +584,12 @@ public class Player_Movement : MonoBehaviour
         if (closestTarget == null)
             Debug.Log("Could not find target");
         else
+        {
             Debug.Log("Found target " + closestTarget.name);
-
+            playerController.playerAudioAgent.PlayLockOn();
+        }
         m_currentTarget = closestTarget;
+        
 
         if (!m_currentTarget)
             return;

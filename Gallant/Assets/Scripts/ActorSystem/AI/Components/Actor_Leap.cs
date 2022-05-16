@@ -71,19 +71,21 @@ namespace ActorSystem.AI.Components
                     return;
                 }
 
-                m_rotationDirection = 0.0f;
-                if (isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
-                {
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * rotMod * Time.fixedDeltaTime);
-
-                    if (Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
-                    {
-                        m_rotationDirection = (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0) ? 1.0f : -1.0f;
-                    }
-                }       
+                m_rotationDirection = 0;
+                //if (isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
+                //{
+                //    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * rotMod * Time.fixedDeltaTime);
+                //
+                //    if (Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
+                //    {
+                //        m_rotationDirection = (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0) ? 1.0f : -1.0f;
+                //    }
+                //}       
             }
             else
             {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * rotMod * Time.fixedDeltaTime);
+                m_rotationDirection = (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0) ? 1.0f : -1.0f;
                 base.FixedUpdate();
             }
         }

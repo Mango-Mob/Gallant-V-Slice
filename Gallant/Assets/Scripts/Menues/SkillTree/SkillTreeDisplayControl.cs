@@ -92,7 +92,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE))
         {
-            PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + 1000);
+            PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") + 1000);
         }
 #endif
 
@@ -140,7 +140,7 @@ public class SkillTreeDisplayControl : MonoBehaviour
         }
 #endif
 
-        m_currencyText.text = $"{PlayerPrefs.GetInt("Player Balance")}";
+        m_currencyText.text = $"{PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}")}";
 
         Navigation(gamepadID);
     }

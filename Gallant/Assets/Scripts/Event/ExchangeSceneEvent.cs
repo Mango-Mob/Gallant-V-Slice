@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ExchangeSceneEvent : SceneEvent
 {
+    public List<ItemData> m_data = new List<ItemData>();
+
     private Player_Stats m_player;
     public struct Option
     {
@@ -19,7 +22,7 @@ public class ExchangeSceneEvent : SceneEvent
         public List<ItemData> m_lose;
     }
 
-    private List<Option> m_options;
+    private List<Option> m_options = new List<Option>();
 
     protected override void Start()
     {
@@ -27,20 +30,88 @@ public class ExchangeSceneEvent : SceneEvent
         m_player = GameManager.Instance.m_player.GetComponent<Player_Stats>();
 
         DialogManager.Instance.SetCharacter(null);
-        DialogManager.Instance.SetDialogText("You are presented a choice...");
+        string dialog = "You are presented a choice...\n";
 
+        for(int i = 0; i < 3; i++)
+        {
+            GenerateCase();
+        }
+        
+        char point = 'A';
         for (int i = 0; i < 4; i++)
         {
-            DialogManager.Instance.SetButtonOption(i, "", null);
+            if(m_options.Count > i)
+            {
+                dialog += $"{point}. {m_options[i].buttonOptionText}\n";
+                switch(i)
+                {
+                    case 0:
+                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectOne);
+                        break;
+                    case 1:
+                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectTwo);
+                        break;
+                    case 2:
+                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectThree);
+                        break;
+                }
+                
+                point++;
+            }
+            else if (m_options.Count == i)
+            {
+                DialogManager.Instance.SetButtonOption(i, "Decline", Decline);
+                break;
+            }
         }
+        DialogManager.Instance.SetDialogText(dialog);
     }
 
-    public override void Interact()
+    public void SelectOne()
     {
-
+        for(int g = 0; g < m_options[0].m_gain.Count; g++)
+        {
+            m_player.AddEffect(m_options[0].m_gain[g].itemEffect);
+        }
+        for (int c = 0; c < m_options[0].m_lose.Count; c++)
+        {
+            m_player.RemoveEffect(m_options[0].m_lose[c].itemEffect);
+        }
+        EndEvent();
     }
 
-    protected override void GenerateCase()
+    public void SelectTwo()
+    {
+        for (int g = 0; g < m_options[1].m_gain.Count; g++)
+        {
+            m_player.AddEffect(m_options[1].m_gain[g].itemEffect);
+        }
+        for (int c = 0; c < m_options[1].m_lose.Count; c++)
+        {
+            m_player.RemoveEffect(m_options[1].m_lose[c].itemEffect);
+        }
+        EndEvent();
+    }
+
+    public void SelectThree()
+    {
+        for (int g = 0; g < m_options[2].m_gain.Count; g++)
+        {
+            m_player.AddEffect(m_options[2].m_gain[g].itemEffect);
+        }
+        for (int c = 0; c < m_options[2].m_lose.Count; c++)
+        {
+            m_player.RemoveEffect(m_options[2].m_lose[c].itemEffect);
+        }
+        EndEvent();
+    }
+
+    public void Decline()
+    {
+        EndEvent();
+    }
+
+    protected void GenerateCase()
     {
         ItemData gain = SelectItem(0, 10);
         ItemData costA = SelectItem(1, 10, new ItemData[] { gain });
@@ -78,27 +149,27 @@ public class ExchangeSceneEvent : SceneEvent
         {
             return;
         }
-
+        int opCount;
         switch (j)
         {
             case 0: //Net gain 1
-                m_options.Add(new Option($"Gain a {gain.itemName}."));
+                m_options.Add(new Option($"Gain a <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description.Substring(0, gain.description.Length - 1)})</i>."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 break;
             case 1: //gain 1 for another 1
-                m_options.Add(new Option($"Trade a {gain.itemName} for {costA.itemName}."));
+                m_options.Add(new Option($"Trade a  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of {costA.itemName} <i>({gain.description})<i>."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_lose.Add(costA);
                 break;
             case 2: //gain 2 specific runes for another 2 random (unknown)?
-                m_options.Add(new Option($"Gain two {gain.itemName} for two random runes."));
+                m_options.Add(new Option($"Gain two  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of two random runes."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_lose.Add(costA);
                 m_options[m_options.Count - 1].m_lose.Add(costB);
                 break;
             case 3: //gain 3 specific runes for another 3 random (unknown)?
-                m_options.Add(new Option($"Gain three {gain.itemName} for three random runes."));
+                m_options.Add(new Option($"Gain three  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of three random runes."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);
@@ -119,12 +190,15 @@ public class ExchangeSceneEvent : SceneEvent
             int amount = m_player.GetEffectQuantity(m_data[i].itemEffect);
 
             bool ignoreCase = false;
-            for (int j = 0; j < ignore.Length; j++)
+            if(ignore != null)
             {
-                if (ignore[j] == m_data[i])
+                for (int j = 0; j < ignore.Length; j++)
                 {
-                    ignoreCase = true;
-                    break;
+                    if (ignore[j] == m_data[i])
+                    {
+                        ignoreCase = true;
+                        break;
+                    }
                 }
             }
 

@@ -81,7 +81,7 @@ public class CurrencyDrop : MonoBehaviour
                 if (distance < m_pickupRange)
                 {
                     //m_targetPlayer.playerResources.ChangeAdrenaline(1);
-                    PlayerPrefs.SetInt("Player Balance", PlayerPrefs.GetInt("Player Balance") + m_heldValue);
+                    PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") + m_heldValue);
                     Destroy(gameObject);
                     return;
                 }

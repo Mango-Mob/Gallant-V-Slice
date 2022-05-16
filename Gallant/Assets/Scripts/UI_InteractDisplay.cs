@@ -12,7 +12,7 @@ public class UI_InteractDisplay : MonoBehaviour
     [SerializeField] private Image m_timerImage;
 
     // Update is called once per frame
-    public void Update()
+    void Update()
     {
         m_timerImage.fillAmount = timer;
 

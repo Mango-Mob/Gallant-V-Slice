@@ -93,6 +93,8 @@ public class WeaponData : ScriptableObject
 
     public List<WeaponTag> m_tags = new List<WeaponTag>();
 
+    public Vector3 m_backHolsterRotationOffset;
+
     [Header("Alt Attack Info")]
     public string m_altAttackName = "None";
     [TextArea(10, 15)]
@@ -135,7 +137,7 @@ public class WeaponData : ScriptableObject
         WeaponData data = CreateInstance<WeaponData>();
 
         // Random weapon type.
-        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length - 3);
+        Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length - 1);
         ApplyWeaponData(data, newWeaponType);
 
         data.abilityData = null;
@@ -154,41 +156,33 @@ public class WeaponData : ScriptableObject
 
         // Random ability and power level is assigned.
         Ability newAbilityType;
-        int iter = 0;
-        do
-        {
-            newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 1);
+        //int iter = 0;
+        //do
+        //{
+        newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 4);
         
-            int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
-            int result = Mathf.Max(_level + curve, 0);
+        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
+        int result = Mathf.Max(_level + curve, 0);
 
-            // Power level
-            int powerLevel = 0;
-            if (result < 3)
-                powerLevel = 1;
-            else if (result < 6)
-                powerLevel = 2;
-            else
-                powerLevel = 3;
+        // Power level
+        int powerLevel = 0;
+        if (result < 3)
+            powerLevel = 1;
+        else if (result < 6)
+            powerLevel = 2;
+        else
+            powerLevel = 3;
 
-            // Ability
-            ApplyAbilityData(data, newAbilityType, powerLevel);
-            iter++; 
-            if (iter > 20)
-            {
-                ApplyAbilityData(data, Ability.ARCANE_BOLT, powerLevel);
-                break;
-            }
-        } while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
+        // Ability
+        ApplyAbilityData(data, newAbilityType, powerLevel);
+        //    iter++; 
+        //    if (iter > 20)
+        //    {
+        //        ApplyAbilityData(data, Ability.ARCANE_BOLT, powerLevel);
+        //        break;
+        //    }
+        //} while (newWeaponType == Weapon.STAFF && data.abilityData.isPassive);
         
-
-        // Create weapon name
-        if (data.abilityData != null)
-        { 
-            data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
-            data.abilityData.lastCooldown = 0.0f;
-        }
-
         //Return new weapon.
         return data;
     }
@@ -219,13 +213,6 @@ public class WeaponData : ScriptableObject
         data.SetLevel(_weaponLevel);
 
         ApplyAbilityData(data, _abilityType, _powerLevel);
-
-        // Create weapon name
-        if (data.abilityData != null)
-        {
-            data.weaponName = data.weaponName + " of " + data.abilityData.weaponTitle;
-            data.abilityData.lastCooldown = 0.0f;
-        }
 
         //Return new weapon.
         return data;
@@ -286,56 +273,28 @@ public class WeaponData : ScriptableObject
         {
             _weaponData.weaponIcon = _weaponData.abilityData?.overwriteStaffIcon;
         }
+
+        // Create weapon name
+        if (_weaponData.abilityData != null)
+        {
+            _weaponData.weaponName = _weaponData.weaponName + " of " + _weaponData.abilityData.weaponTitle;
+            _weaponData.abilityData.lastCooldown = 0.0f;
+        }
     }
     public static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
     {
         _data.abilityData = AbilityData.LoadAbilityData(_abilityType, _powerLevel);
 
-        // Ability
-        //switch (_abilityType)
-        //{
-        //    case Ability.NONE:
-        //        _data.abilityData = null;
-        //        break;
-        //    case Ability.FIREWAVE:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/firewave" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.SAND_MISSILE:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/sandmissile" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.LIGHTNING_BOLT:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/lightning" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.ICE_ROLL:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/frostevade" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.HP_BUFF:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/barrier" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.THORNS:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/thorns" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.ARCANE_BOLT:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/arcanebolt" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.FLAME_ROLL:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/flameevade" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.ROLL_BASH:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
-        //        break;
-        //    case Ability.WHIRLPOOL:
-        //        _data.abilityData = Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
-        //        break;
-        //    default:
-        //        Debug.LogWarning("Could not add ability due to inavlid ability type randomised.");
-        //        break;
-        //}
-
-
         if (_data.weaponType == Weapon.STAFF && _data.abilityData?.overwriteStaffIcon != null)
         {
             _data.weaponIcon = _data.abilityData?.overwriteStaffIcon;
+        }
+
+        // Create weapon name
+        if (_data.abilityData != null)
+        {
+            _data.weaponName = _data.weaponName + " of " + _data.abilityData.weaponTitle;
+            _data.abilityData.lastCooldown = 0.0f;
         }
     }
 
@@ -454,6 +413,8 @@ public class WeaponData : ScriptableObject
         this.overrideAnimation = other.overrideAnimation;
 
         this.m_tags = other.m_tags;
+
+        this.m_backHolsterRotationOffset = other.m_backHolsterRotationOffset;
 
         this.m_altAttackName = other.m_altAttackName;
         this.m_altAttackDesc = other.m_altAttackDesc;
