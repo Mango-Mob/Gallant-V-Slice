@@ -72,6 +72,8 @@ public class Player_Controller : MonoBehaviour
 
     private CameraBounds m_cameraBounds;
     public bool m_cameraFreeze = false;
+    private float m_walkRunLerp = 0.0f;
+    private float m_walkRunLerpSpeed = 5.0f;
 
     private void Awake()
     {
@@ -171,8 +173,11 @@ public class Player_Controller : MonoBehaviour
         //    swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
         //if (playerAttack.m_rightWeaponData != null)
         //    swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
-
-        //animator.SetFloat("SwordRunWeight", swordRunWeight);
+        
+        // Walk run lerp
+        //m_walkRunLerp = Mathf.Clamp01(m_walkRunLerp + (animator.GetFloat("Vertical") > 0.5f ? 1.0f : -1.0f) * Time.deltaTime * m_walkRunLerpSpeed);
+        //animator.SetFloat("WalkRunBlend", m_walkRunLerp);
+        animator.SetFloat("WalkRunBlend", 0.5f);
 
         if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
