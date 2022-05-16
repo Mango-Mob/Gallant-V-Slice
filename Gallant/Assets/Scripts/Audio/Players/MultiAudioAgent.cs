@@ -32,7 +32,7 @@ public class MultiAudioAgent : AudioAgent
 
         for (int i = 0; i < audioPlayersCount; i++)
         {
-            players[i] = new AudioPlayer(gameObject, null);
+            players[i] = new AudioPlayer(gameObject, null, AudioManager.Instance.GetVolume(channel, this) * localVolume);
         }
     }
 

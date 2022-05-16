@@ -157,19 +157,19 @@ public class ExchangeSceneEvent : SceneEvent
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 break;
             case 1: //gain 1 for another 1
-                m_options.Add(new Option($"Trade a {gain.itemName} ({gain.description}) for a {costA.itemName} ({gain.description})."));
+                m_options.Add(new Option($"Trade a  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of {costA.itemName} <i>({gain.description})<i>."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_lose.Add(costA);
                 break;
             case 2: //gain 2 specific runes for another 2 random (unknown)?
-                m_options.Add(new Option($"Gain two {gain.itemName} ({gain.description}) for two random runes."));
+                m_options.Add(new Option($"Gain two  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of two random runes."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_lose.Add(costA);
                 m_options[m_options.Count - 1].m_lose.Add(costB);
                 break;
             case 3: //gain 3 specific runes for another 3 random (unknown)?
-                m_options.Add(new Option($"Gain three {gain.itemName} ({gain.description}) for three random runes."));
+                m_options.Add(new Option($"Gain three  <b><color=#fcba03>{gain.itemName}</color></b> <i>({gain.description})<i> at a cost of three random runes."));
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);
                 m_options[m_options.Count - 1].m_gain.Add(gain);

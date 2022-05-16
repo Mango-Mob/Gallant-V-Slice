@@ -30,10 +30,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public Image m_playerIcon;
 
+    private SoloAudioAgent m_audio;
     private bool m_canQuit = true;
     protected override void Awake()
     {
         base.Awake();
+        m_audio = GetComponent<SoloAudioAgent>();
         m_myCamera = GetComponentInChildren<Camera>();
         m_myCamera.gameObject.SetActive(false);
         m_myCanvas = GetComponent<Canvas>();
@@ -131,6 +133,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void MovePlayerIconTo(Vector3 position, System.Action loadToScene)
     {
+        m_audio.Play();
         StartCoroutine(MovePlayerIcon(position, loadToScene));
     }
 

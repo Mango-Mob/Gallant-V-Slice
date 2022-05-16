@@ -321,8 +321,7 @@ namespace ActorSystem.AI.Components
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
 
-                if (playAudio)
-                    m_audioAgent?.PlayDeath();
+                m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
             {

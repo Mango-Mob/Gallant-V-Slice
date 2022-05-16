@@ -65,12 +65,15 @@ public class DialogManager : Singleton<DialogManager>
         {
             for (int i = 0; i < 3; i++)
             {
-                gamepadButtons[i].enabled = InputManager.Instance.isInGamepadMode;
                 if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i) || InputManager.Instance.IsGamepadButtonDown(ButtonType.UP + i, 0))
                 {
                     if (m_options[i].interactable)
                         m_options[i].onClick?.Invoke();
                 }
+            }
+            foreach (var btn in gamepadButtons)
+            {
+                btn.enabled = InputManager.Instance.isInGamepadMode;
             }
         }
     }

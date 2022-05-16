@@ -21,6 +21,7 @@ public class NavigationPortal : MonoBehaviour
     public VisualEffect portalMain;
     public VisualEffect portalFlair;
     public VisualEffect portalBurst;
+    public SoloAudioAgent m_audio;
 
     private void Start()
     {
@@ -44,12 +45,13 @@ public class NavigationPortal : MonoBehaviour
 
     public void Update()
     {
-        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat);
+        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
         GetComponent<Collider>().enabled = !NavigationManager.Instance.IsVisible;
     }
 
     public void Interact()
     {
+        m_audio.Play();
         NavigationManager.Instance.SetVisibility(true);
         m_myInterface.m_isReady = false;
     }
@@ -69,7 +71,7 @@ public class NavigationPortal : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if((m_myInterface != null && other.gameObject.layer == LayerMask.NameToLayer("Player")))
-            m_myInterface.m_isReady = !GameManager.Instance.IsInCombat;
+            m_myInterface.m_isReady = m_portalMainObj.activeInHierarchy;
     }
 
     private void OnTriggerExit(Collider other)
