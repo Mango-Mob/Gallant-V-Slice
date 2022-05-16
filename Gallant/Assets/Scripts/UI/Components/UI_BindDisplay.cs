@@ -41,6 +41,7 @@ public class UI_BindDisplay : UI_Element
         else
         {
             sprite = InputManager.Instance.GetBindImage(m_bindKey, false);
+
         }
 
         m_button.sprite = sprite;

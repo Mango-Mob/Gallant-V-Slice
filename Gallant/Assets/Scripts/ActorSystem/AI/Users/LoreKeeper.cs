@@ -46,6 +46,7 @@ namespace ActorSystem.AI.Users
             m_gamepadInput = m_myBrain.m_ui.GetElement<UI_Image>("Gamepad");
 
             m_myBrain.m_ui.GetElement<UI_Bar>("Health").gameObject.SetActive(false);
+            
         }
 
         protected override void Update()
@@ -55,7 +56,6 @@ namespace ActorSystem.AI.Users
             GetComponent<Collider>().enabled = isVisible;
             m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
-
             if (m_showUI)
             {
                 UpdateDisplay();

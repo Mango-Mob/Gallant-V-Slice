@@ -10,6 +10,8 @@ public class RewardManager : Singleton<RewardManager>
     public static bool giveRewardUponLoad = false;
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
+    
+
     public GameObject m_window;
     public InfoDisplay[] m_rewardSlots;
 
@@ -25,15 +27,14 @@ public class RewardManager : Singleton<RewardManager>
     private Image m_pressDurationImage;
 
     public List<ItemData> m_items = new List<ItemData>();
+    public ItemData m_forgeItem;
+    public ItemData m_orbItem;
+    public List<AbilityData> m_abilityBooks = new List<AbilityData>();
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
 
     public InfoDisplay m_leftHand;
     public InfoDisplay m_rightHand;
-
-    private const float probFirstWeapon = 1.0f;
-    private const float probSecondWeapon = 0.6666f;
-    private const float probThirdWeapon = 0.05f;
 
     public Player_Controller m_player;
     public float m_pressDuration = 1.0f;
@@ -44,23 +45,31 @@ public class RewardManager : Singleton<RewardManager>
     private int m_hover;
     private int m_select = -1;
     private float m_timer = 0.0f;
+    private SoloAudioAgent m_audio;
 
     private UnityAction<int> m_onResult;
-
+    public bool IsVisible { get { return m_window.activeInHierarchy; } }
     public enum RewardType
     {
         STANDARD,   //One weapon garenteed
         GENERAL,    //Completely random
         WEAPONS,    //Three weapons garenteeds
         RUNE,       //No Weapon garenteed
+        BOOK,       //Books only
     }
 
+    public enum Utility
+    {
+        BOOK,
+        FORGE,
+        ORB,
+    }
     protected void Start()
     {
         m_pressDurationImage = m_gamePadButton.GetComponent<Image>();
         m_pressDurationImage.fillAmount = 0.0f;
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
-
+        m_audio = GetComponent<SoloAudioAgent>();
         if (giveRewardUponLoad)
         {
             Show(Mathf.FloorToInt(GameManager.currentLevel));
@@ -168,6 +177,7 @@ public class RewardManager : Singleton<RewardManager>
 
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
+        m_audio.Play();
         m_window.SetActive(true);
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
@@ -192,7 +202,7 @@ public class RewardManager : Singleton<RewardManager>
                         }
                         else
                         {
-                            rewards.Add(GenerateItem(rewards));
+                            rewards.Add(GenerateUtility(rewards, level));
                         }
                     }
                     break;
@@ -206,7 +216,7 @@ public class RewardManager : Singleton<RewardManager>
                         }
                         else
                         {
-                            rewards.Add(GenerateItem(rewards));
+                            rewards.Add(GenerateUtility(rewards, level));
                         }
                     }
                     break;
@@ -224,6 +234,13 @@ public class RewardManager : Singleton<RewardManager>
                         rewards.Add(GenerateItem(rewards));
                     }
                     break;
+                case RewardType.BOOK:
+                    //Only Abilities
+                    for (int i = 0; i < 3; i++)
+                    {
+                        rewards.Add(GenerateBook(rewards));
+                    }
+                    break;
                 default:
                     break;
             }
@@ -237,6 +254,10 @@ public class RewardManager : Singleton<RewardManager>
                 if (rewards[i].GetType() == typeof(WeaponData))
                 {
                     m_rewardSlots[i].LoadWeapon(rewards[i] as WeaponData);
+                }
+                else if (rewards[i].GetType() == typeof(AbilityData))
+                {
+                    m_rewardSlots[i].LoadAbility(rewards[i] as AbilityData);
                 }
                 else
                 {
@@ -266,15 +287,91 @@ public class RewardManager : Singleton<RewardManager>
         return weapon;
     }
 
-    public ItemData GenerateItem(List<ScriptableObject> currentList)
+    public ScriptableObject GenerateUtility(List<ScriptableObject> currentList, int level, float weaponWeight = 50f, float spellWeight = 50f)
+    {
+        float potent = m_player.playerResources.GetPotentialHealth();
+        float max = m_player.playerResources.m_maxHealth + 5 * m_player.playerResources.m_adrenalineHeal;
+        if (!IsUniqueItem(currentList, m_orbItem))
+            potent = max;
+
+        float weaponCurr = m_player.playerAttack.GetAverageLevel();
+        float weaponMax = GameManager.currentLevel + 2;
+        if (!IsUniqueItem(currentList, m_forgeItem))
+            weaponCurr = weaponMax;
+
+        //Orb, forge, weapon, spell
+        (string, float)[] weights = { ("orb", 100 * (1.0f - potent / max)), ("forge", 100 * (1.0f - weaponCurr / weaponMax)), ("weapon", weaponWeight), ("spell", spellWeight) };
+        System.Array.Sort(weights, (a, b) => { return (int)((100 * b.Item2) - (a.Item2 * 100)); });
+
+        float weightTotal = 0;
+        foreach (var option in weights)
+            weightTotal += option.Item2;
+
+        float select = Random.Range(1, weightTotal + 1);
+        string selectName = "";
+        for (int i = 0; i < weights.Length; i++)
+        {
+            select -= weights[i].Item2;
+            if(select <= 0)
+            {
+                selectName = weights[i].Item1;
+                break;
+            }  
+        }
+
+        switch (selectName)
+        {
+            case "orb":
+                return m_orbItem;
+            case "forge":
+                return m_forgeItem;
+            case "weapon":
+                return GenerateWeapon(currentList, level);
+            case "spell":
+                return GenerateBook(currentList);
+            default:
+                break;
+        }
+        return null;
+    }
+
+    public AbilityData GenerateBook(List<ScriptableObject> currentList)
     {
         int select;
         do
         {
-            select = Random.Range(0, m_items.Count);
-        } while (!IsUniqueItem(currentList, m_items[select]));
+            select = Random.Range(0, m_abilityBooks.Count);
+        } while (!IsUniqueAbility(currentList, m_abilityBooks[select]));
 
-        return m_items[select];
+        return m_abilityBooks[select];
+    }
+
+    public ItemData GenerateItem(List<ScriptableObject> currentList, bool runesAllowed = true)
+    {
+        List<ItemData> options = new List<ItemData>(m_items);
+        options.Add(m_orbItem);
+        options.Add(m_forgeItem);
+        for (int i = options.Count - 1; i >= 0; i--)
+        {
+            if (!runesAllowed && options[i].itemType == ItemData.UtilityType.RUNE)
+                options.RemoveAt(i);
+        }
+
+        int select;
+
+        if (runesAllowed)
+        {
+            do
+            {
+                select = Random.Range(0, options.Count);
+            } while (!IsUniqueItem(currentList, options[select]));
+        }
+        else
+        {
+            select = Random.Range(0, options.Count);
+        }
+
+        return options[select];
     }
 
     public void Select(int item)
@@ -288,7 +385,6 @@ public class RewardManager : Singleton<RewardManager>
             }
         }
     }
-
     public void Confirm()
     {
         if(m_onResult != null)
@@ -343,4 +439,22 @@ public class RewardManager : Singleton<RewardManager>
         }
         return true;
     }
+
+
+    private bool IsUniqueAbility(List<ScriptableObject> list, AbilityData data)
+    {
+        foreach (var reward in list)
+        {
+            AbilityData abilityReward = reward as AbilityData;
+            if (abilityReward != null)
+            {
+                if (abilityReward.abilityPower == data.abilityPower)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }

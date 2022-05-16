@@ -1,0 +1,420 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9859c2ca88cf6842932e49cbef5a52e, type: 3}
+  m_Name: Castle
+  m_EditorClassIdentifier: 
+  m_width: 1250
+  m_height: 1450
+  m_spawnableWaves:
+  - {fileID: 11400000, guid: 7c0805dd5183d4840ae12478a449d150, type: 2}
+  - {fileID: 11400000, guid: 4cbe53fbfde40dd47b4a6e74c85fec08, type: 2}
+  - {fileID: 11400000, guid: 1a9620c296636624cb5ad93ada0e780a, type: 2}
+  - {fileID: 11400000, guid: e20c32faa91274f45b3bdaf023087b07, type: 2}
+  - {fileID: 11400000, guid: f68a24a63a98e964caf5030556ff50c0, type: 2}
+  - {fileID: 11400000, guid: 5098e052bbb9bb94fb75ca15e4762987, type: 2}
+  - {fileID: 11400000, guid: 73f9febc52b601e47bf65126dfb947de, type: 2}
+  - {fileID: 11400000, guid: 3478e03a86b8952498321403994a0f0b, type: 2}
+  - {fileID: 11400000, guid: 9e890f68288750c4989af1271d804d17, type: 2}
+  - {fileID: 11400000, guid: a98fdcc61eeaf464dbe5a1236646a6ba, type: 2}
+  - {fileID: 11400000, guid: 3031f913f1c2bae4a9403a4481503f67, type: 2}
+  - {fileID: 11400000, guid: 84a10383c233a934da853d2cfd9771dd, type: 2}
+  - {fileID: 11400000, guid: 01e2f370c424758418da5fa59ae878a0, type: 2}
+  - {fileID: 11400000, guid: 84ad4e8940fd6a24f8d66bd3d8f43c12, type: 2}
+  - {fileID: 11400000, guid: b3e452858382e534ca812c97ea3179b0, type: 2}
+  - {fileID: 11400000, guid: 1f55b7d03e03e03459b38fba8d571f20, type: 2}
+  - {fileID: 11400000, guid: 99699b6e5f9f3b64e9a1e2bd67485ea8, type: 2}
+  - {fileID: 11400000, guid: 3b88762fe768b2a4d94bb369b1c28294, type: 2}
+  m_portalColor: {r: 0, g: 0.52063495, b: 0.8392157, a: 1}
+  m_root: {fileID: 11400000, guid: 1b1bb8710bac4a1479bbcddd3b8f82a2, type: 2}
+  m_levelFloors:
+  - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 425
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 3
+    potentialScenes:
+    - {fileID: 11400000, guid: 4181455c97f8c3a4387ae6ac41be9de2, type: 2}
+    - {fileID: 11400000, guid: 59fcd275acf08f14f9d7a7ace77a0f53, type: 2}
+    probability:
+    - 0.5
+    - 0.5
+  - type: 1
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 450
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 2
+    potentialScenes:
+    - {fileID: 11400000, guid: c29887de1a56e634bb5a086be43e525d, type: 2}
+    - {fileID: 11400000, guid: e2fde71cd60610e468c64a0ab388523e, type: 2}
+    - {fileID: 11400000, guid: 7e18d24ae25e5464086b38a6ded958c9, type: 2}
+    probability:
+    - 0.8
+    - 0.2
+    - 0
+  - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 450
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: 4181455c97f8c3a4387ae6ac41be9de2, type: 2}
+    - {fileID: 11400000, guid: 59fcd275acf08f14f9d7a7ace77a0f53, type: 2}
+    probability:
+    - 0.5
+    - 0.5
+  - type: 0
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 0
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: a0ced3e35b85dd64e9173be0b0b138dc, type: 2}
+    probability:
+    - 0.8
+    - 0.2
+  - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 525
+    minDiffCost: 0
+    minWaves: 3
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: 4181455c97f8c3a4387ae6ac41be9de2, type: 2}
+    - {fileID: 11400000, guid: 59fcd275acf08f14f9d7a7ace77a0f53, type: 2}
+    probability:
+    - 0.5
+    - 0.5
+  - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 600
+    minDiffCost: 0
+    minWaves: 3
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: 4181455c97f8c3a4387ae6ac41be9de2, type: 2}
+    - {fileID: 11400000, guid: 59fcd275acf08f14f9d7a7ace77a0f53, type: 2}
+    probability:
+    - 0.5
+    - 0.5
+  - type: 1
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 750
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 2
+    potentialScenes:
+    - {fileID: 11400000, guid: c29887de1a56e634bb5a086be43e525d, type: 2}
+    - {fileID: 11400000, guid: e2fde71cd60610e468c64a0ab388523e, type: 2}
+    - {fileID: 11400000, guid: 7e18d24ae25e5464086b38a6ded958c9, type: 2}
+    probability:
+    - 0.8
+    - 0.2
+    - 0
+  - type: 2
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 800
+    minDiffCost: 0
+    minWaves: 3
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: 4181455c97f8c3a4387ae6ac41be9de2, type: 2}
+    - {fileID: 11400000, guid: 59fcd275acf08f14f9d7a7ace77a0f53, type: 2}
+    probability:
+    - 0.5
+    - 0.5
+  - type: 0
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 0
+    minDiffCost: 0
+    minWaves: 2
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: a0ced3e35b85dd64e9173be0b0b138dc, type: 2}
+    probability: []
+  - type: 3
+    difficultyCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    difficultyBase: 450
+    minDiffCost: 0
+    minWaves: 3
+    maxWaves: 4
+    potentialScenes:
+    - {fileID: 11400000, guid: 415baab75f027de478d8d7f1d4896af1, type: 2}
+    probability: []
+  m_minRoomCount: 1
+  m_maxRoomCount: 7
+  m_probOfGrowth:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.8
+      inSlope: -2.2111359
+      outSlope: -2.2111359
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.10896505
+    - serializedVersion: 3
+      time: 0.99998057
+      value: -0.0000017285347
+      inSlope: -2.042061
+      outSlope: -2.042061
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.04619998
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

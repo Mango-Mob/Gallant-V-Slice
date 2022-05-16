@@ -1,4 +1,5 @@
 ﻿using ActorSystem.AI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -297,6 +298,15 @@ public class Player_Attack : MonoBehaviour
                 m_rightWeapon.SetTrailActive(false);
         }
     }
+
+    public float GetAverageLevel()
+    {
+        float left = (m_leftWeaponData != null) ? m_leftWeaponData.m_level : 0;
+        float right = (m_rightWeaponData != null) ? m_rightWeaponData.m_level : 0;
+
+        return (left + right) / 2f;
+    }
+
     public bool IsDuelWielding()
     {
         if (m_leftWeaponData != null && m_rightWeaponData != null)
@@ -785,6 +795,10 @@ public class Player_Attack : MonoBehaviour
         {
             m_leftWeapon.m_weaponObject.transform.localPosition = Vector3.zero;
             m_leftWeapon.m_weaponObject.transform.localRotation = Quaternion.identity;
+            if (_active)
+            {
+                m_leftWeapon.m_weaponObject.transform.localRotation= Quaternion.Euler(m_leftWeapon.m_weaponData.m_backHolsterRotationOffset);
+            }
         }
     }
 

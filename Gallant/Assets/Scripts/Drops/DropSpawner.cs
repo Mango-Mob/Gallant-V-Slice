@@ -40,7 +40,7 @@ public class DropSpawner : MonoBehaviour
                 AbilityData abilityData = droppedSpellbook.GetComponentInChildren<DroppedWeapon>().m_abilityData;
                 InfoDisplay display3 = droppedSpellbook.GetComponentInChildren<InfoDisplay>();
 
-                display3.m_abilityUpgradeData = abilityData;
+                display3.m_abilityData = abilityData;
                 break;
             default:
                 break;

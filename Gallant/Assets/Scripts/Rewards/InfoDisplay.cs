@@ -13,11 +13,11 @@ public class InfoDisplay : MonoBehaviour
     public bool IsAWeapon = true;
     public bool IsEquip = false;
     public bool IsLeft = false;
-    public bool IsUpgrade = false;
+    public bool IsBook = false;
 
     public WeaponData m_weaponData;
     public ItemData m_itemData;
-    public AbilityData m_abilityUpgradeData;
+    public AbilityData m_abilityData;
 
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
@@ -31,7 +31,7 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image[] m_backgrounds;
     [SerializeField] private Image m_foreground;
     [SerializeField] private Text m_title;
-    [SerializeField] private Text m_level;
+    [SerializeField] private TMP_Text m_level;
     [SerializeField] private TagDetails[] m_allTags;
 
     [Header("Weapon Information")]
@@ -82,13 +82,6 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image[] m_upgradeAbilityStars;
     [SerializeField] private TMP_Text m_upgradeAbilityDescription;
 
-    [Header("Weapon Upgrade Information")]
-    [SerializeField] private GameObject m_upgradeWeaponDetailsLoc;
-    [SerializeField] private Image m_upgradeWeaponImageLoc;
-
-    [Header("Weapon Upgrade Information")]
-    // Something will be here in the future.
-
     private Player_Controller playerController;
     private Animator m_animator;
 
@@ -101,9 +94,9 @@ public class InfoDisplay : MonoBehaviour
         if (m_rightHand != null)
             m_rightHand.SetActive(IsADrop);
 
-        m_itemDetailsLoc.SetActive(!IsAWeapon);
-        m_weaponDetailsLoc.SetActive(IsAWeapon);
         m_animator = GetComponent<Animator>();
+
+        playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
 
         if (IsAWeapon && m_weaponData != null)
         {
@@ -113,16 +106,16 @@ public class InfoDisplay : MonoBehaviour
         {
             LoadItem(m_itemData);
         }
-        else if (IsUpgrade)
+        else if (IsBook)
         {
-            LoadUpgrade(m_abilityUpgradeData);
+            LoadAbility(m_abilityData);
         }
     }
 
     private void Update()
     {
-        m_itemImageLoc.transform.parent.gameObject.SetActive(!IsAWeapon && !IsUpgrade);
-        m_weaponImageLoc.transform.parent.gameObject.SetActive(IsAWeapon);
+        //m_itemImageLoc.transform.parent.gameObject.SetActive(!IsAWeapon && !IsBook);
+        //m_weaponImageLoc.transform.parent.gameObject.SetActive(IsAWeapon);
 
         if(IsADrop)
         {
@@ -143,7 +136,7 @@ public class InfoDisplay : MonoBehaviour
 
             m_animator?.SetBool("IsDrop", IsADrop || IsEquip);
 
-            if (!IsUpgrade)
+            if(m_weaponData)
             {
                 m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
                 m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
@@ -152,9 +145,8 @@ public class InfoDisplay : MonoBehaviour
             else
             {
                 m_mainHand?.SetActive(false);
-                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeaponData != null);
-                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeaponData != null);
-
+                m_leftHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
+                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
             }
         }
 
@@ -180,6 +172,7 @@ public class InfoDisplay : MonoBehaviour
             }
         }
     }
+
     public void LoadWeapon(WeaponData data)
     {
         IsAWeapon = true;
@@ -201,10 +194,10 @@ public class InfoDisplay : MonoBehaviour
         m_itemDetailsLoc.SetActive(false);
         m_weaponDetailsLoc.SetActive(true);
         m_upgradeAbilityDetailsLoc.SetActive(false);
-        m_upgradeWeaponDetailsLoc.SetActive(false);
 
         m_title.text = data.weaponName;
-        m_level.text = "Level: " + (data.m_level + 1).ToString();
+        m_level.gameObject.SetActive(true);
+        m_level.SetText("Level: " + (data.m_level + 1).ToString());
         m_weaponImageLoc.sprite = data.weaponIcon;
         m_altTitle.SetText(data.m_altAttackName);
         m_altDescription.SetText(WeaponData.EvaluateDescription(data));
@@ -281,6 +274,35 @@ public class InfoDisplay : MonoBehaviour
         }
     }
 
+    public void LoadAbility(AbilityData data)
+    {
+        if (data != null)
+        {
+            IsAWeapon = false;
+            IsBook = true;
+
+            m_itemDetailsLoc.SetActive(false);
+            m_weaponDetailsLoc.SetActive(false);
+            m_upgradeAbilityDetailsLoc.SetActive(data != null);
+
+            m_level.gameObject.SetActive(true);
+            m_level.SetText("Replace or Upgrade a spell");
+            m_abilityData = data;
+            m_title.text = m_abilityData.abilityName;
+
+            m_passiveLocation.SetActive(false);
+            m_upgradeAbilityImageLoc.sprite = data.abilityIcon;
+            m_upgradeAbilityDescription.SetText(AbilityData.EvaluateDescription(data));
+
+            for (int i = 0; i < m_abilityStars.Length; i++)
+            {
+                m_abilityStars[i].gameObject.SetActive(i < data.starPowerLevel);
+            }
+
+            m_animator?.SetBool("IsBack", false);
+        }
+    }
+
     public void LoadItem(ItemData data)
     {
         IsAWeapon = false;
@@ -297,55 +319,28 @@ public class InfoDisplay : MonoBehaviour
 
         m_title.text = data.itemName;
 
-        m_itemDetailsLoc.SetActive(!IsAWeapon);
-        m_weaponDetailsLoc.SetActive(IsAWeapon);
+        m_itemDetailsLoc.SetActive(true);
+        m_weaponDetailsLoc.SetActive(false);
+        m_upgradeAbilityDetailsLoc.SetActive(false);
 
-        playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
+        m_level.gameObject.SetActive(true);
 
-        m_level.text = "Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString();
+        if (data.itemType == ItemData.UtilityType.RUNE)
+            m_level.SetText("Collected: " + (playerController.playerStats.GetEffectQuantity(data.itemEffect)).ToString());
+        else
+            m_level.gameObject.SetActive(false);
+
         m_itemImageLoc.sprite = data.itemIcon;
         m_itemDescription.text = data.description;
 
         m_passiveLocation.SetActive(false);
-    }
-    public void LoadUpgrade(AbilityData data = null) // If null, is forge upgrade
-    {
-        IsAWeapon = false;
-        IsUpgrade = true;
-
-        m_itemDetailsLoc.SetActive(false);
-        m_weaponDetailsLoc.SetActive(false);
-        m_upgradeAbilityDetailsLoc.SetActive(data != null);
-        m_upgradeWeaponDetailsLoc.SetActive(data == null);
-
-        if (data != null)
-        {
-            m_abilityUpgradeData = data;
-            m_title.text = m_abilityUpgradeData.abilityName;
-
-            m_upgradeAbilityImageLoc.sprite = data.abilityIcon;
-            m_upgradeAbilityDescription.SetText(AbilityData.EvaluateDescription(data));
-
-            for (int i = 0; i < m_abilityStars.Length; i++)
-            {
-                m_abilityStars[i].gameObject.SetActive(i < data.starPowerLevel);
-            }
-        }
-        else
-        {
-            m_title.text = "Temporal Forge";
-        }
-
-        m_animator?.SetBool("IsBack", false);
 
         foreach (var btn in m_flipBtns)
         {
             btn.image.enabled = false;
         }
 
-        playerController = GameManager.Instance.m_player.GetComponentInChildren<Player_Controller>();
         m_passiveLocation.SetActive(false);
-        m_level.gameObject.SetActive(false);
     }
 
     public void ResetPickupTimer()
@@ -462,9 +457,18 @@ public class InfoDisplay : MonoBehaviour
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
         }
+        else if(IsBook)
+        {
+            Vector3 pos = UnityEngine.Random.insideUnitSphere;
+            pos.y = 0;
+            DroppedWeapon.CreateSpellUpgrade(playerController.transform.position + pos.normalized * 0.5f, m_abilityData);
+
+            if (playerController != null)
+                AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
+        }
         else
         {
-            playerController?.playerStats.AddEffect(m_itemData.itemEffect);
+            m_itemData.Apply();
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);

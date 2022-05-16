@@ -14,7 +14,7 @@ public class StunStatus : StatusEffect
         if (_actor.m_myBrain.m_animator)
             _actor.m_myBrain.m_animator.SetPause(true);
 
-            
+        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _actor.m_selfTargetTransform);
         _actor.m_myBrain.IsStunned = true;
     }
 
@@ -29,8 +29,8 @@ public class StunStatus : StatusEffect
         {
             _actor.m_myBrain.m_animator.SetPause(false);
             _actor.m_myBrain.m_animator.Shake(0.0f);
+            m_vfxInWorld.GetComponent<VFXTimerScript>().Finish();
         }
-            
         _actor.m_myBrain.IsStunned = false;
     }
 

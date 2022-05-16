@@ -275,7 +275,6 @@ GameObject:
   - component: {fileID: 8554138189679668020}
   - component: {fileID: 4168496659742833357}
   - component: {fileID: 2168125319478546048}
-  - component: {fileID: 6551319470022174234}
   m_Layer: 0
   m_Name: Distortion
   m_TagString: Untagged
@@ -346,20 +345,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6551319470022174234
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817034453582057590}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2510920313613189907
 GameObject:
   m_ObjectHideFlags: 0
@@ -4358,6 +4343,7 @@ GameObject:
   - component: {fileID: 6750826393975308058}
   - component: {fileID: 992397362908822818}
   - component: {fileID: 1642544197759851539}
+  - component: {fileID: 2050138616367272956}
   m_Layer: 0
   m_Name: LevelPortal
   m_TagString: Untagged
@@ -4397,13 +4383,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_portalDestination: SwampBegin
-  m_prefRequire: 
+  require: 0
   gate: {fileID: 8315839553802198056}
   portalColor: {r: 0.03529412, g: 0.7490196, b: 0, a: 1}
   icon: {fileID: 8077051264095048086}
   portalMain: {fileID: 6481445027011735995}
   portalFlair: {fileID: 677086855854163211}
   portalBurst: {fileID: 5277707458902906987}
+  m_audio: {fileID: 2050138616367272956}
 --- !u!65 &992397362908822818
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4447,6 +4434,24 @@ MonoBehaviour:
   m_isReady: 0
   m_holdDuration: 1
   display: {fileID: 5645208275051125310}
+--- !u!114 &2050138616367272956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4738017536935927108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 024ecd21f977d0b4cbfd71ce0c41f316, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  mainClip: {fileID: 8300000, guid: 25a2eb85660c0d04594666721c8f8e4c, type: 3}
+  channel: 1
+  isPlayOnAwake: 0
+  isLooping: 0
 --- !u!1 &6281165426325963334
 GameObject:
   m_ObjectHideFlags: 0
@@ -8842,12 +8847,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 48fdd9b55bb329e48b485d14a98be0fe, type: 3}
---- !u!224 &7108950298987127429 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 628778877357959081, guid: 48fdd9b55bb329e48b485d14a98be0fe,
-    type: 3}
-  m_PrefabInstance: {fileID: 7643118394932741420}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5645208275051125310 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2613777369646554898, guid: 48fdd9b55bb329e48b485d14a98be0fe,
@@ -8860,3 +8859,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d718fb9779bf324438c255e619a48949, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &7108950298987127429 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 628778877357959081, guid: 48fdd9b55bb329e48b485d14a98be0fe,
+    type: 3}
+  m_PrefabInstance: {fileID: 7643118394932741420}
+  m_PrefabAsset: {fileID: 0}

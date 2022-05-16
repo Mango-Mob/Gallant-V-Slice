@@ -272,7 +272,7 @@ namespace ActorSystem.AI.Components
                 transform.forward = direction.normalized;
 
                 if(m_arms != null)
-                    this.m_arms.m_brainLag = Mathf.Max(0.5f, m_arms.m_brainLag);
+                    this.m_arms.SetBrainLag(0.5f, true);
 
                 if(m_target == null)
                 {
@@ -321,8 +321,7 @@ namespace ActorSystem.AI.Components
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
 
-                if (playAudio)
-                    m_audioAgent?.PlayDeath();
+                m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
             {
@@ -335,7 +334,10 @@ namespace ActorSystem.AI.Components
         public bool HandleImpactDamage(float damage, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
         {
             if (IsDead)
+            {
+                m_ragDoll.m_mainCollider.GetComponent<Rigidbody>().velocity = transform.TransformVector(direction * damage);
                 return false;
+            }
 
             if(!m_canStagger)
             {

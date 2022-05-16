@@ -23,12 +23,28 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
         return m_seenDialogList.Contains(seen);
     }
 
-    public void Start()
+    protected void Start()
     {
-        m_visitNPC.Add("Rowan", PlayerPrefs.GetInt("RowanVisits", 0));
+        m_visitNPC.Add("Rowan", GameManager.m_saveInfo.m_rowanVisits);
         m_deadNPCs.Add("Rowan", false);
+
+        m_visitNPC.Add("Perception", GameManager.m_saveInfo.m_perceptionVisits);
+        m_deadNPCs.Add("Perception", false);
     }
 
+    public void UpdateVisit(string name, int value)
+    {
+        m_visitNPC[name] = value;
+        switch (name)
+        {
+            case "Rowan":
+                GameManager.m_saveInfo.m_rowanVisits = value;
+                return;
+            case "Perception":
+                GameManager.m_saveInfo.m_perceptionVisits = value;
+                return;
+        }
+    }
     public void Refresh()
     {
         m_seenDialogList.Clear();

@@ -16,8 +16,6 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public Vector2 iconNoise;
 
     public float cameraSpeed = 10f;
-    public float width;
-    public float height;
 
     public LevelData m_generatedLevel { get; private set; } = null;
 
@@ -32,10 +30,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public Image m_playerIcon;
 
+    private SoloAudioAgent m_audio;
     private bool m_canQuit = true;
     protected override void Awake()
     {
         base.Awake();
+        m_audio = GetComponent<SoloAudioAgent>();
         m_myCamera = GetComponentInChildren<Camera>();
         m_myCamera.gameObject.SetActive(false);
         m_myCanvas = GetComponent<Canvas>();
@@ -91,10 +91,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                 scrollDelta = InputManager.Instance.GetMouseScrollDelta() * 5f;
             }
            
-            if (scrollDelta != 0)
+            if (scrollDelta != 0 && m_generatedLevel != null)
             {
                 float y = m_myCamera.transform.localPosition.y;
-                y = Mathf.Clamp(y + scrollDelta * cameraSpeed * Time.deltaTime, 0, height);
+                y = Mathf.Clamp(y + scrollDelta * cameraSpeed * Time.deltaTime, 0, m_generatedLevel.m_height);
                 m_myCamera.transform.localPosition = new Vector3(0, y, -10);
             }
         }
@@ -119,7 +119,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             else
                 m_myCamera.transform.localPosition = new Vector3(0, 0, -10);
         }
-        HUDManager.Instance.gameObject?.SetActive(!m_myCamera.gameObject.activeInHierarchy);
+        if (HUDManager.Instance != null)
+            HUDManager.Instance.gameObject?.SetActive(!m_myCamera.gameObject.activeInHierarchy);
 
         if(GameManager.Instance.m_player != null)
             GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledInput = status;
@@ -132,11 +133,13 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void MovePlayerIconTo(Vector3 position, System.Action loadToScene)
     {
+        m_audio.Play();
         StartCoroutine(MovePlayerIcon(position, loadToScene));
     }
 
     private IEnumerator MovePlayerIcon(Vector3 position, System.Action loadToScene)
     {
+        m_canQuit = false;
         Vector3 start = m_playerIcon.transform.position;
         float speed = 15f;
         float distance = Vector3.Distance(start, position);
@@ -148,6 +151,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             m_playerIcon.transform.position = Vector3.Lerp(start, position, t);
             yield return new WaitForEndOfFrame();
         }
+        m_canQuit = true;
         loadToScene.Invoke();
         yield return null;
     }
@@ -188,7 +192,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_generatedLevel = data;
 
         NarrativeManager.Instance.Refresh();
-        float heightStep = height / (data.m_levelFloors.Count);
+        float heightStep = m_generatedLevel.m_height / (data.m_levelFloors.Count);
         index = 0;
 
         if (m_rootNode == null)
@@ -221,12 +225,12 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                 int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_minRoomCount);
                 nodesToCreate = Random.Range(min, max + 1);
             }
-            float widthStep = width / nodesToCreate;
+            float widthStep = m_generatedLevel.m_width / nodesToCreate;
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
                 newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].SelectScene(), m_mapObj.transform);
-                float xPos = widthStep * (j+0.5f) - (width/2) + Random.Range(-iconNoise.x, iconNoise.x);
+                float xPos = widthStep * (j+0.5f) - (m_generatedLevel.m_width / 2) + Random.Range(-iconNoise.x, iconNoise.x);
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
                 newNavNode.m_myIndex = m_activeNodes.Count;
@@ -247,7 +251,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
         m_endNode.m_myDepth = data.m_levelFloors.Count - 1;
-        m_endNode.transform.localPosition = new Vector3(0, height, 0);
+        m_endNode.transform.localPosition = new Vector3(0, m_generatedLevel.m_height, 0);
         
         m_activeNodes.Add(m_endNode);
         foreach (var prev in prevNodes)
@@ -277,7 +281,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
         m_rootNode = m_activeNodes[0];
         m_endNode = m_activeNodes[m_activeNodes.Count - 1];
-        m_endNode.transform.localPosition = new Vector3(0, height, 0);
+        m_endNode.transform.localPosition = new Vector3(0, m_generatedLevel.m_height, 0);
     }
 
     public void Reposition()
@@ -369,7 +373,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetEnd(SceneData data)
     {
         GameObject nodeObj = NavigationNode.CreateNode(data, m_mapObj.transform);
-        nodeObj.transform.localPosition = new Vector3(0, height, 0);
+        nodeObj.transform.localPosition = new Vector3(0, m_generatedLevel.m_height, 0);
         NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
         nodeNav.m_myIndex = m_activeNodes.Count;
 
@@ -408,6 +412,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     }
     public void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube((transform as RectTransform).position + new Vector3(0, height / 2f, 0), new Vector3(width * transform.localScale.x, height, 0));
+        if(m_generatedLevel != null)
+            Gizmos.DrawWireCube((transform as RectTransform).position + new Vector3(0, m_generatedLevel.m_height / 2f, 0), new Vector3(m_generatedLevel.m_width * transform.localScale.x, m_generatedLevel.m_height, 0));
     }
 }

@@ -12,12 +12,15 @@ namespace ActorSystem.AI.Components.SpawnMethods
         private float m_timer;
         private GameObject m_spawn;
         private Actor m_myActor;
+        private Vector3 m_lastSpawnLoc;
+
         public void Awake()
         {
             m_myActor = GetComponent<Actor>();
         }
         public override void StartSpawn(Vector3 spawnLoc)
         {
+            m_lastSpawnLoc = spawnLoc;
             m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
             m_spawn.transform.localScale = Vector3.one * m_myActor.m_myData.radius;
 
@@ -25,6 +28,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.m_myBrain.m_ragDoll?.DisableRagdoll();
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
+            GetComponent<Collider>().enabled = false;
             //m_spawnning = true;
         }
 
@@ -57,7 +61,13 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.m_myBrain.SetEnabled(true);
             m_myActor.m_myBrain.m_legs.SetTargetLocation(transform.position);
             m_myActor.m_myBrain.m_legs.SetTargetRotation(transform.rotation);
+            GetComponent<Collider>().enabled = true;
             Destroy(m_spawn);
+        }
+
+        public override void Respawn()
+        {
+            StartSpawn(m_lastSpawnLoc);
         }
     }
 }

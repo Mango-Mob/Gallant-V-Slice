@@ -36,15 +36,6 @@ namespace ActorSystem.AI.Users
             }
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            if(NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName])
-            {
-                gameObject.SetActive(false);
-            }
-        }
-
         private void EvaluateDialogOptions(int visits)
         {
             for (int i = m_potentialDialogs.Count - 1; i >= 0; i--)
@@ -66,6 +57,10 @@ namespace ActorSystem.AI.Users
         protected override void Start()
         {
             base.Start();
+            if (NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName])
+            {
+                gameObject.SetActive(false);
+            }
             m_player = GameManager.Instance.m_player;
             visits = NarrativeManager.Instance.m_visitNPC[m_myData.ActorName];
             EvaluateDialogOptions(visits);
@@ -73,6 +68,7 @@ namespace ActorSystem.AI.Users
 
         protected override void Update()
         {
+            m_myBrain.m_myOutline.enabled = m_potentialDialogs.Count > 0;
             m_interactDisplay.m_isReady = m_showUI && !isWaiting && m_potentialDialogs.Count > 0;
             m_myBrain.SetEnabled(!isWaiting);
             base.Update();
@@ -86,7 +82,7 @@ namespace ActorSystem.AI.Users
             if(!hasInteractedWith)
             {
                 hasInteractedWith = true;
-                NarrativeManager.Instance.m_visitNPC[m_myData.ActorName] = visits + 1;
+                NarrativeManager.Instance.UpdateVisit(m_myData.ActorName, visits + 1);
                 PlayerPrefs.SetInt($"{m_myData.ActorName}Visits", visits + 1);
             }
 
@@ -97,12 +93,22 @@ namespace ActorSystem.AI.Users
             DialogManager.Instance.m_onDialogFinish.AddListener(EndTalk);
             DialogManager.Instance.Show();
 
+            DialogManager.Instance.m_interact.Add(new UnityEvent());
+            DialogManager.Instance.m_interact[0].AddListener(Reward);
+            
             NarrativeManager.Instance.AddSeenDialog(m_potentialDialogs[select].dialog);
 
             this.SetTargetOrientaion(GameManager.Instance.m_player.transform.position);
             GetComponentInChildren<Interactable>().m_isReady = false;
 
             m_potentialDialogs.RemoveAt(select);
+        }
+
+        private void Reward()
+        {
+            DialogManager.Instance.Hide();
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.RUNE);
+            DialogManager.Instance.m_interact = null;
         }
 
         public void EndTalk()

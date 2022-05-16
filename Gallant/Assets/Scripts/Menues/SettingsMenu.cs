@@ -49,7 +49,7 @@ public class SettingsMenu : MonoBehaviour
         int selected = 0;
         for (int i = 0; i < m_localResolutions.Length; i++)
         {
-            resOptions.Add($"{m_localResolutions[i].width}x{m_localResolutions[i].height} @ {m_localResolutions[i].refreshRate}Hz");
+            resOptions.Add($"{m_localResolutions[i].width} x {m_localResolutions[i].height} @ {m_localResolutions[i].refreshRate}Hz");
             
             if(m_localResolutions[i].width == ApplicationManager.instance.m_width 
                 && m_localResolutions[i].height == ApplicationManager.instance.m_height

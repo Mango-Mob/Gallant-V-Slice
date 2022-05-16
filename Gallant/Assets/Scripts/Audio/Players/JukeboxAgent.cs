@@ -33,9 +33,8 @@ public class JukeboxAgent : AudioAgent
     protected override void Awake()
     {
         base.Awake();
-        player = new AudioPlayer(gameObject, null);
-        player.SetVolume(AudioManager.Instance.GetVolume(type, this) * localVolume);
-        backPlayer = new AudioPlayer(gameObject, null);
+        player = new AudioPlayer(gameObject, null, AudioManager.Instance.GetVolume(type, this) * localVolume);
+        backPlayer = new AudioPlayer(gameObject, null, 0);
         currentList = new List<AudioClip>();
         foreach (var clip in audioClips)
         {

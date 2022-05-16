@@ -113,7 +113,7 @@ public abstract class WeaponBase : MonoBehaviour
     }
     public virtual string GetWeaponName()
     {
-        if (m_weaponData.overrideAnimation =="")
+        if (m_weaponData.overrideAnimation =="" || m_hand == Hand.LEFT)
             return m_weaponData.weaponType.ToString()[0] + m_weaponData.weaponType.ToString().Substring(1).ToLower();
         else
         {
@@ -121,7 +121,7 @@ public abstract class WeaponBase : MonoBehaviour
         }
     }
 
-    private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders, StatusEffect _status = null)
+    private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders, Hand _usedHand = Hand.NONE, StatusEffect _status = null)
     {
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
@@ -131,7 +131,7 @@ public abstract class WeaponBase : MonoBehaviour
 
             bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (m_hand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (m_hand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
+            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (_usedHand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (_usedHand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
             Actor actor = collider.GetComponentInParent<Actor>();
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
@@ -149,13 +149,13 @@ public abstract class WeaponBase : MonoBehaviour
 
             if (!isRubble)
             {
-                if (m_weaponData.abilityData && (m_hand == Hand.LEFT && m_isAltVFXColored || m_hand == Hand.RIGHT && m_isVFXColored))
+                if (m_weaponData.abilityData && (_usedHand == Hand.LEFT && m_isAltVFXColored || _usedHand == Hand.RIGHT && m_isVFXColored))
                 {
-                    playerController.playerAttack.CreateVFX(collider, _source, m_weaponData.abilityData.droppedEnergyColor, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                    playerController.playerAttack.CreateVFX(collider, _source, m_weaponData.abilityData.droppedEnergyColor, _usedHand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
                 }
                 else
                 {
-                    playerController.playerAttack.CreateVFX(collider, _source, m_hand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
+                    playerController.playerAttack.CreateVFX(collider, _source, _usedHand == Hand.LEFT ? m_overrideAltHitVFXPrefab : m_overrideHitVFXPrefab);
                 }
             }
         }
@@ -170,31 +170,41 @@ public abstract class WeaponBase : MonoBehaviour
      * @author : William de Beer
      * @param : (WeaponData) 
      */
-    protected void MeleeAttack(WeaponData _data, Vector3 _source, StatusEffect _status = null)
+    protected void MeleeAttack(WeaponData _data, Vector3 _source, Hand _overrideHand = Hand.NONE, StatusEffect _status = null)
     {
-        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
-            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
+        Hand currentHand = m_hand;
+        if (_overrideHand != Hand.NONE)
+            currentHand = _overrideHand;
 
-        DamageColliders(_data, _source, colliders, _status);
+        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
+            currentHand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
+
+        DamageColliders(_data, _source, colliders, currentHand, _status);
     }
 
-    protected void LongMeleeAttack(WeaponData _data, Vector3 _source, StatusEffect _status = null)
+    protected void LongMeleeAttack(WeaponData _data, Vector3 _source, Hand _overrideHand = Hand.NONE, StatusEffect _status = null)
     {
-        Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset);
-        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * _data.hitSize,
-            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
+        Hand currentHand = m_hand;
+        if (_overrideHand != Hand.NONE)
+            currentHand = _overrideHand;
+
+        Vector3 capsulePos = Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset);
+        Collider[] colliders = Physics.OverlapCapsule(capsulePos, capsulePos + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitSize : _data.hitSize),
+            1.0f, playerController.playerAttack.m_attackTargets);
 
         
-        DamageColliders(_data, _source, colliders, _status);
+        DamageColliders(_data, _source, colliders, currentHand, _status);
     }
-    protected void GroundSlam(WeaponData _data, Vector3 _source, StatusEffect _status = null)
+    protected void GroundSlam(WeaponData _data, Vector3 _source, Hand _overrideHand = Hand.NONE, StatusEffect _status = null)
     {
-        Debug.Log(m_hand);
+        Hand currentHand = m_hand;
+        if (_overrideHand != Hand.NONE)
+            currentHand = _overrideHand;
 
-        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (m_hand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
-            m_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
+        Collider[] colliders = Physics.OverlapSphere(Vector3.up * playerController.playerAttack.m_swingHeight + transform.position + playerController.playerMovement.playerModel.transform.forward * (currentHand == Hand.LEFT ? _data.altHitCenterOffset : _data.hitCenterOffset),
+            currentHand == Hand.LEFT ? _data.altHitSize : _data.hitSize, playerController.playerAttack.m_attackTargets);
 
-        DamageColliders(_data, _source, colliders, _status);
+        DamageColliders(_data, _source, colliders, currentHand, _status);
     }
 
     protected void BeginBlock()

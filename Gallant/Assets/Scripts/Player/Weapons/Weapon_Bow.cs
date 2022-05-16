@@ -6,7 +6,7 @@ public class Weapon_Bow : WeaponBase
 {
     private bool m_chargingShot = false;
     private float m_charge = 0.0f;
-    private float m_chargeRate = 3.0f;
+    private float m_chargeRate = 0.8f;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
@@ -26,6 +26,8 @@ public class Weapon_Bow : WeaponBase
     new private void Update()
     {
         base.Update();
+
+
         if (m_chargingShot && m_charge < 1.0f)
         {
             m_charge += Time.deltaTime * m_chargeRate * playerController.animator.GetFloat(m_hand == Hand.LEFT ? "LeftAttackSpeed" : "RightAttackSpeed");
@@ -36,32 +38,30 @@ public class Weapon_Bow : WeaponBase
                 playerController.playerAudioAgent.PlayOrbPickup();
             }
         }
+        if (m_chargingShot)
+        {
+            if (!playerController.animator.GetBool("UsingLeft"))
+                m_chargingShot = false;
+            playerController.playerResources.ChangeStamina(-10.0f * Time.deltaTime);
+        }
     }
     public override void WeaponFunctionality()
     {
-        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        m_chargingShot = true;
+        playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
+
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.RIGHT);
     }
     public override void WeaponRelease()
     {
-        playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
 
-        m_chargingShot = false;
-        m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
-        ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.RIGHT, m_charge, true);
-        m_charge = 0.0f;
     }
     public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         m_chargingShot = true;
-
-        Debug.Log("LEFT CHARGE SHOT BOW");
     }
     public override void WeaponAltRelease()
     {
-        Debug.Log("HERE! RIGHT HERE!");
-
         playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
 
         m_chargingShot = false;
