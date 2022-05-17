@@ -232,7 +232,7 @@ public abstract class WeaponBase : MonoBehaviour
     protected GameObject ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
     {
         Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
-        DamageColliders(_data, _pos, colliders);
+        DamageColliders(_data, _pos, colliders, _hand);
 
         GameObject vfx = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         ParticleSystem particleSystem = vfx.GetComponentInChildren<ParticleSystem>();
