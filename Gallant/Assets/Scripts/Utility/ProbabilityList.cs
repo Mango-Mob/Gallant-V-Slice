@@ -8,34 +8,40 @@ using System.Threading.Tasks;
 public class ProbabilityList<T>
 {
     private List<T> m_objects = new List<T>();
-    private List<float> m_probability = new List<float>();
+    private List<float> m_weights = new List<float>();
+    
 
-    public void Add(T toAdd, float prob = -1)
+    private List<(T, int)> m_elements = new List<(T, int)>();
+    private float m_totalWeight = 0f;
+
+    public void Add(T toAdd, int weight)
     {
-        if (prob == -1)
-        {
-            prob = 1f / m_objects.Count;
-        }
-
-        m_objects.Add(toAdd);
-        m_probability.Add(prob);
-        Update();
+        m_elements.Add((toAdd, weight));
+        m_totalWeight += weight;
     }
 
-    private void Update()
+    public void Remove(T toRemove)
     {
-        float size = 0f;
-        foreach (var prob in m_probability)
+        for (int i = m_objects.Count - 1; i >= 0; i--)
         {
-            size += prob;
-        }
-
-        if(size > 1.0f)
-        {
-            for (int i = 0; i < m_probability.Count; i++)
+            if(m_objects[i].Equals(toRemove))
             {
-                m_probability[i] = m_probability[i] / size;
+                RemoveAt(i);
+                return;
             }
         }
+    }
+
+    public void RemoveAt(int indexToRemove)
+    {
+        m_objects.RemoveAt(indexToRemove);
+
+        m_totalWeight -= m_weights[indexToRemove];
+        m_weights.RemoveAt(indexToRemove);
+    }
+
+    public T Get(int index)
+    {
+        return m_objects[index];
     }
 }

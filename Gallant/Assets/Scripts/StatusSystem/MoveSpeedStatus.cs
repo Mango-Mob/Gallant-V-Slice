@@ -25,7 +25,7 @@ public class MoveSpeedStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show vfx
         m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _actor.m_selfTargetTransform);
