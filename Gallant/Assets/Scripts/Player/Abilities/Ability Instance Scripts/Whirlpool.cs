@@ -6,54 +6,22 @@ using UnityEngine.VFX;
 
 public class Whirlpool : MonoBehaviour
 {
-    public AbilityData m_data;
-    private float m_lifeTimer = 0.0f;
     public GameObject VFX;
 
+    private bool m_endPull = false;
     [SerializeField] private float m_spawnSpeed = 4.0f;
-    private int m_spawnState = 0;
-    private float m_scaleLerp = 0.0f;
-    private Vector3 m_targetScale;
+    [SerializeField] private WhirlpoolMove m_whirlpoolMove;
+    public Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_targetScale = VFX.transform.localScale;
         Animator animator = GetComponentInChildren<Animator>();
-        animator.speed =animator.GetCurrentAnimatorClipInfo(0)[0].clip.length / m_data.duration;
+        animator.speed = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length / m_whirlpoolMove.m_data.duration;
     }
     // Update is called once per frame
     void Update()
     {
-        //switch (m_spawnState)
-        //{
-        //    case 0:
-        //        m_scaleLerp += Time.deltaTime * m_spawnSpeed;
-        //        break;
-        //    case 2:
-        //        m_scaleLerp -= Time.deltaTime * m_spawnSpeed;
-        //        break;
-        //    default:
-        //        break;
-        //}
-
-        //VFX.transform.localScale = Vector3.Lerp(Vector3.zero, m_targetScale, m_scaleLerp);
-        //if (Mathf.Abs(m_lifeTimer - m_data.duration) < (1.0f / m_spawnSpeed))
-        //{
-        //    m_spawnState = 2;
-        //}
-        //else if (m_scaleLerp >= 1.0f)
-        //{
-        //    m_spawnState = 1;
-        //}
-
-        m_lifeTimer += Time.deltaTime;
-        if (m_lifeTimer > m_data.duration)
-        {
-            VFX.transform.SetParent(null);
-            VFX.GetComponent<VFXTimerScript>().m_startedTimer = true;
-            Destroy(gameObject);
-        }
     }
     private void FixedUpdate()
     {
@@ -61,6 +29,9 @@ public class Whirlpool : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
+        if (m_endPull)
+            return;
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
             Actor actor = other.GetComponentInParent<Actor>();
@@ -70,7 +41,7 @@ public class Whirlpool : MonoBehaviour
                 direction.y = 0.0f;
                 if (direction.magnitude > 0.5f)
                 {
-                    Vector3 forward = direction.normalized * m_data.effectiveness;
+                    Vector3 forward = direction.normalized * m_whirlpoolMove.m_data.effectiveness;
                     actor.KnockbackActor(Quaternion.Euler(0.0f, 65.0f, 0.0f) * forward);
                 }
             }
@@ -84,6 +55,22 @@ public class Whirlpool : MonoBehaviour
 
     public void EndEvent()
     {
-        Debug.Log("END NADO");
+        m_endPull = true;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3.0f);
+        foreach (var collider in colliders)
+        {
+            Actor actor = collider.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                Vector3 direction = actor.transform.position - transform.position;
+                direction.y = 0.0f;
+                actor.KnockbackActor(direction.normalized * 10.0f);
+            }
+            StatusEffectContainer status = collider.GetComponentInParent<StatusEffectContainer>();
+            if (status != null)
+            {
+
+            }
+        }
     }
 }
