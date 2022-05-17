@@ -78,4 +78,14 @@ public class HUDManager : Singleton<HUDManager>
         }
         return null;
     }
+
+    public UI_DamageDisplay GetDamageDisplay()
+    {
+        foreach (var item in m_UIElements)
+        {
+            if (item.GetType() == typeof(UI_DamageDisplay))
+                return item as UI_DamageDisplay;
+        }
+        return null;
+    }
 }
