@@ -132,6 +132,7 @@ namespace ActorSystem.AI.Components
         public void EndLeap()
         {
             m_currentState = LeapState.Ready;
+            m_agent.Warp(transform.position);
             isLeaping = false;
         }
 
