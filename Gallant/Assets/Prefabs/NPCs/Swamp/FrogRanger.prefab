@@ -2309,6 +2309,36 @@ Transform:
   m_Father: {fileID: 6002174382125585133}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0.0000027695776, y: -0.000008240831, z: 15.000114}
+--- !u!1 &5171863324991788497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5019766693649552102}
+  m_Layer: 0
+  m_Name: HeadTop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5019766693649552102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5171863324991788497}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.064264745, y: 1.213, z: -0.09115571}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7376032258622282365}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5200579485285298882
 GameObject:
   m_ObjectHideFlags: 0
@@ -3257,6 +3287,7 @@ Transform:
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
   - {fileID: 4188663107804338745}
+  - {fileID: 5019766693649552102}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3418,8 +3449,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.720376, y: 1.4500313, z: 1.4291725}
-  m_Center: {x: 0.034998417, y: 0.7128198, z: -0.16561699}
+  m_Size: {x: 1.7203763, y: 2.092971, z: 1.4291725}
+  m_Center: {x: 0.03499839, y: 1.0342904, z: -0.165617}
 --- !u!114 &4699483001829647596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3537,6 +3568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_statusPrefab: {fileID: 873845993956563758, guid: 3ed1cd4414ac9e4479634ab99b646432,
     type: 3}
+  m_headLoc: {fileID: 5019766693649552102}
   IsImmuneToFrost: 0
   IsImmuneToFlame: 0
   IsImmuneToStun: 0
