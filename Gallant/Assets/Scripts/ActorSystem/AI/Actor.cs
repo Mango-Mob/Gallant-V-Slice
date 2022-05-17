@@ -111,7 +111,7 @@ namespace ActorSystem.AI
         public void KnockbackActor(Vector3 force)
         {
             if(m_myBrain.m_legs != null && m_myBrain.m_legs.enabled)
-                m_myBrain.m_legs.KnockBack(force);
+                m_myBrain.m_legs.KnockBack(force, false);
 
             //DealImpactDamage(force.magnitude, 0, force.normalized, CombatSystem.DamageType.True);
         }   

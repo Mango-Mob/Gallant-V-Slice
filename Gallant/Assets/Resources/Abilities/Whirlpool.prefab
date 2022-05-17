@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 453353693226594025}
   - component: {fileID: 9134442685562540134}
   - component: {fileID: 4925509707396294790}
+  - component: {fileID: 4635943932151449410}
   m_Layer: 0
   m_Name: Whirlpool
   m_TagString: Untagged
@@ -78,6 +79,20 @@ MonoBehaviour:
   m_data: {fileID: 0}
   VFX: {fileID: 6949154347940149325}
   m_spawnSpeed: 4
+--- !u!136 &4635943932151449410
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512384177507834667}
+  m_Material: {fileID: 13400000, guid: a72c57f875d1d8443bb7e7379e869005, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6949154347940149325
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +119,7 @@ Transform:
   m_GameObject: {fileID: 6949154347940149325}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.75, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.5, y: 0.05, z: 0.5}
   m_Children:
   - {fileID: 5548773071121568450}
   m_Father: {fileID: 4652110334281179852}
@@ -181,16 +196,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7352470589658564841, guid: 88dc210495e178e4a85ab8780ccde7b9,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7352470589658564841, guid: 88dc210495e178e4a85ab8780ccde7b9,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7352470589658564841, guid: 88dc210495e178e4a85ab8780ccde7b9,
         type: 3}
