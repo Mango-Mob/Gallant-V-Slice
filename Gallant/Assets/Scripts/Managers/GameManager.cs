@@ -46,6 +46,7 @@ public class GameManager : Singleton<GameManager>
         for (int i = 0; i < 31; i++)
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Water"), i);
 
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Attackable"), LayerMask.NameToLayer("Attackable"));
         m_sceneHasTutorial = FindObjectOfType<TutorialManager>() != null;
     }
 
@@ -57,7 +58,7 @@ public class GameManager : Singleton<GameManager>
 
         int gamepadID = InputManager.Instance.GetAnyGamePad();
         
-        if(!m_sceneHasTutorial && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
+        if(!m_sceneHasTutorial && m_player != null && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
         {
             m_deathDelay -= Time.deltaTime;
             if(m_deathDelay <= 0)
