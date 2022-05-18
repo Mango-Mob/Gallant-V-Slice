@@ -304,20 +304,24 @@ namespace ActorSystem.AI.Components
             return Physics.OverlapSphere(transform.position, m_agent.radius, 1 << LayerMask.NameToLayer("Default")).Length > 0;
         }
 
-        public void KnockBack(Vector3 force)
+        public void KnockBack(Vector3 force, bool transformDirection = true)
         {
             if(m_canBeKnocked)
             {
+                Vector3 knockForce = force;
+                if (transformDirection)
+                    knockForce = transform.TransformVector(force);
+
                 SetTargetVelocity(force);
                 if (!m_isKnocked)
                 {
                     m_isKnocked = true;
                     m_body.isKinematic = false;
                     m_agent.updatePosition = false;
-                    m_body.velocity = transform.TransformVector(force);
+                    m_body.velocity = knockForce;
                     return;
                 }
-                m_body.velocity = transform.TransformVector(force);
+                m_body.velocity = knockForce;
             }
         }
 

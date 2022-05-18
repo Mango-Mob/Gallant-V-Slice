@@ -20,7 +20,7 @@ public class Ability_Whirlpool : AbilityBase
     new private void Start()
     {
         base.Start();
-        m_boltPrefab = Resources.Load<GameObject>("Abilities/WhirlpoolProjectile");
+        m_boltPrefab = Resources.Load<GameObject>("Abilities/Whirlpool");
     }
     public override void AbilityFunctionality()
     {
