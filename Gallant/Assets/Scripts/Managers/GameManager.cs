@@ -11,7 +11,8 @@ public class GameManager : Singleton<GameManager>
 {
     public static float currentLevel = 0;
     public static float deltaLevel = 1.25f;
-    
+    public ProbabilityList<LevelData> m_levelTest;
+    public List<LevelData> m_comapare;
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
     public GameObject m_player;
