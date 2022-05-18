@@ -29,7 +29,7 @@ public class WeakenStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Actor _actor, Transform headLoc)
     {
         //m_maxResistance = _actor.m_myData.phyResist;
         m_currResistance = m_maxResistance * m_strength;

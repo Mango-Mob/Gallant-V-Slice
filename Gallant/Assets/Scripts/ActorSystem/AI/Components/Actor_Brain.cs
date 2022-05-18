@@ -56,6 +56,8 @@ namespace ActorSystem.AI.Components
         private Timer m_refreshTimer;
 
         private UI_Bar m_staminaBar;
+        private float m_damageTimer = 0;
+        private float m_damageHold = 0;
 
         public bool m_isDisolving { 
             get {
@@ -104,10 +106,6 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_canBeTarget && m_ui != null && m_myOutline != null)
-            {
-                m_ui.SetEnabled(m_forceShowUI || m_myOutline.enabled);
-            }
         }
 
         public override void SetEnabled(bool status)
@@ -294,6 +292,10 @@ namespace ActorSystem.AI.Components
                     break;
             }
 
+            if (playAudio)
+                HUDManager.Instance.GetDamageDisplay().DisplayDamage(transform, _type, damage);
+
+            m_ui?.Show();
             //External
             m_refreshTimer?.Start(5.0f);
 
