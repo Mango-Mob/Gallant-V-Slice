@@ -42,6 +42,9 @@ namespace ActorSystem.AI.Components
         protected override void Update()
         {
             base.Update();
+            if (!m_agent.isOnNavMesh)
+                return;
+
             m_agent.isStopped = true;
             m_animator.SetInteger("LeapingPart", (int)m_currentState);
 
