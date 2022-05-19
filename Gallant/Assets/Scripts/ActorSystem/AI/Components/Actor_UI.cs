@@ -15,11 +15,14 @@ namespace ActorSystem.AI.Components
     {
         protected UI_Element[] m_UIElements;
         private Canvas m_myCanvas;
-
+        private CanvasGroup m_myGroup;
+        private Animator m_animator;
         public void Awake()
         {
             m_UIElements = GetComponentsInChildren<UI_Element>();
             m_myCanvas = GetComponent<Canvas>();
+            m_animator = GetComponentInChildren<Animator>();
+            m_myGroup = GetComponentInChildren<CanvasGroup>();
         }
 
         public override void SetEnabled(bool status)
@@ -60,6 +63,11 @@ namespace ActorSystem.AI.Components
         public void SetBar(string name, float value)
         {
             GetElement<UI_Bar>(name)?.SetValue(value);
+        }
+
+        public void Show()
+        {
+            m_animator?.SetTrigger("Reset");
         }
     }
 }

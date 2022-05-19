@@ -8,6 +8,8 @@ public class StatusEffectContainer : MonoBehaviour
 {
     public GameObject m_statusPrefab;
 
+    public Transform m_headLoc;
+
     public bool IsImmuneToFrost = false;
     public bool IsImmuneToFlame = false;
     public bool IsImmuneToStun = false;
@@ -94,7 +96,7 @@ public class StatusEffectContainer : MonoBehaviour
                 bar = m_actor.m_myBrain.m_ui.GetElement<UI_List>("StatusList")?.Instantiate(m_statusPrefab) as UI_StatusEffectBar;
                 bar.SetImage(effect.m_displayImage);
             }
-            effect.StartActor(m_actor);
+            effect.StartActor(m_actor, m_headLoc);
         }
         else
         {

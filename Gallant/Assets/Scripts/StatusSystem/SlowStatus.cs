@@ -32,7 +32,7 @@ public class SlowStatus : StatusEffect
         return false;
     }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Actor _actor, Transform headLoc)
     {
         if(_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f - m_strength;

@@ -46,7 +46,7 @@ public class WhirlpoolProjectile : BaseAbilityProjectile
                 transform.position,
                 transform.rotation);
 
-            area.GetComponent<Whirlpool>().m_data = m_data;
+            //area.GetComponent<Whirlpool>().m_data = m_data;
         }
         Destroy(gameObject);
     }

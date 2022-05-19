@@ -11,7 +11,8 @@ public class GameManager : Singleton<GameManager>
 {
     public static float currentLevel = 0;
     public static float deltaLevel = 1.25f;
-    
+    public ProbabilityList<LevelData> m_levelTest;
+    public List<LevelData> m_comapare;
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 
     public GameObject m_player;
@@ -49,6 +50,7 @@ public class GameManager : Singleton<GameManager>
         for (int i = 0; i < 31; i++)
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Water"), i);
 
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Attackable"), LayerMask.NameToLayer("Attackable"));
         m_sceneHasTutorial = FindObjectOfType<TutorialManager>() != null;
     }
 
@@ -60,7 +62,7 @@ public class GameManager : Singleton<GameManager>
 
         int gamepadID = InputManager.Instance.GetAnyGamePad();
         
-        if(!m_sceneHasTutorial && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
+        if(!m_sceneHasTutorial && m_player != null && m_player.GetComponent<Player_Controller>().playerResources.m_dead)
         {
             m_deathDelay -= Time.deltaTime;
             if(m_deathDelay <= 0)
