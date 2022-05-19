@@ -9,7 +9,7 @@ namespace ActorSystem.AI.Components
     public class Actor_Material : Actor_Component
     {
         public Material m_hitMaterial;
-        public bool m_isDisolving { get; private set; } = false;
+        public int m_isDisolving { get; private set; } = 0;
 
         private Renderer m_myMesh;
         private Material m_myMaterial;
@@ -34,11 +34,11 @@ namespace ActorSystem.AI.Components
         // Update is called once per frame
         void Update()
         {
-            if (m_isDisolving && m_myMesh != null)
+            if (m_isDisolving != 0 && m_myMesh != null)
             {
                 m_timer += Time.deltaTime;
                 float maxTime = m_disolveTime;
-                float disolveVal = 1.0f - m_timer / maxTime;
+                float disolveVal = (m_isDisolving == 1) ? 1.0f - m_timer / maxTime : m_timer / maxTime;
 
                 if (m_hit == null)
                     m_myMaterial.SetFloat("Fade", disolveVal);
@@ -46,17 +46,16 @@ namespace ActorSystem.AI.Components
                 if (m_timer > maxTime)
                 {
                     if (m_hit == null)
-                        m_myMaterial.SetFloat("Fade", 0.0f);
-                    m_isDisolving = false;
+                        m_myMaterial.SetFloat("Fade", (m_isDisolving == 1) ? 0.0f : 1.0f);
+                    m_isDisolving = 0;
                 }
-                
             } 
         }
 
         public override void SetEnabled(bool status)
         {
             this.enabled = status;
-            if(status && !m_isDisolving)
+            if(status && m_isDisolving == 0)
                 m_timer = 0.0f;
 
             this.gameObject.layer = (status) ? LayerMask.NameToLayer("Attackable") : LayerMask.NameToLayer("Default");
@@ -64,10 +63,29 @@ namespace ActorSystem.AI.Components
 
         public void StartDisolve()
         {
-            m_disolveTime = ActorManager.Instance.m_actorDeathTime;
+            StartDisolve(ActorManager.Instance.m_actorDeathTime);
+        }
+
+        public void StartDisolve(float time)
+        {
+            m_disolveTime = time;
             if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
             {
-                m_isDisolving = true;
+                m_isDisolving = 1;
+                m_myMaterial.SetFloat("Fade", 1.0f);
+            }
+            else
+            {
+                Debug.LogWarning("Disolve called when texture isn't a disolve shader.");
+            }
+        }
+        public void StartResolve(float time)
+        {
+            m_disolveTime = time;
+            if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
+            {
+                m_isDisolving = -1;
+                m_myMaterial.SetFloat("Fade", 0.0f);
             }
             else
             {
@@ -77,13 +95,13 @@ namespace ActorSystem.AI.Components
 
         public void RefreshColor()
         {
-            m_isDisolving = false;
+            m_isDisolving = 0;
             m_myMaterial.SetFloat("Fade", 1.0f);
         }
 
         public void ShowHit()
         {
-            if (m_isDisolving)
+            if (m_isDisolving != 0)
                 return;
 
             if (m_hit != null)

@@ -31,7 +31,10 @@ public class SlowStatus : StatusEffect
         }
         return false;
     }
-
+    public override StatusEffect Clone()
+    {
+        return new SlowStatus(m_strength, m_duration);
+    }
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         if(_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)

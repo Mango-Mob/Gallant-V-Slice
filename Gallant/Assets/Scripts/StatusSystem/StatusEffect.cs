@@ -58,4 +58,6 @@ public abstract class StatusEffect
 
     protected abstract void LoadDisplayImage();
     protected abstract void LoadDisplayVFX();
+
+    public abstract StatusEffect Clone();
 }

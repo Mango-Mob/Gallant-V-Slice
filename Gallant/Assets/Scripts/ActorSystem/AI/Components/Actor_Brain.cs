@@ -64,7 +64,7 @@ namespace ActorSystem.AI.Components
             get {
                 foreach (var material in m_materials)
                 {
-                    if (material.m_isDisolving)
+                    if (material.m_isDisolving != 0)
                         return true;
                 }
                 return false;

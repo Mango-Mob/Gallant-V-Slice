@@ -69,7 +69,10 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Start()
         {
-            
+            if(!m_agent.isOnNavMesh)
+            {
+                KnockBack(Vector3.up, false);
+            }
         }
 
         // Update is called once per frame
