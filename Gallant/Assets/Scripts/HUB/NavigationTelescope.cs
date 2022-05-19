@@ -14,6 +14,7 @@ public class NavigationTelescope : MonoBehaviour
         public float locationAngle;
         public int dangerLevel;
         public Color m_portalColor;
+        public bool levelLocked;
     }
 
     [SerializeField] private Camera m_camera;
@@ -24,6 +25,7 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private LevelPortal m_portal;
     [SerializeField] private CanvasGroup m_transitionGroup;
     [SerializeField] private ButtonHeldCheck m_buttonHeldCheck;
+    [SerializeField] private Image m_locked;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -53,6 +55,7 @@ public class NavigationTelescope : MonoBehaviour
         playerController = FindObjectOfType<Player_Controller>();
         m_camera.enabled = false;
         m_animator = GetComponent<Animator>();
+        m_locked.enabled = false;
     }
 
     // Update is called once per frame
@@ -116,14 +119,17 @@ public class NavigationTelescope : MonoBehaviour
                 float newRot = Mathf.SmoothDampAngle(m_camera.transform.localEulerAngles.y, m_destinations[closestDestinationIndex].locationAngle, ref m_currentVelocity, 0.1f);
                 m_camera.transform.localEulerAngles = new Vector3(m_camera.transform.localRotation.eulerAngles.x, newRot, m_camera.transform.localRotation.eulerAngles.z);
                 m_targetIndex = closestDestinationIndex;
+
+                m_locked.enabled = m_destinations[m_targetIndex].levelLocked;
             }
             else
             {
                 m_targetIndex = -1;
+                m_locked.enabled = false;
             }
         }
 
-        if (m_targetIndex != -1 && (InputManager.Instance.IsBindPressed("Interact") || m_buttonHeldCheck.m_isButtonHeld))
+        if (m_targetIndex != -1 && !m_destinations[m_targetIndex].levelLocked && (InputManager.Instance.IsBindPressed("Interact") || m_buttonHeldCheck.m_isButtonHeld))
         {
             if (!m_selectFlag)
             {
