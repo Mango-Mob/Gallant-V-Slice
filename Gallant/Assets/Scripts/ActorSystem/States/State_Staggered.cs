@@ -8,6 +8,9 @@ public class State_Staggered : State
     {
         (m_myUser as Actor).SetTargetVelocity(Vector3.zero);
         (m_myUser as Actor).m_myBrain.m_animator.SetTrigger("Stagger");
+        (m_myUser as Actor).m_myBrain.m_animator.SetTrigger("Cancel");
+        m_myUser.m_activeStateText = "STAGGERED";
+        m_myActor.m_myBrain.m_lookAtHit = false;
     }
 
     public override void Update()
@@ -25,12 +28,14 @@ public class State_Staggered : State
                 return;
             }
         }
-        
-        (m_myUser as Actor).m_myBrain.RegenStamina(3f);
+        (m_myUser as Actor).GetComponent<Rigidbody>().isKinematic = true;
+        (m_myUser as Actor).SetTargetVelocity(Vector3.zero);
+        (m_myUser as Actor).m_myBrain.RegenStamina(m_myActor.m_myData.staminaReg * 2.5f);
     }
 
     public override void End()
     {
         (m_myUser as Actor).m_myBrain.m_animator.SetTrigger("Stagger_Reset");
+        m_myActor.m_myBrain.m_lookAtHit = true;
     }
 }
