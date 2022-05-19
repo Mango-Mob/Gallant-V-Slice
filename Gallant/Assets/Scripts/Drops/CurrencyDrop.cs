@@ -84,7 +84,7 @@ public class CurrencyDrop : MonoBehaviour
                 {
                     //m_targetPlayer.playerResources.ChangeAdrenaline(1);
                     PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") + m_heldValue);
-                    Instantiate(m_vfxPrefab, transform.position, Quaternion.identity);
+                    Instantiate(m_vfxPrefab, m_targetPlayer.transform.position + transform.up + (m_targetPlayer.playerCamera.transform.position - m_targetPlayer.transform.position).normalized, Quaternion.identity);
                     Destroy(gameObject);
                     return;
                 }
