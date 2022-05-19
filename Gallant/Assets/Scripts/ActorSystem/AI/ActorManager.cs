@@ -88,6 +88,9 @@ namespace ActorSystem.AI
 
         public void Subscribe(Actor user)
         {
+            if (user == null && user.m_myData == null)
+                return;
+
             if(!m_subscribed.Contains(user))
                 m_subscribed.Add(user);
 

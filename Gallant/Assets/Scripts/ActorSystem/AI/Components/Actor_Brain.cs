@@ -340,7 +340,7 @@ namespace ActorSystem.AI.Components
 
         public bool HandleImpactDamage(float damage, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
         {
-            if (IsDead)
+            if (IsDead && m_ragDoll != null)
             {
                 m_ragDoll.m_mainCollider.GetComponent<Rigidbody>().velocity = transform.TransformVector(direction * damage);
                 return false;
