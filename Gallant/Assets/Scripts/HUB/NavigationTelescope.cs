@@ -23,6 +23,7 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private Image m_crosshair;
     [SerializeField] private LevelPortal m_portal;
     [SerializeField] private CanvasGroup m_transitionGroup;
+    [SerializeField] private ButtonHeldCheck m_buttonHeldCheck;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -122,7 +123,7 @@ public class NavigationTelescope : MonoBehaviour
             }
         }
 
-        if (m_targetIndex != -1 && InputManager.Instance.IsBindPressed("Interact"))
+        if (m_targetIndex != -1 && (InputManager.Instance.IsBindPressed("Interact") || m_buttonHeldCheck.m_isButtonHeld))
         {
             if (!m_selectFlag)
             {

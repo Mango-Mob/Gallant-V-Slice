@@ -26,6 +26,11 @@ public abstract class WeaponBase : MonoBehaviour
     public ParticleSystem[] m_weaponTrailParticles;
     private bool m_trailActive = false;
 
+    private bool m_attackedThisFrame = false;
+    private bool m_releasedThisFrame = false;
+    private bool m_altAttackedThisFrame = false;
+    private bool m_altReleasedThisFrame = false;
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -54,7 +59,13 @@ public abstract class WeaponBase : MonoBehaviour
         {
             SetTrailActive(false);
         }
+
+        m_attackedThisFrame = false;
+        m_releasedThisFrame = false;
+        m_altAttackedThisFrame = false;
+        m_altReleasedThisFrame = false;
     }
+
     private void OnDestroy()
     {
         Destroy(m_weaponObject);
@@ -63,22 +74,38 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (_active)
         {
+            if (m_attackedThisFrame)
+                return;
+
+            m_attackedThisFrame = true;
             WeaponFunctionality();
         }
         else
+        {
+            if (m_releasedThisFrame)
+                return;
+
+            m_releasedThisFrame = true;
             WeaponRelease();
+        }
     }
     public void TriggerWeaponAlt(bool _active)
     {
-        Debug.Log($"Triggering Alt Attack: {_active}");
         if (_active)
         {
+            if (m_altAttackedThisFrame)
+                return;
+
+            m_altAttackedThisFrame = true;
             playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost);
             WeaponAltFunctionality();
         }
         else
         {
-            Debug.Log("Release Navidad");
+            if (m_altReleasedThisFrame)
+                return;
+
+            m_altReleasedThisFrame = true;
             WeaponAltRelease();
         }
     }
