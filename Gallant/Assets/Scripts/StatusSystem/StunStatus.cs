@@ -23,6 +23,11 @@ public class StunStatus : StatusEffect
         throw new NotImplementedException();
     }
 
+    public override StatusEffect Clone()
+    {
+        return new StunStatus(m_duration);
+    }
+
     public override void EndActor(Actor _actor)
     {
         if (_actor.m_myBrain.m_animator)

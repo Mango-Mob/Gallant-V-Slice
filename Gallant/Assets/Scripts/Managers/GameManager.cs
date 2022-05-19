@@ -1,17 +1,13 @@
 ﻿using ActorSystem.AI;
-using ActorSystem.AI.Components;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     public static float currentLevel = 0;
     public static float deltaLevel = 1.25f;
-    public ProbabilityList<LevelData> m_levelTest;
     public List<LevelData> m_comapare;
     public static Vector2 m_sensitivity = new Vector2(-400.0f, -250.0f);
 

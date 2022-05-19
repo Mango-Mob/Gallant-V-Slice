@@ -24,7 +24,10 @@ public class HealthRegenStatus : StatusEffect
         }
         return false;
     }
-
+    public override StatusEffect Clone()
+    {
+        return new HealthRegenStatus(m_strength, m_duration);
+    }
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show vfx

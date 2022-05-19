@@ -175,11 +175,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             if (SceneManager.GetActiveScene().name == m_activeNodes[index].m_myData.sceneToLoad && m_activeNodes[index].m_myData.prefabToLoad != null)
             {
                 m_activeNodes[index].ActivateMyConnections();
-                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity).SetActive(true);
                 if(m_activeNodes[index].m_myData.prefabPropsToLoad != null && m_activeNodes[index].m_myData.prefabPropsToLoad.Count > 0)
                 {
                     int select = Random.Range(0, m_activeNodes[index].m_myData.prefabPropsToLoad.Count);
-                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity);
+                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity).SetActive(true);
                 }
             }
         }
@@ -229,7 +229,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i].SelectScene(), m_mapObj.transform);
+                newNodeObj = NavigationNode.CreateNode(Extentions.GetFromList<SceneData>(data.m_levelFloors[i].potentialScenes), m_mapObj.transform);
                 float xPos = widthStep * (j+0.5f) - (m_generatedLevel.m_width / 2) + Random.Range(-iconNoise.x, iconNoise.x);
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
@@ -247,7 +247,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
 
         //Create end node
-        newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes[Random.Range(0, data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes.Length)], transform);
+        newNodeObj = NavigationNode.CreateNode(Extentions.GetFromList<SceneData>(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes), transform);
         m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
         m_endNode.m_myDepth = data.m_levelFloors.Count - 1;

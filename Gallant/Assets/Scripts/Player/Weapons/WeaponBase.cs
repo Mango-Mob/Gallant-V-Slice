@@ -169,7 +169,7 @@ public abstract class WeaponBase : MonoBehaviour
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
                 if (statusContainer != null && _status != null)
                 {
-                    statusContainer.AddStatusEffect(_status);
+                    statusContainer.AddStatusEffect(_status.Clone());
                 }
             }
             hitList.Add(collider.gameObject);

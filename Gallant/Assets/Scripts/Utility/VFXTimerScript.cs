@@ -16,11 +16,11 @@ public class VFXTimerScript : MonoBehaviour
             m_timer -= Time.deltaTime;
 
             if (m_timer <= 0.0f)
-                Finish();
+                Destroy(gameObject);
         }
     }
     public void Finish()
     {
-        Destroy(gameObject);
+        m_timer = 0;
     }
 }

@@ -25,7 +25,10 @@ public class BurnStatus : StatusEffect
         }
         return false;
     }
-
+    public override StatusEffect Clone()
+    {
+        return new BurnStatus(m_strength, m_duration);
+    }
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show vfx
