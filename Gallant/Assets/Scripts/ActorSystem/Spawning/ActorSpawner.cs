@@ -121,6 +121,11 @@ namespace ActorSystem.Spawning
             Stop();
         }
 
+        public void OnDestroy()
+        {
+            ActorManager.Instance?.m_activeSpawnners.Remove(this);
+        }
+
         /*******************
          * Stop : Stops the combat
          * @author : Michael Jordan

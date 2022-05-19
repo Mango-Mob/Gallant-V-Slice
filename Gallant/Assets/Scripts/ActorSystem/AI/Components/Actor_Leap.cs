@@ -72,15 +72,6 @@ namespace ActorSystem.AI.Components
                 }
 
                 m_rotationDirection = 0;
-                //if (isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 1f)
-                //{
-                //    transform.rotation = Quaternion.RotateTowards(transform.rotation, m_targetRotation, m_rotationSpeed * m_speedModifier * rotMod * Time.fixedDeltaTime);
-                //
-                //    if (Quaternion.Angle(transform.rotation, m_targetRotation) > 5f)
-                //    {
-                //        m_rotationDirection = (Vector3.Dot(transform.right, m_targetRotation * Vector3.forward) > 0) ? 1.0f : -1.0f;
-                //    }
-                //}       
             }
             else
             {
@@ -127,10 +118,12 @@ namespace ActorSystem.AI.Components
             startDist = MathParabola.ParabolaDistance(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 10);
             remainDist = startDist;
             rotMod = 1.0f;
+            GetComponent<Collider>().enabled = false;
         }
         
         public void EndLeap()
         {
+            GetComponent<Collider>().enabled = true;
             m_currentState = LeapState.Ready;
             m_agent.Warp(transform.position);
             isLeaping = false;

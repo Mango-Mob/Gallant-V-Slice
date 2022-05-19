@@ -29,7 +29,7 @@ namespace ActorSystem.AI
         {
             m_surfaces.Clear();
             m_surfaces.AddRange(FindObjectsOfType<NavMeshSurface>());
-            m_activeSpawnners.Clear();
+
             foreach (var item in m_surfaces)
             {
                 item.BuildNavMesh();
