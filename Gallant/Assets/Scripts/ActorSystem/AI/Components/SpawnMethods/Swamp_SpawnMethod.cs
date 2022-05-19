@@ -24,8 +24,12 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
             m_spawn.transform.localScale = Vector3.one * m_myActor.m_myData.radius;
 
-            ////Play animation
+            //Play animation
+            m_myActor.m_myBrain.SetEnabled(false);
+            m_myActor.m_myBrain.m_animator.SetEnabled(false);
             m_myActor.m_myBrain.m_ragDoll?.DisableRagdoll();
+            
+            m_myActor.GetComponent<Rigidbody>().isKinematic = true;
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
             GetComponent<Collider>().enabled = false;
