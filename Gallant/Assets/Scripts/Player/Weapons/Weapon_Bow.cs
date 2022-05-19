@@ -27,10 +27,10 @@ public class Weapon_Bow : WeaponBase
     {
         base.Update();
 
-
+        float speedMult = playerController.animator.GetFloat(m_hand == Hand.LEFT ? "LeftAttackSpeed" : "RightAttackSpeed");
         if (m_chargingShot && m_charge < 1.0f)
         {
-            m_charge += Time.deltaTime * m_chargeRate * playerController.animator.GetFloat(m_hand == Hand.LEFT ? "LeftAttackSpeed" : "RightAttackSpeed");
+            m_charge += Time.deltaTime * m_chargeRate * speedMult;
             m_charge = Mathf.Clamp(m_charge, 0.0f, 1.0f);
 
             if (m_charge >= 1.0f)
@@ -42,7 +42,17 @@ public class Weapon_Bow : WeaponBase
         {
             if (!playerController.animator.GetBool("UsingLeft"))
                 m_chargingShot = false;
-            playerController.playerResources.ChangeStamina(-10.0f * Time.deltaTime);
+            playerController.playerResources.ChangeStamina(-10.0f * Time.deltaTime * speedMult);
+
+            if (playerController.playerResources.m_stamina <= 0.0f)
+            {
+                playerController.animator.SetBool("LeftAttackHeld", false);
+                m_chargingShot = false;
+            }
+        }
+        else
+        {
+            m_charge = 0.0f;
         }
     }
     public override void WeaponFunctionality()
@@ -65,7 +75,7 @@ public class Weapon_Bow : WeaponBase
         playerController.playerAudioAgent.PlayWeaponHit(Weapon.BOW, 1);
 
         m_chargingShot = false;
-        m_charge = Mathf.Clamp(m_charge, 0.3f, 1.0f);
+        m_charge = Mathf.Clamp(m_charge, 0.1f, 1.0f);
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.LEFT, m_charge, true);
         m_charge = 0.0f;
     }
