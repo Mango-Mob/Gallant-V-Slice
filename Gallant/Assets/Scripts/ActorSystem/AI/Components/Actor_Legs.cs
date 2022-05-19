@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -45,8 +46,8 @@ namespace ActorSystem.AI.Components
         protected Rigidbody m_body;
 
         //Target Orientation
-        protected Vector3 m_targetPosition;
-        protected Quaternion m_targetRotation;
+        public Vector3 m_targetPosition { get; protected set; }
+        public Quaternion m_targetRotation { get; protected set; }
 
         private float m_delayTimer = 0f;
         public float m_baseStopDist { get; private set; }

@@ -56,8 +56,10 @@ namespace ActorSystem.AI.Components
         public override void SetEnabled(bool status)
         {
             this.enabled = status;
-            if(status)
+            if(status && !m_isDisolving)
                 m_timer = 0.0f;
+
+            this.gameObject.layer = (status) ? LayerMask.NameToLayer("Attackable") : LayerMask.NameToLayer("Default");
         }
 
         public void StartDisolve()

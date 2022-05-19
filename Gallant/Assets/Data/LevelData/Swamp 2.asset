@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9859c2ca88cf6842932e49cbef5a52e, type: 3}
   m_Name: Swamp 2
   m_EditorClassIdentifier: 
+  m_width: 1024
+  m_height: 900
   m_spawnableWaves:
   - {fileID: 11400000, guid: e4a91a2ae65ab05429ff1f46494590f8, type: 2}
   - {fileID: 11400000, guid: 93af370db860a58409aeb83127f2e9f9, type: 2}
@@ -60,15 +62,14 @@ MonoBehaviour:
     minWaves: 2
     maxWaves: 3
     potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-    - {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
-    - {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
-    - {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
-    probability:
-    - 0.25
-    - 0.25
-    - 0.25
-    - 0.25
+    - data: {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
+      weight: 1
   - type: 0
     difficultyCurve:
       serializedVersion: 2
@@ -99,11 +100,10 @@ MonoBehaviour:
     minWaves: 2
     maxWaves: 4
     potentialScenes:
-    - {fileID: 11400000, guid: 33c8d053e604fc640bb341a12d40d668, type: 2}
-    - {fileID: 11400000, guid: 3e9682ab8136c4b46a547f3e794c34bf, type: 2}
-    probability:
-    - 0.8
-    - 0.2
+    - data: {fileID: 11400000, guid: 33c8d053e604fc640bb341a12d40d668, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: 3e9682ab8136c4b46a547f3e794c34bf, type: 2}
+      weight: 1
   - type: 2
     difficultyCurve:
       serializedVersion: 2
@@ -134,15 +134,14 @@ MonoBehaviour:
     minWaves: 2
     maxWaves: 4
     potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-    - {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
-    - {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
-    - {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
-    probability:
-    - 0.25
-    - 0.25
-    - 0.25
-    - 0.25
+    - data: {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
+      weight: 1
   - type: 1
     difficultyCurve:
       serializedVersion: 2
@@ -173,13 +172,12 @@ MonoBehaviour:
     minWaves: 2
     maxWaves: 2
     potentialScenes:
-    - {fileID: 11400000, guid: f753aa35df77b664a9fab1922a238d69, type: 2}
-    - {fileID: 11400000, guid: 6eec125ac0c38244f9ca1f612e9b41f7, type: 2}
-    - {fileID: 11400000, guid: d3df1fcc6c854d7458879e85dded214a, type: 2}
-    probability:
-    - 0.8
-    - 0.2
-    - 0
+    - data: {fileID: 11400000, guid: f753aa35df77b664a9fab1922a238d69, type: 2}
+      weight: 2
+    - data: {fileID: 11400000, guid: 6eec125ac0c38244f9ca1f612e9b41f7, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: d3df1fcc6c854d7458879e85dded214a, type: 2}
+      weight: 0
   - type: 2
     difficultyCurve:
       serializedVersion: 2
@@ -210,15 +208,14 @@ MonoBehaviour:
     minWaves: 3
     maxWaves: 4
     potentialScenes:
-    - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
-    - {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
-    - {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
-    - {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
-    probability:
-    - 0.25
-    - 0.25
-    - 0.25
-    - 0.25
+    - data: {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
+      weight: 1
+    - data: {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
+      weight: 1
   - type: 3
     difficultyCurve:
       serializedVersion: 2
@@ -249,8 +246,8 @@ MonoBehaviour:
     minWaves: 3
     maxWaves: 4
     potentialScenes:
-    - {fileID: 11400000, guid: 08660d8526ce3c943b46e6d6df745e0b, type: 2}
-    probability: []
+    - data: {fileID: 11400000, guid: 08660d8526ce3c943b46e6d6df745e0b, type: 2}
+      weight: 1
   m_minRoomCount: 2
   m_maxRoomCount: 6
   m_probOfGrowth:

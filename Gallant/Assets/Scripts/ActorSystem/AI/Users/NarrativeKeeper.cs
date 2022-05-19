@@ -68,6 +68,15 @@ namespace ActorSystem.AI.Users
 
         protected override void Update()
         {
+            if (m_myBrain.IsDead)
+            {
+                m_myBrain.m_myOutline.enabled = false;
+                return;
+            }
+
+            if(m_myBrain.m_target != null)
+                this.SetTargetOrientaion(m_myBrain.m_legs.m_targetPosition);
+
             m_myBrain.m_myOutline.enabled = m_potentialDialogs.Count > 0;
             m_interactDisplay.m_isReady = m_showUI && !isWaiting && m_potentialDialogs.Count > 0;
             m_myBrain.SetEnabled(!isWaiting);
@@ -93,7 +102,7 @@ namespace ActorSystem.AI.Users
             DialogManager.Instance.m_onDialogFinish.AddListener(EndTalk);
             DialogManager.Instance.Show();
 
-            DialogManager.Instance.m_interact.Add(new UnityEvent());
+            DialogManager.Instance.m_interact[0] = new UnityEvent();
             DialogManager.Instance.m_interact[0].AddListener(Reward);
             
             NarrativeManager.Instance.AddSeenDialog(m_potentialDialogs[select].dialog);
@@ -107,7 +116,7 @@ namespace ActorSystem.AI.Users
         private void Reward()
         {
             DialogManager.Instance.Hide();
-            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.RUNE);
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.BOOK);
             DialogManager.Instance.m_interact = null;
         }
 
@@ -118,19 +127,31 @@ namespace ActorSystem.AI.Users
 
         public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
-            if (base.DealDamage(_damage, _type, piercingVal, _damageLoc))
+            if (!m_myBrain.IsDead)
             {
-                NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName] = true;
-                return true;
+                m_potentialDialogs.Clear();
+                if (base.DealDamage(_damage, _type, piercingVal, _damageLoc))
+                {
+                    NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName] = true;
+                    SetState(new State_Dead(this));
+                    return true;
+                }
+                SetState(new State_FleeFromTarget(this));
             }
+            
             return false;
         }
         public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
-            if(base.DealDamageSilent(_damage, _type))
+            if(!m_myBrain.IsDead)
             {
-                NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName] = true;
-                return true;
+                if (base.DealDamageSilent(_damage, _type))
+                {
+                    NarrativeManager.Instance.m_deadNPCs[m_myData.ActorName] = true;
+                    SetState(new State_Dead(this));
+                    return true;
+                }
+                SetState(new State_FleeFromTarget(this));
             }
             return false;
         }

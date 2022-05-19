@@ -28,6 +28,7 @@ namespace ActorSystem.AI.Components
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
         public Actor_Ragdoll m_ragDoll { get; private set; }
+        public Actor_Indicator[] m_indicators { get; private set; }
         public Outlinable m_myOutline { get; private set; }
         #endregion
 
@@ -82,7 +83,7 @@ namespace ActorSystem.AI.Components
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
             m_myOutline = GetComponentInChildren<Outlinable>();
-
+            m_indicators = GetComponentsInChildren<Actor_Indicator>();
             SetOutlineEnabled(false);
         }
         public void Start()
@@ -322,7 +323,11 @@ namespace ActorSystem.AI.Components
                 GameManager.m_killCount++;
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
-
+                m_arms?.End();
+                foreach (var indicator in m_indicators)
+                {
+                    indicator.SetEnabled(false);
+                }
                 m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
