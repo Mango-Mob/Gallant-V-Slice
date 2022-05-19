@@ -32,6 +32,7 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private float m_turnSpeed = 45.0f;
     [SerializeField] private float m_targetThreshold = 10.0f;
     [SerializeField] private float m_selectSpeed = 0.5f;
+    [SerializeField] private float m_mouseDragSpeed = 20.0f;
     public float m_angleClamp = 60.0f;
 
     [Header("Text Elements")]
@@ -80,6 +81,11 @@ public class NavigationTelescope : MonoBehaviour
         }
 
         Vector2 movementVector = GetMovementVector();
+        if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
+        {
+            Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * m_mouseDragSpeed;
+            movementVector.x += mouseDelta.x;
+        }
 
         if (Mathf.Abs(movementVector.x) > 0.0f)
         {
@@ -91,7 +97,7 @@ public class NavigationTelescope : MonoBehaviour
 
             m_targetIndex = -1;
         }
-        else
+        else if (!InputManager.Instance.GetMousePress(MouseButton.LEFT))
         {
             int closestDestinationIndex = -1;
             float closestDistance = Mathf.Infinity;

@@ -42,7 +42,7 @@ public class Weapon_Bow : WeaponBase
         {
             if (!playerController.animator.GetBool("UsingLeft"))
                 m_chargingShot = false;
-            playerController.playerResources.ChangeStamina(-10.0f * Time.deltaTime * speedMult);
+            playerController.playerResources.ChangeStamina(-50.0f * Time.deltaTime * speedMult);
 
             if (playerController.playerResources.m_stamina <= 0.0f)
             {
