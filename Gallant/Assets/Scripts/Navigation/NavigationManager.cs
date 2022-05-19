@@ -175,11 +175,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             if (SceneManager.GetActiveScene().name == m_activeNodes[index].m_myData.sceneToLoad && m_activeNodes[index].m_myData.prefabToLoad != null)
             {
                 m_activeNodes[index].ActivateMyConnections();
-                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity);
+                Instantiate(m_activeNodes[index].m_myData.prefabToLoad, Vector3.zero, Quaternion.identity).SetActive(true);
                 if(m_activeNodes[index].m_myData.prefabPropsToLoad != null && m_activeNodes[index].m_myData.prefabPropsToLoad.Count > 0)
                 {
                     int select = Random.Range(0, m_activeNodes[index].m_myData.prefabPropsToLoad.Count);
-                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity);
+                    Instantiate(m_activeNodes[index].m_myData.prefabPropsToLoad[select], Vector3.zero, Quaternion.identity).SetActive(true);
                 }
             }
         }

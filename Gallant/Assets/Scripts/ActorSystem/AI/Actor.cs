@@ -258,6 +258,8 @@ namespace ActorSystem.AI
         {
             if(fullRefresh)
                 m_myBrain.Refresh();
+            
+            m_mySpawn.SetEnabled(true);
             m_mySpawn.Respawn();
         }
         public virtual void Slam()
