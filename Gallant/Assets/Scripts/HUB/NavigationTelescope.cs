@@ -14,6 +14,7 @@ public class NavigationTelescope : MonoBehaviour
         public float locationAngle;
         public int dangerLevel;
         public Color m_portalColor;
+        public bool levelLocked;
     }
 
     [SerializeField] private Camera m_camera;
@@ -23,12 +24,15 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private Image m_crosshair;
     [SerializeField] private LevelPortal m_portal;
     [SerializeField] private CanvasGroup m_transitionGroup;
+    [SerializeField] private ButtonHeldCheck m_buttonHeldCheck;
+    [SerializeField] private Image m_locked;
 
     [Header("Settings")]
     public Destination[] m_destinations;
     [SerializeField] private float m_turnSpeed = 45.0f;
     [SerializeField] private float m_targetThreshold = 10.0f;
     [SerializeField] private float m_selectSpeed = 0.5f;
+    [SerializeField] private float m_mouseDragSpeed = 20.0f;
     public float m_angleClamp = 60.0f;
 
     [Header("Text Elements")]
@@ -52,6 +56,7 @@ public class NavigationTelescope : MonoBehaviour
         playerController = FindObjectOfType<Player_Controller>();
         m_camera.enabled = false;
         m_animator = GetComponent<Animator>();
+        m_locked.enabled = false;
     }
 
     // Update is called once per frame
@@ -76,6 +81,11 @@ public class NavigationTelescope : MonoBehaviour
         }
 
         Vector2 movementVector = GetMovementVector();
+        if (InputManager.Instance.GetMousePress(MouseButton.LEFT))
+        {
+            Vector2 mouseDelta = InputManager.Instance.GetMouseDelta() * m_mouseDragSpeed;
+            movementVector.x += mouseDelta.x;
+        }
 
         if (Mathf.Abs(movementVector.x) > 0.0f)
         {
@@ -87,7 +97,7 @@ public class NavigationTelescope : MonoBehaviour
 
             m_targetIndex = -1;
         }
-        else
+        else if (!InputManager.Instance.GetMousePress(MouseButton.LEFT))
         {
             int closestDestinationIndex = -1;
             float closestDistance = Mathf.Infinity;
@@ -115,14 +125,17 @@ public class NavigationTelescope : MonoBehaviour
                 float newRot = Mathf.SmoothDampAngle(m_camera.transform.localEulerAngles.y, m_destinations[closestDestinationIndex].locationAngle, ref m_currentVelocity, 0.1f);
                 m_camera.transform.localEulerAngles = new Vector3(m_camera.transform.localRotation.eulerAngles.x, newRot, m_camera.transform.localRotation.eulerAngles.z);
                 m_targetIndex = closestDestinationIndex;
+
+                m_locked.enabled = m_destinations[m_targetIndex].levelLocked;
             }
             else
             {
                 m_targetIndex = -1;
+                m_locked.enabled = false;
             }
         }
 
-        if (m_targetIndex != -1 && InputManager.Instance.IsBindPressed("Interact"))
+        if (m_targetIndex != -1 && !m_destinations[m_targetIndex].levelLocked && (InputManager.Instance.IsBindPressed("Interact") || m_buttonHeldCheck.m_isButtonHeld))
         {
             if (!m_selectFlag)
             {
