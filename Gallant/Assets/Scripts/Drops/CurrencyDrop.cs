@@ -11,6 +11,8 @@ public class CurrencyDrop : MonoBehaviour
 
     private Player_Controller m_targetPlayer;
     [SerializeField] private Animator m_animator;
+    [SerializeField] private GameObject m_vfxPrefab;
+
 
     private float m_targetScale;
     private bool m_spawning = true;
@@ -82,6 +84,7 @@ public class CurrencyDrop : MonoBehaviour
                 {
                     //m_targetPlayer.playerResources.ChangeAdrenaline(1);
                     PlayerPrefs.SetInt($"Player Balance {GameManager.m_saveSlotInUse}", PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") + m_heldValue);
+                    Instantiate(m_vfxPrefab, m_targetPlayer.transform.position + transform.up + (m_targetPlayer.playerCamera.transform.position - m_targetPlayer.transform.position).normalized, Quaternion.identity);
                     Destroy(gameObject);
                     return;
                 }
