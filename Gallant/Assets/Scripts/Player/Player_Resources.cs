@@ -50,6 +50,8 @@ public class Player_Resources : MonoBehaviour
     public float m_barrierDecayDelay = 0.5f;
     public float m_barrierDecayRate = 50.0f;
 
+    private bool m_inRegenMode = false;
+
     private void Awake()
     {
         healthBar = HUDManager.Instance.GetElement<UI_Bar>("HP");
@@ -62,6 +64,8 @@ public class Player_Resources : MonoBehaviour
         m_adrenaline = m_startingAdrenaline;
 
         playerController = GetComponent<Player_Controller>();
+
+        m_inRegenMode = SceneManager.GetActiveScene().name == "HubWorld";
     }
     // Start is called before the first frame update
     void Start()
@@ -72,13 +76,19 @@ public class Player_Resources : MonoBehaviour
         m_health = m_maxHealth;
         m_stamina = m_maxStamina;
 
-        m_startingAdrenaline += playerController.playerSkills.m_extraHealOrbs;
+        m_startingAdrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
         ResetResources();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (m_inRegenMode)
+        {
+            m_health += Time.deltaTime * 10.0f;
+            m_adrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
+        }
+
         if (m_barrierDecayTimer >= 0.0f)
         {
             m_barrierDecayTimer -= Time.deltaTime;

@@ -686,7 +686,7 @@ public class Player_Controller : MonoBehaviour
                 Debug.Log("BLOCK");
                 animator.SetTrigger("BlockHit");
 
-                playerResources.ChangeStamina(-_damage / 8.0f);
+                playerResources.ChangeStamina(-5.0f);
                 if (playerResources.m_isExhausted)
                 {
                     playerAudioAgent.PlayShieldBlock(); // Guard break audio
