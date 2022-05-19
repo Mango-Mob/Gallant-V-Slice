@@ -27,6 +27,7 @@ public class SettingsMenu : MonoBehaviour
     [Header("Control Components")]
     public Button m_controlsBtn;
     public GameObject m_controlsMenu;
+    public GameObject m_controlsDefaultSelected;
     public Image m_keyboard;
     public Image m_controller;
 
@@ -208,6 +209,15 @@ public class SettingsMenu : MonoBehaviour
         //m_controlsBtn.GetComponent<Image>().color = m_bumperColor;
         m_controlsBtn.interactable = false;
         m_controlsMenu.SetActive(true);
+
+        if (InputManager.Instance.isInGamepadMode)
+        {
+            EventSystem.current.SetSelectedGameObject(m_controlsDefaultSelected);
+        }
+        else if (!InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     public void ResolutionSelection(Dropdown change)

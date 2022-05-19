@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ActorSystem.AI;
+using UnityEngine;
 
 namespace ActorSystem.Data
 {
