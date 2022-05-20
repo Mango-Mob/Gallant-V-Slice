@@ -61,6 +61,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             SetVisibility(false);
         }
 
+        if(m_generatedLevel != null && InputManager.Instance.IsKeyDown(KeyType.L))
+        {
+            SetVisibility(true);
+        }
+
         if(IsVisible)
         {
             if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
