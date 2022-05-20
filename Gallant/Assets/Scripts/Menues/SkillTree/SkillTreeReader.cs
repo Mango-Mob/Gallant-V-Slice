@@ -143,6 +143,9 @@ public class SkillTreeReader : MonoBehaviour
 
     public void SaveSkillTree(InkmanClass _class)
     {
+        if (!Directory.Exists(Application.persistentDataPath + $"/saveSlot{ GameManager.m_saveSlotInUse}/"))
+            Directory.CreateDirectory(Application.persistentDataPath + $"/saveSlot{ GameManager.m_saveSlotInUse}/");
+
         string json = JsonUtility.ToJson(m_skills[(int)_class], true);
         File.WriteAllText(GetSkillTreePath(_class), json);
     }
