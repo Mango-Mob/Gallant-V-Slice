@@ -182,7 +182,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             if (actor.m_myBrain.IsDead)
                 return false;
 
-            hitList.Add(other.gameObject);
+            hitList.Add(actor.gameObject);
             //actor.KnockbackActor((actor.transform.position - transform.position).normalized * m_weaponData.m_impact * m_charge);
 
             if (m_appliedStatusOnHit != EnemyStatus.NONE)
