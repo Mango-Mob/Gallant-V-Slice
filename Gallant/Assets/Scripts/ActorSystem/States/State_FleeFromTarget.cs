@@ -35,12 +35,12 @@ public class State_FleeFromTarget : State
         if(currDist < idealDist * 0.85f)
         {
             m_myUser.m_activeStateText = "FLEE (fleeing)";
-            sampleLoc = m_myActor.transform.position + forward * (currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
         }
         else if(currDist > idealDist * 1.25f)
         {
             m_myUser.m_activeStateText = "FLEE (closing dist)";
-            sampleLoc = m_myActor.transform.position + forward * (currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
         }
         else
         {

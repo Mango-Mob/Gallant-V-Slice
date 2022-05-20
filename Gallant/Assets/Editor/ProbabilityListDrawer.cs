@@ -1,27 +1,17 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
-[CustomPropertyDrawer(typeof(ProbabilityList<>))]
+[CustomPropertyDrawer(typeof(Extentions.WeightedOption<>))]
 public class ProbabilityListDrawer : PropertyDrawer
 {
-    private bool m_foldoutStatus = false;
-    private int m_count = 0;
-
-    
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
-        //fieldInfo.GetValue(property.serializedObject.targetObject) as ProbabilityList;
-        //position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
 
-        m_foldoutStatus = EditorGUI.BeginFoldoutHeaderGroup(position, m_foldoutStatus, label);
-        if (m_foldoutStatus)
-        {
-
-        }
-        EditorGUI.EndFoldoutHeaderGroup();
-        m_count = EditorGUI.IntField(position, label, m_count);
+        EditorGUI.ObjectField(new Rect(position.x, position.y, position.width - 48, position.height), property.FindPropertyRelative("data"), new GUIContent());
+        property.FindPropertyRelative("weight").intValue = EditorGUI.IntField(new Rect(position.x + position.width - 48, position.y, 48, position.height), property.FindPropertyRelative("weight").intValue);
         EditorGUI.EndProperty();
     }
 

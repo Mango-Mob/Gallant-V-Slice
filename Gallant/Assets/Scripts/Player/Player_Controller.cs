@@ -485,7 +485,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (playerAttack.m_leftWeaponData != null)
                     {
-                        WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, _drop.m_abilityData);
+                        WeaponData.AttemptAbilityUpgrade(playerAttack.m_leftWeaponData, _drop.m_abilityData);
                         Destroy(_drop.gameObject);
                     }
                 }
@@ -493,7 +493,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (playerAttack.m_rightWeaponData != null)
                     {
-                        WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, _drop.m_abilityData);
+                        WeaponData.AttemptAbilityUpgrade(playerAttack.m_rightWeaponData, _drop.m_abilityData);
                         Destroy(_drop.gameObject);
                     }
                 }
@@ -758,6 +758,21 @@ public class Player_Controller : MonoBehaviour
                 playerResources.SetHealth(GameManager.RetrieveHealth());
 
             playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
+        }
+        else
+        {
+            if (playerAttack.m_leftWeaponData)
+            {
+                WeaponData clonedLeftData = ScriptableObject.CreateInstance<WeaponData>();
+                clonedLeftData.Clone(playerAttack.m_leftWeaponData);
+                playerAttack.m_leftWeaponData = clonedLeftData;
+            }
+            if (playerAttack.m_rightWeaponData)
+            {
+                WeaponData clonedRightData = ScriptableObject.CreateInstance<WeaponData>();
+                clonedRightData.Clone(playerAttack.m_rightWeaponData);
+                playerAttack.m_rightWeaponData = clonedRightData;
+            }
         }
         playerSkills.EvaluateSkills();
 

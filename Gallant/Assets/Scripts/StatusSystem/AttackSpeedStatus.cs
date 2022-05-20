@@ -24,7 +24,10 @@ public class AttackSpeedStatus : StatusEffect
         }
         return false;
     }
-
+    public override StatusEffect Clone()
+    {
+        return new AttackSpeedStatus(m_strength, m_duration);
+    }
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show vfx

@@ -265,6 +265,26 @@ public class WeaponData : ScriptableObject
         _data.m_itemEffectData = null;
         _data.m_itemEffectData = EffectData.GetEffectData(_data.itemEffect);
     }
+    public static bool AttemptAbilityUpgrade(WeaponData _weaponData, AbilityData _abilityData)
+    {
+        if (_weaponData.abilityData != null && _weaponData.abilityData.abilityPower == _abilityData.abilityPower)
+        {
+            int weaponAbilityLevel = _weaponData.abilityData.starPowerLevel;
+            int bookAbilityLevel = _abilityData.starPowerLevel;
+            if (weaponAbilityLevel >= 3)
+                return false;
+
+            int desiredLevel = Mathf.Min(3, bookAbilityLevel + weaponAbilityLevel);
+            AbilityData newData = AbilityData.LoadAbilityData(_abilityData.abilityPower, desiredLevel);
+
+            ApplyAbilityData(_weaponData, newData);
+        }
+        else
+        {
+            ApplyAbilityData(_weaponData, _abilityData);
+        }
+        return true;
+    }
     public static void ApplyAbilityData(WeaponData _weaponData, AbilityData _abilityData)
     {
         _weaponData.abilityData = _abilityData;

@@ -69,7 +69,7 @@ namespace ActorSystem.AI.Users
                 UpdateDisplay();
             }
             m_myInteractLogic.m_isReady = m_showUI;
-
+            m_myBrain.m_myOutline.enabled = !m_hasGivenReward;
         }
 
         public void Interact()
