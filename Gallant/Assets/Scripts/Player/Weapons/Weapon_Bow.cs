@@ -7,6 +7,7 @@ public class Weapon_Bow : WeaponBase
     private bool m_chargingShot = false;
     private float m_charge = 0.0f;
     private float m_chargeRate = 0.8f;
+    private bool m_particlesPlaying = false;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
@@ -42,7 +43,7 @@ public class Weapon_Bow : WeaponBase
         {
             if (!playerController.animator.GetBool("UsingLeft"))
                 m_chargingShot = false;
-            playerController.playerResources.ChangeStamina(-50.0f * Time.deltaTime * speedMult);
+            playerController.playerResources.ChangeStamina(-25.0f * Time.deltaTime * speedMult);
 
             if (playerController.playerResources.m_stamina <= 0.0f)
             {
@@ -53,6 +54,23 @@ public class Weapon_Bow : WeaponBase
         else
         {
             m_charge = 0.0f;
+        }
+
+        if (m_charge >= 1.0f && !m_particlesPlaying)
+        {
+            foreach (var particle in m_weaponTrailParticles)
+            {
+                particle.Play();
+            }
+            m_particlesPlaying = true;
+        }
+        else if (m_charge < 1.0f && m_particlesPlaying)
+        {
+            foreach (var particle in m_weaponTrailParticles)
+            {
+                particle.Stop();
+            }
+            m_particlesPlaying = false;
         }
     }
     public override void WeaponFunctionality()
