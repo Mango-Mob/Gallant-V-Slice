@@ -34,6 +34,7 @@ public class NavigationPortal : MonoBehaviour
             int select = UnityEngine.Random.Range(0, m_levelToGenerate.Length);
             NavigationManager.Instance.Generate(m_levelToGenerate[select]);
             NavigationManager.Instance.UpdateMap(0);
+            GameManager.m_saveInfo.m_startedRun = true;
             SetColor(m_levelToGenerate[select].m_portalColor);
         }
         else if (NavigationManager.Instance.m_generatedLevel != null)

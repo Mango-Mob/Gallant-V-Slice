@@ -191,7 +191,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Clear(false);
 
         m_generatedLevel = data;
-
+        GameManager.deltaLevel = data.m_levelUpPerFloor;
         NarrativeManager.Instance.Refresh();
         float heightStep = m_generatedLevel.m_height / (data.m_levelFloors.Count);
         index = 0;
