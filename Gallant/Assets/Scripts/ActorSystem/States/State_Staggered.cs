@@ -30,7 +30,7 @@ public class State_Staggered : State
         }
         (m_myUser as Actor).GetComponent<Rigidbody>().isKinematic = true;
         (m_myUser as Actor).SetTargetVelocity(Vector3.zero);
-        (m_myUser as Actor).m_myBrain.RegenStamina(m_myActor.m_myData.staminaReg * 2.5f);
+        (m_myUser as Actor).m_myBrain.RegenStamina(3.0f);
     }
 
     public override void End()

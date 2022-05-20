@@ -27,6 +27,7 @@ namespace ActorSystem.Data
                 else if (item.gameObject.layer == LayerMask.NameToLayer("Destructible"))
                 {
                     i--;
+                    item.GetComponentInParent<Destructible>().ExplodeObject(damageColliders[0].GetHitlocation(parent), baseDamage * damageMod, 2f, false);
                     if (i <= 0) return true;
                 }
             }
