@@ -13,7 +13,6 @@ public class CurrencyDrop : MonoBehaviour
     [SerializeField] private Animator m_animator;
     [SerializeField] private GameObject m_vfxPrefab;
 
-
     private float m_targetScale;
     private bool m_spawning = true;
 

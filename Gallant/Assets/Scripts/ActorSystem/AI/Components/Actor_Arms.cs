@@ -24,6 +24,8 @@ namespace ActorSystem.AI.Components
         public float m_timeSinceLastHit;
         public float m_maxTimeSinceLastHit = 2.0f;
 
+        public Animator m_indicatorAnim;
+
         public bool hasCancel { 
             get 
             {
