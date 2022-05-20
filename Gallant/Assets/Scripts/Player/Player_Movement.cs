@@ -110,7 +110,10 @@ public class Player_Movement : MonoBehaviour
         foreach (var clip in animControllers.animationClips)
         {
             if (clip.name == "knight dodge roll")
+            {
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+                break;
+            }
         }
     }
     private void Update()
