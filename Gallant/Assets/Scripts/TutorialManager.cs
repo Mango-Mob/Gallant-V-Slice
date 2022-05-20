@@ -139,20 +139,4 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         targetDialog = 3;
         yield return null;
     }
-
-    private void OnDrawGizmos()
-    {
-        //Gizmos.color = Color.green;
-        //Gizmos.DrawSphere(transform.position, 0.5f);
-        //Gizmos.DrawLine(transform.position, transform.position + transform.forward);
-        //
-        //for (int i = 0; i < m_tutorialPositions.Length; i++)
-        //{
-        //    Gizmos.color = Color.yellow;
-        //    Gizmos.DrawSphere(m_tutorialPositions[i].position, 0.5f);
-        //    Gizmos.DrawLine(m_tutorialPositions[i].position, m_tutorialPositions[i].position + m_tutorialPositions[i].forward);
-        //}
-        //Gizmos.color = Color.red;
-        //Gizmos.DrawSphere(m_respawn.position, 0.5f);
-    }
 }

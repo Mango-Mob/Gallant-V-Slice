@@ -76,7 +76,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
         m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
 
-        if (m_myCamera.enabled)
+        if (IsVisible)
         {
             float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
@@ -109,9 +109,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetVisibility(bool status, bool canQuit = true)
     {
         m_myCamera.gameObject.SetActive(status);
+        m_mapObj.SetActive(status);
         m_myCanvas.enabled = status;
         m_canQuit = canQuit;
-
+        
         if (m_myCamera.enabled)
         {
             if(index > 0 && m_activeNodes.Count > 0)

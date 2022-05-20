@@ -57,7 +57,7 @@ namespace ActorSystem.AI.Users
             m_myBrain?.m_myOutline.SetEnabled(isVisible);
 
             GetComponent<Collider>().enabled = isVisible;
-            m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
+            m_keyboardInput.transform.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
             if (m_showUI)
             {
