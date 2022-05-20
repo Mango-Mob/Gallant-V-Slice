@@ -19,9 +19,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public LevelData m_generatedLevel { get; private set; } = null;
 
+    [SerializeField] private GameObject m_bonusText;
     [SerializeField] private Button m_mouseInput;
     [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
+    [SerializeField] private UI_Image[] m_gamepadInput;
 
     public bool IsVisible { get { return m_myCamera.enabled && m_myCanvas.enabled; } }
     private List<NavigationNode> m_activeNodes = new List<NavigationNode>();
@@ -72,9 +73,13 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             }
         }
 
-        m_mouseInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_bonusText.SetActive(InputManager.Instance.isInGamepadMode);
+        m_mouseInput.gameObject.SetActive(m_canQuit);
         m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
+        foreach (var item in m_gamepadInput)
+        {
+            item.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
+        }
 
         if (IsVisible)
         {
