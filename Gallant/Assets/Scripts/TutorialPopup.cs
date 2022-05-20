@@ -7,15 +7,10 @@ public class TutorialPopup : MonoBehaviour
     public GameObject KeyboardDisplay;
     public GameObject GamepadDisplay;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        
+        GamepadDisplay.SetActive(InputManager.Instance.isInGamepadMode);
+        KeyboardDisplay.SetActive(!InputManager.Instance.isInGamepadMode);
     }
 }
