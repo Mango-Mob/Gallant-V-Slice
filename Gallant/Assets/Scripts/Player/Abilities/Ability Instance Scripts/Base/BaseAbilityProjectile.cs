@@ -11,6 +11,8 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
     [SerializeField] private GameObject m_particles;
     [SerializeField] private AudioClip m_hitSound;
 
+    public float m_overwriteLifetime = 0.0f;
+
     public float m_speed = 25.0f;
     private float m_lifeTimer = 0.0f;
 
@@ -25,7 +27,7 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
     {
         transform.position += transform.forward * m_speed * Time.fixedDeltaTime;
         m_lifeTimer += Time.fixedDeltaTime;
-        if (m_lifeTimer > m_data.lifetime)
+        if (m_lifeTimer > (m_overwriteLifetime <= 0.0f ? m_data.lifetime : m_overwriteLifetime))
         {
             DetonateProjectile();
         }
