@@ -142,12 +142,33 @@ public class InfoDisplay : MonoBehaviour
                 m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
                 m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
             }
+            else if (IsBook)
+            {
+                m_mainHand?.SetActive(false);
+
+                // If has a weapon and either weapon does not have ability or weapon has ability and is not the same as the book.
+
+                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon != null // Has weapon in hand
+                    && (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData == null // Has no ability
+                    || playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData != null // Has an ability
+                    && (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
+                    || (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.abilityPower == m_abilityData.abilityPower // Same ability as book
+                    && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel < 3)))); // Current power level is less than max
+
+                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null // Has weapon in hand
+                    && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData == null // Has no ability
+                    || playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData != null // Has an ability
+                    && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
+                    || (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower == m_abilityData.abilityPower // Same ability as book
+                    && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel < 3)))); // Current power level is less than max
+            }
             else
             {
                 m_mainHand?.SetActive(false);
-                m_leftHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
+                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon.m_weaponData != null);
                 m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
             }
+
         }
 
         foreach (var item in m_flipBtns)
