@@ -304,7 +304,11 @@ namespace ActorSystem.AI.Components
 
             if(m_arms != null && m_arms.hasCancel)
             {
-                EndAttack();
+                m_arms.End();
+                foreach (var indicator in m_indicators)
+                {
+                    indicator.GetComponent<Animator>().SetTrigger("Cancel");
+                }
                 m_animator.SetTrigger("Cancel");
             }
 
