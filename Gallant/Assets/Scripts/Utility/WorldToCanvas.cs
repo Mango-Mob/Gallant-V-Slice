@@ -5,6 +5,7 @@ using UnityEngine;
 public class WorldToCanvas : MonoBehaviour
 {
     public Transform m_anchorTransform;
+    public Vector3 m_offset = Vector3.zero;
     private Canvas m_canvas;
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,7 @@ public class WorldToCanvas : MonoBehaviour
     {
         if (m_anchorTransform != null && GameManager.Instance != null && GameManager.Instance.m_activeCamera != null)
         {
-            Vector3 pos = GameManager.Instance.m_activeCamera.WorldToScreenPoint(m_anchorTransform.transform.position);
+            Vector3 pos = GameManager.Instance.m_activeCamera.WorldToScreenPoint(m_offset + m_anchorTransform.transform.position);
             (transform as RectTransform).position = pos;
         }
     }

@@ -7,7 +7,7 @@ public class Soup : MonoBehaviour
     private Player_Controller playerController;
     private bool m_soupAvailable = true;
     [SerializeField] private GameObject m_soupVisuals;
-    [SerializeField] private Interactable m_interactable;
+    [SerializeField] private GameObject m_interactableUI;
 
     // Start is called before the first frame update
     void Start()
@@ -24,7 +24,7 @@ public class Soup : MonoBehaviour
         playerController.playerResources.ChangeAdrenaline(1);
 
         m_soupVisuals.SetActive(false);
-        m_interactable.m_isReady = false;
+        m_interactableUI.gameObject.SetActive(false);
         m_soupAvailable = false;
 
         //m_interactable.gameObject.SetActive(false);

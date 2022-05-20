@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -45,8 +46,8 @@ namespace ActorSystem.AI.Components
         protected Rigidbody m_body;
 
         //Target Orientation
-        protected Vector3 m_targetPosition;
-        protected Quaternion m_targetRotation;
+        public Vector3 m_targetPosition { get; protected set; }
+        public Quaternion m_targetRotation { get; protected set; }
 
         private float m_delayTimer = 0f;
         public float m_baseStopDist { get; private set; }
@@ -68,7 +69,10 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Start()
         {
-            
+            if(!m_agent.isOnNavMesh)
+            {
+                KnockBack(Vector3.up, false);
+            }
         }
 
         // Update is called once per frame
@@ -304,20 +308,24 @@ namespace ActorSystem.AI.Components
             return Physics.OverlapSphere(transform.position, m_agent.radius, 1 << LayerMask.NameToLayer("Default")).Length > 0;
         }
 
-        public void KnockBack(Vector3 force)
+        public void KnockBack(Vector3 force, bool transformDirection = true)
         {
             if(m_canBeKnocked)
             {
-                SetTargetVelocity(force);
+                Vector3 knockForce = force;
+                //if (transformDirection)
+                //    knockForce = transform.TransformVector(force);
+
+                SetTargetVelocity(knockForce);
                 if (!m_isKnocked)
                 {
                     m_isKnocked = true;
                     m_body.isKinematic = false;
                     m_agent.updatePosition = false;
-                    m_body.velocity = transform.TransformVector(force);
+                    m_body.velocity = knockForce;
                     return;
                 }
-                m_body.velocity = transform.TransformVector(force);
+                m_body.velocity = knockForce;
             }
         }
 

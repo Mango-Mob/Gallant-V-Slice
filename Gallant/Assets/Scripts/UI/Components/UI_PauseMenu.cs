@@ -34,16 +34,13 @@ public class UI_PauseMenu : MonoBehaviour
     void Start()
     {
         m_window.SetActive(false);
-        m_returnToHubButton.interactable = (SceneManager.GetActiveScene().name != "HubWorld");
+        m_returnToHubButton.interactable = (GameManager.m_saveInfo.m_startedRun);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (NavigationManager.Instance.IsVisible)
-            return;
-
-        if(InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsGamepadButtonDown(ButtonType.START, 0))
+        if(!NavigationManager.Instance.IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsGamepadButtonDown(ButtonType.START, 0)))
         {
             SetPause(!m_window.activeInHierarchy);
         }

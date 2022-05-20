@@ -14,15 +14,16 @@ public class State_Roam : State
 
         float distance = 10f;
         Vector3 currPos = m_myUser.transform.position;
-        Vector3 targetPos;
         NavMeshHit hit;
 
-        do
+        if(NavMesh.SamplePosition(currPos + Random.insideUnitSphere * distance, out hit, distance, NavMesh.AllAreas))
         {
-            targetPos = currPos + Random.insideUnitSphere * distance;
-        } while (!NavMesh.SamplePosition(targetPos, out hit, 1.0f, 1));
-
-        targetLoc = hit.position;
+            targetLoc = hit.position;
+        }
+        else
+        {
+            m_myUser.SetState(new State_Idle(m_myUser));
+        }
     }
 
     public override void Update()

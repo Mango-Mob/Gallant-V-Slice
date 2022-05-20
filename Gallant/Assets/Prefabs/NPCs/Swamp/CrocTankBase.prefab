@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1157569178235442120}
   - component: {fileID: 7116382684557529845}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: AOE_Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -383,7 +383,6 @@ GameObject:
   - component: {fileID: 6124850022068762916}
   - component: {fileID: 4486176056573752642}
   - component: {fileID: 2541021188788366724}
-  - component: {fileID: 4559161072388020571}
   - component: {fileID: 8909545712804844356}
   m_Layer: 9
   m_Name: CrocTankBase
@@ -403,6 +402,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children:
+  - {fileID: 6000631575986559645}
   - {fileID: 7206288806589895415}
   - {fileID: 272828369887087823}
   - {fileID: 1839906736469220003}
@@ -496,6 +496,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_timeSinceLastHit: 0
   m_maxTimeSinceLastHit: 2
+  m_indicatorAnim: {fileID: 4128594163365884350}
 --- !u!114 &4968283057076040477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -510,6 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_statusPrefab: {fileID: 873845993956563758, guid: 3ed1cd4414ac9e4479634ab99b646432,
     type: 3}
+  m_headLoc: {fileID: 6000631575986559645}
   IsImmuneToFrost: 0
   IsImmuneToFlame: 0
   IsImmuneToStun: 0
@@ -602,6 +604,7 @@ MonoBehaviour:
     type: 3}
   m_spawnDelayMin: 0
   m_spawnDelayMax: 0
+  m_spawnTime: 1
 --- !u!114 &4486176056573752642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -631,22 +634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4559161072388020571
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 425316107159982727}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64f2ea71c47602f4588f1e1cf03770d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_spawnning: 0
-  m_spawnVFX: {fileID: 0}
-  m_spawnDelayMin: 0
-  m_spawnDelayMax: 0
 --- !u!114 &8909545712804844356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -663,7 +650,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -1296,7 +1283,7 @@ GameObject:
   - component: {fileID: 7913740491804176233}
   - component: {fileID: 3206629793720540068}
   - component: {fileID: 2894015996296735615}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CrocMobWillEdit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1722,7 +1709,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4993169555546025664}
   - component: {fileID: 4128594163365884350}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: SlamIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2030,7 +2017,7 @@ Transform:
   m_LocalScale: {x: 1.1999999, y: 1.1999999, z: 1.1999999}
   m_Children: []
   m_Father: {fileID: 425316107159982730}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3985589489842199225
 GameObject:
@@ -2073,7 +2060,7 @@ GameObject:
   m_Component:
   - component: {fileID: 370154375431446635}
   - component: {fileID: 8380398489015477895}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Melee_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3003,7 +2990,7 @@ GameObject:
   m_Component:
   - component: {fileID: 466474750267910839}
   - component: {fileID: 947202902480477499}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Melee_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4092,7 +4079,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1905838394354107997}
   - component: {fileID: 8570889097549385695}
-  m_Layer: 0
+  m_Layer: 22
   m_Name: Melee_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4166,6 +4153,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8006789422471273479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6000631575986559645}
+  m_Layer: 0
+  m_Name: HeadTop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6000631575986559645
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8006789422471273479}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.064264745, y: 2.577, z: 0.74217767}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 425316107159982730}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8019276863075141709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4207,7 +4224,7 @@ Transform:
   - {fileID: 6816603506728127203}
   - {fileID: 4993169555546025664}
   m_Father: {fileID: 425316107159982730}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8019276863075141697
 MonoBehaviour:
@@ -5182,7 +5199,7 @@ PrefabInstance:
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5016897514871456099, guid: d387efa772994064986990a62bdc8bcd,
         type: 3}

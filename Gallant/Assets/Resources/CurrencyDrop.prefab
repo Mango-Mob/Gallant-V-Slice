@@ -77,11 +77,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6a071f4b422da742aaf1b91abb0da14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_heldAdrenaline: 0.3
+  m_heldValue: 1
   m_pickupRange: 0.45
   m_pullRange: 10
   m_forceMultiplier: 15
   m_animator: {fileID: 0}
+  m_vfxPrefab: {fileID: 3444104161554182547, guid: c8e4c3eaf1de6234586106acd911b815,
+    type: 3}
 --- !u!95 &2685721157747373425
 Animator:
   serializedVersion: 3
@@ -117,6 +119,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6506413295346234549}
+        m_TargetAssemblyTypeName: 
         m_MethodName: DestroyObject
         m_Mode: 1
         m_Arguments:

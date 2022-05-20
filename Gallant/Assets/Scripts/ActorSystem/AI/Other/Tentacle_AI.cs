@@ -148,7 +148,7 @@ namespace ActorSystem.AI.Other
         {
             m_submergStatus = true;
             m_myBrain.m_animator?.SetBool("Visible", !m_submergStatus);
-
+            m_octoBrain.m_currentlyAttacking.Remove(this);
             if (refresh && m_myBrain.IsDead)
             {
                 m_myBrain.Refresh();
@@ -194,12 +194,11 @@ namespace ActorSystem.AI.Other
                     Submerge(false);
                     after = m_myBrain.m_currHealth;
                     m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
-                    m_octoBrain.m_currentlyAttacking.Remove(this);
                     return true;
                 }
 
                 after = m_myBrain.m_currHealth;
-                m_octoBrain.DealDamage(before - after, _type, piercingVal, _damageLoc);
+                m_octoBrain.DealDamageSilent(before - after, _type);
             }
             return false;
         }
@@ -346,6 +345,14 @@ namespace ActorSystem.AI.Other
         public void PlaySwipe()
         {
             m_myBrain.m_audioAgent.m_myAgent.Play("TentacleSwipe", false, Random.Range(0.90f, 1.1f));
+        }
+
+        public void SetColliders(bool status)
+        {
+            foreach (var collider in GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = status;
+            }
         }
     }
 }

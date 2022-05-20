@@ -35,12 +35,19 @@ public class State_FleeFromTarget : State
         if(currDist < idealDist * 0.85f)
         {
             m_myUser.m_activeStateText = "FLEE (fleeing)";
-            sampleLoc = m_myActor.transform.position + forward * (currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
         }
-        else if(currDist > idealDist * 1.25f)
+        else if(currDist > idealDist * 1.15f)
         {
             m_myUser.m_activeStateText = "FLEE (closing dist)";
-            sampleLoc = m_myActor.transform.position + forward * (currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
+        }
+        else
+        {
+            m_myUser.m_activeStateText = "FLEE (waiting)";
+            m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
+            SampleTransitionToAttack();
+            return;
         }
 
         NavMesh.SamplePosition(sampleLoc, out sampleHit, m_myActor.m_myData.radius * 2f, ~0);
@@ -56,60 +63,25 @@ public class State_FleeFromTarget : State
         {
             m_myUser.m_activeStateText = "FLEE (waiting)";
             m_myActor.SetTargetOrientaion(m_myActor.m_target.transform.position);
-            if (m_myActor.m_states.Contains(Type.ATTACK))
-            {
-                int id = m_myActor.m_myBrain.GetNextAttack();
-                if (id >= 0)
-                {
-                    m_myUser.SetState(new State_Attack(m_myUser, id));
-                }
-            }
-        }
-        //if (userAsActor.m_animator != null && userAsActor.m_animator.m_hasVelocity)
-        //    userAsActor.m_animator.SetVector3("VelocityHorizontal", "",  "VelocityVertical", userAsActor.m_legs.localVelocity.normalized, 0.25f);
-        //
-        //if (userAsActor.m_target == null)
-        //{
-        //    m_myUser.SetState(new State_Idle(m_myUser));
-        //    return;
-        //}
-        //    
-        //float dist = Vector3.Distance(userAsActor.m_target.transform.position, userAsActor.transform.position);
-        //
-        //if(dist < userAsActor.m_idealDistance)
-        //{
-        //    //MOVE
-        //    Vector3 direct = userAsActor.transform.position - userAsActor.m_target.transform.position;
-        //    NavMeshHit hit;
-        //    if(NavMesh.SamplePosition(userAsActor.transform.position + direct.normalized, out hit, 0.5f, ~0))
-        //    {
-        //        userAsActor.m_legs.SetTargetLocation(hit.position, true);
-        //    }
-        //    else if (NavMesh.SamplePosition(userAsActor.transform.position - direct.normalized, out hit, 0.5f, ~0))
-        //    {
-        //        userAsActor.m_legs.SetTargetLocation(hit.position, true);
-        //    }
-        //}
-        //else
-        //{
-        //    userAsActor.m_legs.SetTargetRotation(Quaternion.LookRotation((userAsActor.m_target.transform.position - userAsActor.transform.position).normalized, Vector3.up));
-        //    m_delay -= Time.deltaTime;
-        //
-        //    //Check if there is a target to move to.
-        //    userAsActor.m_legs.SetTargetRotation(Quaternion.LookRotation(userAsActor.m_target.transform.position - userAsActor.transform.position, Vector3.up));
-        //    if (m_myActor.m_states.Contains(Type.ATTACK))
-        //    {
-        //        State_Attack.AttemptTransition(m_myUser);
-        //    }
-        //    else
-        //    {
-        //        m_myUser.SetState(new State_Idle(m_myUser));
-        //    }
-        //}       
+            SampleTransitionToAttack();
+            return;
+        }  
     }
 
     public override void End()
     {
+        
+    }
 
+    private void SampleTransitionToAttack()
+    {
+        if (m_myActor.m_states.Contains(Type.ATTACK))
+        {
+            int id = m_myActor.m_myBrain.GetNextAttack();
+            if (id >= 0)
+            {
+                m_myUser.SetState(new State_Attack(m_myUser, id));
+            }
+        }
     }
 }

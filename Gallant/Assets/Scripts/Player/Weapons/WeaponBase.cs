@@ -26,6 +26,11 @@ public abstract class WeaponBase : MonoBehaviour
     public ParticleSystem[] m_weaponTrailParticles;
     private bool m_trailActive = false;
 
+    private bool m_attackedThisFrame = false;
+    private bool m_releasedThisFrame = false;
+    private bool m_altAttackedThisFrame = false;
+    private bool m_altReleasedThisFrame = false;
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -54,7 +59,13 @@ public abstract class WeaponBase : MonoBehaviour
         {
             SetTrailActive(false);
         }
+
+        m_attackedThisFrame = false;
+        m_releasedThisFrame = false;
+        m_altAttackedThisFrame = false;
+        m_altReleasedThisFrame = false;
     }
+
     private void OnDestroy()
     {
         Destroy(m_weaponObject);
@@ -63,22 +74,38 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (_active)
         {
+            if (m_attackedThisFrame)
+                return;
+
+            m_attackedThisFrame = true;
             WeaponFunctionality();
         }
         else
+        {
+            if (m_releasedThisFrame)
+                return;
+
+            m_releasedThisFrame = true;
             WeaponRelease();
+        }
     }
     public void TriggerWeaponAlt(bool _active)
     {
-        Debug.Log($"Triggering Alt Attack: {_active}");
         if (_active)
         {
+            if (m_altAttackedThisFrame)
+                return;
+
+            m_altAttackedThisFrame = true;
             playerController.playerResources.ChangeStamina(-m_weaponData.m_altAttackStaminaCost);
             WeaponAltFunctionality();
         }
         else
         {
-            Debug.Log("Release Navidad");
+            if (m_altReleasedThisFrame)
+                return;
+
+            m_altReleasedThisFrame = true;
             WeaponAltRelease();
         }
     }
@@ -126,13 +153,13 @@ public abstract class WeaponBase : MonoBehaviour
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
         {
-            if (hitList.Contains(collider.gameObject))
+            Actor actor = collider.GetComponentInParent<Actor>();
+            if (hitList.Contains(collider.gameObject) || (actor != null && hitList.Contains(actor.gameObject)))
                 continue;
 
             bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
 
             playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (_usedHand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (_usedHand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
-            Actor actor = collider.GetComponentInParent<Actor>();
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
@@ -142,9 +169,11 @@ public abstract class WeaponBase : MonoBehaviour
                 StatusEffectContainer statusContainer = collider.GetComponentInParent<StatusEffectContainer>();
                 if (statusContainer != null && _status != null)
                 {
-                    statusContainer.AddStatusEffect(_status);
+                    statusContainer.AddStatusEffect(_status.Clone());
                 }
             }
+            if (actor != null)
+                hitList.Add(actor.gameObject);
             hitList.Add(collider.gameObject);
 
             if (!isRubble)
@@ -232,7 +261,7 @@ public abstract class WeaponBase : MonoBehaviour
     protected GameObject ConeAttack(Vector3 _pos, WeaponData _data, Hand _hand, float _angle)
     {
         Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
-        DamageColliders(_data, _pos, colliders);
+        DamageColliders(_data, _pos, colliders, _hand);
 
         GameObject vfx = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
         ParticleSystem particleSystem = vfx.GetComponentInChildren<ParticleSystem>();

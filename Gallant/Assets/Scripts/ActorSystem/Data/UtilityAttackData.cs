@@ -29,6 +29,7 @@ namespace ActorSystem.Data
                     ApplyEffect(damageMod);
                     m_intensity = m_startIntensity;
                     Destroy(m_proj);
+                    m_proj = null;
                     break;
                 default:
                     break;
@@ -92,6 +93,12 @@ namespace ActorSystem.Data
                 case UtilityType.Teleport:
                     base.EndActor(user);
                     (user.m_myBrain.m_legs as Actor_Leap).m_speedModifier = 1f;
+                    break;
+                case UtilityType.Tracker:
+                    if(m_proj != null)
+                    {
+                        Destroy(m_proj);
+                    }
                     break;
                 default:
                     break;

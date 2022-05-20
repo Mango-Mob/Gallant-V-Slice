@@ -13,6 +13,7 @@ public class LevelData : ScriptableObject
     public float m_width = 1024, m_height = 900;
     public List<WaveData> m_spawnableWaves;
     public Color m_portalColor;
+    public float m_levelUpPerFloor = 1.45f;
     public enum FloorType { REST, EVENT, COMBAT, SPECIAL};
 
     [System.Serializable]
@@ -24,28 +25,7 @@ public class LevelData : ScriptableObject
         public float minDiffCost;
         public int minWaves;
         public int maxWaves;
-        public SceneData[] potentialScenes;
-        public float[] probability;
-
-        public SceneData SelectScene()
-        {
-            int rollMax = 10000;
-            float roll = Random.Range(0, rollMax);
-            float rollOver = 0;
-            if (potentialScenes.Length == 1)
-                return potentialScenes[0];
-            for (int i = 0; i < probability.Length; i++)
-            {
-                if(roll < (probability[i] + rollOver) * rollMax)
-                {
-                    //Select
-                    return potentialScenes[i];
-                }
-                rollOver += probability[i];
-            }
-
-            return null;
-        }
+        public List<Extentions.WeightedOption<SceneData>> potentialScenes;
     }
 
     public SceneData m_root;

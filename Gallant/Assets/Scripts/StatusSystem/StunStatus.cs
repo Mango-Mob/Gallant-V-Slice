@@ -6,7 +6,7 @@ public class StunStatus : StatusEffect
 {
     public StunStatus(float dur) : base(dur, dur) { }
 
-    public override void StartActor(Actor _actor)
+    public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show VFX
         if (_actor.m_myBrain.m_legs)
@@ -14,13 +14,18 @@ public class StunStatus : StatusEffect
         if (_actor.m_myBrain.m_animator)
             _actor.m_myBrain.m_animator.SetPause(true);
 
-        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _actor.m_selfTargetTransform);
+        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, headLoc);
         _actor.m_myBrain.IsStunned = true;
     }
 
     public override void StartPlayer(Player_Controller _player)
     {
         throw new NotImplementedException();
+    }
+
+    public override StatusEffect Clone()
+    {
+        return new StunStatus(m_duration);
     }
 
     public override void EndActor(Actor _actor)

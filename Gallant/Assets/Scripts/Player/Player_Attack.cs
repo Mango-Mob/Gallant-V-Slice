@@ -703,7 +703,8 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Vector3 damageSource = (_damageSource == null ? transform.position : _damageSource);
+        Debug.Log("Source = " + _damageSource);
+        Vector3 damageSource = (_damageSource == Vector3.zero ? transform.position : _damageSource);
 
         Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)
@@ -735,7 +736,6 @@ public class Player_Attack : MonoBehaviour
             actor.DealImpactDamage(_impactForce, _piercingVal, impactDirection.normalized, _damageType);
             playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
         }
-
 
         Destructible destructible = _target.GetComponentInParent<Destructible>();
         if (destructible != null)

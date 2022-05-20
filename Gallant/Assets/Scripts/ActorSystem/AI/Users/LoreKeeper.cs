@@ -53,8 +53,11 @@ namespace ActorSystem.AI.Users
         {
             isVisible = TutorialManager.Instance.tutorialPosition == myTutorialPosition && !isDone && !GameManager.Instance.IsInCombat;
             m_myBrain.m_animator.SetBool("IsVisible", isVisible);
+            m_myBrain.m_canBeTarget = isVisible;
+            m_myBrain?.m_myOutline.SetEnabled(isVisible);
+
             GetComponent<Collider>().enabled = isVisible;
-            m_keyboardInput.transform.parent.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
+            m_keyboardInput.transform.gameObject.SetActive(m_showUI && !InputManager.Instance.isInGamepadMode);
             m_gamepadInput.gameObject.SetActive(m_showUI && InputManager.Instance.isInGamepadMode);
             if (m_showUI)
             {

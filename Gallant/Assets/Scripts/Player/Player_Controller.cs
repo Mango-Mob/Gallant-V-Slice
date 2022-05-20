@@ -12,6 +12,8 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Controller : MonoBehaviour
 {
+    public bool m_spawnWithAnimation = false;
+    private bool m_spawning = false;
     public GameObject testObject;
     public Camera playerCamera { private set; get; }
     public Animator animator;
@@ -72,6 +74,8 @@ public class Player_Controller : MonoBehaviour
 
     private CameraBounds m_cameraBounds;
     public bool m_cameraFreeze = false;
+    private float m_walkRunLerp = 0.0f;
+    private float m_walkRunLerpSpeed = 2.0f;
 
     private void Awake()
     {
@@ -100,6 +104,17 @@ public class Player_Controller : MonoBehaviour
         playerCamera = Camera.main;
         m_startZoom = playerCamera.fieldOfView;
         LoadPlayerInfo();
+
+        if (m_spawnWithAnimation)
+        {
+            m_spawning = true;
+            animator.SetTrigger("Spawn");
+        }
+    }
+
+    public void FinishSpawn()
+    {
+        m_spawning = false;
     }
 
     private void FixedUpdate()
@@ -130,7 +145,7 @@ public class Player_Controller : MonoBehaviour
         m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
         playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
 
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning)
         {
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
@@ -171,8 +186,6 @@ public class Player_Controller : MonoBehaviour
         //    swordRunWeight += playerAttack.m_leftWeapon.GetWeaponName() == "Sword" ? -1.0f : 0.0f;
         //if (playerAttack.m_rightWeaponData != null)
         //    swordRunWeight += playerAttack.m_rightWeapon.GetWeaponName() == "Sword" ? 1.0f : 0.0f;
-
-        //animator.SetFloat("SwordRunWeight", swordRunWeight);
 
         if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
@@ -225,6 +238,15 @@ public class Player_Controller : MonoBehaviour
 
         // Move player
         playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.Instance.IsBindDown("Roll", gamepadID), Time.deltaTime);
+
+        // Walk run lerp
+        bool isWalkSpeed = animator.GetFloat("Vertical") <= 0.5f;
+        m_walkRunLerp = Mathf.Clamp01(m_walkRunLerp + (isWalkSpeed ? -1.0f : 1.0f) * Time.deltaTime * m_walkRunLerpSpeed);
+        if (isWalkSpeed)
+        {
+            animator.SetFloat("Vertical", animator.GetFloat("Vertical") * (1.0f + (1.0f - m_walkRunLerp)));
+        }
+        animator.SetFloat("WalkRunBlend", m_walkRunLerp);
 
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
@@ -463,7 +485,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (playerAttack.m_leftWeaponData != null)
                     {
-                        WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, _drop.m_abilityData);
+                        WeaponData.AttemptAbilityUpgrade(playerAttack.m_leftWeaponData, _drop.m_abilityData);
                         Destroy(_drop.gameObject);
                     }
                 }
@@ -471,7 +493,7 @@ public class Player_Controller : MonoBehaviour
                 {
                     if (playerAttack.m_rightWeaponData != null)
                     {
-                        WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, _drop.m_abilityData);
+                        WeaponData.AttemptAbilityUpgrade(playerAttack.m_rightWeaponData, _drop.m_abilityData);
                         Destroy(_drop.gameObject);
                     }
                 }
@@ -664,7 +686,7 @@ public class Player_Controller : MonoBehaviour
                 Debug.Log("BLOCK");
                 animator.SetTrigger("BlockHit");
 
-                playerResources.ChangeStamina(-_damage / 8.0f);
+                playerResources.ChangeStamina(-5.0f);
                 if (playerResources.m_isExhausted)
                 {
                     playerAudioAgent.PlayShieldBlock(); // Guard break audio
@@ -736,6 +758,21 @@ public class Player_Controller : MonoBehaviour
                 playerResources.SetHealth(GameManager.RetrieveHealth());
 
             playerResources.SetOrbCount(GameManager.RetrieveOrbCount());
+        }
+        else
+        {
+            if (playerAttack.m_leftWeaponData)
+            {
+                WeaponData clonedLeftData = ScriptableObject.CreateInstance<WeaponData>();
+                clonedLeftData.Clone(playerAttack.m_leftWeaponData);
+                playerAttack.m_leftWeaponData = clonedLeftData;
+            }
+            if (playerAttack.m_rightWeaponData)
+            {
+                WeaponData clonedRightData = ScriptableObject.CreateInstance<WeaponData>();
+                clonedRightData.Clone(playerAttack.m_rightWeaponData);
+                playerAttack.m_rightWeaponData = clonedRightData;
+            }
         }
         playerSkills.EvaluateSkills();
 

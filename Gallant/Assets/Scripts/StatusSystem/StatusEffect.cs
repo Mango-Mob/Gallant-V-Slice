@@ -45,7 +45,7 @@ public abstract class StatusEffect
         LoadDisplayVFX();
     }
 
-    public abstract void StartActor(Actor _actor);
+    public abstract void StartActor(Actor _actor, Transform headLoc);
     public abstract void StartPlayer(Player_Controller _player);
 
     public abstract void UpdateOnActor(Actor _actor, float dt);
@@ -58,4 +58,6 @@ public abstract class StatusEffect
 
     protected abstract void LoadDisplayImage();
     protected abstract void LoadDisplayVFX();
+
+    public abstract StatusEffect Clone();
 }

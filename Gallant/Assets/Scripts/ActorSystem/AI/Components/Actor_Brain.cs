@@ -28,6 +28,7 @@ namespace ActorSystem.AI.Components
         public Actor_PatrolData m_patrol {get; private set;}
         public Actor_AudioAgent m_audioAgent { get; private set; }
         public Actor_Ragdoll m_ragDoll { get; private set; }
+        public Actor_Indicator[] m_indicators { get; private set; }
         public Outlinable m_myOutline { get; private set; }
         #endregion
 
@@ -35,7 +36,8 @@ namespace ActorSystem.AI.Components
         public bool IsStunned { get; set; } = false;
         public bool m_canBeTarget = true;
         public bool m_forceShowUI = false;
-        
+        public bool m_lookAtHit { get; set; } = true;
+
         [Header("Preview")]
         public float m_currHealth;
         public float m_currStamina;
@@ -56,12 +58,14 @@ namespace ActorSystem.AI.Components
         private Timer m_refreshTimer;
 
         private UI_Bar m_staminaBar;
+        private float m_damageTimer = 0;
+        private float m_damageHold = 0;
 
         public bool m_isDisolving { 
             get {
                 foreach (var material in m_materials)
                 {
-                    if (material.m_isDisolving)
+                    if (material.m_isDisolving != 0)
                         return true;
                 }
                 return false;
@@ -80,7 +84,7 @@ namespace ActorSystem.AI.Components
             m_ragDoll = GetComponentInChildren<Actor_Ragdoll>();
             m_icon = GetComponentInChildren<Actor_MiniMapIcon>();
             m_myOutline = GetComponentInChildren<Outlinable>();
-
+            m_indicators = GetComponentsInChildren<Actor_Indicator>();
             SetOutlineEnabled(false);
         }
         public void Start()
@@ -104,10 +108,6 @@ namespace ActorSystem.AI.Components
             //Externals
             UpdateExternals();
             m_refreshTimer?.Update();
-            if(m_canBeTarget && m_ui != null && m_myOutline != null)
-            {
-                m_ui.SetEnabled(m_forceShowUI || m_myOutline.enabled);
-            }
         }
 
         public override void SetEnabled(bool status)
@@ -201,6 +201,7 @@ namespace ActorSystem.AI.Components
             }
                 
             m_currHealth = m_startHealth;
+            m_currStamina = m_startStamina;
             m_currPhyResist = m_basePhyResist;
             m_currAbilResist = m_baseAbilResist;
         }
@@ -265,14 +266,14 @@ namespace ActorSystem.AI.Components
             if (IsDead)
                 return true;
             
-            if(_damageLoc != null && m_legs != null)
+            if(_damageLoc != null && m_legs != null && m_lookAtHit)
             {
                 Vector3 direction = (_damageLoc.Value - transform.position).normalized;
                 direction.y = 0;
                 transform.forward = direction.normalized;
-
+                
                 if(m_arms != null)
-                    this.m_arms.SetBrainLag(0.5f, true);
+                    this.m_arms.SetBrainLag(0.35f, true);
 
                 if(m_target == null)
                 {
@@ -294,12 +295,20 @@ namespace ActorSystem.AI.Components
                     break;
             }
 
+            if (playAudio)
+                HUDManager.Instance.GetDamageDisplay().DisplayDamage(transform, _type, damage);
+
+            m_ui?.Show();
             //External
             m_refreshTimer?.Start(5.0f);
 
             if(m_arms != null && m_arms.hasCancel)
             {
-                EndAttack();
+                m_arms.End();
+                foreach (var indicator in m_indicators)
+                {
+                    indicator.GetComponent<Animator>().SetTrigger("Cancel");
+                }
                 m_animator.SetTrigger("Cancel");
             }
 
@@ -320,7 +329,11 @@ namespace ActorSystem.AI.Components
                 GameManager.m_killCount++;
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
-
+                m_arms?.End();
+                foreach (var indicator in m_indicators)
+                {
+                    indicator.SetEnabled(false);
+                }
                 m_audioAgent?.PlayDeath();
             }
             else if (playAudio)
@@ -333,15 +346,16 @@ namespace ActorSystem.AI.Components
 
         public bool HandleImpactDamage(float damage, float piercingVal, Vector3 direction, CombatSystem.DamageType _type)
         {
-            if (IsDead)
+            float impactToKnockbackConst = 1/5f;
+            if (IsDead && m_ragDoll != null)
             {
-                m_ragDoll.m_mainCollider.GetComponent<Rigidbody>().velocity = transform.TransformVector(direction * damage);
+                m_ragDoll.m_mainCollider.GetComponent<Rigidbody>().velocity = transform.TransformVector(direction * damage * impactToKnockbackConst);
                 return false;
             }
 
             if(!m_canStagger)
             {
-                m_legs?.KnockBack(direction * damage);
+                m_legs?.KnockBack(direction * damage * impactToKnockbackConst);
                 return false;
             }
 
@@ -358,19 +372,10 @@ namespace ActorSystem.AI.Components
                     damage *= (1.0f - CombatSystem.CalculateDamageNegated(_type, 0, 0));
                     break;
             }
-
             m_currStamina = Mathf.Clamp(m_currStamina - damage, 0, m_startStamina);
+            m_legs?.KnockBack(direction * (damage * impactToKnockbackConst) * 0.4f);
 
-            if (m_currStamina == 0)
-            {
-                m_legs?.KnockBack(direction * damage);
-                return true;
-            }
-            else
-            {
-                m_legs?.KnockBack(direction * damage * 0.5f);
-                return false;
-            }
+            return m_currStamina == 0;
         }
 
         public void Refresh()

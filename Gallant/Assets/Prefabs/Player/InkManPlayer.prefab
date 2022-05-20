@@ -374,7 +374,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2148400951
+    m_Bits: 2152595255
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -493,6 +493,7 @@ GameObject:
   - component: {fileID: 6606438092573322739}
   - component: {fileID: 972039595792485957}
   - component: {fileID: 2701469700978438296}
+  - component: {fileID: 4347671907178783412}
   m_Layer: 8
   m_Name: InkManPlayer
   m_TagString: Player
@@ -530,6 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6dfc69dd8a2254c9edb82fa1119063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_spawnWithAnimation: 0
   testObject: {fileID: 0}
   animator: {fileID: 7932121596817040913}
   armsMask: {fileID: 31900000, guid: d46eaab4bb8653843b6e7e093d56f268, type: 2}
@@ -571,7 +573,7 @@ MonoBehaviour:
   m_rollSpeed: 9
   m_rollDistanceMult: 5
   m_attackMoveSpeed: 0.5
-  m_healMoveSpeedMult: 0.7
+  m_healMoveSpeedMult: 0.3
   m_attackMoveSpeedLerpSpeed: 4
   m_rollCost: 35
   m_turnAnimationTime: 0.2
@@ -594,7 +596,7 @@ MonoBehaviour:
   m_iceSlip: 1
   m_bogSlow: 0.5
   m_lavaDamage: 10
-  m_speedBoost: 2
+  m_speedBoost: 1.5
   m_jumpBounce: 10
   m_touchedSurfaces: 
 --- !u!114 &550414675513458815
@@ -676,7 +678,7 @@ MonoBehaviour:
   m_exhaustDurationTimer: 0
   m_exhaustRegenMult: 0.5
   m_staminaRegenDelay: 1
-  m_staminaRegenRate: 20
+  m_staminaRegenRate: 40
   m_staminaBarRadialRange: 0.19
   m_exhaustDuration: 3
   m_adrenalineHeal: 40
@@ -697,6 +699,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_statusPrefab: {fileID: 0}
+  m_headLoc: {fileID: 0}
   IsImmuneToFrost: 0
   IsImmuneToFlame: 0
   IsImmuneToStun: 0
@@ -820,6 +823,22 @@ MonoBehaviour:
   m_extraHealOrbs: 0
   m_attackSpeedStatusBonus: 1
   m_movementSpeedStatusBonus: 1
+--- !u!208 &4347671907178783412
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122777058140226024}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.2, y: 1, z: 0.2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &4263136085482831028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,6 +1305,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b6649917cc227ff4086e0a5a05bde20c, type: 2}
+    - target: {fileID: -6848458255392166931, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -6095986519387722582, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1296,11 +1320,36 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 414ebf910fd818241894b41729b1ee7f, type: 2}
+    - target: {fileID: -4051461111170309175, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -3222858453042770478, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: -3059848043687035477, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 414ebf910fd818241894b41729b1ee7f, type: 2}
+    - target: {fileID: -1942054847456865880, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -549341597750185671, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 120852832288407609, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 121115362928033373, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1321,26 +1370,76 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 47edc2d510237d441997d66120f659e9, type: 2}
+    - target: {fileID: 1873554753622733621, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2673072619405778437, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 08ff9dec3aa42cb4f977ffe1f7142874, type: 2}
+    - target: {fileID: 4104680891612922544, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4118836350931082626, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 47edc2d510237d441997d66120f659e9, type: 2}
+    - target: {fileID: 4307517788155646311, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5191492074492589309, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 47edc2d510237d441997d66120f659e9, type: 2}
+    - target: {fileID: 5374474776784906572, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 5734798225466899547, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 8e4d31f3f66c85e4f90f14e97d2545be, type: 2}
+    - target: {fileID: 6015535934615346612, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6352689021045315629, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6673903067151852327, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7193141760621906988, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7225782569155129774, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8553970891864147393, guid: 4edd2e8ef40db864f84f9038afc9dc37,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 9168561536137666218, guid: 4edd2e8ef40db864f84f9038afc9dc37,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1507,7 +1606,19 @@ MonoBehaviour:
         m_CallState: 2
   eventFive:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3122777058140226017}
+        m_TargetAssemblyTypeName: Player_Controller, Assembly-CSharp
+        m_MethodName: FinishSpawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   animEvents:
   - _name: LeftWeapon
     _event:

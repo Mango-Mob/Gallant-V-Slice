@@ -1379,7 +1379,6 @@ GameObject:
   - component: {fileID: 6800129612680544971}
   - component: {fileID: 2098726697452933951}
   - component: {fileID: 1494381621860711093}
-  - component: {fileID: 6232114292092991291}
   - component: {fileID: 3450740905111738071}
   - component: {fileID: 4400527043297260045}
   m_Layer: 9
@@ -1451,6 +1450,7 @@ MonoBehaviour:
   m_acceleration: 6
   m_stoppingDist: 0
   isLantern: 0
+  isHold: 0
   emergeOnAwake: 0
   isVisible: 0
   m_headPhaseAttacks:
@@ -1467,6 +1467,7 @@ MonoBehaviour:
     size: {x: 0, y: 0, z: 0}
     radius: 0
   m_needsToUpdateAttacks: 0
+  m_octoBrain: {fileID: 0}
 --- !u!114 &2695535844105113941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1615,6 +1616,38 @@ MonoBehaviour:
             m_StringArgument: Swipe
             m_BoolArgument: 0
           m_CallState: 2
+  - _name: EnableCollider
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4334076525128619282}
+          m_TargetAssemblyTypeName: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
+          m_MethodName: SetColliders
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Swipe
+            m_BoolArgument: 1
+          m_CallState: 2
+  - _name: DisableCollider
+    _event:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4334076525128619282}
+          m_TargetAssemblyTypeName: ActorSystem.AI.Other.Tentacle_AI, Assembly-CSharp
+          m_MethodName: SetColliders
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Swipe
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &3769122964767734331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1667,8 +1700,17 @@ MonoBehaviour:
   m_lastAttackName: 
   m_myData:
   - {fileID: 11400000, guid: e95a513ca22c7f240958fc6211f91663, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 7ce2b637238e188439b01a9d53116361, type: 2}
+  - {fileID: 11400000, guid: e95a513ca22c7f240958fc6211f91663, type: 2}
+  m_brainDecay:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_timeSinceLastHit: 0
+  m_maxTimeSinceLastHit: 2
+  m_indicatorAnim: {fileID: 0}
 --- !u!114 &2098726697452933951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1700,40 +1742,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &6232114292092991291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4334076525128619281}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2d8418b0b9634b1892b0268dd9c2743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boneShape: 1
-  drawBones: 1
-  drawTripods: 0
-  boneSize: 1.77
-  tripodSize: 1
-  boneColor: {r: 0, g: 0, b: 1, a: 0.5}
-  m_Transforms:
-  - {fileID: 4334076524922629103}
-  - {fileID: 4334076525106418905}
-  - {fileID: 4334076524688368962}
-  - {fileID: 4334076524560283332}
-  - {fileID: 4334076525079005533}
-  - {fileID: 4334076525099119297}
-  - {fileID: 4334076524293372755}
-  - {fileID: 4334076525002051730}
-  - {fileID: 4334076523388282768}
-  - {fileID: 4334076523765269025}
-  - {fileID: 4334076523504946190}
-  - {fileID: 4334076523199458119}
-  - {fileID: 4334076523658821087}
-  - {fileID: 4334076524110517782}
-  - {fileID: 4334076523094254653}
 --- !u!114 &3450740905111738071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1748,6 +1756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_statusPrefab: {fileID: 873845993956563758, guid: 3ed1cd4414ac9e4479634ab99b646432,
     type: 3}
+  m_headLoc: {fileID: 0}
   IsImmuneToFrost: 0
   IsImmuneToFlame: 0
   IsImmuneToStun: 1
