@@ -29,6 +29,11 @@ public class WeakenStatus : StatusEffect
         return false;
     }
 
+    public override StatusEffect Clone()
+    {
+        return new WeakenStatus(m_strength, m_duration);
+    }
+
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         //m_maxResistance = _actor.m_myData.phyResist;

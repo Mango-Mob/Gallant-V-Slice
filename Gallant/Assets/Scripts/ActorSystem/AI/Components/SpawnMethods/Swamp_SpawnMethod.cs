@@ -7,6 +7,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
         public GameObject m_spawnVFX;
         public float m_spawnDelayMin;
         public float m_spawnDelayMax;
+        public float m_spawnTime = 1.0f;
 
         private bool m_hasResentlySpawnned;
         private float m_timer;
@@ -33,7 +34,12 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
             GetComponent<Collider>().enabled = false;
-            //m_spawnning = true;
+
+            foreach (var item in m_myActor.m_myBrain.m_materials)
+            {
+                item.enabled = true;
+                item.StartDisolve(m_timer);
+            }
         }
 
         protected override void Update()
@@ -55,6 +61,10 @@ namespace ActorSystem.AI.Components.SpawnMethods
                 m_myActor.m_myBrain.m_animator.SetEnabled(true);
                 m_myActor.m_myBrain.m_animator.SetBool("Spawn", true);
                 m_myActor.m_myBrain.m_animator.PlayAnimation("Spawn_Loop");
+                foreach (var item in m_myActor.m_myBrain.m_materials)
+                {
+                    item.StartResolve(m_spawnTime);
+                }
             }
         }   
 

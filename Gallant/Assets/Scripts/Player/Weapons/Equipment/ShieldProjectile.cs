@@ -18,6 +18,8 @@ public class ShieldProjectile : BasePlayerProjectile
     private bool m_canCatchOverride = false;
     private float m_storedProjectileSpeed;
     [SerializeField] private AnimationCurve m_shieldSpeedCurve = new AnimationCurve();
+    private float m_pursueTimer = 0.0f;
+    [SerializeField] private float m_pursueDuration = 2.0f;
 
     // Start is called before the first frame update
     new private void Start()
@@ -56,6 +58,8 @@ public class ShieldProjectile : BasePlayerProjectile
         }
         else
         {
+            m_pursueTimer += Time.deltaTime;
+
             Actor closestTarget = null;
             float closestDistance = Mathf.Infinity;
 
@@ -65,6 +69,13 @@ public class ShieldProjectile : BasePlayerProjectile
                 Actor actor = collider.GetComponentInParent<Actor>();
                 if (actor == null || hitList.Contains(actor.gameObject) || actor.m_myBrain.IsDead)
                     continue;
+
+                if (m_pursueTimer > m_pursueDuration)
+                {
+                    hitList.Add(actor.gameObject);
+                    m_pursueTimer = 0.0f;
+                    continue;
+                }
 
                 float distance = Vector3.Distance(actor.transform.position, transform.position);
                 if (distance < closestDistance)

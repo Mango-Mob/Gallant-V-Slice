@@ -26,7 +26,9 @@ namespace ActorSystem.AI.Bosses
         public Tentacle_AI m_tentacleI;
         public List<Actor_Material> m_holdingTentacles;
 
-
+        public List<Transform> m_targetLocR;
+        public List<Transform> m_targetLocL;
+        public List<Transform> m_targetLocO;
         public ActorSpawner m_mySpawnner;
         public WaveData m_waveToSpawn;
         private Transform m_restingTransformL;
@@ -143,35 +145,19 @@ namespace ActorSystem.AI.Bosses
                     switch (select)
                     {
                         case 0:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[0].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[0].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[3].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[3].rotation;
+                        case 3:
+                            m_tentacleL.m_idealLocation = m_targetLocL[0].position;
+                            m_tentacleR.m_idealLocation = m_targetLocR[0].position;
+                            m_tentacleO.m_idealLocation = m_targetLocO[0].position;
                             break;
                         case 1:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[2].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[1].rotation;
-                            break;
                         case 2:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[2].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[2].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[1].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[1].rotation;
-                            break;
-                        case 3:
-                            m_tentacleL.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[0].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[0].rotation;
-                            m_tentacleR.m_idealLocation = m_myBrain.m_patrol.m_targetOrientations[3].position + m_myModel.transform.forward * 4.5f;
-                            m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[3].rotation;
+                            m_tentacleL.m_idealLocation = m_targetLocL[1].position;
+                            m_tentacleR.m_idealLocation = m_targetLocR[1].position;
+                            m_tentacleO.m_idealLocation = m_targetLocO[1].position;
                             break;
                     }
-                    m_tentacleO.transform.position = opposingTransform.position + opposingTransform.forward * 4.5f;
                     m_tentacleO.transform.rotation = opposingTransform.rotation;
-
-                    Vector3 midPoint = Extentions.MidPoint(m_tentacleR.m_idealLocation, m_tentacleL.m_idealLocation);
-                    m_tentacleO.m_idealLocation = new Vector3(midPoint.x, m_tentacleO.transform.position.y, m_tentacleO.transform.position.z);
 
                     if(isCompletelySubmerged)
                     {
@@ -182,6 +168,10 @@ namespace ActorSystem.AI.Bosses
                         m_tentacleL.Emerge();
                         m_tentacleR.Emerge();
                         m_tentacleO.Emerge();
+
+                        m_tentacleL.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[(select == 3 || select == 0) ? 0 : 2].rotation;
+                        m_tentacleR.transform.rotation = m_myBrain.m_patrol.m_targetOrientations[(select == 3 || select == 0) ? 3 : 1].rotation;
+                        m_tentacleO.transform.rotation = opposingTransform.rotation;
                     }
                     Submerge();
                     break;
@@ -189,7 +179,7 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleL.Submerge(false);
                     m_tentacleR.Submerge(false);
                     m_tentacleO.Submerge(false);
-                    StartCoroutine(CreateInk(5, 2f, 0.05f));
+                    StartCoroutine(CreateInk(9, 2f, 0.05f));
                     m_inkPhaseTimer.Start(m_inkAttackDuration);
                     break;
                 case Phase.SUMMON:
@@ -249,7 +239,17 @@ namespace ActorSystem.AI.Bosses
             }
             if (m_tentacleL.m_myBrain.IsDead && m_tentacleR.m_myBrain.IsDead && m_tentacleO.m_myBrain.IsDead)
             {
-                StartCoroutine(ChangeOrientation(m_mode, 1f));
+                if(this.m_mode == Phase.HEAD)
+                {
+                    StartCoroutine(ChangeOrientation(m_mode, 1f));
+                }
+                else
+                {
+                    m_headphaseHealth = m_myBrain.m_startHealth * 0.2f;
+                    m_tentaclePhaseTimer.Stop();
+                    StartCoroutine(ChangeOrientation(Phase.HEAD, 1f));
+                }
+                
             }
         }
 
@@ -280,6 +280,7 @@ namespace ActorSystem.AI.Bosses
         private void TentacleTimeComplete()
         {
             m_headphaseHealth = m_myBrain.m_startHealth * 0.2f;
+            m_tentaclePhaseTimer.Stop();
             TransitionToPhase(Phase.HEAD);
         }
         private void AttackInk()

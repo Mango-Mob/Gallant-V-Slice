@@ -24,7 +24,10 @@ public class MoveSpeedStatus : StatusEffect
         }
         return false;
     }
-
+    public override StatusEffect Clone()
+    {
+        return new MoveSpeedStatus(m_strength, m_duration);
+    }
     public override void StartActor(Actor _actor, Transform headLoc)
     {
         //Show vfx

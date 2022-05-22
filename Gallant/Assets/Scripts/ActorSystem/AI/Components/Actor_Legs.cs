@@ -69,7 +69,10 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Start()
         {
-            
+            if(!m_agent.isOnNavMesh)
+            {
+                KnockBack(Vector3.up, false);
+            }
         }
 
         // Update is called once per frame
@@ -310,10 +313,10 @@ namespace ActorSystem.AI.Components
             if(m_canBeKnocked)
             {
                 Vector3 knockForce = force;
-                if (transformDirection)
-                    knockForce = transform.TransformVector(force);
+                //if (transformDirection)
+                //    knockForce = transform.TransformVector(force);
 
-                SetTargetVelocity(force);
+                SetTargetVelocity(knockForce);
                 if (!m_isKnocked)
                 {
                     m_isKnocked = true;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using EPOOutline;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,14 @@ public class ClassChanger : MonoBehaviour
     private void Awake()
     {
         m_myInterface = GetComponentInChildren<Interactable>();
+        if (GameManager.m_saveInfo.m_startedRun)
+        {
+            GetComponentInChildren<Outlinable>().enabled = false;
+            Destroy(m_myInterface);
+            Destroy(this);
+            return;
+        }
+
         m_myInterface.m_interactFunction.AddListener(Change);
     }
     private void Update()

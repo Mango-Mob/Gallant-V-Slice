@@ -110,7 +110,10 @@ public class Player_Movement : MonoBehaviour
         foreach (var clip in animControllers.animationClips)
         {
             if (clip.name == "knight dodge roll")
+            {
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+                break;
+            }
         }
     }
     private void Update()
@@ -573,8 +576,9 @@ public class Player_Movement : MonoBehaviour
         foreach (var actor in actors)
         {
             float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
+            bool canLockOn = actor.m_myBrain.m_canBeTarget;
 
-            if (distance < closestDistance)
+            if (canLockOn && distance < closestDistance)
             {
                 closestDistance = distance;
                 closestTarget = actor;

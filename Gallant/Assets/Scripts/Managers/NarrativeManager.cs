@@ -26,10 +26,10 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
     protected void Start()
     {
         m_visitNPC.Add("Rowan", GameManager.m_saveInfo.m_rowanVisits);
-        m_deadNPCs.Add("Rowan", false);
 
         m_visitNPC.Add("Perception", GameManager.m_saveInfo.m_perceptionVisits);
-        m_deadNPCs.Add("Perception", false);
+
+        NewRun();
     }
 
     public void UpdateVisit(string name, int value)
@@ -48,5 +48,14 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
     public void Refresh()
     {
         m_seenDialogList.Clear();
+
+        NewRun();
+    }
+
+    public void NewRun()
+    {
+        m_deadNPCs.Clear();
+        m_deadNPCs.Add("Rowan", false);
+        m_deadNPCs.Add("Perception", false);
     }
 }
