@@ -22,6 +22,7 @@ namespace ActorSystem.AI.Users
         public bool isWaiting = false;
         public float interactRange = 1.5f;
 
+        private bool rewardGiven = false;
         private bool hasInteractedWith = false;
         private int visits = 0;
         private GameObject m_player;
@@ -85,6 +86,15 @@ namespace ActorSystem.AI.Users
             m_myBrain.m_myOutline.enabled = m_potentialDialogs.Count > 0;
             m_interactDisplay.m_isReady = m_showUI && !isWaiting && m_potentialDialogs.Count > 0;
             m_myBrain.SetEnabled(!isWaiting);
+
+            if(rewardGiven)
+            {
+                if(!RewardManager.Instance.IsVisible)
+                {
+                    rewardGiven = false;
+                    isWaiting = false;
+                }
+            }
             base.Update();
         }
 
@@ -121,8 +131,9 @@ namespace ActorSystem.AI.Users
         private void Reward()
         {
             DialogManager.Instance.Hide();
-            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.BOOK);
+            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
             DialogManager.Instance.m_interact = null;
+            rewardGiven = true;
         }
 
         public void EndTalk()

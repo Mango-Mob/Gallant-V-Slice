@@ -19,9 +19,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public LevelData m_generatedLevel { get; private set; } = null;
 
+    [SerializeField] private GameObject m_bonusText;
     [SerializeField] private Button m_mouseInput;
     [SerializeField] private UI_Text m_keyboardInput;
-    [SerializeField] private UI_Image m_gamepadInput;
+    [SerializeField] private UI_Image[] m_gamepadInput;
 
     public bool IsVisible { get { return m_myCamera.enabled && m_myCanvas.enabled; } }
     private List<NavigationNode> m_activeNodes = new List<NavigationNode>();
@@ -60,6 +61,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             SetVisibility(false);
         }
 
+        if(m_generatedLevel != null && InputManager.Instance.IsKeyDown(KeyType.L))
+        {
+            SetVisibility(true);
+        }
+
         if(IsVisible)
         {
             if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
@@ -72,11 +78,15 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             }
         }
 
-        m_mouseInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
+        m_bonusText.SetActive(InputManager.Instance.isInGamepadMode);
+        m_mouseInput.gameObject.SetActive(m_canQuit);
         m_keyboardInput.gameObject.SetActive(m_canQuit && !InputManager.Instance.isInGamepadMode);
-        m_gamepadInput.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
+        foreach (var item in m_gamepadInput)
+        {
+            item.gameObject.SetActive(m_canQuit && InputManager.Instance.isInGamepadMode);
+        }
 
-        if (m_myCamera.enabled)
+        if (IsVisible)
         {
             float scrollDelta = 0;
             if (InputManager.Instance.isInGamepadMode)
@@ -109,9 +119,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public void SetVisibility(bool status, bool canQuit = true)
     {
         m_myCamera.gameObject.SetActive(status);
+        m_mapObj.SetActive(status);
         m_myCanvas.enabled = status;
         m_canQuit = canQuit;
-
+        
         if (m_myCamera.enabled)
         {
             if(index > 0 && m_activeNodes.Count > 0)
@@ -190,7 +201,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         Clear(false);
 
         m_generatedLevel = data;
-
+        GameManager.deltaLevel = data.m_levelUpPerFloor;
         NarrativeManager.Instance.Refresh();
         float heightStep = m_generatedLevel.m_height / (data.m_levelFloors.Count);
         index = 0;

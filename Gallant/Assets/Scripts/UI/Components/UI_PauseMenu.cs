@@ -18,7 +18,7 @@ public class UI_PauseMenu : MonoBehaviour
 
     public Button[] m_allButtons;
     public GameObject m_confirmPannel;
-
+    public GameObject m_noButton;
     public void SetPause(bool state)
     {
         Time.timeScale = state ? 0.0f : 1.0f;
@@ -34,7 +34,7 @@ public class UI_PauseMenu : MonoBehaviour
     void Start()
     {
         m_window.SetActive(false);
-        m_returnToHubButton.interactable = (SceneManager.GetActiveScene().name != "HubWorld");
+        m_returnToHubButton.interactable = (GameManager.m_saveInfo.m_startedRun);
     }
 
     // Update is called once per frame
@@ -72,6 +72,7 @@ public class UI_PauseMenu : MonoBehaviour
     public void ReturnToHub()
     {
         m_confirmPannel.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(m_noButton);
         foreach (var item in m_allButtons)
         {
             item.interactable = false;

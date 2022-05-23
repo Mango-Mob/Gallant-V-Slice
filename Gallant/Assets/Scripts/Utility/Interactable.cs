@@ -19,6 +19,12 @@ public class Interactable : MonoBehaviour
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
     }
 
+    private void OnDestroy()
+    {
+        if(display)
+            Destroy(display);
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -69,7 +69,11 @@ public class LevelManager : SingletonPersistent<LevelManager>
     public void LoadHubWorld(bool _playerDied = false)
     {
         if (_playerDied)
+        {
+            GameManager.m_saveInfo.m_startedRun = false;
             GameManager.ClearPlayerInfoFromFile();
+            NarrativeManager.Instance.Refresh();
+        }
         else
             GameManager.SavePlayerInfoToFile();
 

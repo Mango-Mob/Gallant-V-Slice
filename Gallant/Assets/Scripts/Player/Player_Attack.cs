@@ -298,7 +298,10 @@ public class Player_Attack : MonoBehaviour
                 m_rightWeapon.SetTrailActive(false);
         }
     }
-
+    public void ResetComboCount()
+    {
+        playerController.animator.SetInteger("ComboCount", 0);
+    }
     public float GetAverageLevel()
     {
         float left = (m_leftWeaponData != null) ? m_leftWeaponData.m_level : 0;

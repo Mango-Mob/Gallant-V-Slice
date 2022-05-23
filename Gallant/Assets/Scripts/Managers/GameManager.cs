@@ -442,7 +442,7 @@ public class GameManager : Singleton<GameManager>
         // ******
         // Put desired stored variables here!
         // V V V V V V
-
+        public bool m_startedRun = false;
         public int m_testValue;
 
         //LEVELS

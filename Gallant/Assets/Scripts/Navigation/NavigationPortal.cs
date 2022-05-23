@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ActorSystem.AI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,6 +35,7 @@ public class NavigationPortal : MonoBehaviour
             int select = UnityEngine.Random.Range(0, m_levelToGenerate.Length);
             NavigationManager.Instance.Generate(m_levelToGenerate[select]);
             NavigationManager.Instance.UpdateMap(0);
+            GameManager.m_saveInfo.m_startedRun = true;
             SetColor(m_levelToGenerate[select].m_portalColor);
         }
         else if (NavigationManager.Instance.m_generatedLevel != null)
@@ -49,7 +51,7 @@ public class NavigationPortal : MonoBehaviour
     public void Update()
     {
         m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
-        m_portalAnimator.SetBool("IsVisible", !GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
+        m_portalAnimator.SetBool("IsVisible", !GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible );
         GetComponent<Collider>().enabled = !GameManager.Instance.IsInCombat && !NavigationManager.Instance.IsVisible;
     }
 

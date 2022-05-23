@@ -396,8 +396,16 @@ public class Player_Movement : MonoBehaviour
             if (_move.magnitude != 0)
             {
                 // Movement
-                normalizedMove += _move.y * transform.forward;
-                normalizedMove += _move.x * transform.right;
+                if (InputManager.Instance.isInGamepadMode)
+                {
+                    normalizedMove += _move.y * transform.forward;
+                    normalizedMove += _move.x * transform.right;
+                }
+                else
+                {
+                    normalizedMove += _move.y * playerModel.transform.forward;
+                    normalizedMove += _move.x * playerModel.transform.right;
+                }
 
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
@@ -576,8 +584,9 @@ public class Player_Movement : MonoBehaviour
         foreach (var actor in actors)
         {
             float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
+            bool canLockOn = actor.m_myBrain.m_canBeTarget;
 
-            if (distance < closestDistance)
+            if (canLockOn && distance < closestDistance)
             {
                 closestDistance = distance;
                 closestTarget = actor;
