@@ -24,7 +24,7 @@ public class State_FleeFromTarget : State
             return;
         }
         
-        float idealDist = m_myActor.m_myBrain.m_legs.m_agent.stoppingDistance;
+        float idealDist = m_myActor.m_myBrain.m_legs.m_idealRange;
         if (idealDist == 0)
             idealDist = 20f;
         float currDist = Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position);
@@ -35,12 +35,12 @@ public class State_FleeFromTarget : State
         if(currDist < idealDist * 0.85f)
         {
             m_myUser.m_activeStateText = "FLEE (fleeing)";
-            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist) * Mathf.Abs(currDist - idealDist);
         }
         else if(currDist > idealDist * 1.15f)
         {
             m_myUser.m_activeStateText = "FLEE (closing dist)";
-            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist);
+            sampleLoc = m_myActor.transform.position + forward * Mathf.Sign(currDist - idealDist) * Mathf.Abs(currDist - idealDist);
         }
         else
         {
@@ -58,6 +58,11 @@ public class State_FleeFromTarget : State
             {
                 m_myActor.SetTargetLocation(sampleHit.position, false);
             }
+        }
+        else if (currDist < idealDist * 0.85f && m_myActor.m_states.Contains(Type.STRAFE))
+        {
+            m_myActor.SetState(new State_Strafe(m_myUser));
+            return;
         }
         else
         {

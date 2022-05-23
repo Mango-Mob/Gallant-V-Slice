@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dfa1dfadb91e8544a7ef6e4536d0e97, type: 3}
+  m_Name: GreatSwing
+  m_EditorClassIdentifier: 
+  debugShow: 0
+  animID: greatSwipe
+  priority: 10
+  cooldown: 6
+  brainLag: 2
+  damageType: 0
+  baseDamage: 10
+  postVFXPrefab: {fileID: 0}
+  canContinueAfterMiss: 1
+  canBeCanceled: 0
+  canTrackTarget: 1
+  canAttackMove: 0
+  isIdleAfterAttack: 1
+  detectCollider:
+    start: {x: 0, y: 0, z: 0}
+    center: {x: 0, y: 0.75, z: 1.2}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: {x: 0, y: 0, z: 0}
+    radius: 1.2
+  damageColliders:
+  - start: {x: 0, y: 0, z: 0}
+    center: {x: 0, y: 0.75, z: 1.5}
+    end: {x: 0, y: 0, z: 0}
+    type: 1
+    size: {x: 0, y: 0, z: 0}
+    radius: 1.3
+  onHitEffect: 0
+  effectPower: 0
+  hitsCount: 1
+  ignoreIFrames: 0
