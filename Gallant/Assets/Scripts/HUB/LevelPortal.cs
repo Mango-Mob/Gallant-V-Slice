@@ -77,7 +77,7 @@ public class LevelPortal : MonoBehaviour
         m_audio.Play();
         NavigationManager.Instance.Clear(true);
         GameManager.Instance.m_player.GetComponent<Player_Controller>().StorePlayerInfo();
-
+        GameManager.m_saveInfo.m_startedRun = false;
         LevelManager.Instance.LoadNewLevel(m_portalDestination);
     }
 

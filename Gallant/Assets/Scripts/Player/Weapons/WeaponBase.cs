@@ -150,6 +150,12 @@ public abstract class WeaponBase : MonoBehaviour
 
     private List<GameObject> DamageColliders(WeaponData _data, Vector3 _source, Collider[] colliders, Hand _usedHand = Hand.NONE, StatusEffect _status = null)
     {
+        List<float> comboList = _data.m_comboDamageMult;
+        float comboDamageMult = 1.0f;
+        if (_usedHand == Hand.RIGHT && playerController.animator.GetInteger("ComboCount") < _data.m_comboDamageMult.Count)
+            comboDamageMult = _data.m_comboDamageMult[playerController.animator.GetInteger("ComboCount")];
+
+        playerController.animator.SetInteger("ComboCount", playerController.animator.GetInteger("ComboCount") + 1);
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
         {
@@ -159,7 +165,7 @@ public abstract class WeaponBase : MonoBehaviour
 
             bool isRubble = collider.gameObject.layer == LayerMask.NameToLayer("Rubble");
 
-            playerController.playerAttack.DamageTarget(collider.gameObject, _data.m_damage * (_usedHand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (_usedHand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
+            playerController.playerAttack.DamageTarget(collider.gameObject, comboDamageMult * _data.m_damage * (_usedHand == Hand.LEFT ? _data.m_altDamageMult : 1.0f), _data.m_impact * (_usedHand == Hand.LEFT ? _data.m_altImpactMult : 1.0f), _data.m_piercing, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
 
             if (actor != null && !hitList.Contains(collider.gameObject) && collider.gameObject.layer != LayerMask.NameToLayer("Rubble"))
             {
