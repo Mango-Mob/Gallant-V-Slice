@@ -24,6 +24,12 @@ public class Weapon_Shield : WeaponBase
     new private void Update()
     {
         base.Update();
+        if (m_hand == Hand.LEFT && playerController.playerAttack.m_isBlocking && playerController.playerResources.m_isExhausted)
+        {
+            playerController.playerAudioAgent.PlayShieldBlock(); // Guard break audio
+            playerController.animator.SetTrigger("HitPlayer");
+            playerController.playerAttack.ToggleBlock(false);
+        }
     }
     public override void WeaponFunctionality()
     {
