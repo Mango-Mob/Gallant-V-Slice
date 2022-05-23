@@ -396,8 +396,16 @@ public class Player_Movement : MonoBehaviour
             if (_move.magnitude != 0)
             {
                 // Movement
-                normalizedMove += _move.y * transform.forward;
-                normalizedMove += _move.x * transform.right;
+                if (InputManager.Instance.isInGamepadMode)
+                {
+                    normalizedMove += _move.y * transform.forward;
+                    normalizedMove += _move.x * transform.right;
+                }
+                else
+                {
+                    normalizedMove += _move.y * playerModel.transform.forward;
+                    normalizedMove += _move.x * playerModel.transform.right;
+                }
 
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
