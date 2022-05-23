@@ -793,6 +793,21 @@ MonoBehaviour:
   m_currPhyResist: 0
   m_currAbilResist: 0
   m_target: {fileID: 0}
+  m_onDeathEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3429935277530132581}
+        m_TargetAssemblyTypeName: ActorSystem.Spawning.HeadSpawnner, Assembly-CSharp
+        m_MethodName: StartSpawn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1550552339540298193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,6 +904,7 @@ MonoBehaviour:
   m_canRotate: 1
   m_rotationSpeed: 90
   m_pivotMin: 160
+  m_idealRange: 2
 --- !u!114 &1550552339540298196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1622,6 +1638,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7287271002859938608}
   - component: {fileID: 1179945827321115405}
+  - component: {fileID: 3429935277530132581}
   m_Layer: 0
   m_Name: HeadLoc
   m_TagString: Untagged
@@ -1657,6 +1674,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_boneToSyncWith: {fileID: 1416255371125612852}
+--- !u!114 &3429935277530132581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2704469533234874952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 391d4fa32548b964a86bc05ea1755221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_toSpawn: {fileID: 11400000, guid: a6d64e7974ae0224db4ff97b32e5c9ae, type: 2}
 --- !u!1 &2815922801098375594
 GameObject:
   m_ObjectHideFlags: 0

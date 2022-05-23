@@ -65,12 +65,12 @@ namespace ActorSystem.AI
             m_myBrain.m_canStagger = m_states.Contains(State.Type.STAGGER);
         }
 
-        public void Spawn(uint level, Vector3 spawnLoc)
+        public void Spawn(uint level, Vector3 spawnLoc, Quaternion rotation)
         {
             m_myLevel = level;
             m_myBrain.LoadData(m_myData, level);
             m_mySpawn.SetEnabled(true);
-            m_mySpawn.StartSpawn(spawnLoc);
+            m_mySpawn.StartSpawn(spawnLoc, rotation);
         }
 
         public void SetLevel(uint level)

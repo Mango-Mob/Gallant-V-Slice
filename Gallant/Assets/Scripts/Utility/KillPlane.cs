@@ -24,12 +24,12 @@ public class KillPlane : MonoBehaviour
                 //Enemy
                 if (canRespawnColliders)
                 {
-                    other.GetComponent<Actor>().DealDamage(damageOnHit, CombatSystem.DamageType.True);
-                    other.GetComponent<Actor>().Respawn(false);
+                    other.GetComponent<Actor>()?.DealDamage(damageOnHit, CombatSystem.DamageType.True);
+                    other.GetComponent<Actor>()?.Respawn(false);
                 }
                 else
                 {
-                    other.GetComponent<Actor>().Kill();
+                    other.GetComponent<Actor>()?.Kill();
                 }
             }
             else if (other.gameObject.layer == LayerMask.NameToLayer("Player"))

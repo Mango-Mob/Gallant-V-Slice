@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 
 namespace ActorSystem.AI.Components
@@ -53,6 +54,8 @@ namespace ActorSystem.AI.Components
         public float m_baseAbilResist   { get; private set; }
 
         public bool m_canStagger { get; set; }
+
+        public UnityEvent m_onDeathEvent;
 
         private float m_staminaRegen; 
         private FloatRange m_adrenalineGain;
@@ -333,6 +336,7 @@ namespace ActorSystem.AI.Components
 
             if(IsDead)
             {
+                m_onDeathEvent?.Invoke();
                 GameManager.m_killCount++;
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();
