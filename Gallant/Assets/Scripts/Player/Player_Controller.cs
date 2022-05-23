@@ -145,6 +145,9 @@ public class Player_Controller : MonoBehaviour
         m_zoomLerp = Mathf.Clamp01(m_zoomLerp);
         playerCamera.fieldOfView = Mathf.Lerp(m_startZoom, m_maxZoom, m_zoomLerp);
 
+        if (playerAttack.m_isBlocking)
+            playerResources.ChangeStamina(-10.0f * Time.deltaTime);
+
         if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning)
         {
             animator.SetFloat("Horizontal", 0.0f);
@@ -684,9 +687,12 @@ public class Player_Controller : MonoBehaviour
 
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
+                if (playerAbilities.m_leftAbility)
+                    playerAbilities.m_leftAbility.ReduceCooldown((_damage / 8.0f));
+                if (playerAbilities.m_rightAbility)
+                    playerAbilities.m_rightAbility.ReduceCooldown((_damage / 8.0f));
                 animator.SetTrigger("BlockHit");
 
-                playerResources.ChangeStamina(-5.0f);
                 if (playerResources.m_isExhausted)
                 {
                     playerAudioAgent.PlayShieldBlock(); // Guard break audio

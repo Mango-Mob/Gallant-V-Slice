@@ -49,8 +49,8 @@ public abstract class AbilityBase : MonoBehaviour
     }
     public void Update()
     {
-        if (!m_canUse)
-            m_cooldownTimer -= Time.deltaTime;
+        //if (!m_canUse)
+        //    m_cooldownTimer -= Time.deltaTime;
 
         m_canUse = m_cooldownTimer <= 0.0f;
 
@@ -72,6 +72,10 @@ public abstract class AbilityBase : MonoBehaviour
     {
         m_cooldownTimer = m_data.cooldownTime * playerController.playerStats.m_abilityCD;
         m_canUse = false;
+    }
+    public void ReduceCooldown(float _amount)
+    {
+        m_cooldownTimer -= _amount;
     }
 
     public float GetCooldownTime()
