@@ -389,7 +389,7 @@ public class InfoDisplay : MonoBehaviour
     {
         m_itemDetailsLoc.SetActive(false);
         m_weaponDetailsLoc.SetActive(false);
-        m_exchangeDetailsLoc.SetActive(false);
+        m_exchangeDetailsLoc?.SetActive(false);
         m_upgradeAbilityDetailsLoc.SetActive(false);
     }
 
