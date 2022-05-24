@@ -51,7 +51,9 @@ namespace ActorSystem.AI.Components
 
         private float m_delayTimer = 0f;
         public float m_baseStopDist { get; private set; }
-        
+
+        public float m_idealRange = 2f;
+
         // Start is called before the first frame update
         protected virtual void Awake()
         {

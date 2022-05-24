@@ -19,7 +19,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
         {
             m_myActor = GetComponent<Actor>();
         }
-        public override void StartSpawn(Vector3 spawnLoc)
+        public override void StartSpawn(Vector3 spawnLoc, Quaternion rotation)
         {
             m_lastSpawnLoc = spawnLoc;
             m_spawn = GameObject.Instantiate(m_spawnVFX, spawnLoc, Quaternion.identity);
@@ -81,7 +81,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
 
         public override void Respawn()
         {
-            StartSpawn(m_lastSpawnLoc);
+            StartSpawn(m_lastSpawnLoc, Quaternion.identity);
         }
     }
 }

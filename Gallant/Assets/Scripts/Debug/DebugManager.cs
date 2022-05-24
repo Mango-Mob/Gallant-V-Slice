@@ -199,11 +199,14 @@ namespace Exceed.Debug
                     }
                 }
 
-                m_selelectedName.text = (m_selected != null) ? $"\"{m_selected.name}\"" : "null";
+                if(m_selected != null)
+                {
+                    m_selelectedName.text = (m_selected != null) ? $"\"{m_selected.name}\"" : "null";
 
-                m_toggleSelectedButtons[0].interactable = !m_selected.activeInHierarchy;
-                m_toggleSelectedButtons[1].interactable = m_selected.activeInHierarchy;
-                m_killOneBtn.interactable = m_selected.GetComponentInParent<Actor>() != null;
+                    m_toggleSelectedButtons[0].interactable = !m_selected.activeInHierarchy;
+                    m_toggleSelectedButtons[1].interactable = m_selected.activeInHierarchy;
+                    m_killOneBtn.interactable = m_selected.GetComponentInParent<Actor>() != null;
+                }
             }
         }
 

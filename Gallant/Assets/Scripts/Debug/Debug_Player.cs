@@ -103,25 +103,25 @@ public class Debug_Player : MonoBehaviour
     {
         if (_left)
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().UpgradeWeapon(Hand.LEFT);
+            GameManager.Instance.m_player?.GetComponent<Player_Controller>().UpgradeWeapon(Hand.LEFT);
         }
         else
         {
-            GameManager.Instance.m_player.GetComponent<Player_Controller>().UpgradeWeapon(Hand.RIGHT);
+            GameManager.Instance.m_player?.GetComponent<Player_Controller>().UpgradeWeapon(Hand.RIGHT);
         }
     }
 
     private void ToggleGodMode(bool _active)
     {
         Debug.Log(_active);
-        GameManager.Instance.m_player.GetComponent<Player_Controller>().SetGodMode(_active);
+        GameManager.Instance.m_player?.GetComponent<Player_Controller>().SetGodMode(_active);
     }
 
     public void AddEffect(bool _add)
     {
         if (_add)
-            GameManager.Instance.m_player.GetComponent<Player_Stats>().AddEffect((ItemEffect)m_effectSelectInput.value);
+            GameManager.Instance.m_player?.GetComponent<Player_Stats>().AddEffect((ItemEffect)m_effectSelectInput.value);
         else
-            GameManager.Instance.m_player.GetComponent<Player_Stats>().RemoveEffect((ItemEffect)m_effectSelectInput.value);
+            GameManager.Instance.m_player?.GetComponent<Player_Stats>().RemoveEffect((ItemEffect)m_effectSelectInput.value);
     }
 }
