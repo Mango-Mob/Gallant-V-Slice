@@ -26,7 +26,8 @@ public class RewardManager : Singleton<RewardManager>
     public GameObject m_gamePadButton;
     private Image m_pressDurationImage;
 
-    public List<ItemData> m_items = new List<ItemData>();
+    public List<Extentions.WeightedOption<ItemData>> m_runes = new List<Extentions.WeightedOption<ItemData>>();
+    public ItemData m_randomRune;
     public ItemData m_forgeItem;
     public ItemData m_orbItem;
     public List<AbilityData> m_abilityBooks = new List<AbilityData>();
@@ -93,7 +94,7 @@ public class RewardManager : Singleton<RewardManager>
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
-            Show(1);
+            Show(1, RewardType.RUNE);
         }
 #endif
 
@@ -231,7 +232,7 @@ public class RewardManager : Singleton<RewardManager>
                     //No Weapons
                     for (int i = 0; i < 3; i++)
                     {
-                        rewards.Add(GenerateItem(rewards));
+                        rewards.Add(ExchangeData.CreateExchange(GenerateRune(1), 3, m_randomRune, 3));
                     }
                     break;
                 case RewardType.BOOK:
@@ -259,6 +260,10 @@ public class RewardManager : Singleton<RewardManager>
                 {
                     m_rewardSlots[i].LoadAbility(rewards[i] as AbilityData);
                 }
+                else if(rewards[i].GetType() == typeof(ExchangeData))
+                {
+                    m_rewardSlots[i].LoadExchange(rewards[i] as ExchangeData);
+                }
                 else
                 {
                     m_rewardSlots[i].LoadItem(rewards[i] as ItemData);
@@ -270,8 +275,8 @@ public class RewardManager : Singleton<RewardManager>
 
     public bool IsAWeaponReward(int magnitude = 10000)
     {
-        int totalOptions = m_items.Count + System.Enum.GetNames(typeof(Weapon)).Length;
-        float probOfWeapon = (m_items.Count - totalOptions) / totalOptions;
+        int totalOptions = m_runes.Count + System.Enum.GetNames(typeof(Weapon)).Length;
+        float probOfWeapon = (m_runes.Count - totalOptions) / totalOptions;
 
         return (Random.Range(0, magnitude) <= probOfWeapon * magnitude);
     }
@@ -346,32 +351,35 @@ public class RewardManager : Singleton<RewardManager>
         return m_abilityBooks[select];
     }
 
-    public ItemData GenerateItem(List<ScriptableObject> currentList, bool runesAllowed = true)
+    public ItemData GenerateItem(List<ScriptableObject> currentList)
     {
-        List<ItemData> options = new List<ItemData>(m_items);
+        List<ItemData> options = new List<ItemData>();
         options.Add(m_orbItem);
         options.Add(m_forgeItem);
-        for (int i = options.Count - 1; i >= 0; i--)
-        {
-            if (!runesAllowed && options[i].itemType == ItemData.UtilityType.RUNE)
-                options.RemoveAt(i);
-        }
 
         int select;
-
-        if (runesAllowed)
-        {
-            do
-            {
-                select = Random.Range(0, options.Count);
-            } while (!IsUniqueItem(currentList, options[select]));
-        }
-        else
-        {
-            select = Random.Range(0, options.Count);
-        }
-
+        select = Random.Range(0, options.Count);
         return options[select];
+    }
+
+    public ItemData GenerateRune(int offset = 1, bool isInverse = false)
+    {
+        for (int i = m_runes.Count - 1; i >= 0; i--)
+        {
+            uint newWeight = 0;
+            if(isInverse)
+            {
+                newWeight = 10 - (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
+                m_runes.SetWeightAt<ItemData>(i, (newWeight - offset < 0) ? 0 : newWeight + 1);
+            }
+            else
+            {
+                newWeight = (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
+                m_runes.SetWeightAt<ItemData>(i, (newWeight + offset > 10) ? 0 : newWeight + 1);
+            }
+        }
+
+        return Extentions.GetFromList<ItemData>(m_runes);
     }
 
     public void Select(int item)
