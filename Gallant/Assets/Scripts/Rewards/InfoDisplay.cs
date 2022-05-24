@@ -82,6 +82,15 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image[] m_upgradeAbilityStars;
     [SerializeField] private TMP_Text m_upgradeAbilityDescription;
 
+    [Header("Exchange Information")]
+    [SerializeField] private GameObject m_exchangeDetailsLoc;
+    [SerializeField] private Image m_gainRuneImageLoc;
+    [SerializeField] private TMP_Text m_gainQuantity;
+    [SerializeField] private TMP_Text m_gainDescription;
+    [SerializeField] private Image m_costRuneImageLoc;
+    [SerializeField] private TMP_Text m_costQuantity;
+    [SerializeField] private TMP_Text m_costDescription;
+
     private Player_Controller playerController;
     private Animator m_animator;
 
@@ -114,9 +123,6 @@ public class InfoDisplay : MonoBehaviour
 
     private void Update()
     {
-        //m_itemImageLoc.transform.parent.gameObject.SetActive(!IsAWeapon && !IsBook);
-        //m_weaponImageLoc.transform.parent.gameObject.SetActive(IsAWeapon);
-
         if(IsADrop)
         {
             m_leftKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
@@ -212,9 +218,9 @@ public class InfoDisplay : MonoBehaviour
         }
 
         gameObject.SetActive(true);
-        m_itemDetailsLoc.SetActive(false);
+
+        ClearDisplay();
         m_weaponDetailsLoc.SetActive(true);
-        m_upgradeAbilityDetailsLoc.SetActive(false);
 
         m_title.text = data.weaponName;
         m_level.gameObject.SetActive(true);
@@ -295,6 +301,23 @@ public class InfoDisplay : MonoBehaviour
         }
     }
 
+    public void LoadExchange(ExchangeData data)
+    {
+        if(data != null)
+        {
+            ClearDisplay();
+            m_exchangeDetailsLoc.SetActive(true);
+
+            m_gainRuneImageLoc.sprite = data.m_gainRune.itemIcon;
+            m_gainQuantity.SetText(data.m_gainQuantity.ToString());
+            m_gainDescription.SetText(data.m_gainRune.description);
+
+            m_costRuneImageLoc.sprite = data.m_costRune.itemIcon;
+            m_costQuantity.SetText(data.m_costQuantity.ToString());
+            m_costDescription.SetText(data.m_costRune.description);
+        }
+    }
+
     public void LoadAbility(AbilityData data)
     {
         if (data != null)
@@ -302,8 +325,7 @@ public class InfoDisplay : MonoBehaviour
             IsAWeapon = false;
             IsBook = true;
 
-            m_itemDetailsLoc.SetActive(false);
-            m_weaponDetailsLoc.SetActive(false);
+            ClearDisplay();
             m_upgradeAbilityDetailsLoc.SetActive(data != null);
 
             m_level.gameObject.SetActive(true);
@@ -340,9 +362,8 @@ public class InfoDisplay : MonoBehaviour
 
         m_title.text = data.itemName;
 
+        ClearDisplay();
         m_itemDetailsLoc.SetActive(true);
-        m_weaponDetailsLoc.SetActive(false);
-        m_upgradeAbilityDetailsLoc.SetActive(false);
 
         m_level.gameObject.SetActive(true);
 
@@ -362,6 +383,14 @@ public class InfoDisplay : MonoBehaviour
         }
 
         m_passiveLocation.SetActive(false);
+    }
+
+    public void ClearDisplay()
+    {
+        m_itemDetailsLoc.SetActive(false);
+        m_weaponDetailsLoc.SetActive(false);
+        m_exchangeDetailsLoc.SetActive(false);
+        m_upgradeAbilityDetailsLoc.SetActive(false);
     }
 
     public void ResetPickupTimer()

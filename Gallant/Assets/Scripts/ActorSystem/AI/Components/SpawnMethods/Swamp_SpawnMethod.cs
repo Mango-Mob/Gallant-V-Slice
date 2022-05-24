@@ -73,6 +73,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_hasResentlySpawnned = false;
             m_spawnning = false;
             m_myActor.m_myBrain.SetEnabled(true);
+            m_myActor.m_onSpawnEvent?.Invoke();
             m_myActor.m_myBrain.m_legs.SetTargetLocation(transform.position);
             m_myActor.m_myBrain.m_legs.SetTargetRotation(transform.rotation);
             GetComponent<Collider>().enabled = true;

@@ -34,12 +34,13 @@ public class FirewaveProjectile : BaseAbilityProjectile
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
-            ProjectileCollide(other);
-
-            StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
-            if (status != null)
+            if (ProjectileCollide(other))
             {
-                status.AddStatusEffect(new BurnStatus(m_data.effectiveness * playerController.playerStats.m_abilityDamage, m_data.duration));
+                StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
+                if (status != null)
+                {
+                    status.AddStatusEffect(new BurnStatus(m_data.effectiveness * playerController.playerStats.m_abilityDamage, m_data.duration));
+                }
             }
         }
     }

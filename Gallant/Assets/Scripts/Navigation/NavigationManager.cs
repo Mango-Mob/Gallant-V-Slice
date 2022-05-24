@@ -51,6 +51,11 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         //ConstructScene();
     }
 
+    public FloorData GetActiveFloor()
+    {
+        return m_activeNodes[index].m_myFloor;
+    }
+
     public void Update()
     {
         if (InputManager.Instance == null)
@@ -222,25 +227,25 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             List<NavigationNode> nextNodes = new List<NavigationNode>();
             int nodesToCreate = 0;
             float probOfIncrease = data.Evaluate(i);
-            if((Random.Range(0, 10000) < 10000 * probOfIncrease && prevNodes.Count != data.m_maxRoomCount) || prevNodes.Count <= data.m_minRoomCount)
+            if((Random.Range(0, 10000) < 10000 * probOfIncrease && prevNodes.Count != data.m_levelFloors[i].maxSize) || prevNodes.Count <= data.m_levelFloors[i].minSize)
             {
                 //Increase 
-                int min = Mathf.Min(prevNodes.Count + 1, (int)data.m_maxRoomCount);
-                int max = Mathf.Min(prevNodes.Count + 2, (int)data.m_maxRoomCount);
+                int min = Mathf.Min(prevNodes.Count + 1, (int)data.m_levelFloors[i].maxSize);
+                int max = Mathf.Min(prevNodes.Count + 2, (int)data.m_levelFloors[i].maxSize);
                 nodesToCreate = Random.Range(min, max);
             }
             else
             {
                 //Decrease
-                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_minRoomCount);
-                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_minRoomCount);
+                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_levelFloors[i].minSize);
+                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_levelFloors[i].minSize);
                 nodesToCreate = Random.Range(min, max + 1);
             }
             float widthStep = m_generatedLevel.m_width / nodesToCreate;
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                newNodeObj = NavigationNode.CreateNode(Extentions.GetFromList<SceneData>(data.m_levelFloors[i].potentialScenes), m_mapObj.transform);
+                newNodeObj = NavigationNode.CreateNode(data.GetFloorScene(i), m_mapObj.transform);
                 float xPos = widthStep * (j+0.5f) - (m_generatedLevel.m_width / 2) + Random.Range(-iconNoise.x, iconNoise.x);
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
@@ -258,7 +263,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
 
         //Create end node
-        newNodeObj = NavigationNode.CreateNode(Extentions.GetFromList<SceneData>(data.m_levelFloors[(data.m_levelFloors.Count - 1)].potentialScenes), transform);
+        newNodeObj = NavigationNode.CreateNode(data.GetFloorScene(data.m_levelFloors.Count - 1), transform);
         m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
         m_endNode.m_myDepth = data.m_levelFloors.Count - 1;
@@ -272,27 +277,6 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         
         Reposition();
         CleanUp();
-    }
-
-    public void Generate(SceneData[] data, (int, int)[] connections)
-    {
-        Clear(true);
-        foreach (var item in data)
-        {
-            GameObject nodeObj = NavigationNode.CreateNode(item, transform);
-            nodeObj.transform.localPosition = item.navLocalPosition;
-            NavigationNode nodeNav = nodeObj.GetComponent<NavigationNode>();
-            nodeNav.m_myIndex = m_activeNodes.Count;
-            m_activeNodes.Add(nodeNav);
-        }
-
-        for (int i = 0; i < connections.Length; i++)
-        {
-            m_activeNodes[connections[i].Item1].AddLink(m_activeNodes[connections[i].Item2], m_linePrefab);
-        }
-        m_rootNode = m_activeNodes[0];
-        m_endNode = m_activeNodes[m_activeNodes.Count - 1];
-        m_endNode.transform.localPosition = new Vector3(0, m_generatedLevel.m_height, 0);
     }
 
     public void Reposition()

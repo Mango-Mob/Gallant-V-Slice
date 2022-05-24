@@ -83,6 +83,10 @@ public abstract class AbilityBase : MonoBehaviour
         if (m_data.isPassive)
             return 0.0f;
 
-        return m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD);
+        float cooldownTime = (m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD));
+        if (cooldownTime >= 1.0f)
+            return 0.0f;
+
+        return 1.0f - cooldownTime;
     }
 }
