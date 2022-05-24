@@ -65,6 +65,7 @@ public class State_Strafe : State
                 }
             }
         }
+        NavMeshHit temp;
         if (Vector3.Distance(targetLoc, m_myActor.m_target.transform.position) > m_myActor.m_myBrain.m_legs.m_baseStopDist * 1.15f)
         {
             if (m_myActor.m_states.Contains(Type.MOVE_TO_TARGET))
@@ -72,7 +73,7 @@ public class State_Strafe : State
                 m_myUser.SetState(new State_MoveToTarget(m_myUser));
             }
         }
-        else if (Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) < m_myActor.m_myBrain.m_legs.m_baseStopDist * 0.95)
+        else if (Vector3.Distance(m_myActor.transform.position, m_myActor.m_target.transform.position) < m_myActor.m_myBrain.m_legs.m_idealDistance * 0.95 && NavMesh.SamplePosition(m_myActor.transform.position - m_myActor.transform.forward * 2f, out temp, 2f, ~0))
         {
             if (m_myActor.m_states.Contains(Type.FLEE_FROM_TARGET))
             {

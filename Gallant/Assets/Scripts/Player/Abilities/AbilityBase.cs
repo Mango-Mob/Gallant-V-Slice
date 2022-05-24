@@ -49,8 +49,8 @@ public abstract class AbilityBase : MonoBehaviour
     }
     public void Update()
     {
-        if (!m_canUse)
-            m_cooldownTimer -= Time.deltaTime;
+        //if (!m_canUse)
+        //    m_cooldownTimer -= Time.deltaTime;
 
         m_canUse = m_cooldownTimer <= 0.0f;
 
@@ -73,12 +73,20 @@ public abstract class AbilityBase : MonoBehaviour
         m_cooldownTimer = m_data.cooldownTime * playerController.playerStats.m_abilityCD;
         m_canUse = false;
     }
+    public void ReduceCooldown(float _amount)
+    {
+        m_cooldownTimer -= _amount;
+    }
 
     public float GetCooldownTime()
     {
         if (m_data.isPassive)
             return 0.0f;
 
-        return m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD);
+        float cooldownTime = (m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD));
+        if (cooldownTime >= 1.0f)
+            return 0.0f;
+
+        return 1.0f - cooldownTime;
     }
 }

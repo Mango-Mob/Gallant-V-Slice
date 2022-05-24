@@ -8,7 +8,7 @@ namespace ActorSystem.Data
     [CreateAssetMenu(fileName = "UtilityAttack_Data", menuName = "Game Data/Attack Data/Utility", order = 1)]
     public class UtilityAttackData : AttackData
     {
-        public enum UtilityType { Teleport, Tracker}
+        public enum UtilityType { Teleport, Tracker, Bomber}
         public UtilityType m_type;
         public float m_intensity = 5;
         public float m_speed = 5f;
@@ -31,6 +31,9 @@ namespace ActorSystem.Data
                     Destroy(m_proj);
                     m_proj = null;
                     break;
+                case UtilityType.Bomber:
+                    //parent.GetComponent<Actor>().DestroySelf();
+                    return true;
                 default:
                     break;
             }
@@ -50,6 +53,9 @@ namespace ActorSystem.Data
                     m_proj = Instantiate(m_projPrefab, user.transform.position, Quaternion.identity);
                     m_proj.transform.localScale = Vector3.one * 0.25f;
                     m_startIntensity = m_intensity;
+                    break;
+                case UtilityType.Bomber:
+                    user.SetTargetLocation(user.m_target.transform.position, true);
                     break;
                 default:
                     break;
@@ -81,6 +87,9 @@ namespace ActorSystem.Data
                         }
                     }
                     break;
+                case UtilityType.Bomber:
+                    user.SetTargetLocation(user.m_target.transform.position, true);
+                    break;
                 default:
                     break;
             }
@@ -99,6 +108,8 @@ namespace ActorSystem.Data
                     {
                         Destroy(m_proj);
                     }
+                    break;
+                case UtilityType.Bomber:
                     break;
                 default:
                     break;
@@ -129,7 +140,18 @@ namespace ActorSystem.Data
 
         public override void PostInvoke(Transform user, uint id)
         {
-
+            switch (m_type)
+            {
+                case UtilityType.Teleport:
+                    break;
+                case UtilityType.Tracker:
+                    break;
+                case UtilityType.Bomber:
+                    user.GetComponent<Actor>().DestroySelf();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ApplyEffect(float damMod = 1.0f)

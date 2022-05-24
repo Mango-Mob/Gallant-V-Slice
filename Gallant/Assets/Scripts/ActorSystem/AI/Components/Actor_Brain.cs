@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 
 namespace ActorSystem.AI.Components
@@ -19,6 +20,7 @@ namespace ActorSystem.AI.Components
     public class Actor_Brain : Actor_Component
     {
         #region Actor sub-sections
+        public Actor_Head m_head { get; private set; } //Controls sight/hearing based behaviours and look direction
         public Actor_Arms m_arms { get; private set; } //The arms of the actor
         public Actor_Legs m_legs { get; private set; } //The Legs of the actor (the navmesh)
         public Actor_Animator m_animator { get; private set; } //The animator of the actor (the animator)
@@ -53,6 +55,8 @@ namespace ActorSystem.AI.Components
 
         public bool m_canStagger { get; set; }
 
+        public UnityEvent m_onDeathEvent;
+
         private float m_staminaRegen; 
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
@@ -74,6 +78,7 @@ namespace ActorSystem.AI.Components
 
         protected virtual void Awake()
         {
+            m_head = GetComponentInChildren<Actor_Head>();
             m_arms = GetComponentInChildren<Actor_Arms>();
             m_legs = GetComponentInChildren<Actor_Legs>();
             m_animator = GetComponentInChildren<Actor_Animator>();
@@ -101,6 +106,7 @@ namespace ActorSystem.AI.Components
         {
             if (IsStunned || IsDead)
             {
+                m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
                 m_legs?.Halt();
                 return;
             }
@@ -137,12 +143,16 @@ namespace ActorSystem.AI.Components
             {
                 m_animator.SetBool("Pivot", (m_legs != null) ? m_legs.enabled && m_legs.ShouldPivot() : false);
             }
-            m_ui?.SetBar("Health", (float) m_currHealth / m_startHealth);
-
+            
             if(m_staminaBar != null)
                 m_ui?.SetBar("Stamina", (float)m_currStamina / m_startStamina);
             
             m_staminaBar?.gameObject.SetActive(m_canStagger);
+
+            if(m_target != null)
+            {
+                m_head?.SetLookDirection((m_target.transform.position - transform.position).normalized);
+            }
         }
 
         public void LoadData(ActorData _data, uint _level = 0)
@@ -326,6 +336,7 @@ namespace ActorSystem.AI.Components
 
             if(IsDead)
             {
+                m_onDeathEvent?.Invoke();
                 GameManager.m_killCount++;
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();

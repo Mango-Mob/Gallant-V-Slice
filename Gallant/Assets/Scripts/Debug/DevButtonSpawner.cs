@@ -48,7 +48,7 @@ public class DevButtonSpawner : MonoBehaviour
 
         if(data.GetASpawnPoint(spawn.m_myData.radius, out spawnLoc))
         {
-            spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnLoc);
+            spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnLoc, Quaternion.identity);
             return;
         }
 

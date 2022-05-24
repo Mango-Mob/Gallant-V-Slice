@@ -28,6 +28,7 @@ public class Player_Movement : MonoBehaviour
     public float m_attackMoveSpeedLerpSpeed = 5.0f;
     public float m_rollCost = 35.0f;
     float m_turnSmoothTime = 0.075f;
+    float m_fastTurnSmoothTime = 0.001f;
     float m_turnSmoothVelocity;
     float m_turnAnimationVelocity = 0.0f;
     public float m_turnAnimationTime = 0.075f;
@@ -338,6 +339,9 @@ public class Player_Movement : MonoBehaviour
      */
     public void Move(Vector2 _move, Vector2 _aim, bool _roll, float _deltaTime)
     {
+        if (!InputManager.Instance.isInGamepadMode && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE)
+            _aim = Vector2.zero;
+
         // Move speed mult
         m_currentMoveSpeedLerp = Mathf.Clamp(m_currentMoveSpeedLerp + (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE ? -1.0f : 1.0f) * Time.deltaTime * m_attackMoveSpeedLerpSpeed, 0.0f, 1.0f);
 
@@ -396,16 +400,8 @@ public class Player_Movement : MonoBehaviour
             if (_move.magnitude != 0)
             {
                 // Movement
-                if (InputManager.Instance.isInGamepadMode)
-                {
-                    normalizedMove += _move.y * transform.forward;
-                    normalizedMove += _move.x * transform.right;
-                }
-                else
-                {
-                    normalizedMove += _move.y * playerModel.transform.forward;
-                    normalizedMove += _move.x * playerModel.transform.right;
-                }
+                normalizedMove += _move.y * transform.forward;
+                normalizedMove += _move.x * transform.right;
 
                 // Apply movement
                 movement = normalizedMove * speed * _deltaTime;
@@ -545,8 +541,10 @@ public class Player_Movement : MonoBehaviour
         // Rotate player model
         if (_direction.magnitude >= 0.1f && playerModel != null)
         {
+            bool fastTurn = !InputManager.Instance.isInGamepadMode && playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE;
+
             float targetAngle = Mathf.Atan2(_direction.normalized.x, _direction.normalized.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(playerModel.transform.eulerAngles.y, targetAngle, ref m_turnSmoothVelocity, m_turnSmoothTime);
+            float angle = Mathf.SmoothDampAngle(playerModel.transform.eulerAngles.y, targetAngle, ref m_turnSmoothVelocity, fastTurn ? m_fastTurnSmoothTime : m_turnSmoothTime);
             playerModel.transform.rotation = Quaternion.Euler(0.0f, angle, 0.0f);
 
             targetRotateAnim = Mathf.SmoothDampAngle(playerController.animator.GetFloat("Rotate"), 
