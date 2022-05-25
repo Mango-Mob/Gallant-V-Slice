@@ -387,10 +387,10 @@ public class InfoDisplay : MonoBehaviour
 
     public void ClearDisplay()
     {
-        m_itemDetailsLoc.SetActive(false);
-        m_weaponDetailsLoc.SetActive(false);
+        m_itemDetailsLoc?.SetActive(false);
+        m_weaponDetailsLoc?.SetActive(false);
         m_exchangeDetailsLoc?.SetActive(false);
-        m_upgradeAbilityDetailsLoc.SetActive(false);
+        m_upgradeAbilityDetailsLoc?.SetActive(false);
     }
 
     public void ResetPickupTimer()
