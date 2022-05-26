@@ -6,7 +6,7 @@ public class Weapon_Spear : WeaponBase
 {
     new private void Awake()
     {
-        //m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/CrossbowBolt");
+        m_objectAltPrefab = Resources.Load<GameObject>("VFX/WeaponSwings/Spear Spin");
         base.Awake();
     }
 
@@ -31,6 +31,7 @@ public class Weapon_Spear : WeaponBase
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         MeleeAttack(m_weaponData, transform.position, Hand.LEFT);
+        SpawnVFX(m_objectAltPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
     }
     public override void WeaponAltRelease() { }
     private void OnDrawGizmos()
