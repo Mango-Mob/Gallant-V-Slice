@@ -432,7 +432,7 @@ public class Player_Attack : MonoBehaviour
 
         // Drop old weapon
         DropWeapon(_hand, _weapon.transform.position);
-        ApplyWeaponData(_hand);
+        //ApplyWeaponData(_hand);
         switch (_hand)
         {
             case Hand.LEFT:
@@ -579,8 +579,6 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
 
-
-
         if (m_leftWeaponIcon != null)
         {
             if (IsTwoHanded())
@@ -590,7 +588,6 @@ public class Player_Attack : MonoBehaviour
             else
                 m_altAttackIcon.SetIconSprite(null);
         }
-
 
         // Set idle animations
         if (m_leftWeaponData != null && !IsTwoHanded())
@@ -609,6 +606,7 @@ public class Player_Attack : MonoBehaviour
             {
                 playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
                 playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.LEFT);
+                Debug.Log(Weapon.SWORD);
             }
             else
             {
@@ -626,12 +624,14 @@ public class Player_Attack : MonoBehaviour
             {
                 playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
                 playerController.playerCombatAnimator.SetRunAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
+                Debug.Log(m_rightWeaponData.weaponType);
             }
         }
         else
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
             playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.RIGHT);
+            Debug.Log(Weapon.SWORD);
         }
 
         m_leftWeaponIcon.SetDisabledState(m_rightWeaponData && m_rightWeaponData.isTwoHanded);

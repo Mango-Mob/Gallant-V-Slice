@@ -138,9 +138,9 @@ public abstract class WeaponBase : MonoBehaviour
             }
         }
     }
-    protected void SpawnVFX(GameObject _prefab, Vector3 _position, Quaternion _rotation)
+    protected GameObject SpawnVFX(GameObject _prefab, Vector3 _position, Quaternion _rotation)
     {
-        GameObject VFX = Instantiate(_prefab, transform.position, playerController.playerMovement.playerModel.transform.rotation);
+        GameObject VFX = Instantiate(_prefab, _position, _rotation);
         ParticleSystem[] particles = VFX.GetComponentsInChildren<ParticleSystem>();
         if (m_weaponData.abilityData != null)
         {
@@ -152,6 +152,7 @@ public abstract class WeaponBase : MonoBehaviour
                 mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
             }
         }
+        return VFX;
     }
     public virtual string GetWeaponName()
     {
