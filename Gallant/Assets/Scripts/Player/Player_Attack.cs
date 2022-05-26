@@ -426,6 +426,9 @@ public class Player_Attack : MonoBehaviour
         //    DropWeapon(_hand, _weapon.transform.position);
         //    ApplyWeaponData(_hand);
         //}
+        if (_hand == Hand.LEFT && m_leftWeaponData != null && m_rightWeaponData == null
+            || _hand == Hand.RIGHT && m_rightWeaponData != null && m_leftWeaponData == null)
+            SwapWeapons();
 
         // Drop old weapon
         DropWeapon(_hand, _weapon.transform.position);
