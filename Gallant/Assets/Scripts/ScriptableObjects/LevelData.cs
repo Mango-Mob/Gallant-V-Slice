@@ -42,9 +42,6 @@ public class LevelData : ScriptableObject
 
     public List<WaveData> EvaluateCombat(FloorData floor)
     {
-        if (floor.m_type != FloorData.FloorType.COMBAT)
-            return null;
-
         List<WaveData> result = new List<WaveData>();
         List<WaveData> options = new List<WaveData>();
         List<WaveData> archive = new List<WaveData>(m_spawnableWaves);
