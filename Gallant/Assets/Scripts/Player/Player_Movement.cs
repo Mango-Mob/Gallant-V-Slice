@@ -361,6 +361,7 @@ public class Player_Movement : MonoBehaviour
             m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
         }
 
+        Vector2 baseMove = _move;
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
             * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease)
             * playerController.playerSkills.m_movementSpeedStatusBonus;
@@ -397,6 +398,13 @@ public class Player_Movement : MonoBehaviour
 
             Vector3 normalizedMove = Vector3.zero;
 
+            // If player is not trying to aim, aim in direction of movement.
+            if (baseMove.magnitude != 0 && _aim.magnitude == 0 && m_currentTarget == null)
+            {
+                Vector3 normalizedBaseMove = baseMove.y * transform.forward + baseMove.x * transform.right;
+                RotateToFaceDirection(new Vector3(normalizedBaseMove.x, 0, normalizedBaseMove.z));
+            }
+
             if (_move.magnitude != 0)
             {
                 // Movement
@@ -409,9 +417,6 @@ public class Player_Movement : MonoBehaviour
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
                 //    movement *= m_attackMoveSpeed;
 
-                // If player is not trying to aim, aim in direction of movement.
-                if (_aim.magnitude == 0 && m_currentTarget == null)
-                    RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
 
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                 {

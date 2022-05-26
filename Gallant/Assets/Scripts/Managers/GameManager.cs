@@ -67,8 +67,8 @@ public class GameManager : Singleton<GameManager>
             }
         }
 
-        Cursor.visible = !InputManager.Instance.isInGamepadMode && !m_joystickCursorEnabled;
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = !InputManager.Instance.isInGamepadMode;
+        Cursor.lockState = UI_PauseMenu.isPaused ? CursorLockMode.None : CursorLockMode.Confined;
     }
 
     private void OnLevelWasLoaded(int level)
