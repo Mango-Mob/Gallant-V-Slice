@@ -31,7 +31,10 @@ public class CombatEvent : SceneEvent
             int selectProps = Random.Range(0, m_combatScenarios[select].prefabPropsToLoad.Count);
             Instantiate(m_combatScenarios[select].prefabPropsToLoad[selectProps], Vector3.zero, Quaternion.identity);
         }
-        
+        if()
+        {
+
+        }
         DialogManager.Instance.Hide();
 
         Destroy(gameObject);
