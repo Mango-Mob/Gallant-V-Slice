@@ -220,9 +220,14 @@ public class Player_Abilities : MonoBehaviour
         }
 
         if (_ability != null)
-            m_passiveVFX.SetAbility(_hand, _ability.abilityPower);
+            m_passiveVFX.ChangeActiveVFX(_hand, _ability.abilityPower);
         else
-            m_passiveVFX.SetAbility(_hand, Ability.NONE);
+            m_passiveVFX.ChangeActiveVFX(_hand, Ability.NONE);
+
+        //    if (_ability != null)
+        //    m_passiveVFX.SetAbility(_hand, _ability.abilityPower);
+        //else
+        //    m_passiveVFX.SetAbility(_hand, Ability.NONE);
     }
 
     public void PassiveProcess(Hand _hand, PassiveType _type, GameObject _object = null, float _damage = 0.0f)
