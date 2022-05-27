@@ -105,6 +105,10 @@ namespace ActorSystem.AI.Components
             m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
             if (IsStunned || IsDead)
             {
+                foreach (var item in m_indicators)
+                {
+                    item.m_speed = 0.0f;
+                }
                 m_legs?.Halt();
                 return;
             }
@@ -130,7 +134,8 @@ namespace ActorSystem.AI.Components
         {
             if(m_animator != null && m_animator.m_hasVelocity)
             {
-                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
+                m_animator.m_speed = (m_legs != null) ? m_legs.m_speedModifier : 1.0f;
+                m_animator.SetFloat("VelocityHaste", 1.0f);
                 m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.scaledVelocity : Vector3.zero);
             }
             if (m_animator != null && m_animator.HasParameter("RotationVelocity"))

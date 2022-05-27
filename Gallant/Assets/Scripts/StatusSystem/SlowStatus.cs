@@ -54,6 +54,10 @@ public class SlowStatus : StatusEffect
             float strength = Mathf.Lerp(1.0f - m_strength, 1.0f, lerp);
             _actor.m_myBrain.m_legs.m_speedModifier = strength;
 
+            foreach (var item in _actor.m_myBrain.m_indicators)
+            {
+                item.m_speed = Mathf.Min(strength, item.m_speed);
+            }
         }
 
         m_duration -= dt;
@@ -73,6 +77,11 @@ public class SlowStatus : StatusEffect
         foreach (var material in _actor.m_myBrain.m_materials)
         {
             material.RefreshColor();
+        }
+
+        foreach (var item in _actor.m_myBrain.m_indicators)
+        {
+            item.m_speed = 1.0f;
         }
     }
 
