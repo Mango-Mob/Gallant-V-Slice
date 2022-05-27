@@ -53,6 +53,11 @@ public class UI_CollectionList : UI_Element
         m_nextBtn.interactable = data.descriptions.Count > page;
         m_prevBtn.interactable = page > 0;
 
+        if(PlayerPrefs.GetInt(data.collectableID, 0) > 1)
+        {
+            PlayerPrefs.SetInt(data.collectableID, 1);
+        }
+
         m_window.SetActive(true);
     }
 

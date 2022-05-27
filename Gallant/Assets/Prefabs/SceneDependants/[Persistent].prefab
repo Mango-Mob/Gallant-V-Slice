@@ -118,6 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d43f1892ecb6214e87d696bc5504656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_collectableProb: 1
 --- !u!1 &281543964674366811
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +547,12 @@ MonoBehaviour:
   index: 0
   iconNoise: {x: 25, y: 50}
   cameraSpeed: 20
-  m_returnButton: {fileID: 0}
+  m_playerSpeed:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_bonusText: {fileID: 2109533464402335968}
   m_mouseInput: {fileID: 1554697889076164720}
   m_keyboardInput: {fileID: 6570227777755873962}

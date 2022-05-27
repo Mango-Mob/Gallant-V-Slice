@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CollectableSpawn : MonoBehaviour
 {
+    public int listID = 0;
+
     public void Awake()
     {
         NarrativeManager.Instance.m_currentSpawns.Add(this);

@@ -102,9 +102,9 @@ namespace ActorSystem.AI.Components
 
         public void Update()
         {
+            m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
             if (IsStunned || IsDead)
             {
-                m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
                 m_legs?.Halt();
                 return;
             }

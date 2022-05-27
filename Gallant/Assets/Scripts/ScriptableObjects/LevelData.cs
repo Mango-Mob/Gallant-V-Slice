@@ -12,7 +12,8 @@ using UnityEditorInternal;
 public class LevelData : ScriptableObject
 {
     public float m_width = 1024, m_height = 900;
-    public List<CollectableData> m_potentialCollectables { get; private set; }
+    [SerializeField] public List<CollectableData> m_potentialCollectablesA;
+    [SerializeField] public List<CollectableData> m_potentialCollectablesB;
     public List<WaveData> m_spawnableWaves;
     public Color m_portalColor;
     public float m_levelUpPerFloor = 1.45f;

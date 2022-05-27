@@ -24,7 +24,12 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
 
             if(Random.Range(0, 10000) < 10000 * m_collectableProb && NavigationManager.Instance.m_generatedLevel != null)
             {
-                List<CollectableData> potential = new List<CollectableData>(NavigationManager.Instance.m_generatedLevel.m_potentialCollectables);
+                List<CollectableData> potential;
+                if (select.listID == 0)
+                    potential = new List<CollectableData>(NavigationManager.Instance.m_generatedLevel.m_potentialCollectablesA);
+                else
+                    potential = new List<CollectableData>(NavigationManager.Instance.m_generatedLevel.m_potentialCollectablesB);
+
                 for (int i = potential.Count - 1; i >= 0; i--)
                 {
                     if (m_collectableStatus[potential[i]])
@@ -68,7 +73,11 @@ public class NarrativeManager : SingletonPersistent<NarrativeManager>
     {
         foreach (var item in Resources.LoadAll<CollectableData>("Data/"))
         {
-            m_collectableStatus.Add(item, PlayerPrefs.GetInt(item.collectableID, 0) == 1);
+            m_collectableStatus.Add(item, PlayerPrefs.GetInt(item.collectableID, 0) >= 1);
+
+#if UNITY_EDITOR
+            m_collectableStatus[item] = false;
+#endif
         }
     }
 
