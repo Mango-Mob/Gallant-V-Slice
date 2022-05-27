@@ -639,7 +639,8 @@ public class Player_Attack : MonoBehaviour
 
         ToggleTwohandedMode(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
 
-
+        playerController.playerAbilities.ToggleIconActive(Hand.LEFT, !(m_rightWeaponData && m_rightWeaponData.isTwoHanded));
+        playerController.playerAbilities.ToggleIconActive(Hand.RIGHT, !(m_leftWeaponData && m_leftWeaponData.isTwoHanded));
 
         playerController.playerAudioAgent.EquipWeapon();
     }
@@ -792,6 +793,8 @@ public class Player_Attack : MonoBehaviour
             m_leftWeaponEffect = ItemEffect.NONE;
             if (m_leftWeapon)
                 m_leftWeapon.m_weaponObject.transform.SetParent(m_backHolster);
+
+            playerController.playerAbilities.m_passiveVFX.HideVFX(Hand.LEFT, true);
         }
         else
         {
@@ -804,6 +807,7 @@ public class Player_Attack : MonoBehaviour
                 }
                 m_leftWeapon.m_weaponObject.transform.SetParent(m_leftHandTransform);
             }
+            playerController.playerAbilities.m_passiveVFX.HideVFX(Hand.LEFT, false);
         }
         if (m_leftWeapon)
         {

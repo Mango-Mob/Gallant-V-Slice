@@ -10,6 +10,8 @@ public class AbilityPassiveVFX : MonoBehaviour
     private GameObject m_activeLeftVFX;
     private GameObject m_activeRightVFX;
 
+    [SerializeField] private float m_offHandRingSizeMult = 0.75f;
+
     [Header("Prefabs")]
     [SerializeField] private GameObject m_flamerollPrefab;
     [SerializeField] private GameObject m_frostrollPrefab;
@@ -53,6 +55,23 @@ public class AbilityPassiveVFX : MonoBehaviour
         ActivateVFX(_hand, _ability);
     }
 
+    public void HideVFX(Hand _hand, bool _hidden)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_activeLeftVFX)
+                    m_activeLeftVFX.SetActive(!_hidden);
+                break;
+            case Hand.RIGHT:
+                if (m_activeRightVFX)
+                    m_activeRightVFX.SetActive(!_hidden);
+                break;
+            default:
+                return;
+        }
+    }
+
     private void ActivateVFX(Hand _hand, Ability _ability)
     {
         GameObject vfxPrefab;
@@ -82,6 +101,7 @@ public class AbilityPassiveVFX : MonoBehaviour
             case Hand.LEFT:
                 m_activeLeftVFX = Instantiate(vfxPrefab, transform);
                 m_activeLeftVFX.transform.localPosition = Vector3.zero;
+                m_activeLeftVFX.transform.localScale *= m_offHandRingSizeMult;
                 break;
             case Hand.RIGHT:
                 m_activeRightVFX = Instantiate(vfxPrefab, transform);
