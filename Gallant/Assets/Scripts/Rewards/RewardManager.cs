@@ -99,7 +99,7 @@ public class RewardManager : Singleton<RewardManager>
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
-            Show(1, RewardType.STANDARD);
+            Show(10, RewardType.BOOK);
         }
 #endif
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
@@ -252,7 +252,7 @@ public class RewardManager : Singleton<RewardManager>
                     //Only Abilities
                     for (int i = 0; i < 3; i++)
                     {
-                        rewards.Add(GenerateBook(rewards));
+                        rewards.Add(GenerateBook(rewards, level));
                     }
                     break;
                 default:
@@ -355,22 +355,41 @@ public class RewardManager : Singleton<RewardManager>
             case "weapon":
                 return GenerateWeapon(currentList, level);
             case "spell":
-                return GenerateBook(currentList);
+                return GenerateBook(currentList, level);
             default:
                 break;
         }
         return null;
     }
 
-    public AbilityData GenerateBook(List<ScriptableObject> currentList)
+    public AbilityData GenerateBook(List<ScriptableObject> currentList, int level)
     {
+        List<Extentions.WeightedOption<int>> spellLevels = new List<Extentions.WeightedOption<int>>();
+        for (int i = 0; i < m_spellTierWeight.Length; i++)
+        {
+            Extentions.WeightedOption<int> option = new Extentions.WeightedOption<int>();
+            option.data = i + 1;
+            option.weight = (uint)m_spellTierWeight[i].Evaluate(level);
+            spellLevels.Add(option);
+        }
+        int spellLevel = Extentions.GetFromList<int>(spellLevels);
+
+        List<AbilityData> options = new List<AbilityData>(m_abilityBooks);
+        for (int i = options.Count - 1; i >= 0; i--)
+        {
+            if(options[i].starPowerLevel != spellLevel)
+            {
+                options.RemoveAt(i);
+            }
+        }
+
         int select;
         do
         {
-            select = Random.Range(0, m_abilityBooks.Count);
-        } while (!IsUniqueAbility(currentList, m_abilityBooks[select]));
+            select = Random.Range(0, options.Count);
+        } while (!IsUniqueAbility(currentList, options[select]));
 
-        return m_abilityBooks[select];
+        return options[select];
     }
 
     public ItemData GenerateItem(List<ScriptableObject> currentList)
