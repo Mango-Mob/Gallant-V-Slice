@@ -15,6 +15,7 @@ public class Collectable : MonoBehaviour
 
     private bool m_ShowUI = false;
     private bool m_hasBeenCollected;
+
     // Start is called before the first frame update
     void Start()
     {

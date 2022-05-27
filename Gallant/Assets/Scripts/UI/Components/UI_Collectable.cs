@@ -29,7 +29,7 @@ public class UI_Collectable : UI_Element
     public void SetData(CollectableData data)
     {
         m_data = data;
-        m_unlocked = PlayerPrefs.GetInt(data.collectableID, 0) == 1;
+        m_unlocked = NarrativeManager.Instance.m_collectableStatus[data.collectableID];
         m_collectableIcon.sprite = m_data.itemIcon;
     }
     public void SetParentList(UI_CollectionList list)
