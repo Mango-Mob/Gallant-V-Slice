@@ -14,10 +14,13 @@ public class InfoDisplay : MonoBehaviour
     public bool IsEquip = false;
     public bool IsLeft = false;
     public bool IsBook = false;
+    public bool IsExchange = false;
 
     public WeaponData m_weaponData;
     public ItemData m_itemData;
     public AbilityData m_abilityData;
+    public ExchangeData m_exchangeData;
+
 
     public Color m_greaterColor = Color.green;
     public Color m_sameColor = Color.yellow;
@@ -306,6 +309,10 @@ public class InfoDisplay : MonoBehaviour
         if(data != null)
         {
             ClearDisplay();
+            IsExchange = true;
+            IsAWeapon = false;
+            IsBook = false;
+
             m_exchangeDetailsLoc.SetActive(true);
 
             m_gainRuneImageLoc.sprite = data.m_gainRune.itemIcon;
@@ -315,6 +322,10 @@ public class InfoDisplay : MonoBehaviour
             m_costRuneImageLoc.sprite = data.m_costRune.itemIcon;
             m_costQuantity.SetText(data.m_costQuantity.ToString());
             m_costDescription.SetText(data.m_costRune.description);
+
+            m_title.text = "Trade";
+            m_level.SetText("Obtained: "+GameManager.Instance.m_player.GetComponent<Player_Controller>().playerStats.GetEffectQuantity(data.m_gainRune.itemEffect));
+            m_exchangeData = data;
         }
     }
 
@@ -515,6 +526,10 @@ public class InfoDisplay : MonoBehaviour
 
             if (playerController != null)
                 AudioManager.Instance?.PlayAudioTemporary(playerController.transform.position, m_collectAudio);
+        }
+        else if(IsExchange)
+        {
+            m_exchangeData.Apply();
         }
         else
         {

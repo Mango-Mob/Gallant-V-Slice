@@ -22,8 +22,11 @@ public class Player_Controller : MonoBehaviour
     public bool m_isDisabledInput = false;
     public bool m_isNearDrop = false;
     public bool m_isDisabledAttacks = false;
+    private bool m_hasRecentPickup = false;
+    private bool m_hasRecentDialogue = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
+    public float m_controlReturnDelay = 1.0f;
     public ClassData m_inkmanClass { private set; get; }
 
     // Player components
@@ -293,7 +296,7 @@ public class Player_Controller : MonoBehaviour
                 m_dualWieldBonus = 1.0f;
             }
 
-            if (!m_isDisabledAttacks && !m_isNearDrop)
+            if (!m_hasRecentPickup && !m_isDisabledAttacks && !m_isNearDrop)
             {
                 if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
                     animator.SetTrigger("RightTrigger");
@@ -387,11 +390,10 @@ public class Player_Controller : MonoBehaviour
         }
 
 
-        if (InputManager.Instance.IsBindDown("Consume", gamepadID))
+        if (InputManager.Instance.IsBindDown("Consume", gamepadID) && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Arm")).IsName("Heal"))
         {
             // Heal from adrenaline
             animator.SetTrigger("Heal");
-            //playerResources.UseAdrenaline();
         }
 
         if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
@@ -504,6 +506,19 @@ public class Player_Controller : MonoBehaviour
                 break;
         }
         playerPickup.RemoveDropFromList(_drop);
+        StartCoroutine(DelayAttackControl());
+    }
+    IEnumerator DelayAttackControl()
+    {
+        m_hasRecentPickup = true;
+        yield return new WaitForSeconds(m_controlReturnDelay);
+        m_hasRecentPickup = false;
+    }
+    IEnumerator DelaySwapControl()
+    {
+        m_hasRecentDialogue = true;
+        yield return new WaitForSeconds(m_controlReturnDelay);
+        m_hasRecentDialogue = false;
     }
     public void StartHeal() { animator.SetBool("IsHealing", true); }
 

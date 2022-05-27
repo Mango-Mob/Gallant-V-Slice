@@ -138,6 +138,22 @@ public abstract class WeaponBase : MonoBehaviour
             }
         }
     }
+    protected GameObject SpawnVFX(GameObject _prefab, Vector3 _position, Quaternion _rotation)
+    {
+        GameObject VFX = Instantiate(_prefab, _position, _rotation);
+        ParticleSystem[] particles = VFX.GetComponentsInChildren<ParticleSystem>();
+        if (m_weaponData.abilityData != null)
+        {
+            Color newColor = m_weaponData.abilityData.droppedEnergyColor;
+            foreach (var particleSystem in particles)
+            {
+                ParticleSystem.MainModule mainModule = particleSystem.main;
+                newColor.a = mainModule.startColor.color.a;
+                mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
+            }
+        }
+        return VFX;
+    }
     public virtual string GetWeaponName()
     {
         if (m_weaponData.overrideAnimation =="" || m_hand == Hand.LEFT)

@@ -12,11 +12,12 @@ namespace ActorSystem.AI.Components
         public float accel = 8;
         public float minHeight = 2;
         public float maxJumpDist = 8;
+        public float m_jumpDelay = 0.5f;
 
         [Range(0, 1f)]
         public float endPointStart = 0.9f;
         private float speed = 0;
-
+        private float m_jumpTimer = 0f;
         private Actor_Animator m_animator;
         private Vector3 startPos;
         private Vector3 endPos;
@@ -25,7 +26,7 @@ namespace ActorSystem.AI.Components
         private bool isLeaping = false;
         private float rotMod = 1.0f;
         public LeapState m_currentState = LeapState.Ready;
-        public enum LeapState { Ready, Start, Landing };
+        public enum LeapState { Ready, Start, Landing};
         // Start is called before the first frame update
         protected override void Start()
         {
@@ -53,9 +54,9 @@ namespace ActorSystem.AI.Components
                 transform.position = MathParabola.Parabola(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 1.0f - remainDist/startDist);
             }
 
-            if(!isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 10f)
+            if(m_jumpTimer > 0f)
             {
-                StartRotationLeap();
+                m_jumpTimer -= Time.deltaTime;
             }
         }
 
@@ -100,16 +101,21 @@ namespace ActorSystem.AI.Components
             Vector3 destination = transform.position + direction.normalized * Mathf.Min(maxJumpDist * m_speedModifier, direction.magnitude);
             m_targetPosition = destination;
 
-            if (lookAtTarget)
+            SetTargetRotation(Quaternion.LookRotation(direction.normalized, Vector3.up));
+
+            if (Quaternion.Angle(transform.rotation, m_targetRotation) > 2f)
             {
-                SetTargetRotation(Quaternion.LookRotation(direction.normalized, Vector3.up)); 
+                m_jumpTimer = m_jumpDelay;
             }
 
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(destination, out hit, m_agent.radius, m_agent.areaMask))
+            if(m_jumpTimer <= 0f)
             {
-                endPos = hit.position;
-                m_currentState = LeapState.Start;
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(destination, out hit, m_agent.radius, m_agent.areaMask))
+                {
+                    endPos = hit.position;
+                    m_currentState = LeapState.Start;
+                }
             }
         }
 

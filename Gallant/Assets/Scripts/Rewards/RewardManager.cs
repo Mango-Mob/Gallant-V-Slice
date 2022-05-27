@@ -10,9 +10,8 @@ public class RewardManager : Singleton<RewardManager>
     public static bool giveRewardUponLoad = false;
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
-    
-
     public GameObject m_window;
+    public Text m_rewardTitle;
     public InfoDisplay[] m_rewardSlots;
 
     [Header("Ability Description")]
@@ -34,6 +33,8 @@ public class RewardManager : Singleton<RewardManager>
     [Range(0.0f, 1.0f)]
     public float[] m_weaponProbability;
 
+    public GameObject m_currentWeapons;
+    public GameObject m_currentRunes;
     public InfoDisplay m_leftHand;
     public InfoDisplay m_rightHand;
 
@@ -171,6 +172,10 @@ public class RewardManager : Singleton<RewardManager>
         m_rewardSlots[0].LoadWeapon(data1);
         m_rewardSlots[1].LoadWeapon(data2);
         m_rewardSlots[2].LoadWeapon(data3);
+
+        m_currentWeapons.SetActive(true);
+        m_currentRunes.SetActive(false);
+
         m_onResult = onResult;
 
         EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].gameObject);
@@ -179,10 +184,12 @@ public class RewardManager : Singleton<RewardManager>
     public void Show(int level, RewardType type = RewardType.STANDARD)
     {
         m_audio.Play();
+        m_rewardTitle.text = "Choose";
         m_window.SetActive(true);
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
-
+        m_currentWeapons.SetActive(true);
+        m_currentRunes.SetActive(false);
         m_player.m_isDisabledInput = true;
         m_onResult = GiveReward;
 
@@ -230,10 +237,13 @@ public class RewardManager : Singleton<RewardManager>
                     break;
                 case RewardType.RUNE:
                     //No Weapons
+                    m_currentWeapons.SetActive(false);
+                    m_currentRunes.SetActive(true);
                     for (int i = 0; i < 3; i++)
                     {
-                        rewards.Add(ExchangeData.CreateExchange(GenerateRune(1), 3, m_randomRune, 3));
+                        rewards.Add(ExchangeData.CreateExchange(GenerateRune(rewards, 1), 3, m_randomRune, 3));
                     }
+                    m_rewardTitle.text = "Exchange";
                     break;
                 case RewardType.BOOK:
                     //Only Abilities
@@ -362,20 +372,27 @@ public class RewardManager : Singleton<RewardManager>
         return options[select];
     }
 
-    public ItemData GenerateRune(int offset = 1, bool isInverse = false)
+    public ItemData GenerateRune(List<ScriptableObject> currentList, int offset = 1, bool isInverse = false)
     {
         for (int i = m_runes.Count - 1; i >= 0; i--)
         {
-            uint newWeight = 0;
-            if(isInverse)
+            if(IsUniqueRune(currentList, m_runes[i].data.itemEffect))
             {
-                newWeight = 10 - (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
-                m_runes.SetWeightAt<ItemData>(i, (newWeight - offset < 0) ? 0 : newWeight + 1);
+                uint newWeight = 0;
+                if (isInverse)
+                {
+                    newWeight = (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
+                    m_runes.SetWeightAt<ItemData>(i, (newWeight - offset < 0) ? 0 : newWeight + 1);
+                }
+                else
+                {
+                    newWeight = (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
+                    m_runes.SetWeightAt<ItemData>(i, (newWeight + offset > 10) ? 0 : (10 - newWeight) + 1);
+                }
             }
             else
             {
-                newWeight = (uint)m_player.playerStats.GetEffectQuantity(m_runes[i].data.itemEffect);
-                m_runes.SetWeightAt<ItemData>(i, (newWeight + offset > 10) ? 0 : newWeight + 1);
+                m_runes.SetWeightAt<ItemData>(i, 0);
             }
         }
 
@@ -431,7 +448,21 @@ public class RewardManager : Singleton<RewardManager>
         }
         return true;
     }
-
+    private bool IsUniqueRune(List<ScriptableObject> list, ItemEffect data)
+    {
+        foreach (var reward in list)
+        {
+            ExchangeData exchangeReward = reward as ExchangeData;
+            if (exchangeReward != null)
+            {
+                if (exchangeReward.m_gainRune.itemEffect == data)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     public bool IsUniqueItem(List<ScriptableObject> list, ItemData data)
     {
         foreach (var reward in list)
