@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -43,6 +44,9 @@ public class RewardManager : Singleton<RewardManager>
 
     public Animator m_inventoryAnimator;
     public Image m_inventoryImage;
+
+    [Header("Probabilities")]
+    public AnimationCurve[] m_spellTierWeight;
 
     private int m_hover;
     private int m_select = -1;
@@ -95,10 +99,9 @@ public class RewardManager : Singleton<RewardManager>
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
-            Show(1, RewardType.RUNE);
+            Show(1, RewardType.STANDARD);
         }
 #endif
-
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
         m_gamePadButton.SetActive(InputManager.Instance.isInGamepadMode && m_select != -1);
         m_inventoryImage.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
@@ -201,7 +204,7 @@ public class RewardManager : Singleton<RewardManager>
             {
                 case RewardType.STANDARD:
                     //Garenteed weapon
-                    rewards.Add(WeaponData.GenerateWeapon(level));
+                    rewards.Add(GenerateWeapon(rewards, level));
                     for (int i = 0; i < 2; i++)
                     {
                         if (IsAWeaponReward())
@@ -293,10 +296,19 @@ public class RewardManager : Singleton<RewardManager>
 
     public WeaponData GenerateWeapon(List<ScriptableObject> currentList, int level)
     {
+        List<Extentions.WeightedOption<int>> spellLevels = new List<Extentions.WeightedOption<int>>();
+        for (int i = 0; i < m_spellTierWeight.Length; i++)
+        {
+            Extentions.WeightedOption<int> option = new Extentions.WeightedOption<int>();
+            option.data = i + 1;
+            option.weight = (uint)m_spellTierWeight[i].Evaluate(level);
+            spellLevels.Add(option);
+        }
+        int spellLevel = Extentions.GetFromList<int>(spellLevels);
         WeaponData weapon;
         do
         {
-            weapon = WeaponData.GenerateWeapon(level);
+            weapon = WeaponData.GenerateWeapon(level, spellLevel);
         } while (!IsUniqueWeapon(currentList, weapon));
 
         return weapon;
