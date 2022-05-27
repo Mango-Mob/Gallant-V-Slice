@@ -25,7 +25,7 @@ namespace ActorSystem.AI.Components
         private bool isLeaping = false;
         private float rotMod = 1.0f;
         public LeapState m_currentState = LeapState.Ready;
-        public enum LeapState { Ready, Start, Landing };
+        public enum LeapState { Ready, Start, Landing, Waiting };
         // Start is called before the first frame update
         protected override void Start()
         {
@@ -53,9 +53,9 @@ namespace ActorSystem.AI.Components
                 transform.position = MathParabola.Parabola(startPos, endPos, Mathf.Max(Vector3.Distance(startPos, endPos) / 2, minHeight), 1.0f - remainDist/startDist);
             }
 
-            if(!isLeaping && Quaternion.Angle(transform.rotation, m_targetRotation) > 10f)
+            if(m_currentState == LeapState.Waiting && Quaternion.Angle(transform.rotation, m_targetRotation) < 5f)
             {
-                StartRotationLeap();
+                m_currentState = LeapState.Start;
             }
         }
 
@@ -100,7 +100,7 @@ namespace ActorSystem.AI.Components
             Vector3 destination = transform.position + direction.normalized * Mathf.Min(maxJumpDist * m_speedModifier, direction.magnitude);
             m_targetPosition = destination;
 
-            if (lookAtTarget)
+            //if (lookAtTarget)
             {
                 SetTargetRotation(Quaternion.LookRotation(direction.normalized, Vector3.up)); 
             }
@@ -109,7 +109,7 @@ namespace ActorSystem.AI.Components
             if (NavMesh.SamplePosition(destination, out hit, m_agent.radius, m_agent.areaMask))
             {
                 endPos = hit.position;
-                m_currentState = LeapState.Start;
+                m_currentState = LeapState.Waiting;
             }
         }
 
