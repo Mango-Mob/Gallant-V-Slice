@@ -35,9 +35,14 @@ public class Player_Skills : MonoBehaviour
     private GameObject m_slowPatchPrefab;
 
     private SkillAbility m_healthRegenStatus;
+
     private SkillAbility m_knockbackSplashSkill;
+
     private SkillAbility m_impactSplashSkill;
+    private GameObject m_impactSplashVFX;
+
     private SkillAbility m_fireDamageSplashSkill;
+    private GameObject m_fireDamageSplashVFX;
     private class SkillAbility
     {
         public float m_strength { private set; get; } = 0.0f;
@@ -60,6 +65,8 @@ public class Player_Skills : MonoBehaviour
 
         m_flamePatchPrefab = Resources.Load<GameObject>("Skills/FlamePatch");
         m_slowPatchPrefab = Resources.Load<GameObject>("Skills/FrostPatch");
+        m_impactSplashVFX = Resources.Load<GameObject>("Skills/VFX/earthOnHit");
+        m_fireDamageSplashVFX = Resources.Load<GameObject>("Skills/VFX/fireOnHit");
     }
 
     // Update is called once per frame
@@ -234,7 +241,9 @@ public class Player_Skills : MonoBehaviour
                 {
                     playerController.playerAttack.DamageTarget(collider.gameObject, m_fireDamageSplashSkill.m_strength * _potency, 0.0f, 0.0f, CombatSystem.DamageType.Ability);
                 }
+
                 // Spawn VFX
+                GameObject fireVFX = Instantiate(m_fireDamageSplashVFX, _actor.m_selfTargetTransform.position, transform.rotation);
 
                 break;
             case AbilityTag.Air:
@@ -248,10 +257,11 @@ public class Player_Skills : MonoBehaviour
                 // SFX
                 break;
             case AbilityTag.Earth:
+                Debug.Log("Tags Exist!");
                 if (m_impactSplashSkill == null)
                     return;
-                // Splash impact damage to nearby enemies
 
+                // Splash impact damage to nearby enemies
                 // Get actors within radius
                 Collider[] earthColliders = Physics.OverlapSphere(_actor.transform.position, 5.0f, playerController.playerAttack.m_attackTargets);
 
@@ -266,6 +276,7 @@ public class Player_Skills : MonoBehaviour
                 }
 
                 // Spawn VFX
+                GameObject earthVFX = Instantiate(m_impactSplashVFX, _actor.m_selfTargetTransform.position, transform.rotation);
                 break;
             case AbilityTag.Water:
                 if (m_healthRegenStatus == null)
