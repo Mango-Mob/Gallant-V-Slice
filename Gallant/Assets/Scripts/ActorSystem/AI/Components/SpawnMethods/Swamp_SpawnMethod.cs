@@ -33,11 +33,10 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.GetComponent<Rigidbody>().isKinematic = true;
             m_timer = Random.Range(m_spawnDelayMin, m_spawnDelayMax);
             m_hasResentlySpawnned = true;
-            GetComponent<Collider>().enabled = false;
 
             foreach (var item in m_myActor.m_myBrain.m_materials)
             {
-                item.enabled = true;
+                item.SetEnabled(true);
                 item.StartDisolve(m_timer);
             }
         }
@@ -63,6 +62,7 @@ namespace ActorSystem.AI.Components.SpawnMethods
                 m_myActor.m_myBrain.m_animator.PlayAnimation("Spawn_Loop");
                 foreach (var item in m_myActor.m_myBrain.m_materials)
                 {
+                    item.SetEnabled(true);
                     item.StartResolve(m_spawnTime);
                 }
             }
@@ -76,7 +76,6 @@ namespace ActorSystem.AI.Components.SpawnMethods
             m_myActor.m_onSpawnEvent?.Invoke();
             m_myActor.m_myBrain.m_legs.SetTargetLocation(transform.position);
             m_myActor.m_myBrain.m_legs.SetTargetRotation(transform.rotation);
-            GetComponent<Collider>().enabled = true;
             Destroy(m_spawn);
         }
 

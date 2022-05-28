@@ -134,7 +134,7 @@ public class WeaponData : ScriptableObject
     private static float m_maxSpeedPerLevel = 0.03f;
 
 
-    public static WeaponData GenerateWeapon(int _level)
+    public static WeaponData GenerateWeapon(int _level, int abilityLevel)
     {
         WeaponData data = CreateInstance<WeaponData>();
 
@@ -163,20 +163,20 @@ public class WeaponData : ScriptableObject
         //{
         newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 4);
         
-        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
-        int result = Mathf.Max(_level + curve, 0);
-
-        // Power level
-        int powerLevel = 0;
-        if (result < 3)
-            powerLevel = 1;
-        else if (result < 6)
-            powerLevel = 2;
-        else
-            powerLevel = 3;
+        //int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
+        //int result = Mathf.Max(_level + curve, 0);
+        //
+        //// Power level
+        //int powerLevel = 0;
+        //if (result < 3)
+        //    powerLevel = 1;
+        //else if (result < 6)
+        //    powerLevel = 2;
+        //else
+        //    powerLevel = 3;
 
         // Ability
-        ApplyAbilityData(data, newAbilityType, powerLevel);
+        ApplyAbilityData(data, newAbilityType, abilityLevel);
         //    iter++; 
         //    if (iter > 20)
         //    {
