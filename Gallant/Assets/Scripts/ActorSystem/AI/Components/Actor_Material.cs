@@ -69,7 +69,7 @@ namespace ActorSystem.AI.Components
         public void StartDisolve(float time)
         {
             m_disolveTime = time;
-
+            m_timer = 0.0f;
             if (m_myMesh == null)
                 return;
 
@@ -83,9 +83,11 @@ namespace ActorSystem.AI.Components
                 Debug.LogWarning("Disolve called when texture isn't a disolve shader.");
             }
         }
+
         public void StartResolve(float time)
         {
             m_disolveTime = time;
+            m_timer = 0.0f;
             if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = -1;
