@@ -363,8 +363,7 @@ public class Player_Movement : MonoBehaviour
 
         Vector2 baseMove = _move;
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
-            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease)
-            * playerController.playerSkills.m_movementSpeedStatusBonus;
+            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease);
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
@@ -385,7 +384,7 @@ public class Player_Movement : MonoBehaviour
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
             }
 
-            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed * (GameManager.Instance.IsInCombat ? 1.0f : playerController.playerSkills.m_outOfCombatSpeedIncrease); // Player movement speed
+            float speed = m_moveSpeed * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
             if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.BOG)) // If the player is walking in bog.
             {
                 speed *= m_bogSlow;
@@ -394,7 +393,7 @@ public class Player_Movement : MonoBehaviour
             {
                 speed *= m_speedBoost;
             }
-            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / 5.0f);
+            playerController.animator.SetFloat("MovementSpeed", speed / m_moveSpeed);
 
             Vector3 normalizedMove = Vector3.zero;
 

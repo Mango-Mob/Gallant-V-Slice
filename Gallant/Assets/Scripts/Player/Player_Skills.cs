@@ -37,6 +37,7 @@ public class Player_Skills : MonoBehaviour
     private SkillAbility m_healthRegenStatus;
 
     private SkillAbility m_knockbackSplashSkill;
+    private GameObject m_knockbackSplashVFX;
 
     private SkillAbility m_impactSplashSkill;
     private GameObject m_impactSplashVFX;
@@ -66,6 +67,7 @@ public class Player_Skills : MonoBehaviour
         m_flamePatchPrefab = Resources.Load<GameObject>("Skills/FlamePatch");
         m_slowPatchPrefab = Resources.Load<GameObject>("Skills/FrostPatch");
         m_impactSplashVFX = Resources.Load<GameObject>("Skills/VFX/earthOnHit");
+        m_knockbackSplashVFX = Resources.Load<GameObject>("Skills/VFX/earthOnKill");
         m_fireDamageSplashVFX = Resources.Load<GameObject>("Skills/VFX/fireOnHit");
     }
 
@@ -332,6 +334,8 @@ public class Player_Skills : MonoBehaviour
                 }
 
                 // Spawn VFX
+                GameObject earthVFX = Instantiate(m_knockbackSplashVFX, _actor.m_selfTargetTransform.position, transform.rotation);
+
                 break;
             case AbilityTag.Water:
                 if (m_slowPatchSplashSkill == null)
