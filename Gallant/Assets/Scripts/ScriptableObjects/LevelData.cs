@@ -12,6 +12,8 @@ using UnityEditorInternal;
 public class LevelData : ScriptableObject
 {
     public float m_width = 1024, m_height = 900;
+    [SerializeField] public List<CollectableData> m_potentialCollectablesA;
+    [SerializeField] public List<CollectableData> m_potentialCollectablesB;
     public List<WaveData> m_spawnableWaves;
     public Color m_portalColor;
     public float m_levelUpPerFloor = 1.45f;
@@ -42,9 +44,6 @@ public class LevelData : ScriptableObject
 
     public List<WaveData> EvaluateCombat(FloorData floor)
     {
-        if (floor.m_type != FloorData.FloorType.COMBAT)
-            return null;
-
         List<WaveData> result = new List<WaveData>();
         List<WaveData> options = new List<WaveData>();
         List<WaveData> archive = new List<WaveData>(m_spawnableWaves);

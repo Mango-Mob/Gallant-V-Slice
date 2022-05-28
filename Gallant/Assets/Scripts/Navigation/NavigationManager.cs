@@ -16,7 +16,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     public Vector2 iconNoise;
 
     public float cameraSpeed = 10f;
-
+    public AnimationCurve m_playerSpeed;
     public LevelData m_generatedLevel { get; private set; } = null;
 
     [SerializeField] private GameObject m_bonusText;
@@ -46,9 +46,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Start()
     {
-        //Generate(6, 2, 6);
-        //UpdateMap(0);
-        //ConstructScene();
+        
     }
 
     public FloorData GetActiveFloor()
@@ -157,7 +155,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
     {
         m_canQuit = false;
         Vector3 start = m_playerIcon.transform.position;
-        float speed = 15f;
+        float speed = m_playerSpeed.Evaluate(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerStats.GetEffectQuantity(ItemEffect.MOVE_SPEED));
         float distance = Vector3.Distance(start, position);
         float dt = speed / distance;
         float t = 0;

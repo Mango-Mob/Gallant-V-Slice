@@ -24,7 +24,7 @@ public abstract class SceneEvent : MonoBehaviour
         Destroy(this);
     }
 
-    public void Update()
+    protected virtual void Update()
     {
         if(GameManager.Instance.m_player != null)
         {

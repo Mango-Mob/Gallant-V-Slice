@@ -27,46 +27,55 @@ public class ExchangeSceneEvent : SceneEvent
     protected override void Start()
     {
         base.Start();
-        m_player = GameManager.Instance.m_player.GetComponent<Player_Stats>();
-
-        DialogManager.Instance.SetCharacter(null);
-        string dialog = "You are presented a choice...\n";
-
-        for(int i = 0; i < 3; i++)
-        {
-            GenerateCase();
-        }
-        
-        char point = 'A';
-        for (int i = 0; i < 4; i++)
-        {
-            if(m_options.Count > i)
-            {
-                dialog += $"{point}. {m_options[i].buttonOptionText}\n";
-                switch(i)
-                {
-                    case 0:
-                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectOne);
-                        break;
-                    case 1:
-                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectTwo);
-                        break;
-                    case 2:
-                        DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectThree);
-                        break;
-                }
-                
-                point++;
-            }
-            else if (m_options.Count == i)
-            {
-                DialogManager.Instance.SetButtonOption(i, "Decline", Decline);
-                break;
-            }
-        }
-        DialogManager.Instance.SetDialogText(dialog);
+        //m_player = GameManager.Instance.m_player.GetComponent<Player_Stats>();
+        DialogManager.Instance.Hide();
+        RewardManager.Instance.Show(1, RewardManager.RewardType.RUNE);
+        //DialogManager.Instance.SetCharacter(null);
+        //string dialog = "You are presented a choice...\n";
+        //
+        //for(int i = 0; i < 3; i++)
+        //{
+        //    GenerateCase();
+        //}
+        //
+        //char point = 'A';
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    if(m_options.Count > i)
+        //    {
+        //        dialog += $"{point}. {m_options[i].buttonOptionText}\n";
+        //        switch(i)
+        //        {
+        //            case 0:
+        //                DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectOne);
+        //                break;
+        //            case 1:
+        //                DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectTwo);
+        //                break;
+        //            case 2:
+        //                DialogManager.Instance.SetButtonOption(i, m_options[i].m_gain[0].itemName, SelectThree);
+        //                break;
+        //        }
+        //        
+        //        point++;
+        //    }
+        //    else if (m_options.Count == i)
+        //    {
+        //        DialogManager.Instance.SetButtonOption(i, "Decline", Decline);
+        //        break;
+        //    }
+        //}
+        //DialogManager.Instance.SetDialogText(dialog);
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if(!RewardManager.Instance.IsVisible)
+        {
+            EndEvent();
+        }
+    }
     public void SelectOne()
     {
         for(int g = 0; g < m_options[0].m_gain.Count; g++)
