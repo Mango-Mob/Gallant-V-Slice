@@ -16,9 +16,10 @@ namespace ActorSystem.AI.Bosses
         public enum ChargePhase { IDLE, AIM, RUNNING, RECOVERY}
 
         public float m_chargeAimDist = 5f;
-
+        public float m_chargeHitDist = 2.5f;
+        public float m_chargeKnockback = 20.0f;
         public bool m_chargeControlled = true;
-
+        
         public Phase m_phase;
         public ChargePhase m_cPhase;
         public AnimationCurve m_chargeMSpeedMod;
@@ -27,6 +28,7 @@ namespace ActorSystem.AI.Bosses
 
         public float m_chargeCooldown = 3.0f;
         private float m_chargeCurrCd = 0.0f;
+        private float m_recoveryCd = 0.0f;
         private float m_chargeTimer = 0.0f;
         private Vector3 m_chargeTarget;
         protected override void Awake()
@@ -47,6 +49,9 @@ namespace ActorSystem.AI.Bosses
 
             if (m_chargeCurrCd > 0)
                 m_chargeCurrCd -= Time.deltaTime;
+
+            if (m_recoveryCd > 0)
+                m_recoveryCd -= Time.deltaTime;
 
             switch (m_phase)
             {
@@ -162,13 +167,14 @@ namespace ActorSystem.AI.Bosses
                     {
                         SetTargetLocation(transform.position, false);
                         SetTargetOrientaion(m_target.transform.position);
+                        m_myBrain.m_animator.SetInteger("ChargeStatus", 0);
                         break;
                     }
                 case ChargePhase.RUNNING:
                     {
                         if (m_myBrain.m_legs.enabled)
                         {
-                            m_chargeTimer = Mathf.Clamp(m_chargeTimer + Time.deltaTime, 0, 1.0f);
+                            m_chargeTimer = Mathf.Clamp(m_chargeTimer + Time.deltaTime, 0, m_chargeMSpeedMod.keys[m_chargeMSpeedMod.keys.Count() - 1].time);
                             m_myBrain.m_legs.m_baseSpeed = m_myData.baseSpeed * m_chargeMSpeedMod.Evaluate(m_chargeTimer);
 
                             if (m_chargeControlled)
@@ -186,8 +192,14 @@ namespace ActorSystem.AI.Bosses
                                 if(Vector3.Distance(transform.position, m_chargeTarget) > m_chargeAimDist)
                                 {
                                     //Lost Target
-                                    m_myBrain.m_animator.SetTrigger("Hit");
-                                    EnterRecovery();
+                                    EnterRecovery(0.5f, false);
+                                }
+                                else if(Vector3.Distance(transform.position, m_target.transform.position) <= m_chargeHitDist)
+                                {
+                                    //Hit player
+                                    EnterRecovery(1.0f, false);
+                                    m_target.GetComponent<Player_Controller>().StunPlayer(0.2f,  (m_target.transform.position - transform.position).normalized * m_chargeKnockback);
+                                    m_target.GetComponent<Player_Controller>().ScreenShake(5.0f);
                                 }
                                 else
                                 {
@@ -200,6 +212,10 @@ namespace ActorSystem.AI.Bosses
                 case ChargePhase.RECOVERY:
                     {
                         m_myBrain.m_legs.Halt();
+                        if(m_recoveryCd <= 0)
+                        {
+                            TransitionToPhase(Phase.ATTACK);
+                        }
                         break;
                     };
                 default:
@@ -209,9 +225,11 @@ namespace ActorSystem.AI.Bosses
             
         }
 
-        private void EnterRecovery()
+        private void EnterRecovery(float delay, bool wasHit = true)
         {
-            m_myBrain.m_animator.SetTrigger("Hit");
+            m_recoveryCd = delay;
+            m_myBrain.m_animator.SetInteger("ChargeStatus", (wasHit) ? -1 : 1);
+            m_myBrain.m_legs.Halt();
             m_cPhase = ChargePhase.RECOVERY;
             foreach (var item in m_myWalls)
             {
@@ -223,7 +241,7 @@ namespace ActorSystem.AI.Bosses
         {
             if(m_phase == Phase.CHARGE)
             {
-                EnterRecovery();
+                EnterRecovery(1.5f, true);
             }
         }
 
@@ -255,6 +273,9 @@ namespace ActorSystem.AI.Bosses
                 {
                     Extentions.GizmosDrawCircle(m_target.transform.position, m_chargeAimDist);
                 }
+
+                Gizmos.color = Color.red;
+                Extentions.GizmosDrawCircle(m_target.transform.position, m_chargeHitDist);
             }
         }
 

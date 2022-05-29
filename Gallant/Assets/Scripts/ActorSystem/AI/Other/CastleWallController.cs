@@ -9,15 +9,23 @@ namespace ActorSystem.AI.Other
 
         public void SetEnabledStatus(bool status)
         {
-            GetComponent<NavMeshObstacle>().carving = status;
+            GetComponent<NavMeshObstacle>().enabled = status;
         }
 
-        public void OnCollisionEnter(Collision collision)
+        public void OnTriggerEnter(Collider other)
         {
-            if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
             {
-                collision.collider.gameObject.GetComponent<Boss_Castle>().HitWall();
+                other.gameObject.GetComponent<Boss_Castle>().HitWall();
             }
         }
+
+        //public void OnCollisionEnter(Collision collision)
+        //{
+        //    if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+        //    {
+        //        collision.collider.gameObject.GetComponent<Boss_Castle>().HitWall();
+        //    }
+        //}
     }
 }
