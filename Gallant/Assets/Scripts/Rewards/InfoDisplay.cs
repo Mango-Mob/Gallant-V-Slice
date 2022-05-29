@@ -344,14 +344,14 @@ public class InfoDisplay : MonoBehaviour
             m_abilityData = data;
             m_title.text = m_abilityData.abilityName;
 
+            for (int i = 0; i < m_upgradeAbilityStars.Length; i++)
+            {
+                m_upgradeAbilityStars[i].gameObject.SetActive(i < data.starPowerLevel);
+            }
+
             m_passiveLocation.SetActive(false);
             m_upgradeAbilityImageLoc.sprite = data.abilityIcon;
             m_upgradeAbilityDescription.SetText(AbilityData.EvaluateDescription(data));
-
-            for (int i = 0; i < m_abilityStars.Length; i++)
-            {
-                m_abilityStars[i].gameObject.SetActive(i < data.starPowerLevel);
-            }
 
             m_animator?.SetBool("IsBack", false);
         }
