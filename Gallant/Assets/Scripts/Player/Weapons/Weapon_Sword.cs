@@ -6,7 +6,7 @@ public class Weapon_Sword : WeaponBase
 {
     new private void Awake()
     {
-        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/BoomerangProjectile");
+        m_objectPrefab = Resources.Load<GameObject>("VFX/WeaponSwings/Spear Spin");
         base.Awake();
     }
 
@@ -28,6 +28,31 @@ public class Weapon_Sword : WeaponBase
     public override void WeaponFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+
+        GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
+        VFX.transform.localScale *= (m_weaponData.hitCenterOffset + m_weaponData.hitSize) * 0.6f;
+        VFX.transform.SetParent(transform);
+
+        switch (playerController.animator.GetInteger("ComboCount"))
+        {
+            case 0:
+                VFX.transform.localScale = new Vector3(VFX.transform.localScale.x * -1.0f,
+                    VFX.transform.localScale.y,
+                    VFX.transform.localScale.z);
+                break;
+            case 1:
+                break;
+            case 2:
+                VFX.transform.localScale = new Vector3(VFX.transform.localScale.x * -1.0f,
+                    VFX.transform.localScale.y,
+                    VFX.transform.localScale.z);
+
+                VFX.transform.Rotate(new Vector3(0.0f, 0.0f, 85.0f));
+                break;
+            default:
+                break;
+        }
+
         MeleeAttack(m_weaponData, transform.position);
     }
     public override void WeaponRelease() { }
@@ -35,6 +60,10 @@ public class Weapon_Sword : WeaponBase
     {
         if (m_attackReady)
         {
+            GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
+            VFX.transform.localScale *= (m_weaponData.hitCenterOffset + m_weaponData.hitSize) * 0.6f;
+            VFX.transform.SetParent(transform);
+
             playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             MeleeAttack(m_weaponData, transform.position);
             m_attackReady = false;

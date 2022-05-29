@@ -151,7 +151,7 @@ public class Player_Controller : MonoBehaviour
         if (playerAttack.m_isBlocking)
             playerResources.ChangeStamina(-10.0f * Time.deltaTime);
 
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned)
         {
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
@@ -196,6 +196,12 @@ public class Player_Controller : MonoBehaviour
         if ((!rightAttackHeld && !leftAttackHeld) || playerMovement.m_isRolling)
             playerAttack.ToggleBlock(false);
 
+        
+
+        // Move player
+        playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.Instance.IsBindDown("Roll", gamepadID), Time.deltaTime);
+
+
         float armWeight = animator.GetLayerWeight(animator.GetLayerIndex("Arm"));
         float standArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("StandArm"));
         float runArmWeight = animator.GetLayerWeight(animator.GetLayerIndex("RunArmL"));
@@ -215,7 +221,8 @@ public class Player_Controller : MonoBehaviour
         }
 
         // Set avatar mask to be used
-        if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
+        //if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
+        if (animator.GetFloat("Vertical") > 0.5f)
         {
             runArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
             idleWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
@@ -241,9 +248,6 @@ public class Player_Controller : MonoBehaviour
 
         animator.SetLayerWeight(animator.GetLayerIndex("Arm"), armWeight);
         animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), standArmWeight);
-
-        // Move player
-        playerMovement.Move(GetPlayerMovementVector(), GetPlayerAimVector(), InputManager.Instance.IsBindDown("Roll", gamepadID), Time.deltaTime);
 
         // Walk run lerp
         bool isWalkSpeed = animator.GetFloat("Vertical") <= 0.5f;
@@ -418,7 +422,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, transform.up * 5.0f);
+            StunPlayer(0.2f, transform.up * 20.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
@@ -835,13 +839,18 @@ public class Player_Controller : MonoBehaviour
     {
         m_inkmanClass = _class;
 
-        if (playerAttack.m_leftWeaponData?.m_level == -1)
+        if (_class.startWeapon != null)
         {
-            playerAttack.SetWeaponData(Hand.LEFT, _class.startWeapon);
-        }
-        else if (playerAttack.m_rightWeaponData?.m_level == -1)
-        {
-            playerAttack.SetWeaponData(Hand.RIGHT, _class.startWeapon); 
+            WeaponData clonedWeapon = ScriptableObject.CreateInstance<WeaponData>();
+            clonedWeapon.Clone(_class.startWeapon);
+            if (playerAttack.m_leftWeaponData?.m_level == -1)
+            {
+                playerAttack.SetWeaponData(Hand.LEFT, clonedWeapon);
+            }
+            else if (playerAttack.m_rightWeaponData?.m_level == -1)
+            {
+                playerAttack.SetWeaponData(Hand.RIGHT, clonedWeapon);
+            }
         }
 
         playerClassArmour.SetClassArmour(_class.inkmanClass);

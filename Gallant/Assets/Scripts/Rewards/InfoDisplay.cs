@@ -162,20 +162,22 @@ public class InfoDisplay : MonoBehaviour
                     || playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData != null // Has an ability
                     && (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
                     || (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.abilityPower == m_abilityData.abilityPower // Same ability as book
-                    && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel < 3)))); // Current power level is less than max
+                    && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel < 3 // Current power level is less than max
+                    && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel <= m_abilityData.starPowerLevel)))); // Check power level of weapon is <= to the power level of the spell
 
                 m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null // Has weapon in hand
                     && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData == null // Has no ability
                     || playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData != null // Has an ability
                     && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
                     || (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower == m_abilityData.abilityPower // Same ability as book
-                    && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel < 3)))); // Current power level is less than max
+                    && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel < 3 // Current power level is less than max
+                    && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel <= m_abilityData.starPowerLevel)))); // Check power level of weapon is <= to the power level of the spell
             }
             else
             {
                 m_mainHand?.SetActive(false);
-                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon.m_weaponData != null);
-                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
+                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon != null && playerController.playerAttack.m_leftWeapon.m_weaponData != null);
+                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData != null);
             }
 
         }

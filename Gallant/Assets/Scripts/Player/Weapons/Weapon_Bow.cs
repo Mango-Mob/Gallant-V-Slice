@@ -8,10 +8,12 @@ public class Weapon_Bow : WeaponBase
     private float m_charge = 0.0f;
     private float m_chargeRate = 0.8f;
     private bool m_particlesPlaying = false;
+    private BowString m_bowString;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/BowArrow");
         m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/ChargedBowArrow");
+
         base.Awake();
     }
 
@@ -21,6 +23,9 @@ public class Weapon_Bow : WeaponBase
         base.Start();
         if (m_weaponObject != null)
             m_weaponObject.name = "Bow";
+
+        m_bowString = GetComponentInChildren<BowString>();
+        m_bowString.m_bindTransform = playerController.playerAttack.m_leftHandTransform;
     }
 
     // Update is called once per frame
@@ -71,6 +76,11 @@ public class Weapon_Bow : WeaponBase
                 particle.Stop();
             }
             m_particlesPlaying = false;
+        }
+        
+        if (m_bowString != null)
+        {
+            m_bowString.m_lerp = Mathf.Clamp01(m_bowString.m_lerp + (m_chargingShot ? 15.0f : -1.0f) * Time.deltaTime);
         }
     }
     public override void WeaponFunctionality()

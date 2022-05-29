@@ -24,7 +24,10 @@ public class BowString : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_renderer.SetPosition(1, Vector3.Lerp((m_startLine.position + m_endLine.position) / 2, m_bindTransform.position, m_lerp));
+        if (m_bindTransform != null)
+            m_renderer.SetPosition(1, Vector3.Lerp((m_startLine.position + m_endLine.position) / 2, m_bindTransform.position, m_lerp));
+        else
+            m_renderer.SetPosition(1, (m_startLine.position + m_endLine.position) / 2);
 
         m_renderer.SetPosition(0, m_startLine.position);
         m_renderer.SetPosition(2, m_endLine.position);
