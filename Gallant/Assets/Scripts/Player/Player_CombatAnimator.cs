@@ -19,10 +19,10 @@ public class Player_CombatAnimator : MonoBehaviour
             !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
         {
             float transitionDuration = m_durationTransition;
-            if (_animName == "Left Hammer")
-            {
-                transitionDuration = 0.2f;
-            }
+            //if (_animName == "Left Hammer")
+            //{
+            //    transitionDuration = 0.2f;
+            //}
             if (_animName == "Left Hammer" || _animName == "Left Greatsword")
             {
                 playerController.animator.SetLayerWeight(playerController.animator.GetLayerIndex("Arm"), 0.0f);
