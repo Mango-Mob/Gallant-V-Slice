@@ -276,7 +276,14 @@ public class WeaponData : ScriptableObject
             if (weaponAbilityLevel >= 3)
                 return false;
 
-            int desiredLevel = Mathf.Min(3, bookAbilityLevel + weaponAbilityLevel);
+            int desiredLevel = 1;
+            if (bookAbilityLevel > weaponAbilityLevel)
+                desiredLevel = Mathf.Min(3, bookAbilityLevel);
+            else if (bookAbilityLevel == weaponAbilityLevel)
+                desiredLevel = Mathf.Min(3, bookAbilityLevel + 1);
+            else
+                return false;
+
             AbilityData newData = AbilityData.LoadAbilityData(_abilityData.abilityPower, desiredLevel);
 
             ApplyAbilityData(_weaponData, newData);

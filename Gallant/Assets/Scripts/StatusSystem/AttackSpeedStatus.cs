@@ -36,6 +36,8 @@ public class AttackSpeedStatus : StatusEffect
 
     public override void StartPlayer(Player_Controller _player)
     {
+        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _player.transform);
+        m_vfxInWorld.transform.position = _player.transform.position;
     }
 
     public override void UpdateOnActor(Actor _actor, float dt)
@@ -58,6 +60,8 @@ public class AttackSpeedStatus : StatusEffect
     public override void EndPlayer(Player_Controller _player)
     {
         _player.playerSkills.m_attackSpeedStatusBonus = 1.0f;
+        m_vfxInWorld.GetComponent<ParticleSystem>().Stop();
+        m_vfxInWorld.GetComponent<VFXTimerScript>().m_startedTimer = true;
     }
 
     protected override void LoadDisplayImage()
@@ -67,6 +71,6 @@ public class AttackSpeedStatus : StatusEffect
 
     protected override void LoadDisplayVFX()
     {
-        m_vfxDisplayPrefab = Resources.Load<GameObject>("VFX/Burn");
+        m_vfxDisplayPrefab = Resources.Load<GameObject>("Skills/VFX/airOnHit");
     }
 }
