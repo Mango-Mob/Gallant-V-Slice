@@ -839,13 +839,18 @@ public class Player_Controller : MonoBehaviour
     {
         m_inkmanClass = _class;
 
-        if (playerAttack.m_leftWeaponData?.m_level == -1)
+        if (_class.startWeapon != null)
         {
-            playerAttack.SetWeaponData(Hand.LEFT, _class.startWeapon);
-        }
-        else if (playerAttack.m_rightWeaponData?.m_level == -1)
-        {
-            playerAttack.SetWeaponData(Hand.RIGHT, _class.startWeapon); 
+            WeaponData clonedWeapon = ScriptableObject.CreateInstance<WeaponData>();
+            clonedWeapon.Clone(_class.startWeapon);
+            if (playerAttack.m_leftWeaponData?.m_level == -1)
+            {
+                playerAttack.SetWeaponData(Hand.LEFT, clonedWeapon);
+            }
+            else if (playerAttack.m_rightWeaponData?.m_level == -1)
+            {
+                playerAttack.SetWeaponData(Hand.RIGHT, clonedWeapon);
+            }
         }
 
         playerClassArmour.SetClassArmour(_class.inkmanClass);
