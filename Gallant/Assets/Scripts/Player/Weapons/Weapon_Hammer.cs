@@ -7,6 +7,7 @@ public class Weapon_Hammer : Weapon_Sword
     private GameObject m_vfxPrefab;
     new private void Awake()
     {
+        m_objectPrefab = Resources.Load<GameObject>("VFX/WeaponSwings/Spear Spin");
         m_vfxPrefab = Resources.Load<GameObject>("VFX/GroundSlamVFX");
         base.Awake();
     }

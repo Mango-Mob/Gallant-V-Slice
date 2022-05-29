@@ -60,6 +60,10 @@ public class Weapon_Sword : WeaponBase
     {
         if (m_attackReady)
         {
+            GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
+            VFX.transform.localScale *= (m_weaponData.hitCenterOffset + m_weaponData.hitSize) * 0.6f;
+            VFX.transform.SetParent(transform);
+
             playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
             MeleeAttack(m_weaponData, transform.position);
             m_attackReady = false;

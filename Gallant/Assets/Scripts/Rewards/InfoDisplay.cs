@@ -176,8 +176,8 @@ public class InfoDisplay : MonoBehaviour
             else
             {
                 m_mainHand?.SetActive(false);
-                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon.m_weaponData != null);
-                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon.m_weaponData != null);
+                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon != null && playerController.playerAttack.m_leftWeapon.m_weaponData != null);
+                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData != null);
             }
 
         }

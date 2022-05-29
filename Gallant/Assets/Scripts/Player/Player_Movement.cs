@@ -158,9 +158,30 @@ public class Player_Movement : MonoBehaviour
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
+        EnemyHeadAvoision();
         RollUpdate();
         DashUpdate();
-        StunUpdate(); 
+        StunUpdate();
+    }
+
+    /*******************
+     * EnemyHeadAvoision : Checks if player is on enemy head and moves them off of it.
+     * @author : William de Beer
+     */
+    private void EnemyHeadAvoision()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, characterController.radius, playerController.playerAttack.m_attackTargets);
+
+        foreach (var item in targets)
+        {
+            Actor actor = item.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                Vector3 direction = transform.position - actor.transform.position;
+                direction.y = 0.0f;
+                characterController.Move(direction.normalized * 5.0f * Time.fixedDeltaTime);
+            }
+        }
     }
 
     /*******************
