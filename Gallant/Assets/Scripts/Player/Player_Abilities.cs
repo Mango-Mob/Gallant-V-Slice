@@ -26,7 +26,7 @@ public enum Ability
 public class Player_Abilities : MonoBehaviour
 {
     public Player_Controller playerController { private set; get; }
-    [SerializeField] private AbilityPassiveVFX m_passiveVFX;
+    public AbilityPassiveVFX m_passiveVFX { private set; get; }
 
     [Header("Ability Information")]
     public AbilityBase m_leftAbility;
@@ -47,6 +47,7 @@ public class Player_Abilities : MonoBehaviour
     private void Start()
     {
         playerController = GetComponent<Player_Controller>();
+        m_passiveVFX = GetComponentInChildren<AbilityPassiveVFX>();
     }
 
     // Update is called once per frame
@@ -123,6 +124,19 @@ public class Player_Abilities : MonoBehaviour
             }
         }
     }
+    public void ToggleIconActive(Hand _hand, bool _active)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftAbilityIcon.SetDisabledState(!_active);
+                break;
+            case Hand.RIGHT:
+                m_rightAbilityIcon.SetDisabledState(!_active);
+                break;
+        }
+    }
+
     /*******************
      * SetAbility : Set ability in specified hand
      * @author : William de Beer

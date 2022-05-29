@@ -32,7 +32,7 @@ public class Weapon_Spear : WeaponBase
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
         MeleeAttack(m_weaponData, transform.position, Hand.LEFT);
         GameObject VFX = SpawnVFX(m_objectAltPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
-        VFX.transform.localScale *= m_weaponData.altHitSize * 0.6f;
+        VFX.transform.localScale *= m_weaponData.altHitSize * 0.4f;
         VFX.transform.SetParent(transform);
     }
     public override void WeaponAltRelease() { }

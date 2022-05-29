@@ -168,14 +168,6 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         Debug.Log("Hit " + other.name + " with " + m_weaponData.weaponType + " for " + m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f));
 
-        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_impact * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altImpactMult : 1.0f), 0, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
-       
-        if (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment"))
-        {
-            EnvironmentCollision(other);
-            return false;
-        }
-
         if (!isRubble)
         {
             m_projectileUser.playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType, 2); // Audio
@@ -185,6 +177,12 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             else
                 m_projectileUser.CreateVFX(other, transform.position, m_overrideHitVFX);
         }
+        if (m_canCollideWithEnvironment && other.gameObject.layer == LayerMask.NameToLayer("Environment"))
+        {
+            EnvironmentCollision(other);
+        }
+
+        m_projectileUser.DamageTarget(other.gameObject, m_weaponData.m_damage * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altDamageMult : 1.0f), m_weaponData.m_impact * m_charge * (m_hand == Hand.LEFT ? m_weaponData.m_altImpactMult : 1.0f), 0, CombatSystem.DamageType.Physical, m_weaponData.abilityData != null ? m_weaponData.abilityData.m_tags : null);
 
         if (actor != null)
         {
@@ -218,7 +216,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
                 }
             }
             return true;
-        }       
+        }
 
         return false;
     }

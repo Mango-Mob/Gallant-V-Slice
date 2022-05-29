@@ -125,11 +125,11 @@ public class StatusEffectContainer : MonoBehaviour
         }
         else
         {
-            //Remove vfx
-            if (display.effect.m_vfxInWorld != null)
-            {
-                Destroy(display.effect.m_vfxInWorld);
-            }
+            ////Remove vfx
+            //if (display.effect.m_vfxInWorld != null)
+            //{
+            //    Destroy(display.effect.m_vfxInWorld);
+            //}
             display.effect.EndPlayer(m_player);
         }
     }
