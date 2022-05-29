@@ -23,4 +23,45 @@ public class ExchangeData : ScriptableObject
 
         return result;
     }
+
+    public void Apply()
+    {
+        Player_Controller player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
+
+        for (int i = 0; i < m_gainQuantity; i++)
+        {
+            if (m_gainRune.itemEffect == ItemEffect.NONE)
+            {
+                player.playerStats.AddEffect(GetRandomRune(m_costRune.itemEffect));
+            }
+            else
+            {
+                player.playerStats.AddEffect(m_gainRune.itemEffect);
+            }
+        }
+
+        for (int i = 0; i < m_costQuantity; i++)
+        {
+            if (m_costRune.itemEffect == ItemEffect.NONE)
+            {
+                player.playerStats.RemoveEffect(GetRandomRune(m_gainRune.itemEffect));
+            }
+            else
+            {
+                player.playerStats.RemoveEffect(m_costRune.itemEffect);
+            }
+        }
+        
+    }
+
+    public static ItemEffect GetRandomRune(ItemEffect exception = ItemEffect.NONE)
+    {
+        ItemEffect select;
+        do
+        {
+            select = (ItemEffect)Random.Range(1, (int)ItemEffect.DAMAGE_RESISTANCE);
+        } while (select == exception);
+
+        return select;
+    }
 }

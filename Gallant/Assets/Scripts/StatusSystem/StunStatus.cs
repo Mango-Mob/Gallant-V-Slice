@@ -37,6 +37,11 @@ public class StunStatus : StatusEffect
             m_vfxInWorld.GetComponent<VFXTimerScript>().Finish();
         }
         _actor.m_myBrain.IsStunned = false;
+
+        foreach (var item in _actor.m_myBrain.m_indicators)
+        {
+            item.m_speed = 1.0f;
+        }
     }
 
     public override void EndPlayer(Player_Controller _player)

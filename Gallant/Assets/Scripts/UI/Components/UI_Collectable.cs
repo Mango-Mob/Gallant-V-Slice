@@ -7,6 +7,7 @@ public class UI_Collectable : UI_Element
 {
     public Image m_collectableIcon;
     public Button m_interactButton;
+    public Image m_newIcon;
 
     public bool m_unlocked = false;
 
@@ -24,12 +25,14 @@ public class UI_Collectable : UI_Element
     void Update()
     {
         m_interactButton.interactable = m_unlocked;
+        m_newIcon.gameObject.SetActive(PlayerPrefs.GetInt(m_data.collectableID, 0) == 2);
     }
 
     public void SetData(CollectableData data)
     {
         m_data = data;
-        m_unlocked = PlayerPrefs.GetInt(data.collectableID, 0) == 1;
+        m_unlocked = PlayerPrefs.GetInt(data.collectableID, 0) >= 1;
+        m_newIcon.gameObject.SetActive(PlayerPrefs.GetInt(m_data.collectableID, 0) == 2);
         m_collectableIcon.sprite = m_data.itemIcon;
     }
     public void SetParentList(UI_CollectionList list)

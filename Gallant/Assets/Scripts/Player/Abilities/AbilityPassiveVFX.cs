@@ -102,6 +102,7 @@ public class AbilityPassiveVFX : MonoBehaviour
                 m_activeLeftVFX = Instantiate(vfxPrefab, transform);
                 m_activeLeftVFX.transform.localPosition = Vector3.zero;
                 m_activeLeftVFX.transform.localScale *= m_offHandRingSizeMult;
+                m_activeLeftVFX.transform.localScale = new Vector3(m_activeLeftVFX.transform.localScale.x * -1.0f, m_activeLeftVFX.transform.localScale.y, m_activeLeftVFX.transform.localScale.z);
                 break;
             case Hand.RIGHT:
                 m_activeRightVFX = Instantiate(vfxPrefab, transform);

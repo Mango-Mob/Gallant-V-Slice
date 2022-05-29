@@ -47,7 +47,7 @@ public class SerializedWeapon
         if (_weapon.m_level == -2)
             return null;
 
-        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Length > 6 && _weapon.m_weaponModel.Substring(0, 6) == "Wooden"));
+        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Length > 6 && _weapon.m_weaponModel.Contains("Wooden")));
 
         data.m_damage = _weapon.m_damage;
         data.m_speed = _weapon.m_speed;
@@ -78,6 +78,7 @@ public enum WeaponTag
 public class WeaponData : ScriptableObject
 {
     public string weaponName;
+    [HideInInspector] public string baseWeaponName;
     public Weapon weaponType; // The type of weapon the object is.
     public GameObject weaponModelPrefab; // Prefab of weapon model to be used when player is holding it
 
@@ -134,7 +135,7 @@ public class WeaponData : ScriptableObject
     private static float m_maxSpeedPerLevel = 0.03f;
 
 
-    public static WeaponData GenerateWeapon(int _level)
+    public static WeaponData GenerateWeapon(int _level, int abilityLevel)
     {
         WeaponData data = CreateInstance<WeaponData>();
 
@@ -142,6 +143,7 @@ public class WeaponData : ScriptableObject
         Weapon newWeaponType = (Weapon)Random.Range(0, System.Enum.GetValues(typeof(Weapon)).Length - 1);
         ApplyWeaponData(data, newWeaponType);
 
+        data.baseWeaponName = data.weaponName;
         data.abilityData = null;
 
         // Damage / Speed are randomly assigned (between a range that increases based on the level value).
@@ -163,20 +165,20 @@ public class WeaponData : ScriptableObject
         //{
         newAbilityType = (Ability)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(Ability)).Length - 4);
         
-        int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
-        int result = Mathf.Max(_level + curve, 0);
-
-        // Power level
-        int powerLevel = 0;
-        if (result < 3)
-            powerLevel = 1;
-        else if (result < 6)
-            powerLevel = 2;
-        else
-            powerLevel = 3;
+        //int curve = UnityEngine.Random.Range(0, 3) + UnityEngine.Random.Range(0, 3) - 2;
+        //int result = Mathf.Max(_level + curve, 0);
+        //
+        //// Power level
+        //int powerLevel = 0;
+        //if (result < 3)
+        //    powerLevel = 1;
+        //else if (result < 6)
+        //    powerLevel = 2;
+        //else
+        //    powerLevel = 3;
 
         // Ability
-        ApplyAbilityData(data, newAbilityType, powerLevel);
+        ApplyAbilityData(data, newAbilityType, abilityLevel);
         //    iter++; 
         //    if (iter > 20)
         //    {
@@ -200,6 +202,7 @@ public class WeaponData : ScriptableObject
             return null;
         }
 
+        data.baseWeaponName = data.weaponName;
         data.abilityData = null;
 
         //// Damage / Speed are randomly assigned (between a range that increases based on the level value).
@@ -298,7 +301,7 @@ public class WeaponData : ScriptableObject
     {
         _weaponData.abilityData = _abilityData;
 
-        if (_weaponData.weaponType == Weapon.STAFF && _weaponData.abilityData?.overwriteStaffIcon != null)
+        if (_weaponData.weaponType == Weapon.STAFF && _weaponData.abilityData?.overwriteStaffIcon != null && !_weaponData.baseWeaponName.Contains("Wooden"))
         {
             _weaponData.weaponIcon = _weaponData.abilityData?.overwriteStaffIcon;
         }
@@ -306,25 +309,13 @@ public class WeaponData : ScriptableObject
         // Create weapon name
         if (_weaponData.abilityData != null)
         {
-            _weaponData.weaponName = _weaponData.weaponName + " of " + _weaponData.abilityData.weaponTitle;
+            _weaponData.weaponName = _weaponData.baseWeaponName + " of " + _weaponData.abilityData.weaponTitle;
             _weaponData.abilityData.lastCooldown = 0.0f;
         }
     }
     public static void ApplyAbilityData(WeaponData _data, Ability _abilityType, int _powerLevel)
     {
-        _data.abilityData = AbilityData.LoadAbilityData(_abilityType, _powerLevel);
-
-        if (_data.weaponType == Weapon.STAFF && _data.abilityData?.overwriteStaffIcon != null)
-        {
-            _data.weaponIcon = _data.abilityData?.overwriteStaffIcon;
-        }
-
-        // Create weapon name
-        if (_data.abilityData != null)
-        {
-            _data.weaponName = _data.weaponName + " of " + _data.abilityData.weaponTitle;
-            _data.abilityData.lastCooldown = 0.0f;
-        }
+        ApplyAbilityData(_data, AbilityData.LoadAbilityData(_abilityType, _powerLevel));
     }
 
     public static WeaponData UpgradeWeaponLevel(WeaponData _data)
@@ -428,6 +419,12 @@ public class WeaponData : ScriptableObject
     public void Clone(WeaponData other)
     {
         this.weaponName = other.weaponName;
+
+        if (other.baseWeaponName == null || other.baseWeaponName == "")
+            this.baseWeaponName = other.weaponName;
+        else
+            this.baseWeaponName = other.baseWeaponName;
+
         this.weaponType = other.weaponType;
         this.weaponModelPrefab = other.weaponModelPrefab;
 

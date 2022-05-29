@@ -36,7 +36,8 @@ public class MoveSpeedStatus : StatusEffect
 
     public override void StartPlayer(Player_Controller _player)
     {
-
+        m_vfxInWorld = GameObject.Instantiate(m_vfxDisplayPrefab, _player.playerMovement.playerModel.transform);
+        m_vfxInWorld.transform.position = _player.playerMovement.playerModel.transform.position + Vector3.up;
     }
 
     public override void UpdateOnActor(Actor _actor, float dt)
@@ -59,6 +60,8 @@ public class MoveSpeedStatus : StatusEffect
     public override void EndPlayer(Player_Controller _player)
     {
         _player.playerSkills.m_movementSpeedStatusBonus = 1.0f;
+        m_vfxInWorld.GetComponent<ParticleSystem>().Stop();
+        m_vfxInWorld.GetComponent<VFXTimerScript>().m_startedTimer = true;
     }
 
     protected override void LoadDisplayImage()
@@ -68,6 +71,6 @@ public class MoveSpeedStatus : StatusEffect
 
     protected override void LoadDisplayVFX()
     {
-        m_vfxDisplayPrefab = Resources.Load<GameObject>("VFX/Burn");
+        m_vfxDisplayPrefab = Resources.Load<GameObject>("Skills/VFX/airOnKill");
     }
 }
