@@ -260,28 +260,31 @@ public class Player_Controller : MonoBehaviour
 
         if (!playerMovement.m_isStunned && !playerMovement.m_isRolling) // Make sure player is not stunned
         {
-            // Left hand pickup
-            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID))
+            if (playerAttack.GetCurrentUsedHand() == Hand.NONE)
             {
-                DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
-                if (droppedWeapon != null)
+                // Left hand pickup
+                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID))
                 {
-                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeaponData, Hand.LEFT))
+                    DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+                    if (droppedWeapon != null)
                     {
-                        HandlePickupDrop(droppedWeapon, Hand.LEFT);
+                        if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_leftWeaponData, Hand.LEFT))
+                        {
+                            HandlePickupDrop(droppedWeapon, Hand.LEFT);
+                        }
                     }
                 }
-            }
 
-            // Right hand pickup
-            if (InputManager.Instance.IsMouseButtonPressed(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID))
-            {
-                DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
-                if (droppedWeapon != null)
+                // Right hand pickup
+                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID))
                 {
-                    if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeaponData, Hand.RIGHT))
+                    DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
+                    if (droppedWeapon != null)
                     {
-                        HandlePickupDrop(droppedWeapon, Hand.RIGHT);
+                        if (droppedWeapon.m_pickupDisplay.UpdatePickupTimer(playerAttack.m_rightWeaponData, Hand.RIGHT))
+                        {
+                            HandlePickupDrop(droppedWeapon, Hand.RIGHT);
+                        }
                     }
                 }
             }
@@ -349,50 +352,7 @@ public class Player_Controller : MonoBehaviour
             playerMovement.LockOnTarget();
         }
 
-        if (playerMovement.m_currentTarget != null)
-        {
-            Vector2 aim = InputManager.Instance.isInGamepadMode ? GetPlayerAimVector() : InputManager.Instance.GetMouseDelta() * Time.deltaTime * 10.0f;
-
-            if (aim.magnitude >= 1.0f && !m_hasSwappedTarget)
-            {
-                List<Actor> actors = GetActorsInfrontOfTransform(playerMovement.m_currentTarget.transform.position, 
-                    aim.y * transform.forward + aim.x * transform.right, 60.0f, 7.0f);
-
-                Actor closestActor = null;
-                float closestDistance = Mathf.Infinity;
-                foreach (var actor in actors)
-                {
-                    if (actor == playerMovement.m_currentTarget)
-                        continue;
-
-                    float distance = Vector3.Distance(playerMovement.m_currentTarget.transform.position, actor.transform.position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closestActor = actor;
-                    }
-                }
-
-                if (closestActor != null)
-                {
-                    playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(false);
-                    playerMovement.m_currentTarget = closestActor;
-                    playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
-                    m_hasSwappedTarget = true;
-
-                    playerAudioAgent.PlayLockOn();
-                }
-            }
-            else if (aim.magnitude < 1.0f)
-            {
-                m_hasSwappedTarget = false;
-            }
-        }
-        else
-        {
-            m_hasSwappedTarget = false;
-        }
-
+        EvaluateLockOn();
 
         if (InputManager.Instance.IsBindDown("Consume", gamepadID) && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Arm")).IsName("Heal"))
         {
@@ -459,6 +419,17 @@ public class Player_Controller : MonoBehaviour
 #endif
     }
 
+    public void InstantRunStop()
+    {
+        m_currentVelocity = Vector3.zero;
+        m_walkRunLerp = 0.0f;
+
+        animator.SetFloat("Horizontal", 0.0f);
+        animator.SetFloat("Vertical", 0.0f);
+
+        animator.SetLayerWeight(animator.GetLayerIndex("Arm"), 0.0f);
+        animator.SetLayerWeight(animator.GetLayerIndex("StandArm"), 1.0f);
+    }
     public void ForceZoom(bool _active)
     {
         m_zoomed = _active;
@@ -595,7 +566,91 @@ public class Player_Controller : MonoBehaviour
             return m_lastAimDirection;
         }
     }
+    public void EvaluateLockOn()
+    {
+        // Lock-on change
+        if (playerMovement.m_currentTarget != null)
+        {
+            Vector2 aim = InputManager.Instance.isInGamepadMode ? GetPlayerAimVector() : InputManager.Instance.GetMouseDelta() * Time.deltaTime * 10.0f;
 
+            if (InputManager.Instance.isInGamepadMode)
+            {
+                if (aim.magnitude >= 1.0f && !m_hasSwappedTarget)
+                {
+                    List<Actor> actors = GetActorsInfrontOfTransform(playerMovement.m_currentTarget.transform.position,
+                        aim.y * transform.forward + aim.x * transform.right, 60.0f, 7.0f);
+
+                    Actor closestActor = null;
+                    float closestDistance = Mathf.Infinity;
+                    foreach (var actor in actors)
+                    {
+                        if (actor == playerMovement.m_currentTarget)
+                            continue;
+
+                        float distance = Vector3.Distance(playerMovement.m_currentTarget.transform.position, actor.transform.position);
+                        if (distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestActor = actor;
+                        }
+                    }
+
+                    if (closestActor != null)
+                    {
+                        playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(false);
+                        playerMovement.m_currentTarget = closestActor;
+                        playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
+                        m_hasSwappedTarget = true;
+
+                        playerAudioAgent.PlayLockOn();
+                    }
+                }
+                else if (aim.magnitude < 1.0f)
+                {
+                    m_hasSwappedTarget = false;
+                }
+            }
+            else
+            {
+                if (aim.magnitude > 0.0f)
+                {
+                    RaycastHit hit;
+                    Ray ray = playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
+                    if (Physics.Raycast(ray, out hit, 1000, m_mouseAimingRayLayer))
+                    {
+                        // Find actors
+                        Actor[] actors = FindObjectsOfType<Actor>();
+
+                        Actor closestActor = null;
+                        float closestDistance = Mathf.Infinity;
+                        foreach (var actor in actors)
+                        {
+                            float distance = Vector3.Distance(hit.point, actor.transform.position);
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                closestActor = actor;
+                            }
+                        }
+
+                        if (closestActor != null && closestActor != playerMovement.m_currentTarget)
+                        {
+                            playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(false);
+                            playerMovement.m_currentTarget = closestActor;
+                            playerMovement.m_currentTarget.m_myBrain.SetOutlineEnabled(true);
+                            m_hasSwappedTarget = true;
+
+                            playerAudioAgent.PlayLockOn();
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            m_hasSwappedTarget = false;
+        }
+    }
     public List<Actor> GetActorsInfrontOfTransform(Vector3 _pos, Vector3 _forward, float _angle, float _distance)
     {
         Collider[] colliders = Physics.OverlapSphere(_pos, _distance, playerAttack.m_attackTargets);
