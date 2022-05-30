@@ -34,6 +34,7 @@ public class UI_PauseMenu : MonoBehaviour
     void Start()
     {
         m_window.SetActive(false);
+        m_confirmPannel.SetActive(false);
         m_returnToHubButton.interactable = (GameManager.m_saveInfo.m_startedRun);
     }
 
