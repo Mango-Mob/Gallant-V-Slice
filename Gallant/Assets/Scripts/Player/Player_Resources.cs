@@ -188,6 +188,11 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
+
+            playerController.animator.SetBool("RightAttackHeld", false);
+            playerController.animator.SetBool("LeftAttackHeld", false);
+
+
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
