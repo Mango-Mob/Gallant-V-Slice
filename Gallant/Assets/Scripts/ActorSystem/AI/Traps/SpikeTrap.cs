@@ -38,11 +38,29 @@ namespace ActorSystem.AI.Traps
             }
         }
 
+        public void DealDamage()
+        {
+            Collider[] hits = GetDamagedColliders();
+
+            foreach (var hit in hits)
+            {
+                if(hit.gameObject.layer == LayerMask.NameToLayer("Player"))
+                {
+                    hit.GetComponent<Player_Controller>().DamagePlayer(m_baseDamage, CombatSystem.DamageType.Physical, null, true);
+                }
+                else if(hit.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+                {
+                    hit.GetComponent<Actor>().DealDamage(m_baseDamage, CombatSystem.DamageType.Physical, 0, null);
+                }
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if(m_isDetectTrap && m_delay <= 0 && m_detectLayers == (m_detectLayers | (1 << other.gameObject.layer)))
             {
                 m_delay = m_postDetectDelay;
+                hasDetected = true;
             }
         }
 
