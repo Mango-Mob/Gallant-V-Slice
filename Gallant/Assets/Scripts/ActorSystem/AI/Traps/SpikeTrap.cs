@@ -5,6 +5,8 @@ namespace ActorSystem.AI.Traps
     public class SpikeTrap : MonoBehaviour
     {
         [Header("Attack Variables")]
+        [Tooltip("In Seconds")]
+        public float m_defaultSpeed = 1.0f;
         public float m_postDetectDelay = 0.5f;
         public float m_postAttackDelay = 0.5f;
 
@@ -17,7 +19,7 @@ namespace ActorSystem.AI.Traps
         public LayerMask m_damageLayers;
         public BoxCollider m_damageCollider;
 
-        private bool hasDetected = true;
+        private bool hasDetected = false;
         private float m_delay = 0.0f;
         private Animator m_animator;
 
@@ -33,9 +35,22 @@ namespace ActorSystem.AI.Traps
 
             if(m_delay <= 0 && hasDetected)
             {
-                m_animator.SetTrigger("Extend");
+                ExtendSpikes(m_defaultSpeed);
                 hasDetected = false;
             }
+        }
+
+        public void ExtendSpikes(float timer = 0.0f)
+        {
+            if(timer <= 0.0f)
+            {
+                m_animator.SetFloat("InvertTimeScale", -1.0f);  
+            }
+            else
+            {
+                m_animator.SetFloat("InvertTimeScale", 1.0f/timer);
+            }
+            m_animator.SetTrigger("Extend");
         }
 
         public void DealDamage()
@@ -53,9 +68,11 @@ namespace ActorSystem.AI.Traps
                     hit.GetComponent<Actor>().DealDamage(m_baseDamage, CombatSystem.DamageType.Physical, 0, null);
                 }
             }
+
+            m_delay = m_postAttackDelay;
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             if(m_isDetectTrap && m_delay <= 0 && m_detectLayers == (m_detectLayers | (1 << other.gameObject.layer)))
             {
