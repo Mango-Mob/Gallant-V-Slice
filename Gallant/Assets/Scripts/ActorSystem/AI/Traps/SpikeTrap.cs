@@ -86,7 +86,7 @@ namespace ActorSystem.AI.Traps
             return Physics.OverlapBox(m_damageCollider.transform.position + m_damageCollider.center, m_damageCollider.size / 2f, transform.rotation, m_damageLayers);
         }
 
-        private void OnDrawGizmos()
+        private void OnDrawGizmosSelected()
         {
             Gizmos.color = GetDamagedColliders().Length > 0 ? Color.green : Color.red;
 

@@ -20,7 +20,7 @@ public class AudioPlayer
     public AudioClip currentClip { get { return source.clip; } }
 
     public bool isMutating { get; protected set; } = false; //If coroutine is active.
-
+    public bool is3D { get { return source.spatialBlend == 1; } set { source.spatialBlend = (value) ? 1 : 0; } }
     protected AudioSource source; //Created in constructor.
     protected float m_localPitch = 1.0f;
 
@@ -155,5 +155,11 @@ public class AudioPlayer
 
         Play();
         yield return null;
+    }
+
+    public void Set3DRange(float min, float max)
+    {
+        source.minDistance = Mathf.Min(min, max);
+        source.maxDistance = Mathf.Max(min, max);
     }
 }
