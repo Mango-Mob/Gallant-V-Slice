@@ -189,10 +189,14 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
 
-            playerController.animator.SetBool("RightAttackHeld", false);
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("IdleArmL"));
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("IdleArmR"));
+
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("RunArmL"));
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("RunArmR"));
+
             playerController.animator.SetBool("LeftAttackHeld", false);
-
-
+            playerController.animator.SetBool("RightAttackHeld", false);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
