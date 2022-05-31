@@ -28,7 +28,7 @@ public class Weapon_Hammer : Weapon_Sword
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
 
-        GroundSlam(m_weaponData, transform.position, Hand.NONE, new StunStatus(2.0f));
+        GroundSlam(m_weaponData, transform.position, Hand.NONE, new StunStatus(3.0f));
         playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType);
         GameObject newObject = Instantiate(m_vfxPrefab, transform.position + playerController.playerMovement.playerModel.transform.forward * m_weaponData.altHitCenterOffset, Quaternion.identity);
         newObject.transform.localScale *= m_weaponData.altHitSize * 4.0f;
