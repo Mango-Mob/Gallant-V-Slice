@@ -51,6 +51,7 @@ public class Player_Movement : MonoBehaviour
     private Vector3 m_knockbackVelocity = Vector3.zero;
     public float m_minKnockbackSpeed = 0.5f;
     public LayerMask m_groundLayerMask;
+    public Vector3 m_lastVelocity = Vector3.zero;
 
     [Header("Dodge Attributes")]
     public float m_shadowDuration = 1.0f;
@@ -617,7 +618,7 @@ public class Player_Movement : MonoBehaviour
             m_wasOnIce = false;
         }
 
-
+        m_lastVelocity = movement;
         //characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
         // Move
         //characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
