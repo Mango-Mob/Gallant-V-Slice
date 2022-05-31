@@ -25,6 +25,7 @@ public class Player_Controller : MonoBehaviour
     private bool m_hasRecentPickup = false;
     private bool m_hasRecentDialogue = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
+    public float m_armsWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
     public float m_controlReturnDelay = 1.0f;
     public ClassData m_inkmanClass { private set; get; }
@@ -224,13 +225,13 @@ public class Player_Controller : MonoBehaviour
         //if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
         if (animator.GetFloat("Vertical") > 0.5f)
         {
-            runArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-            idleWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            runArmWeight += Time.deltaTime * m_armsWeightLerpSpeed;
+            idleWeight -= Time.deltaTime * m_armsWeightLerpSpeed;
         }
         else
         {
-            runArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-            idleWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            runArmWeight -= Time.deltaTime * m_armsWeightLerpSpeed;
+            idleWeight += Time.deltaTime * m_armsWeightLerpSpeed;
         }
 
         armWeight = Mathf.Clamp(armWeight, 0.0f, 1.0f);
