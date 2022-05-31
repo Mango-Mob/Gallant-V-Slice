@@ -713,10 +713,11 @@ public class Player_Controller : MonoBehaviour
         if (!m_godMode)
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
-        animator.SetTrigger("HitPlayer");
         // Create VFX
-        if (m_damageVFXPrefab != null)
+        if (m_damageVFXPrefab != null && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Flinch")).IsName("Flinch"))
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
+
+        animator.SetTrigger("HitPlayer");
 
         //if (animatorCamera)
         //    animatorCamera.SetTrigger("Shake");

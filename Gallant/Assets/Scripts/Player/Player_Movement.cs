@@ -82,7 +82,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_jumpBounce = 5.0f;
 
     private bool m_wasOnIce = false;
-    public List<GroundSurface.SurfaceType> m_touchedSurfaces = new List<GroundSurface.SurfaceType>();
+    public List<GroundSurface.SurfaceInfo> m_touchedSurfaces = new List<GroundSurface.SurfaceInfo>();
     private Vector3 m_slideVelocity = Vector3.zero;
     private bool m_steppedThisFrame = false;
 
@@ -119,9 +119,11 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        EvaluateSurfaceValues();
+
         m_steppedThisFrame = false;
 
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
+        if (m_lavaDamage > 0.0f)
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage, CombatSystem.DamageType.True);
         }
@@ -163,6 +165,44 @@ public class Player_Movement : MonoBehaviour
         StunUpdate(); 
     }
 
+    private void EvaluateSurfaceValues()
+    {
+        m_iceSlip = 0.0f;
+        m_bogSlow = 0.0f;
+        m_lavaDamage = 0.0f;
+        m_speedBoost = 0.0f;
+        m_jumpBounce = 0.0f;
+
+        foreach (var surface in m_touchedSurfaces)
+        {
+            switch (surface.surfaceType)
+            {
+                case GroundSurface.SurfaceType.ICE:
+                    if (surface.effectiveness > m_iceSlip)
+                        m_iceSlip = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.BOG:
+                    if (surface.effectiveness > m_bogSlow)
+                        m_bogSlow = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.LAVA:
+                    if (surface.effectiveness > m_lavaDamage)
+                        m_lavaDamage = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.SPEED:
+                    if (surface.effectiveness > m_speedBoost)
+                        m_speedBoost = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.JUMP:
+                    if (surface.effectiveness > m_jumpBounce)
+                        m_jumpBounce = surface.effectiveness;
+                    break;
+                default:
+                    Debug.Log("Surface Unknown");
+                    break;
+            }
+        }
+    }
     /*******************
      * RollUpdate : Updates rolling movement if active.
      * @author : William de Beer
@@ -385,13 +425,13 @@ public class Player_Movement : MonoBehaviour
             }
 
             float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed * (GameManager.Instance.IsInCombat ? 1.0f : playerController.playerSkills.m_outOfCombatSpeedIncrease); // Player movement speed
-            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.BOG)) // If the player is walking in bog.
+            if (m_bogSlow > 0.0f) // If the player is walking in bog.
             {
-                speed *= m_bogSlow;
+                speed *= 1.0f - m_bogSlow;
             }
-            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.SPEED)) // If the player is walking in speed.
+            if (m_speedBoost > 0.0f) // If the player is walking in speed.
             {
-                speed *= m_speedBoost;
+                speed *= 1.0f + m_speedBoost;
             }
             playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / 5.0f);
 
@@ -489,11 +529,11 @@ public class Player_Movement : MonoBehaviour
         Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
 
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.JUMP))
+        if (m_jumpBounce > 0.0f)
         {
             StunPlayer(0.0f, transform.up * m_jumpBounce);
         }
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.ICE)) // If the player is walking on ice.
+        if (m_iceSlip > 0.0f) // If the player is walking on ice.
         {
             if (!m_wasOnIce)
                 m_slideVelocity = horizLastMove * _deltaTime;
