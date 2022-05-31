@@ -39,7 +39,7 @@ namespace ActorSystem.Spawning
                 if (floor < 0)
                     return;
 
-                m_waves = data.EvaluateCombat((uint)floor);
+                m_waves = data.EvaluateCombat(NavigationManager.Instance.GetActiveFloor());
 
                 if(m_waves == null)
                 {

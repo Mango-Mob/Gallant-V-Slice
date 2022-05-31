@@ -33,6 +33,7 @@ public class CameraMaskTarget : MonoBehaviour
         newObject.transform.localRotation = Quaternion.identity;
         newObject.transform.localScale = Vector3.one;
         newObject.AddComponent<MeshFilter>().mesh = GetComponent<MeshFilter>().mesh;
+        
         m_phantomMeshRenderer = newObject.AddComponent<MeshRenderer>();
         m_phantomMeshRenderer.material = m_phantomMaterial;
 

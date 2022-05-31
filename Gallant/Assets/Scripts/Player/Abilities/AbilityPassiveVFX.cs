@@ -7,6 +7,18 @@ public class AbilityPassiveVFX : MonoBehaviour
     private Ability m_leftAbilityType = Ability.NONE;
     private Ability m_rightAbilityType = Ability.NONE;
 
+    private GameObject m_activeLeftVFX;
+    private GameObject m_activeRightVFX;
+
+    [SerializeField] private float m_offHandRingSizeMult = 0.75f;
+
+    [Header("Prefabs")]
+    [SerializeField] private GameObject m_flamerollPrefab;
+    [SerializeField] private GameObject m_frostrollPrefab;
+    [SerializeField] private GameObject m_rockrollPrefab;
+    [SerializeField] private GameObject m_thornsPrefab;
+
+    [Header("Old Variables")]
     [SerializeField] private GameObject m_frameBase;
 
     [Header("Buttons")]
@@ -26,6 +38,105 @@ public class AbilityPassiveVFX : MonoBehaviour
         
     }
 
+    public void ChangeActiveVFX(Hand _hand, Ability _ability)
+    {
+        DeactivateVFX(_hand);
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_leftAbilityType = _ability;
+                break;
+            case Hand.RIGHT:
+                m_rightAbilityType = _ability;
+                break;
+            default:
+                return;
+        }
+        ActivateVFX(_hand, _ability);
+    }
+
+    public void HideVFX(Hand _hand, bool _hidden)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_activeLeftVFX)
+                    m_activeLeftVFX.SetActive(!_hidden);
+                break;
+            case Hand.RIGHT:
+                if (m_activeRightVFX)
+                    m_activeRightVFX.SetActive(!_hidden);
+                break;
+            default:
+                return;
+        }
+    }
+
+    private void ActivateVFX(Hand _hand, Ability _ability)
+    {
+        GameObject vfxPrefab;
+        switch (_ability)
+        {
+            case Ability.ICE_ROLL:
+                vfxPrefab = m_frostrollPrefab;
+                break;
+            case Ability.THORNS:
+                vfxPrefab = m_thornsPrefab;
+                break;
+            case Ability.FLAME_ROLL:
+                vfxPrefab = m_flamerollPrefab;
+                break;
+            case Ability.ROLL_BASH:
+                vfxPrefab = m_rockrollPrefab;
+                break;
+            default:
+                return;
+        }
+
+        if (vfxPrefab == null)
+            return;
+
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                m_activeLeftVFX = Instantiate(vfxPrefab, transform);
+                m_activeLeftVFX.transform.localPosition = Vector3.zero;
+                m_activeLeftVFX.transform.localScale *= m_offHandRingSizeMult;
+                m_activeLeftVFX.transform.localScale = new Vector3(m_activeLeftVFX.transform.localScale.x * -1.0f, m_activeLeftVFX.transform.localScale.y, m_activeLeftVFX.transform.localScale.z);
+                break;
+            case Hand.RIGHT:
+                m_activeRightVFX = Instantiate(vfxPrefab, transform);
+                m_activeRightVFX.transform.localPosition = Vector3.zero;
+                break;
+        }
+    }
+    private void DeactivateVFX(Hand _hand)
+    {
+        switch (_hand)
+        {
+            case Hand.LEFT:
+                if (m_activeLeftVFX == null)
+                    return;
+                Destroy(m_activeLeftVFX);
+                break;
+            case Hand.RIGHT:
+                if (m_activeRightVFX == null)
+                    return;
+                Destroy(m_activeRightVFX);
+                break;
+        }
+    }
+
+    //*****************\\
+    // This took me 5  \\
+    //  long minutes.  \\
+    //*****************\\
+    //**OLD*FUNCTIONS**\\
+    //*****************\\
+    //********|********\\
+    //********|********\\
+    //*******\|/*******\\
+    //********V********\\
     public void SetAbility(Hand _hand, Ability _ability)
     {
         switch (_hand)

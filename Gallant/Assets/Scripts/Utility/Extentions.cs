@@ -225,4 +225,15 @@ public static class Extentions
 
         return default(T);
     }
+
+    public static void SetWeightAt<T>(this List<WeightedOption<T>> options, int index, uint weight)
+    {
+        WeightedOption<T> replacer = new WeightedOption<T>();
+
+        replacer.data = options[index].data;
+        replacer.weight = weight;
+
+        options[index] = replacer;
+
+    }
 }

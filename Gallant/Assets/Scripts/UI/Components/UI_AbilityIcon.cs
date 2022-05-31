@@ -33,6 +33,7 @@ public class UI_AbilityIcon : UI_Element
 
     [Header("Components")]
     [SerializeField] private Image m_icon;
+    [SerializeField] private Image m_disabled;
     [SerializeField] private Image m_cooldown;
     [SerializeField] private Image m_cooldownShad;
     [SerializeField] private GameObject[] m_stars;
@@ -151,6 +152,12 @@ public class UI_AbilityIcon : UI_Element
         {
             item.SetActive(_active);
         }
+    }
+
+    public void SetDisabledState(bool _disabled)
+    {
+        if (m_disabled)
+            m_disabled.enabled = _disabled;
     }
 
     #region Parent override functions

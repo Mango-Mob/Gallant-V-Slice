@@ -21,6 +21,9 @@ namespace ActorSystem.AI.Components
         public bool m_hasPivot { get; private set; }
 
         public float m_setDelay = 0.0f;
+
+        public float m_speed { get { return GetComponent<Animator>().speed; } set { GetComponent<Animator>().speed = value; } }
+
         // Start is called before the first frame update
         void Awake()
         {

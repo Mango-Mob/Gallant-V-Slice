@@ -15,6 +15,13 @@ public class Player_Movement : MonoBehaviour
     public Player_Controller playerController { private set; get; }
 
     public GameObject playerModel;
+    public SpriteRenderer m_aimingArrow;
+    public float m_aimingArrowMaxAlpha = 0.5f;
+    public float m_aimingArrowLerpSpeed = 5.0f;
+    private float m_aimingArrowLerp = 0.0f;
+
+    public float m_aimingArrowFadeDelay = 1.0f;
+    public float m_aimingArrowFadeTimer = 0.0f;
 
     private float m_currentMoveSpeedLerp = 1.0f;
 
@@ -121,6 +128,24 @@ public class Player_Movement : MonoBehaviour
     {
         EvaluateSurfaceValues();
 
+        // Player aiming arrow
+        if (m_aimingArrow != null)
+        {
+            if (m_aimingArrowFadeTimer > 0.0f)
+            {
+                m_aimingArrowFadeTimer -= Time.deltaTime;
+                m_aimingArrowLerp += Time.deltaTime * m_aimingArrowLerpSpeed;
+            }
+            else
+            {
+                m_aimingArrowLerp -= Time.deltaTime * m_aimingArrowLerpSpeed;
+            }
+            m_aimingArrowLerp = Mathf.Clamp01(m_aimingArrowLerp);
+            m_aimingArrow.color = new Color(m_aimingArrow.color.r, m_aimingArrow.color.g, m_aimingArrow.color.b, m_aimingArrowLerp * m_aimingArrowMaxAlpha);
+
+            m_aimingArrow.transform.position = playerController.GetFloorPosition();
+        }
+
         m_steppedThisFrame = false;
 
         if (m_lavaDamage > 0.0f)
@@ -160,9 +185,30 @@ public class Player_Movement : MonoBehaviour
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
+        EnemyHeadAvoision();
         RollUpdate();
         DashUpdate();
-        StunUpdate(); 
+        StunUpdate();
+    }
+
+    /*******************
+     * EnemyHeadAvoision : Checks if player is on enemy head and moves them off of it.
+     * @author : William de Beer
+     */
+    private void EnemyHeadAvoision()
+    {
+        Collider[] targets = Physics.OverlapSphere(transform.position, characterController.radius, playerController.playerAttack.m_attackTargets);
+
+        foreach (var item in targets)
+        {
+            Actor actor = item.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                Vector3 direction = transform.position - actor.transform.position;
+                direction.y = 0.0f;
+                characterController.Move(direction.normalized * 5.0f * Time.fixedDeltaTime);
+            }
+        }
     }
 
     private void EvaluateSurfaceValues()
@@ -368,7 +414,7 @@ public class Player_Movement : MonoBehaviour
 
     public void QuickSetAttackMoveSpeedLerp(float _lerp)
     {
-        m_currentMoveSpeedLerp = 1.0f;
+        m_currentMoveSpeedLerp = _lerp;
     }
 
     /*******************
@@ -401,9 +447,9 @@ public class Player_Movement : MonoBehaviour
             m_attackMoveSpeed = playerController.playerAttack.m_rightWeapon.m_weaponData.m_attackMoveSpeed;
         }
 
+        Vector2 baseMove = _move;
         _move *= (_aim.magnitude == 0.0f ? 1.0f : 1.0f) * Mathf.Lerp(m_attackMoveSpeed, 1.0f, m_currentMoveSpeedLerp)
-            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease)
-            * playerController.playerSkills.m_movementSpeedStatusBonus;
+            * (!playerController.animator.GetBool("IsHealing") ? 1.0f : m_healMoveSpeedMult * playerController.playerSkills.m_healMoveSpeedIncrease);
         m_isMoving = (_move.magnitude > 0.0f);
 
         Vector3 movement = Vector3.zero;
@@ -414,6 +460,8 @@ public class Player_Movement : MonoBehaviour
                 // Make player model face target direction
                 Vector3 normalizedAim = (m_currentTarget.transform.position - transform.position).normalized;
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
+
+                m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
             else // If the player is trying to aim...
             {
@@ -422,9 +470,12 @@ public class Player_Movement : MonoBehaviour
                 normalizedAim += _aim.y * transform.forward;
                 normalizedAim += _aim.x * transform.right;
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
+
+                if (_aim.magnitude > 0.0f)
+                    m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
 
-            float speed = m_moveSpeed * playerController.playerStats.m_movementSpeed * (GameManager.Instance.IsInCombat ? 1.0f : playerController.playerSkills.m_outOfCombatSpeedIncrease); // Player movement speed
+            float speed = m_moveSpeed * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
             if (m_bogSlow > 0.0f) // If the player is walking in bog.
             {
                 speed *= 1.0f - m_bogSlow;
@@ -433,9 +484,16 @@ public class Player_Movement : MonoBehaviour
             {
                 speed *= 1.0f + m_speedBoost;
             }
-            playerController.animator.SetFloat("MovementSpeed", playerController.playerStats.m_movementSpeed * speed / 5.0f);
+            playerController.animator.SetFloat("MovementSpeed", speed / m_moveSpeed);
 
             Vector3 normalizedMove = Vector3.zero;
+
+            // If player is not trying to aim, aim in direction of movement.
+            if (baseMove.magnitude != 0 && _aim.magnitude == 0 && m_currentTarget == null)
+            {
+                Vector3 normalizedBaseMove = baseMove.y * transform.forward + baseMove.x * transform.right;
+                RotateToFaceDirection(new Vector3(normalizedBaseMove.x, 0, normalizedBaseMove.z));
+            }
 
             if (_move.magnitude != 0)
             {
@@ -449,9 +507,6 @@ public class Player_Movement : MonoBehaviour
                 //if (playerController.playerAttack.GetCurrentUsedHand() != Hand.NONE)
                 //    movement *= m_attackMoveSpeed;
 
-                // If player is not trying to aim, aim in direction of movement.
-                if (_aim.magnitude == 0 && m_currentTarget == null)
-                    RotateToFaceDirection(new Vector3(normalizedMove.x, 0, normalizedMove.z));
 
                 if (_aim.magnitude == 0 && m_currentTarget == null)
                 {
@@ -576,6 +631,9 @@ public class Player_Movement : MonoBehaviour
      */
     private void RotateToFaceDirection(Vector3 _direction)
     {
+        if (!playerController.animator.GetBool("CanRotate"))
+            return;
+
         float targetRotateAnim = 0.5f;
 
         // Rotate player model
@@ -614,20 +672,44 @@ public class Player_Movement : MonoBehaviour
             return;
         }
 
-        List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
-
-        float closestDistance = Mathf.Infinity;
         Actor closestTarget = null;
-
-        foreach (var actor in actors)
+        if (InputManager.Instance.isInGamepadMode)
         {
-            float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
-            bool canLockOn = actor.m_myBrain.m_canBeTarget;
+            List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
 
-            if (canLockOn && distance < closestDistance)
+            float closestDistance = Mathf.Infinity;
+
+            foreach (var actor in actors)
             {
-                closestDistance = distance;
-                closestTarget = actor;
+                float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
+                bool canLockOn = actor.m_myBrain.m_canBeTarget;
+
+                if (canLockOn && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestTarget = actor;
+                }
+            }
+        }
+        else
+        {
+            RaycastHit hit;
+            Ray ray = playerController.playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
+            if (Physics.Raycast(ray, out hit, 1000, playerController.m_mouseAimingRayLayer))
+            {
+                // Find actors
+                Actor[] actors = FindObjectsOfType<Actor>();
+
+                float closestDistance = Mathf.Infinity;
+                foreach (var actor in actors)
+                {
+                    float distance = Vector3.Distance(hit.point, actor.transform.position);
+                    if (distance < closestDistance && distance <= m_maxDistance)
+                    {
+                        closestDistance = distance;
+                        closestTarget = actor;
+                    }
+                }
             }
         }
 
@@ -651,7 +733,6 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_steppedThisFrame || (playerController.GetPlayerMovementVector(true).magnitude <= 0.3f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
             return;
-
 
         m_steppedThisFrame = true;
         Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;

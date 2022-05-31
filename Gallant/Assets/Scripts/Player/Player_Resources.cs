@@ -268,7 +268,14 @@ public class Player_Resources : MonoBehaviour
         m_dead = false;
     }
 
-    public void SetHealth(float _health) { m_health = _health; }
+    public void SetHealth(float _health) 
+    { 
+        m_health = _health;
+
+        float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+
+        healthBar.InstantUpdate(healthPercentage); 
+    }
     public void SetOrbCount(int _orbs) { m_adrenaline = _orbs; }
 
     public float GetPotentialHealth()

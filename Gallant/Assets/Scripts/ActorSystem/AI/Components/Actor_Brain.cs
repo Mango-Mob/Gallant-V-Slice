@@ -55,8 +55,6 @@ namespace ActorSystem.AI.Components
 
         public bool m_canStagger { get; set; }
 
-        public UnityEvent m_onDeathEvent;
-
         private float m_staminaRegen; 
         private FloatRange m_adrenalineGain;
         private Timer m_refreshTimer;
@@ -104,9 +102,13 @@ namespace ActorSystem.AI.Components
 
         public void Update()
         {
+            m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
             if (IsStunned || IsDead)
             {
-                m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
+                foreach (var item in m_indicators)
+                {
+                    item.m_speed = 0.0f;
+                }
                 m_legs?.Halt();
                 return;
             }
@@ -132,7 +134,8 @@ namespace ActorSystem.AI.Components
         {
             if(m_animator != null && m_animator.m_hasVelocity)
             {
-                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
+                m_animator.m_speed = (m_legs != null) ? m_legs.m_speedModifier : 1.0f;
+                m_animator.SetFloat("VelocityHaste", 1.0f);
                 m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.scaledVelocity : Vector3.zero);
             }
             if (m_animator != null && m_animator.HasParameter("RotationVelocity"))
@@ -336,7 +339,6 @@ namespace ActorSystem.AI.Components
 
             if(IsDead)
             {
-                m_onDeathEvent?.Invoke();
                 GameManager.m_killCount++;
                 m_ui?.SetBar("Health", 0f);
                 m_legs?.Halt();

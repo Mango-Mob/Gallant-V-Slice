@@ -18,6 +18,7 @@ namespace ActorSystem.Data
         private float m_startIntensity;
         private Vector3 targetPoint;
         private GameObject m_proj; 
+
         public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             switch (m_type)
@@ -32,7 +33,22 @@ namespace ActorSystem.Data
                     m_proj = null;
                     break;
                 case UtilityType.Bomber:
-                    //parent.GetComponent<Actor>().DestroySelf();
+                    m_intensity = m_startIntensity;
+
+                    Collider[] targets = GetDamageOverlap(parent, filter, id);
+                    foreach (var item in targets)
+                    {
+                        if (item.gameObject.layer == LayerMask.NameToLayer("Player"))
+                        {
+                            Player_Controller player = item.GetComponentInParent<Player_Controller>();
+                            player.DamagePlayer(baseDamage * damageMod, damageType, source, true);
+                            ApplyEffect(player, parent, onHitEffect, effectPower);
+                        }
+                        else if (item.gameObject.layer == LayerMask.NameToLayer("Destructible"))
+                        {
+                            item.GetComponentInParent<Destructible>().ExplodeObject(damageColliders[0].GetHitlocation(parent), baseDamage * damageMod, 5f, false);
+                        }
+                    }
                     return true;
                 default:
                     break;
@@ -56,6 +72,7 @@ namespace ActorSystem.Data
                     break;
                 case UtilityType.Bomber:
                     user.SetTargetLocation(user.m_target.transform.position, true);
+                    m_startIntensity = m_intensity;
                     break;
                 default:
                     break;
@@ -88,7 +105,15 @@ namespace ActorSystem.Data
                     }
                     break;
                 case UtilityType.Bomber:
-                    user.SetTargetLocation(user.m_target.transform.position, true);
+                    if(m_intensity > 0)
+                    {
+                        user.SetTargetLocation(user.m_target.transform.position, true);
+                        m_intensity -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        user.SetTargetLocation(user.transform.position, false);
+                    }
                     break;
                 default:
                     break;
@@ -140,6 +165,7 @@ namespace ActorSystem.Data
 
         public override void PostInvoke(Transform user, uint id)
         {
+            base.PostInvoke(user, id);
             switch (m_type)
             {
                 case UtilityType.Teleport:

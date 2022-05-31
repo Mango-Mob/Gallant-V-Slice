@@ -17,6 +17,7 @@ public class NavigationTelescope : MonoBehaviour
         public bool levelLocked;
     }
 
+    [SerializeField] private int m_startingLocationIndex;
     [SerializeField] private Camera m_camera;
     [SerializeField] private GameObject m_useButton;
     [SerializeField] private GameObject m_navCanvas;
@@ -55,6 +56,9 @@ public class NavigationTelescope : MonoBehaviour
     {
         playerController = FindObjectOfType<Player_Controller>();
         m_camera.enabled = false;
+        m_camera.transform.localRotation = Quaternion.Euler(m_camera.transform.localRotation.eulerAngles.x, 
+            m_destinations[m_startingLocationIndex].locationAngle, 
+            m_camera.transform.localRotation.eulerAngles.z);
         m_animator = GetComponent<Animator>();
         m_locked.enabled = false;
     }

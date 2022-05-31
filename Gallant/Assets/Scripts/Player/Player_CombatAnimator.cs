@@ -21,14 +21,12 @@ public class Player_CombatAnimator : MonoBehaviour
             float transitionDuration = m_durationTransition;
             if (_animName == "Left Hammer")
             {
-                transitionDuration = 0.2f;
+                playerController.animator.SetBool("CanRotate", false);
             }
             if (_animName == "Left Hammer" || _animName == "Left Greatsword")
             {
-                playerController.animator.SetLayerWeight(playerController.animator.GetLayerIndex("Arm"), 0.0f);
-                playerController.animator.SetLayerWeight(playerController.animator.GetLayerIndex("StandArm"), 1.0f);
-
-                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(1.0f);
+                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
+                playerController.InstantRunStop();
             }
             playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
 
@@ -60,23 +58,29 @@ public class Player_CombatAnimator : MonoBehaviour
                 return;
         }
 
+        string animName;
         switch (_weapon)
         {
             case Weapon.BOW:
-                playerController.animator.Play("Bow", layerIndex);
+                animName = "Bow";
                 break;
             case Weapon.GREATSWORD:
-                playerController.animator.Play("Greatsword", layerIndex);
+                animName = "Greatsword";
                 break;
             case Weapon.CROSSBOW:
-                playerController.animator.Play("Crossbow", layerIndex);
+                animName = "Crossbow";
                 break;
             case Weapon.SPEAR:
-                playerController.animator.Play("Spear", layerIndex);
+                animName = "Spear";
                 break;
             default:
-                playerController.animator.Play("Default", layerIndex);
+                animName = "Default";
                 break;
+        }
+
+        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+        {
+            playerController.animator.Play(animName, layerIndex);
         }
     }
     public void SetRunAnimation(Weapon _weapon, Hand _hand)
@@ -94,20 +98,26 @@ public class Player_CombatAnimator : MonoBehaviour
                 return;
         }
 
+        string animName;
         switch (_weapon)
         {
             case Weapon.BOW:
-                playerController.animator.Play("Bow", layerIndex);
+                animName = "Bow";
                 break;
             case Weapon.GREATSWORD:
-                playerController.animator.Play("Greatsword", layerIndex);
+                animName = "Greatsword";
                 break;
             case Weapon.SPEAR:
-                playerController.animator.Play("Spear", layerIndex);
+                animName = "Spear";
                 break;
             default:
-                playerController.animator.Play("Default", layerIndex);
+                animName = "Default";
                 break;
+        }
+
+        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+        {
+            playerController.animator.Play(animName, layerIndex);
         }
     }
 }

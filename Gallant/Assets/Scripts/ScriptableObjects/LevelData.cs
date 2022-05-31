@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,28 +12,24 @@ using UnityEditorInternal;
 public class LevelData : ScriptableObject
 {
     public float m_width = 1024, m_height = 900;
+    [SerializeField] public List<CollectableData> m_potentialCollectablesA;
+    [SerializeField] public List<CollectableData> m_potentialCollectablesB;
     public List<WaveData> m_spawnableWaves;
     public Color m_portalColor;
     public float m_levelUpPerFloor = 1.45f;
-    public enum FloorType { REST, EVENT, COMBAT, SPECIAL};
-
-    [System.Serializable]
-    public struct Floor
-    {
-        public FloorType type;
-        public AnimationCurve difficultyCurve;
-        public float difficultyBase;
-        public float minDiffCost;
-        public int minWaves;
-        public int maxWaves;
-        public List<Extentions.WeightedOption<SceneData>> potentialScenes;
-    }
-
+    
     public SceneData m_root;
 
+    [Serializable]
+    public struct Floor
+    {
+        [SerializeField] public List<Extentions.WeightedOption<FloorData>> m_data;
+        [SerializeField] public uint minSize;
+        [SerializeField] public uint maxSize;
+    }
+
     public List<Floor> m_levelFloors;
-    public uint m_minRoomCount;
-    public uint m_maxRoomCount;
+
     [SerializeField] protected AnimationCurve m_probOfGrowth;
 
     public float Evaluate(int floor)
@@ -45,27 +42,21 @@ public class LevelData : ScriptableObject
         return m_probOfGrowth.Evaluate(t);
     }
 
-    public List<WaveData> EvaluateCombat(uint floor)
+    public List<WaveData> EvaluateCombat(FloorData floor)
     {
-        if (floor > m_levelFloors.Count)
-            return null;
-
-        if (m_levelFloors[(int)floor].type != FloorType.COMBAT)
-            return null;
-
         List<WaveData> result = new List<WaveData>();
         List<WaveData> options = new List<WaveData>();
         List<WaveData> archive = new List<WaveData>(m_spawnableWaves);
 
         //Randomise the target count for waves:
-        int waveCount = Random.Range(m_levelFloors[(int)floor].minWaves, m_levelFloors[(int)floor].maxWaves + 1);
+        int waveCount = UnityEngine.Random.Range(floor.minWaves, floor.maxWaves + 1);
         //Budget overflow if weaker waves is used.
         float overflow = 0;
         for (int i = 1; i < waveCount + 1; i++)
         {
             //Determine the budget for this wave
-            float budget = m_levelFloors[(int)floor].difficultyBase * m_levelFloors[(int)floor].difficultyCurve.Evaluate((float)i/waveCount) + overflow;
-            float limit = m_levelFloors[(int)floor].minDiffCost * m_levelFloors[(int)floor].difficultyCurve.Evaluate((float)i / waveCount);
+            float budget = floor.difficultyBase * floor.difficultyCurve.Evaluate((float)i/waveCount) + overflow;
+            float limit = floor.minDiffCost * floor.difficultyCurve.Evaluate((float)i / waveCount);
 
             if (archive.Count == 0)
                 archive = new List<WaveData>(m_spawnableWaves);
@@ -76,7 +67,7 @@ public class LevelData : ScriptableObject
             WaveData toAdd = null;
             while(budget > 0 && options.Count > 0)
             {
-                int select = Random.Range(0, options.Count);
+                int select = UnityEngine.Random.Range(0, options.Count);
 
                 if(toAdd == null)
                 {
@@ -121,5 +112,10 @@ public class LevelData : ScriptableObject
         }
 
         return result;
+    }
+
+    public FloorData GetFloorScene(int index)
+    {
+        return Extentions.GetFromList<FloorData>(m_levelFloors[index].m_data);
     }
 }
