@@ -15,16 +15,23 @@ namespace ActorSystem.AI.Bosses
 
         public enum ChargePhase { IDLE, AIM, RUNNING, RECOVERY}
 
+        [Header("Charge variables")]
         public float m_minDistForCharge = 5f;
         public float m_chargeAimDist = 5f;
         public float m_chargeHitDist = 2.5f;
         public float m_chargeKnockback = 20.0f;
         public bool m_chargeControlled = true;
-        
-        public Phase m_phase;
-        public ChargePhase m_cPhase;
         public AnimationCurve m_chargeMSpeedMod;
 
+        [Header("Flee variables")]
+        public float m_fleeHealthReq = 0.5f;
+        public Transform m_fleeLocation;
+        public float m_fleeTime = 45f;
+        public bool m_hasFled = false;
+
+        [Header("System")]
+        public Phase m_phase;
+        public ChargePhase m_cPhase;
         public CastleWallController[] m_myWalls;
 
         public float m_chargeCooldown = 3.0f;
@@ -66,6 +73,7 @@ namespace ActorSystem.AI.Bosses
                     ChargePhaseFunc();
                     break;
                 case Phase.FLEE:
+                    FleePhaseFunc();
                     break;
                 case Phase.DEAD:
                     break;
@@ -122,6 +130,7 @@ namespace ActorSystem.AI.Bosses
                     }
                     break;
                 case Phase.FLEE:
+                    m_hasFled = true;
                     break;
                 case Phase.DEAD:
                     break;
@@ -160,10 +169,25 @@ namespace ActorSystem.AI.Bosses
                 return;
             }
 
-            if(dist >= m_minDistForCharge && m_chargeCurrCd <= 0)
+            if(!m_myBrain.m_arms.m_activeAttack.HasValue)
             {
-                TransitionToPhase(Phase.CHARGE);
+                if (!m_hasFled && m_myBrain.m_currHealth <= m_myBrain.m_startHealth * m_fleeHealthReq)
+                {
+                    TransitionToPhase(Phase.FLEE);
+                    return;
+                }
+
+                if (!m_myBrain.m_arms.m_activeAttack.HasValue && dist >= m_minDistForCharge && m_chargeCurrCd <= 0)
+                {
+                    TransitionToPhase(Phase.CHARGE);
+                }
             }
+        }
+
+        private void FleePhaseFunc()
+        {
+            m_myBrain.m_legs.SetEnabled(false);
+            transform.position = m_fleeLocation.position;
         }
 
         private void ChargePhaseFunc()
@@ -275,7 +299,10 @@ namespace ActorSystem.AI.Bosses
         public void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-
+            
+            if(m_fleeLocation != null)
+                Gizmos.DrawSphere(m_fleeLocation.position, 0.5f);
+            
             if(m_phase == Phase.CHARGE && m_target != null)
             {
                 if (!m_chargeControlled)
