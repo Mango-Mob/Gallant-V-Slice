@@ -15,6 +15,13 @@ public class Player_Movement : MonoBehaviour
     public Player_Controller playerController { private set; get; }
 
     public GameObject playerModel;
+    public SpriteRenderer m_aimingArrow;
+    public float m_aimingArrowMaxAlpha = 0.5f;
+    public float m_aimingArrowLerpSpeed = 5.0f;
+    private float m_aimingArrowLerp = 0.0f;
+
+    public float m_aimingArrowFadeDelay = 1.0f;
+    public float m_aimingArrowFadeTimer = 0.0f;
 
     private float m_currentMoveSpeedLerp = 1.0f;
 
@@ -82,7 +89,7 @@ public class Player_Movement : MonoBehaviour
     [SerializeField] private float m_jumpBounce = 5.0f;
 
     private bool m_wasOnIce = false;
-    public List<GroundSurface.SurfaceType> m_touchedSurfaces = new List<GroundSurface.SurfaceType>();
+    public List<GroundSurface.SurfaceInfo> m_touchedSurfaces = new List<GroundSurface.SurfaceInfo>();
     private Vector3 m_slideVelocity = Vector3.zero;
     private bool m_steppedThisFrame = false;
 
@@ -119,9 +126,29 @@ public class Player_Movement : MonoBehaviour
     }
     private void Update()
     {
+        EvaluateSurfaceValues();
+
+        // Player aiming arrow
+        if (m_aimingArrow != null)
+        {
+            if (m_aimingArrowFadeTimer > 0.0f)
+            {
+                m_aimingArrowFadeTimer -= Time.deltaTime;
+                m_aimingArrowLerp += Time.deltaTime * m_aimingArrowLerpSpeed;
+            }
+            else
+            {
+                m_aimingArrowLerp -= Time.deltaTime * m_aimingArrowLerpSpeed;
+            }
+            m_aimingArrowLerp = Mathf.Clamp01(m_aimingArrowLerp);
+            m_aimingArrow.color = new Color(m_aimingArrow.color.r, m_aimingArrow.color.g, m_aimingArrow.color.b, m_aimingArrowLerp * m_aimingArrowMaxAlpha);
+
+            m_aimingArrow.transform.position = playerController.GetFloorPosition();
+        }
+
         m_steppedThisFrame = false;
 
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.LAVA))
+        if (m_lavaDamage > 0.0f)
         {
             playerController.DamagePlayer(Time.deltaTime * m_lavaDamage, CombatSystem.DamageType.True);
         }
@@ -184,6 +211,44 @@ public class Player_Movement : MonoBehaviour
         }
     }
 
+    private void EvaluateSurfaceValues()
+    {
+        m_iceSlip = 0.0f;
+        m_bogSlow = 0.0f;
+        m_lavaDamage = 0.0f;
+        m_speedBoost = 0.0f;
+        m_jumpBounce = 0.0f;
+
+        foreach (var surface in m_touchedSurfaces)
+        {
+            switch (surface.surfaceType)
+            {
+                case GroundSurface.SurfaceType.ICE:
+                    if (surface.effectiveness > m_iceSlip)
+                        m_iceSlip = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.BOG:
+                    if (surface.effectiveness > m_bogSlow)
+                        m_bogSlow = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.LAVA:
+                    if (surface.effectiveness > m_lavaDamage)
+                        m_lavaDamage = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.SPEED:
+                    if (surface.effectiveness > m_speedBoost)
+                        m_speedBoost = surface.effectiveness;
+                    break;
+                case GroundSurface.SurfaceType.JUMP:
+                    if (surface.effectiveness > m_jumpBounce)
+                        m_jumpBounce = surface.effectiveness;
+                    break;
+                default:
+                    Debug.Log("Surface Unknown");
+                    break;
+            }
+        }
+    }
     /*******************
      * RollUpdate : Updates rolling movement if active.
      * @author : William de Beer
@@ -349,7 +414,7 @@ public class Player_Movement : MonoBehaviour
 
     public void QuickSetAttackMoveSpeedLerp(float _lerp)
     {
-        m_currentMoveSpeedLerp = 1.0f;
+        m_currentMoveSpeedLerp = _lerp;
     }
 
     /*******************
@@ -395,6 +460,8 @@ public class Player_Movement : MonoBehaviour
                 // Make player model face target direction
                 Vector3 normalizedAim = (m_currentTarget.transform.position - transform.position).normalized;
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
+
+                m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
             else // If the player is trying to aim...
             {
@@ -403,16 +470,19 @@ public class Player_Movement : MonoBehaviour
                 normalizedAim += _aim.y * transform.forward;
                 normalizedAim += _aim.x * transform.right;
                 RotateToFaceDirection(new Vector3(normalizedAim.x, 0, normalizedAim.z));
+
+                if (_aim.magnitude > 0.0f)
+                    m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
 
             float speed = m_moveSpeed * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
-            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.BOG)) // If the player is walking in bog.
+            if (m_bogSlow > 0.0f) // If the player is walking in bog.
             {
-                speed *= m_bogSlow;
+                speed *= 1.0f - m_bogSlow;
             }
-            if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.SPEED)) // If the player is walking in speed.
+            if (m_speedBoost > 0.0f) // If the player is walking in speed.
             {
-                speed *= m_speedBoost;
+                speed *= 1.0f + m_speedBoost;
             }
             playerController.animator.SetFloat("MovementSpeed", speed / m_moveSpeed);
 
@@ -514,11 +584,11 @@ public class Player_Movement : MonoBehaviour
         Vector3 horizLastMove = characterController.velocity;
         horizLastMove.y = 0;
 
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.JUMP))
+        if (m_jumpBounce > 0.0f)
         {
             StunPlayer(0.0f, transform.up * m_jumpBounce);
         }
-        if (m_touchedSurfaces.Contains(GroundSurface.SurfaceType.ICE)) // If the player is walking on ice.
+        if (m_iceSlip > 0.0f) // If the player is walking on ice.
         {
             if (!m_wasOnIce)
                 m_slideVelocity = horizLastMove * _deltaTime;
@@ -561,6 +631,9 @@ public class Player_Movement : MonoBehaviour
      */
     private void RotateToFaceDirection(Vector3 _direction)
     {
+        if (!playerController.animator.GetBool("CanRotate"))
+            return;
+
         float targetRotateAnim = 0.5f;
 
         // Rotate player model
@@ -599,20 +672,44 @@ public class Player_Movement : MonoBehaviour
             return;
         }
 
-        List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
-
-        float closestDistance = Mathf.Infinity;
         Actor closestTarget = null;
-
-        foreach (var actor in actors)
+        if (InputManager.Instance.isInGamepadMode)
         {
-            float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
-            bool canLockOn = actor.m_myBrain.m_canBeTarget;
+            List<Actor> actors = playerController.GetActorsInfrontOfPlayer(m_maxAngle, m_maxDistance);
 
-            if (canLockOn && distance < closestDistance)
+            float closestDistance = Mathf.Infinity;
+
+            foreach (var actor in actors)
             {
-                closestDistance = distance;
-                closestTarget = actor;
+                float distance = Vector3.Distance(actor.m_selfTargetTransform.transform.position, transform.position);
+                bool canLockOn = actor.m_myBrain.m_canBeTarget;
+
+                if (canLockOn && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestTarget = actor;
+                }
+            }
+        }
+        else
+        {
+            RaycastHit hit;
+            Ray ray = playerController.playerCamera.ScreenPointToRay(InputManager.Instance.GetMousePositionInScreen());
+            if (Physics.Raycast(ray, out hit, 1000, playerController.m_mouseAimingRayLayer))
+            {
+                // Find actors
+                Actor[] actors = FindObjectsOfType<Actor>();
+
+                float closestDistance = Mathf.Infinity;
+                foreach (var actor in actors)
+                {
+                    float distance = Vector3.Distance(hit.point, actor.transform.position);
+                    if (distance < closestDistance && distance <= m_maxDistance)
+                    {
+                        closestDistance = distance;
+                        closestTarget = actor;
+                    }
+                }
             }
         }
 
@@ -636,7 +733,6 @@ public class Player_Movement : MonoBehaviour
     {
         if (m_steppedThisFrame || (playerController.GetPlayerMovementVector(true).magnitude <= 0.3f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
             return;
-
 
         m_steppedThisFrame = true;
         Vector3 footPosition = _left ? m_leftFoot.position : m_rightFoot.position;

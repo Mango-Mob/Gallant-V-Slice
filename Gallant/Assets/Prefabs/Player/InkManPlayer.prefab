@@ -531,7 +531,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6dfc69dd8a2254c9edb82fa1119063, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_spawnWithAnimation: 1
+  m_spawnWithAnimation: 0
   testObject: {fileID: 0}
   animator: {fileID: 7932121596817040913}
   armsMask: {fileID: 31900000, guid: d46eaab4bb8653843b6e7e093d56f268, type: 2}
@@ -542,6 +542,7 @@ MonoBehaviour:
   m_isNearDrop: 0
   m_isDisabledAttacks: 0
   m_standMoveWeightLerpSpeed: 5
+  m_armsWeightLerpSpeed: 5
   m_lastAttackHand: 2
   m_controlReturnDelay: 0.5
   m_dualWieldSpeed: 1.3
@@ -569,6 +570,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModel: {fileID: 4967484959850702184}
+  m_aimingArrow: {fileID: 633460672345088239}
+  m_aimingArrowMaxAlpha: 0.5
+  m_aimingArrowLerpSpeed: 5
+  m_aimingArrowFadeDelay: 1
+  m_aimingArrowFadeTimer: 0
   m_gravityMult: 10
   m_moveSpeed: 5
   m_rollSpeed: 9
@@ -599,7 +605,6 @@ MonoBehaviour:
   m_lavaDamage: 10
   m_speedBoost: 1.5
   m_jumpBounce: 10
-  m_touchedSurfaces: 
 --- !u!114 &550414675513458815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,7 +945,7 @@ GameObject:
   m_Component:
   - component: {fileID: 782847104315964585}
   - component: {fileID: 633460672345088239}
-  m_Layer: 17
+  m_Layer: 0
   m_Name: MiniMapIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,8 +960,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6894780308577613801}
   m_LocalRotation: {x: 0.6532815, y: 0.27059805, z: -0.27059805, w: 0.6532815}
-  m_LocalPosition: {x: 0, y: 2.8920002, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5000004, z: 1.4999999}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5745429755596865490}
   m_RootOrder: 11
