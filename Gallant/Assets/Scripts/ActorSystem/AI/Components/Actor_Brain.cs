@@ -60,8 +60,6 @@ namespace ActorSystem.AI.Components
         private Timer m_refreshTimer;
 
         private UI_Bar m_staminaBar;
-        private float m_damageTimer = 0;
-        private float m_damageHold = 0;
 
         public bool m_isDisolving { 
             get {

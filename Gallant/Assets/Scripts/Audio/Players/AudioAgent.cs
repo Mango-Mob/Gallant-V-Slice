@@ -17,6 +17,10 @@ public abstract class AudioAgent : MonoBehaviour
     public float localVolume = 1f;
     [Tooltip("Mutes this agent completely.")]
     public bool isMuted = false;
+    public bool is3D = false;
+
+    public float min3D_Dist = 1f;
+    public float max3D_Dist = 500f;
 
     protected virtual void Awake()
     {

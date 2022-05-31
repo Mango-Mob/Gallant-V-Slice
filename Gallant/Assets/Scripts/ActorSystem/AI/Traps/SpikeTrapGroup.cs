@@ -18,7 +18,7 @@ namespace ActorSystem.AI.Traps
 
         public void Start()
         {
-            if(m_testData.m_spikeGridModifier.Length == m_spikeGrid.Length)
+            if(m_testData != null && m_testData.m_spikeGridModifier.Length == m_spikeGrid.Length)
             {
                 for (int i = 0; i < m_testData.m_spikeGridModifier.Length; i++)
                 {
