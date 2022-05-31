@@ -14,6 +14,7 @@ public class NavigationNode : MonoBehaviour
 
     private bool IsCompleted = false;
     private Image mainIconLoc;
+    private Image backImageLoc;
     public struct Connection
     {
         public LineRenderer render;
@@ -132,14 +133,12 @@ public class NavigationNode : MonoBehaviour
         NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
         nav.m_myFloor = null;
         nav.m_myData = data;
-
-        nodeBackground.AddComponent<Image>().sprite = nav.m_myData.iconBack;
+        nav.backImageLoc = nodeBackground.AddComponent<Image>();
 
         nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
         nodeObj.GetComponent<Button>().interactable = false;
         nav.mainIconLoc = nodeImage.AddComponent<Image>();
         nodeObj.GetComponent<Button>().targetGraphic = nav.mainIconLoc;
-        nodeImage.GetComponent<Image>().sprite = nav.m_myData.sceneIcon;
 
         return nodeObj;
     }
@@ -168,17 +167,38 @@ public class NavigationNode : MonoBehaviour
 
         NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
         nav.m_myFloor = data;
-        nav.m_myData = data.GetScene();
 
-        nodeBackground.AddComponent<Image>().sprite = nav.m_myData.iconBack;
+        nav.backImageLoc = nodeBackground.AddComponent<Image>();
 
         nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
         nodeObj.GetComponent<Button>().interactable = false;
         nav.mainIconLoc = nodeImage.AddComponent<Image>();
         nodeObj.GetComponent<Button>().targetGraphic = nav.mainIconLoc;
-        nodeImage.GetComponent<Image>().sprite = nav.m_myData.sceneIcon;
 
         return nodeObj;
+    }
+
+    //Recursive
+    public void EvaluateSelf(List<Extentions.WeightedOption<SceneData>> options = null)
+    {
+        //Start case: null options
+        if (m_myData == null)
+        {
+            if (options == null)
+                m_myData = m_myFloor.GetScene();
+            else
+                m_myData = Extentions.GetFromList<SceneData>(options);
+        }
+
+        mainIconLoc.sprite = m_myData.sceneIcon;
+        backImageLoc.sprite = m_myData.iconBack;
+
+        //Break case: No connections remaining
+        foreach (var connection in m_myConnections)
+        {
+            var sceneList = SceneData.EvaluateWeights(m_myData, connection.other.m_myFloor.potentialScenes);
+            connection.other.EvaluateSelf(sceneList);
+        }
     }
 
     public void OnDrawGizmos()

@@ -243,7 +243,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             for (int j = 0; j < nodesToCreate; j++)
             {
                 //Random quantity;
-                newNodeObj = NavigationNode.CreateNode(data.GetFloorScene(i), m_mapObj.transform);
+                newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[i], m_mapObj.transform);
                 float xPos = widthStep * (j+0.5f) - (m_generatedLevel.m_width / 2) + Random.Range(-iconNoise.x, iconNoise.x);
                 (newNodeObj.transform as RectTransform).localPosition = new Vector3(xPos, heightStep * (i + 1) + Random.Range(-iconNoise.y, iconNoise.y), 0);
                 NavigationNode newNavNode = newNodeObj.GetComponent<NavigationNode>();
@@ -261,7 +261,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
 
         //Create end node
-        newNodeObj = NavigationNode.CreateNode(data.GetFloorScene(data.m_levelFloors.Count - 1), transform);
+        newNodeObj = NavigationNode.CreateNode(data.m_levelFloors[data.m_levelFloors.Count - 1], transform);
         m_endNode = newNodeObj.GetComponent<NavigationNode>();
         m_endNode.m_myIndex = m_activeNodes.Count;
         m_endNode.m_myDepth = data.m_levelFloors.Count - 1;
@@ -275,6 +275,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         
         Reposition();
         CleanUp();
+
+        //Final step
+        m_rootNode.EvaluateSelf();
     }
 
     public void Reposition()
@@ -327,16 +330,25 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
                         {
                             if(nodeA.m_myConnections[i].mag >= nodeB.m_myConnections[j].mag)
                             {
+                                //A connection is longer
                                 Destroy(nodeA.m_myConnections[i].render.gameObject);
                                 nodeA.m_myConnections.RemoveAt(i);
                                 break;
                             }
                             else
                             {
+                                //B connection is longer
                                 Destroy(nodeB.m_myConnections[j].render.gameObject);
                                 nodeB.m_myConnections.RemoveAt(j);
                                 continue;
                             }
+                        }
+                        else if(nodeA.m_myConnections[i].mag >= m_generatedLevel.m_width * 0.6f)
+                        {
+                            //Length exceeded
+                            Destroy(nodeA.m_myConnections[i].render.gameObject);
+                            nodeA.m_myConnections.RemoveAt(i);
+                            break;
                         }
                     }
                 }
