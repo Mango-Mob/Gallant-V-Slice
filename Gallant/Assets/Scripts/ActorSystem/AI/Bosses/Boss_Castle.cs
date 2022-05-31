@@ -15,6 +15,7 @@ namespace ActorSystem.AI.Bosses
 
         public enum ChargePhase { IDLE, AIM, RUNNING, RECOVERY}
 
+        public float m_minDistForCharge = 5f;
         public float m_chargeAimDist = 5f;
         public float m_chargeHitDist = 2.5f;
         public float m_chargeKnockback = 20.0f;
@@ -146,9 +147,20 @@ namespace ActorSystem.AI.Bosses
 
         private void AttackPhaseFunc()
         {
-            SetTargetLocation(m_target.transform.position, true);
+            float dist = Vector3.Distance(transform.position, m_target.transform.position);
+            if (dist > m_myBrain.m_legs.m_idealRange)
+                SetTargetLocation(m_target.transform.position, true);
+            else
+                m_myBrain.m_legs.Halt();
 
-            if(m_chargeCurrCd <= 0)
+            int index = m_myBrain.GetNextAttack();
+            if(index >= 0)
+            {
+                m_myBrain.BeginAttack(index);
+                return;
+            }
+
+            if(dist >= m_minDistForCharge && m_chargeCurrCd <= 0)
             {
                 TransitionToPhase(Phase.CHARGE);
             }
@@ -249,13 +261,15 @@ namespace ActorSystem.AI.Bosses
         {
 
         }
+
         public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
-            return false;
+            return base.DealDamage(_damage, _type, piercingVal, null);
         }
+
         public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
-            return false;
+            return base.DealDamageSilent(_damage, _type);
         }
 
         public void OnDrawGizmos()

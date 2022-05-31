@@ -117,6 +117,9 @@ namespace ActorSystem.AI.Components
             if (m_brainLag > 0)
                 return -1;
 
+            if (m_activeAttack.HasValue)
+                return -1;
+
             for (int i = 0; i < m_myData.Count; i++)
             {
                 if (m_myData[i] == null)
