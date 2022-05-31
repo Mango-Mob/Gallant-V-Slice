@@ -32,6 +32,14 @@ public class Weapon_Hammer : Weapon_Sword
         playerController.playerAudioAgent.PlayWeaponHit(m_weaponData.weaponType);
         GameObject newObject = Instantiate(m_vfxPrefab, transform.position + playerController.playerMovement.playerModel.transform.forward * m_weaponData.altHitCenterOffset, Quaternion.identity);
         newObject.transform.localScale *= m_weaponData.altHitSize * 4.0f;
+
     }
-    public override void WeaponAltRelease() { }
+    public override void WeaponAltRelease()
+    {
+        Transform modelTransform = playerController.playerMovement.playerModel.transform;
+
+        float moveSpeed = playerController.playerMovement.characterController.velocity.magnitude;
+        Debug.Log(playerController.playerMovement.characterController.velocity);
+        playerController.playerMovement.ApplyDashMovement(modelTransform.forward * moveSpeed * m_weaponData.m_dashSpeed, m_weaponData.m_dashDuration / (m_weaponData.m_speed * m_weaponData.m_altSpeedMult), modelTransform.forward);
+    }
 }
