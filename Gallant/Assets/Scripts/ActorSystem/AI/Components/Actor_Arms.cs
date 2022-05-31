@@ -141,7 +141,10 @@ namespace ActorSystem.AI.Components
 
         public void PostInvoke(uint id)
         {
-            m_myData[m_activeAttack.Value].PostInvoke(transform, id);
+            if(m_activeAttack.HasValue)
+            {
+                m_myData[m_activeAttack.Value]?.PostInvoke(transform, id);
+            }
         }
 
         public void SetBrainLag(float decay, bool fromPlayer = false)
