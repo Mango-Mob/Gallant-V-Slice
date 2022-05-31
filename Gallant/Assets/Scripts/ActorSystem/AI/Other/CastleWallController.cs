@@ -16,7 +16,7 @@ namespace ActorSystem.AI.Other
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
             {
-                other.gameObject.GetComponent<Boss_Castle>().HitWall();
+                other.gameObject.GetComponent<Boss_Castle>()?.HitWall();
             }
         }
 

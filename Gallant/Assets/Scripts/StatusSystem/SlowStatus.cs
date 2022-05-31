@@ -39,6 +39,11 @@ public class SlowStatus : StatusEffect
     {
         if(_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f - m_strength;
+
+        foreach (var item in _actor.m_myBrain.m_materials)
+        {
+            item.StartFreeze(0.4f);
+        }
     }
 
     public override void StartPlayer(Player_Controller _player)
