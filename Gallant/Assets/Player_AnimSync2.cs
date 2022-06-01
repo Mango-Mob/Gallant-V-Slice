@@ -7,10 +7,10 @@ public class Player_AnimSync2 : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("IdleArmL")).shortNameHash, animator.GetLayerIndex("IdleArmL"));
-        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("IdleArmR")).shortNameHash, animator.GetLayerIndex("IdleArmR"));
-        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("RunArmL")).shortNameHash, animator.GetLayerIndex("RunArmL"));
-        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("RunArmR")).shortNameHash, animator.GetLayerIndex("RunArmR"));
+        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("IdleArmL")).shortNameHash, animator.GetLayerIndex("IdleArmL"), 0.0f);
+        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("IdleArmR")).shortNameHash, animator.GetLayerIndex("IdleArmR"), 0.0f);
+        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("RunArmL")).shortNameHash, animator.GetLayerIndex("RunArmL"), 0.0f);
+        animator.Play(animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("RunArmR")).shortNameHash, animator.GetLayerIndex("RunArmR"), 0.0f);
     }
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

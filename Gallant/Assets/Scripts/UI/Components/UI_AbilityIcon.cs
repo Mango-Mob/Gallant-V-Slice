@@ -46,6 +46,7 @@ public class UI_AbilityIcon : UI_Element
     [SerializeField] private GameObject m_activeFrame;
     [SerializeField] private GameObject m_passiveFrame;
     bool m_isCharged = true;
+    bool m_isBindActive = false;
 
     private void Awake()
     {
@@ -59,6 +60,12 @@ public class UI_AbilityIcon : UI_Element
      */
     public void SetCooldown(float _fill, float _maxCooldown)
     {
+        // Hide/Show bindings
+        foreach (var item in m_bindButtonObjects)
+        {
+            item.SetActive(m_isBindActive && _fill >= 1.0f);
+        }
+
         m_cooldown.fillAmount = _fill;
         m_cooldownShad.fillAmount = _fill + m_lineThickness;
         m_cooldown.enabled = _fill < 1.0f;
@@ -148,6 +155,7 @@ public class UI_AbilityIcon : UI_Element
 
     public void SetBindDisplayActive(bool _active)
     {
+        m_isBindActive = _active;
         foreach (var item in m_bindButtonObjects)
         {
             item.SetActive(_active);

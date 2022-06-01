@@ -18,6 +18,8 @@ public class Whirlpool : MonoBehaviour
     {
         Animator animator = GetComponentInChildren<Animator>();
         animator.speed = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length / m_whirlpoolMove.m_data.duration;
+
+        
     }
     // Update is called once per frame
     void Update()
