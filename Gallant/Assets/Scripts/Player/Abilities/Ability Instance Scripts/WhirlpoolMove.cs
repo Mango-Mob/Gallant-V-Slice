@@ -12,6 +12,7 @@ public class WhirlpoolMove : BaseAbilityProjectile
     new private void Start()
     {
         base.Start();
+        Physics.IgnoreCollision(playerController.playerMovement.characterController, GetComponent<CapsuleCollider>(), true);
     }
 
     // Update is called once per frame
