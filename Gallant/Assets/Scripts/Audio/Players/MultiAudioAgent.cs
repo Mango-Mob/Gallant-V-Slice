@@ -33,6 +33,8 @@ public class MultiAudioAgent : AudioAgent
         for (int i = 0; i < audioPlayersCount; i++)
         {
             players[i] = new AudioPlayer(gameObject, null, AudioManager.Instance.GetVolume(channel, this) * localVolume);
+            players[i].is3D = is3D;
+            players[i].Set3DRange(min3D_Dist, max3D_Dist);
         }
     }
 
@@ -44,6 +46,9 @@ public class MultiAudioAgent : AudioAgent
                 player.SetVolume(0.0f);
             else
                 player.SetVolume(AudioManager.Instance.GetVolume(channel, this) * localVolume);
+
+            player.is3D = is3D;
+            player.Set3DRange(min3D_Dist, max3D_Dist);
 
             player.Update();
         }

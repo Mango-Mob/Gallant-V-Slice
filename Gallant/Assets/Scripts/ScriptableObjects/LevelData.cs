@@ -20,15 +20,7 @@ public class LevelData : ScriptableObject
     
     public SceneData m_root;
 
-    [Serializable]
-    public struct Floor
-    {
-        [SerializeField] public List<Extentions.WeightedOption<FloorData>> m_data;
-        [SerializeField] public uint minSize;
-        [SerializeField] public uint maxSize;
-    }
-
-    public List<Floor> m_levelFloors;
+    public List<FloorData> m_levelFloors;
 
     [SerializeField] protected AnimationCurve m_probOfGrowth;
 
@@ -114,8 +106,8 @@ public class LevelData : ScriptableObject
         return result;
     }
 
-    public FloorData GetFloorScene(int index)
-    {
-        return Extentions.GetFromList<FloorData>(m_levelFloors[index].m_data);
-    }
+    //public FloorData GetFloorScene(int index)
+    //{
+    //    return m_levelFloors[index].m_data;
+    //}
 }

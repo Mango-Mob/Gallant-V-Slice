@@ -8,11 +8,14 @@ namespace ActorSystem.AI.Components
     [RequireComponent(typeof(Renderer))]
     public class Actor_Material : Actor_Component
     {
-        public Material m_hitMaterial;
+        public Color m_hitColor;
+        public Material m_freezeMaterial;
+        public Material m_myMaterial;
+
         public int m_isDisolving { get; private set; } = 0;
 
+        private Texture m_mainTexture;
         private Renderer m_myMesh;
-        private Material m_myMaterial;
 
         private float m_timer = 0.0f;
         private float m_disolveTime = 7.5f;
@@ -22,7 +25,14 @@ namespace ActorSystem.AI.Components
         private void Awake()
         {
             m_myMesh = GetComponent<Renderer>();
-            m_myMaterial = m_myMesh.material;
+            m_myMesh.material = m_myMaterial;
+            m_mainTexture = m_myMaterial.GetTexture("TextureAlbedo");
+
+            if(m_freezeMaterial != null)
+            {
+                m_freezeMaterial = Instantiate(m_freezeMaterial);
+                m_freezeMaterial.SetTexture("_MainTexture", m_mainTexture);
+            }
         }
 
         // Start is called before the first frame update
@@ -73,7 +83,9 @@ namespace ActorSystem.AI.Components
             if (m_myMesh == null)
                 return;
 
-            if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
+            EndFreeze();
+
+            if (m_myMaterial.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = 1;
                 m_myMaterial.SetFloat("Fade", 1.0f);
@@ -88,7 +100,10 @@ namespace ActorSystem.AI.Components
         {
             m_disolveTime = time;
             m_timer = 0.0f;
-            if (m_myMesh.material.HasProperty("Fade") || m_hit != null)
+
+            EndFreeze();
+
+            if (m_myMaterial.HasProperty("Fade") || m_hit != null)
             {
                 m_isDisolving = -1;
                 m_myMaterial.SetFloat("Fade", 0.0f);
@@ -103,6 +118,7 @@ namespace ActorSystem.AI.Components
         {
             m_isDisolving = 0;
             m_myMaterial.SetFloat("Fade", 1.0f);
+            EndFreeze();
         }
 
         public void ShowHit()
@@ -113,17 +129,54 @@ namespace ActorSystem.AI.Components
             if (m_hit != null)
                 StopCoroutine(m_hit);
 
-            m_hit = StartCoroutine(ShowHitRoutine(0.02f));
+            m_hit = StartCoroutine(ShowHitRoutine(0.1f));
         }
 
         private IEnumerator ShowHitRoutine(float time)
         {
-            m_myMesh.material = m_hitMaterial;
+            m_myMesh.material.SetColor("_BaseOverrideColor", m_hitColor);
 
             yield return new WaitForSecondsRealtime(time);
 
-            m_myMesh.material = m_myMaterial;
+            m_myMesh.material.SetColor("_BaseOverrideColor", new Color(0, 0, 0, 0));
             m_hit = null;
+            yield return null;
+        }
+
+        public void StartFreeze(float targetFreeze)
+        {
+            if(m_isDisolving == 0)
+            {
+                StartCoroutine(SetFreezeStatus(targetFreeze, 1.0f));
+            }
+        }
+
+        public void EndFreeze()
+        {
+            if (m_isDisolving == 0)
+            {
+                StartCoroutine(SetFreezeStatus(0.0f, 1.0f));
+            }
+        }
+
+        private IEnumerator SetFreezeStatus(float target, float time)
+        {
+            float timer = 0.0f;
+
+            float start = (m_myMesh.material.HasProperty("_IceSlider")) ? m_freezeMaterial.GetFloat("_IceSlider") : 0f;
+            m_myMesh.material = m_freezeMaterial;
+            while (timer <= time)
+            {
+                m_freezeMaterial.SetFloat("_IceSlider", Mathf.Lerp(start, target, timer / time));
+                timer += Time.deltaTime;
+                yield return new WaitForEndOfFrame();
+            }
+
+            if(target <= 0.0f)
+            {
+                m_myMesh.material = m_myMaterial;
+            }
+
             yield return null;
         }
     }
