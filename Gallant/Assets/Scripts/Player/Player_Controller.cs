@@ -939,6 +939,30 @@ public class Player_Controller : MonoBehaviour
         animator.SetFloat("Horizontal", 0.0f);
     }
 
+    GameObject tempCameraTransformObject;
+    public void KillPlaneDeath(bool _isFullHP = false)
+    {
+        if (tempCameraTransformObject != null)
+            Destroy(tempCameraTransformObject);
+
+        tempCameraTransformObject = new GameObject("TempCameraTransform");
+        tempCameraTransformObject.transform.position = transform.position;
+        
+        m_cameraFocusLerp = 1.0f;
+
+        ChangeCameraFocus(tempCameraTransformObject.transform, 1.0f, false);
+        StartCoroutine(RespawnDelay(_isFullHP));
+    }
+    IEnumerator RespawnDelay(bool _isFullHP = false)
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        RespawnPlayerToGround(_isFullHP);
+
+        ResetCameraFocus(2.0f);
+
+        Destroy(tempCameraTransformObject);
+    }
     public void RespawnPlayerToGround(bool _isFullHP = false)
     {
         Vector3 targetPosition = playerMovement.m_lastGroundedPosition/* - playerMovement.m_lastGroundedVelocity.normalized * 2.0f*/;
