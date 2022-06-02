@@ -18,8 +18,6 @@ public class SceneData : ScriptableObject
 
     public List<GameObject> prefabPropsToLoad = new List<GameObject>();
 
-
-
     public static List<Extentions.WeightedOption<SceneData>> EvaluateWeights(SceneData previous, List<Extentions.WeightedOption<SceneData>> existing)
     {
         List<Extentions.WeightedOption<SceneData>> result = new List<Extentions.WeightedOption<SceneData>>(existing);

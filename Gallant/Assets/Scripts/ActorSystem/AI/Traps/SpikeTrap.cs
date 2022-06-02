@@ -19,6 +19,8 @@ namespace ActorSystem.AI.Traps
         public LayerMask m_damageLayers;
         public BoxCollider m_damageCollider;
 
+
+        public bool isFinished { get { return m_animator.GetBool("Ready"); } }
         private bool hasDetected = false;
         private float m_delay = 0.0f;
         private Animator m_animator;
