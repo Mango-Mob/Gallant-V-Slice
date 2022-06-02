@@ -33,6 +33,8 @@ namespace ActorSystem.AI.Bosses
         public bool m_isJumping = false;
         private bool m_spikesStarted = false;
         private bool m_hasJumpBack = false;
+        private float m_cameraDelay = 0.0f;
+        private bool m_cameraReturned = false;
 
         [Header("System")]
         public Phase m_phase;
@@ -141,7 +143,10 @@ namespace ActorSystem.AI.Bosses
                     m_isJumping = false;
                     m_spikesStarted = false;
                     m_hasJumpBack = false;
+                    m_target.GetComponent<Player_Controller>().ChangeCameraFocus(transform, 1f, true);
                     StartCoroutine(JumpTo(m_fleeLocation.position, 1.0f, false));
+                    m_cameraReturned = false;
+                    m_cameraDelay = 1.0f;
                     break;
                 case Phase.DEAD:
                     break;
@@ -200,23 +205,39 @@ namespace ActorSystem.AI.Bosses
             //Initial Phase
             if(Vector3.Distance(m_fleeLocation.position, transform.position) < 0.25f && !m_hasJumpBack)
             {
-                //In position
-                Vector3 forward = m_target.transform.position - transform.position;
-                forward.y = 0;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(forward.normalized, Vector3.up), 120);
-                if (!m_spikesStarted)
+                if(!m_cameraReturned)
                 {
-                    m_spikesStarted = true;
-                    m_spikeGroup.m_playingInSeconds = 45.0f;
-                }
-                else if (m_spikesStarted && m_spikeGroup.m_playingInSeconds <= 0 && m_spikeGroup.IsReady())
-                {
-                    m_hasJumpBack = true;
-                    NavMeshHit hit;
-                    if(NavMesh.SamplePosition(m_target.transform.position + UnityEngine.Random.onUnitSphere * 3f, out hit, 3, ~0))
+                    m_cameraDelay -= Time.deltaTime;
+                    if(m_cameraDelay <= 0)
                     {
-                        StartCoroutine(JumpTo(hit.position, 1.0f, true));
-                        TransitionToPhase(Phase.ATTACK);
+                        m_cameraReturned = true;
+                        m_target.GetComponent<Player_Controller>().ResetCameraFocus(0.5f);
+                    } 
+                }
+                else if(m_cameraDelay <= 0)
+                {
+                    //In position
+                    Vector3 forward = m_target.transform.position - transform.position;
+                    forward.y = 0;
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(forward.normalized, Vector3.up), 120);
+                    if (!m_spikesStarted)
+                    {
+                        m_spikesStarted = true;
+                        m_spikeGroup.m_playingInSeconds = 45.0f;
+                    }
+                    else if (m_spikesStarted && m_spikeGroup.m_playingInSeconds <= 0 && m_spikeGroup.IsReady())
+                    {
+                        m_hasJumpBack = true;
+                        NavMeshHit hit;
+
+                        Vector3 randOnUnitSphere = UnityEngine.Random.onUnitSphere;
+                        randOnUnitSphere.y = 0;
+
+                        if (NavMesh.SamplePosition(m_target.transform.position + randOnUnitSphere.normalized * 5f, out hit, 3, ~0))
+                        {
+                            StartCoroutine(JumpTo(hit.position, 1.0f, true));
+                            TransitionToPhase(Phase.ATTACK);
+                        }
                     }
                 }
             }
