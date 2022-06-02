@@ -1,5 +1,7 @@
 ﻿using ActorSystem.AI.Other;
+using ActorSystem.AI.Traps;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,17 +30,22 @@ namespace ActorSystem.AI.Bosses
         public Transform m_fleeLocation;
         public float m_fleeTime = 45f;
         public bool m_hasFled = false;
+        public bool m_isJumping = false;
+        private bool m_spikesStarted = false;
+        private bool m_hasJumpBack = false;
 
         [Header("System")]
         public Phase m_phase;
         public ChargePhase m_cPhase;
         public CastleWallController[] m_myWalls;
+        public SpikeTrapGroup m_spikeGroup;
 
         public float m_chargeCooldown = 3.0f;
         private float m_chargeCurrCd = 0.0f;
         private float m_recoveryCd = 0.0f;
         private float m_chargeTimer = 0.0f;
         private Vector3 m_chargeTarget;
+        private Vector3 m_jumpStartLoc;
         protected override void Awake()
         {
             base.Awake();
@@ -131,6 +138,10 @@ namespace ActorSystem.AI.Bosses
                     break;
                 case Phase.FLEE:
                     m_hasFled = true;
+                    m_isJumping = false;
+                    m_spikesStarted = false;
+                    m_hasJumpBack = false;
+                    StartCoroutine(JumpTo(m_fleeLocation.position, 1.0f, false));
                     break;
                 case Phase.DEAD:
                     break;
@@ -186,8 +197,29 @@ namespace ActorSystem.AI.Bosses
 
         private void FleePhaseFunc()
         {
-            m_myBrain.m_legs.SetEnabled(false);
-            transform.position = m_fleeLocation.position;
+            //Initial Phase
+            if(Vector3.Distance(m_fleeLocation.position, transform.position) < 0.25f && !m_hasJumpBack)
+            {
+                //In position
+                Vector3 forward = m_target.transform.position - transform.position;
+                forward.y = 0;
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(forward.normalized, Vector3.up), 120);
+                if (!m_spikesStarted)
+                {
+                    m_spikesStarted = true;
+                    m_spikeGroup.m_playingInSeconds = 45.0f;
+                }
+                else if (m_spikesStarted && m_spikeGroup.m_playingInSeconds <= 0 && m_spikeGroup.IsReady())
+                {
+                    m_hasJumpBack = true;
+                    NavMeshHit hit;
+                    if(NavMesh.SamplePosition(m_target.transform.position + UnityEngine.Random.onUnitSphere * 3f, out hit, 3, ~0))
+                    {
+                        StartCoroutine(JumpTo(hit.position, 1.0f, true));
+                        TransitionToPhase(Phase.ATTACK);
+                    }
+                }
+            }
         }
 
         private void ChargePhaseFunc()
@@ -256,9 +288,7 @@ namespace ActorSystem.AI.Bosses
                     };
                 default:
                     break;
-            }
-
-            
+            }   
         }
 
         private void EnterRecovery(float delay, bool wasHit = true)
@@ -271,6 +301,38 @@ namespace ActorSystem.AI.Bosses
             {
                 item.SetEnabledStatus(true);
             }
+        }
+
+        public IEnumerator JumpTo(Vector3 location, float jumpDuration, bool enableLegsAfter = false)
+        {
+            //Lift off
+            SetTargetOrientaion(m_fleeLocation.position);
+            m_myBrain.m_animator.PlayAnimation("JumpStart");
+            do
+            {
+                yield return new WaitForEndOfFrame();
+            } while (!m_isJumping);
+
+            float jumpTimer = 0;
+            float timePerFrame = 1.0f/Mathf.Max(jumpDuration, 0.01f);
+            m_myBrain.m_animator.SetBool("Landed", false);
+            Vector3 initialPos = transform.position;
+
+            m_myBrain.m_legs.SetEnabled(false);
+
+            do
+            {
+                jumpTimer = Mathf.Clamp(jumpTimer + timePerFrame * Time.deltaTime, 0, 1);
+                transform.position = MathParabola.Parabola(initialPos, location, 5f, jumpTimer);
+
+                if (jumpTimer > 0.9f)
+                    m_myBrain.m_animator.SetBool("Landed", true);
+
+                yield return new WaitForEndOfFrame();
+            } while (jumpTimer < 1.0f);
+
+            m_myBrain.m_legs.SetEnabled(enableLegsAfter);
+            yield return null;
         }
 
         public void HitWall()
@@ -294,6 +356,12 @@ namespace ActorSystem.AI.Bosses
         public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
             return base.DealDamageSilent(_damage, _type);
+        }
+
+        public void StartJump()
+        {
+            m_isJumping = true;
+            m_myBrain.m_legs.m_rotationDirection = 0.0f;
         }
 
         public void OnDrawGizmos()

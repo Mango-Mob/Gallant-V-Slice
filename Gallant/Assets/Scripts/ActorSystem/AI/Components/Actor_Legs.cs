@@ -36,7 +36,7 @@ namespace ActorSystem.AI.Components
         //Statistics:
         public float m_rotationSpeed = 5f;
 
-        public float m_rotationDirection { get; protected set; } = 0f;
+        public float m_rotationDirection { get; set; } = 0f;
 
         //Accessables:
         public NavMeshAgent m_agent { get; protected set; }
