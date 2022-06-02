@@ -70,7 +70,7 @@ public abstract class AbilityBase : MonoBehaviour
 
     public void StartCooldown()
     {
-        m_cooldownTimer = m_data.cooldownTime * playerController.playerStats.m_abilityCD;
+        m_cooldownTimer = m_data.cooldownTime;
         m_canUse = false;
     }
     public void ReduceCooldown(float _amount)
@@ -83,7 +83,7 @@ public abstract class AbilityBase : MonoBehaviour
         if (m_data.isPassive)
             return 1.0f;
 
-        float cooldownTime = (m_cooldownTimer / (m_data.cooldownTime * playerController.playerStats.m_abilityCD));
+        float cooldownTime = (m_cooldownTimer / (m_data.cooldownTime));
         if (cooldownTime >= 1.0f)
             return 0.0f;
 
