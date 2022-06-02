@@ -61,6 +61,7 @@ public class Player_Controller : MonoBehaviour
     [SerializeField] private GameObject m_damageVFXPrefab;
 
     [Header("Camera Target Focus")]
+    private bool m_focusInputDisabled = false;
     private Vector3 m_defaultCameraPosition = Vector3.zero;
     private Transform m_cameraFocusTransform;
     private Vector3 m_lastCameraFocusPosition = Vector3.zero;
@@ -143,7 +144,7 @@ public class Player_Controller : MonoBehaviour
         if (playerAttack.m_isBlocking)
             playerResources.ChangeStamina(-10.0f * Time.deltaTime);
 
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned || m_focusInputDisabled)
         {
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
@@ -384,7 +385,7 @@ public class Player_Controller : MonoBehaviour
         {
             if (testObject != null)
             {
-                ChangeCameraFocus(testObject.transform, 2.0f, 3.0f);
+                ChangeCameraFocus(testObject.transform, 2.0f, 3.0f, true);
             }
         }
 
@@ -819,10 +820,12 @@ public class Player_Controller : MonoBehaviour
         playerCamera.transform.parent.localPosition = Vector3.Lerp(m_defaultCameraPosition,
            transform.InverseTransformPoint((m_cameraFocusTransform != null ? m_cameraFocusTransform.position : m_lastCameraFocusPosition)) + m_defaultCameraPosition, m_cameraFocusLerp);
     }
-    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed)
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, bool _disableInput = false)
     {
         m_cameraFocusTransform = _focusTarget;
         m_cameraFocusLerpSpeed = _transitionSpeed;
+
+        m_focusInputDisabled = _disableInput;
     }
     public void ResetCameraFocus(float _transitionSpeed)
     {
@@ -831,20 +834,19 @@ public class Player_Controller : MonoBehaviour
 
         m_cameraFocusTransform = null;
         m_cameraFocusLerpSpeed = _transitionSpeed;
-    }
-    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, float _duration)
-    {
-        m_cameraFocusTransform = _focusTarget;
-        m_cameraFocusLerpSpeed = _transitionSpeed;
 
-        StartCoroutine(CameraFocusCoroutine(_duration));
+        m_focusInputDisabled = false;
     }
-    IEnumerator CameraFocusCoroutine(float _duration)
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, float _duration, bool _disableInput = false)
+    {
+        ChangeCameraFocus(_focusTarget, _transitionSpeed, _disableInput);
+
+        StartCoroutine(CameraFocusCoroutine(_transitionSpeed, _duration));
+    }
+    IEnumerator CameraFocusCoroutine(float _transitionSpeed, float _duration)
     {
         yield return new WaitForSeconds(_duration);
-        if (m_cameraFocusTransform)
-            m_lastCameraFocusPosition = m_cameraFocusTransform.transform.position;
-        m_cameraFocusTransform = null;
+        ResetCameraFocus(_transitionSpeed);
     }
 
     public void ScreenShake(float _intensity, float _shake = 0.3f)
