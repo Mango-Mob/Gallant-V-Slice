@@ -740,14 +740,14 @@ public class Player_Attack : MonoBehaviour
 
             bool killedEnemy = actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
             actor.DealImpactDamage(_impactForce, _piercingVal, impactDirection.normalized, _damageType);
-            playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
+            playerController.playerSkills.ActivateSkills(_abilityTags, actor, _damage * damageMult, killedEnemy);
 
             if (_damageType == CombatSystem.DamageType.Physical)
             {
                 if (playerController.playerAbilities.m_leftAbility)
-                    playerController.playerAbilities.m_leftAbility.ReduceCooldown(_damage * damageMult / 8.0f);
+                    playerController.playerAbilities.m_leftAbility.ReduceCooldown(playerController.playerStats.m_abilityCD * _damage * damageMult / 8.0f);
                 if (playerController.playerAbilities.m_rightAbility)
-                    playerController.playerAbilities.m_rightAbility.ReduceCooldown(_damage * damageMult / 8.0f);
+                    playerController.playerAbilities.m_rightAbility.ReduceCooldown(playerController.playerStats.m_abilityCD * _damage * damageMult / 8.0f);
             }
         }
 

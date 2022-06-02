@@ -31,6 +31,10 @@ public class DropSpawner : MonoBehaviour
                 InfoDisplay display1 = droppedWeapon.GetComponentInChildren<InfoDisplay>();
 
                 display1.m_weaponData = weaponData;
+
+                if (weaponData.abilityData != null)
+                    GetComponentInChildren<SpriteRenderer>().sprite = weaponData.abilityData.abilityIcon;
+
                 break;
             case DropType.UPGRADE:
                 GameObject droppedUpgrade = DroppedWeapon.CreateWeaponUpgrade(transform.position + m_spawnLoc);

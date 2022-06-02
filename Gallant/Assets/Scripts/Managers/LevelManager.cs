@@ -169,7 +169,7 @@ public class LevelManager : SingletonPersistent<LevelManager>
             yield return new WaitForEndOfFrame();
         }
 
-        if (_transition == Transition.CROSSFADE_SPLIT)
+        if (_transition == Transition.CROSSFADE_SPLIT || _transition == Transition.YOUDIED)
             timeMult = 1.0f;
 
         transition.speed = 1.0f / timeMult;

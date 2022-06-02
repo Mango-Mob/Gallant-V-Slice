@@ -25,6 +25,7 @@ public class Player_Controller : MonoBehaviour
     private bool m_hasRecentPickup = false;
     private bool m_hasRecentDialogue = false;
     public float m_standMoveWeightLerpSpeed = 0.5f;
+    public float m_armsWeightLerpSpeed = 0.5f;
     public Hand m_lastAttackHand = Hand.NONE;
     public float m_controlReturnDelay = 1.0f;
     public ClassData m_inkmanClass { private set; get; }
@@ -58,6 +59,14 @@ public class Player_Controller : MonoBehaviour
 
     private bool m_godMode = false;
     [SerializeField] private GameObject m_damageVFXPrefab;
+
+    [Header("Camera Target Focus")]
+    private bool m_focusInputDisabled = false;
+    private Vector3 m_defaultCameraPosition = Vector3.zero;
+    private Transform m_cameraFocusTransform;
+    private Vector3 m_lastCameraFocusPosition = Vector3.zero;
+    private float m_cameraFocusLerp = 0.0f;
+    private float m_cameraFocusLerpSpeed = 1.0f;
 
     // Zoom
     [Header("Camera Zoom")]
@@ -106,6 +115,8 @@ public class Player_Controller : MonoBehaviour
     {
         playerCamera = Camera.main;
         m_startZoom = playerCamera.fieldOfView;
+        m_defaultCameraPosition = playerCamera.transform.parent.localPosition;
+
         LoadPlayerInfo();
 
         if (m_spawnWithAnimation)
@@ -118,24 +129,6 @@ public class Player_Controller : MonoBehaviour
     public void FinishSpawn()
     {
         m_spawning = false;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!m_cameraFreeze)
-        {
-            if (m_shake > 0.0f)
-            {
-                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
-                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
-
-            }
-            else
-            {
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
-                m_shake = 0.0f;
-            }
-        }
     }
 
     // Update is called once per frame
@@ -151,7 +144,7 @@ public class Player_Controller : MonoBehaviour
         if (playerAttack.m_isBlocking)
             playerResources.ChangeStamina(-10.0f * Time.deltaTime);
 
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned || m_focusInputDisabled)
         {
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
@@ -224,13 +217,13 @@ public class Player_Controller : MonoBehaviour
         //if (Mathf.Abs(animator.GetFloat("Horizontal")) > 0.7f || Mathf.Abs(animator.GetFloat("Vertical")) > 0.7f)
         if (animator.GetFloat("Vertical") > 0.5f)
         {
-            runArmWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
-            idleWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
+            runArmWeight += Time.deltaTime * m_armsWeightLerpSpeed;
+            idleWeight -= Time.deltaTime * m_armsWeightLerpSpeed;
         }
         else
         {
-            runArmWeight -= Time.deltaTime * m_standMoveWeightLerpSpeed;
-            idleWeight += Time.deltaTime * m_standMoveWeightLerpSpeed;
+            runArmWeight -= Time.deltaTime * m_armsWeightLerpSpeed;
+            idleWeight += Time.deltaTime * m_armsWeightLerpSpeed;
         }
 
         armWeight = Mathf.Clamp(armWeight, 0.0f, 1.0f);
@@ -390,8 +383,10 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ZERO))
         {
-            //playerResources.ChangeBarrier(10.0f);
-            LevelManager.Instance.ReloadLevel();
+            if (testObject != null)
+            {
+                ChangeCameraFocus(testObject.transform, 2.0f, 3.0f, true);
+            }
         }
 
         // Item debug
@@ -787,14 +782,71 @@ public class Player_Controller : MonoBehaviour
         if (!m_godMode)
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
 
-        animator.SetTrigger("HitPlayer");
         // Create VFX
-        if (m_damageVFXPrefab != null)
+        if (m_damageVFXPrefab != null && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Flinch")).IsName("Flinch"))
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
+
+        animator.SetTrigger("HitPlayer");
 
         //if (animatorCamera)
         //    animatorCamera.SetTrigger("Shake");
         ScreenShake(5.0f);
+    }
+
+    #region Camera Manipulation
+    private void FixedUpdate()
+    {
+        if (!m_cameraFreeze)
+        {
+            if (m_shake > 0.0f)
+            {
+                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+
+            }
+            else
+            {
+                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+                m_shake = 0.0f;
+            }
+        }
+    }
+    private void LateUpdate()
+    {
+        // Camera focus lerp
+        m_cameraFocusLerp += m_cameraFocusLerpSpeed * (m_cameraFocusTransform != null ? 1.0f : -1.0f) * Time.deltaTime;
+        m_cameraFocusLerp = Mathf.Clamp01(m_cameraFocusLerp);
+
+        playerCamera.transform.parent.localPosition = Vector3.Lerp(m_defaultCameraPosition,
+           transform.InverseTransformPoint((m_cameraFocusTransform != null ? m_cameraFocusTransform.position : m_lastCameraFocusPosition)) + m_defaultCameraPosition, m_cameraFocusLerp);
+    }
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, bool _disableInput = false)
+    {
+        m_cameraFocusTransform = _focusTarget;
+        m_cameraFocusLerpSpeed = _transitionSpeed;
+
+        m_focusInputDisabled = _disableInput;
+    }
+    public void ResetCameraFocus(float _transitionSpeed)
+    {
+        if (m_cameraFocusTransform)
+            m_lastCameraFocusPosition = m_cameraFocusTransform.transform.position;
+
+        m_cameraFocusTransform = null;
+        m_cameraFocusLerpSpeed = _transitionSpeed;
+
+        m_focusInputDisabled = false;
+    }
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, float _duration, bool _disableInput = false)
+    {
+        ChangeCameraFocus(_focusTarget, _transitionSpeed, _disableInput);
+
+        StartCoroutine(CameraFocusCoroutine(_transitionSpeed, _duration));
+    }
+    IEnumerator CameraFocusCoroutine(float _transitionSpeed, float _duration)
+    {
+        yield return new WaitForSeconds(_duration);
+        ResetCameraFocus(_transitionSpeed);
     }
 
     public void ScreenShake(float _intensity, float _shake = 0.3f)
@@ -802,6 +854,8 @@ public class Player_Controller : MonoBehaviour
         m_shakeIntensityMult = _intensity;
         m_shake = _shake;
     }
+    #endregion
+
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
@@ -885,6 +939,30 @@ public class Player_Controller : MonoBehaviour
         animator.SetFloat("Horizontal", 0.0f);
     }
 
+    GameObject tempCameraTransformObject;
+    public void KillPlaneDeath(bool _isFullHP = false)
+    {
+        if (tempCameraTransformObject != null)
+            Destroy(tempCameraTransformObject);
+
+        tempCameraTransformObject = new GameObject("TempCameraTransform");
+        tempCameraTransformObject.transform.position = transform.position;
+        
+        m_cameraFocusLerp = 1.0f;
+
+        ChangeCameraFocus(tempCameraTransformObject.transform, 1.0f, false);
+        StartCoroutine(RespawnDelay(_isFullHP));
+    }
+    IEnumerator RespawnDelay(bool _isFullHP = false)
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        RespawnPlayerToGround(_isFullHP);
+
+        ResetCameraFocus(2.0f);
+
+        Destroy(tempCameraTransformObject);
+    }
     public void RespawnPlayerToGround(bool _isFullHP = false)
     {
         Vector3 targetPosition = playerMovement.m_lastGroundedPosition/* - playerMovement.m_lastGroundedVelocity.normalized * 2.0f*/;
