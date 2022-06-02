@@ -238,19 +238,10 @@ public class Player_Skills : MonoBehaviour
                 // Get actors within radius
                 Collider[] fireColliders = Physics.OverlapSphere(_actor.transform.position, 5.0f, playerController.playerAttack.m_attackTargets);
 
-                List<Actor> hitList = new List<Actor>();
                 // Apply damage to those in radius that is not hit actor (multiply damage by potency)
                 foreach (var collider in fireColliders)
                 {
-                    Actor actor = collider.GetComponentInParent<Actor>();
-                    if (actor == null || _actor == actor || hitList.Contains(actor))
-                        continue;
-
-                    hitList.Add(actor);
-                    float damageToDeal = playerController.playerStats.m_abilityDamage * m_fireDamageSplashSkill.m_strength * _potency;
-                    Debug.Log(damageToDeal);
-                    actor.DealDamageSilent(damageToDeal, CombatSystem.DamageType.Ability);
-                    HUDManager.Instance.GetDamageDisplay().DisplayDamage(actor.transform, CombatSystem.DamageType.Ability, damageToDeal);
+                    playerController.playerAttack.DamageTarget(collider.gameObject, m_fireDamageSplashSkill.m_strength * _potency, 0.0f, 0.0f, CombatSystem.DamageType.Ability);
                 }
 
                 // Spawn VFX
