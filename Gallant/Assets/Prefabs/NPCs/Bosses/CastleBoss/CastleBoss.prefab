@@ -1034,7 +1034,19 @@ MonoBehaviour:
         m_CallState: 2
   eventThree:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5446802839975089471}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Bosses.Boss_Castle, Assembly-CSharp
+        m_MethodName: StartJump
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   eventFour:
     m_PersistentCalls:
       m_Calls: []
@@ -1164,6 +1176,7 @@ MonoBehaviour:
   m_fleeLocation: {fileID: 0}
   m_fleeTime: 45
   m_hasFled: 0
+  m_isJumping: 0
   m_phase: 0
   m_cPhase: 0
   m_myWalls:
@@ -1171,6 +1184,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  m_spikeGroup: {fileID: 0}
   m_chargeCooldown: 3
 --- !u!114 &3969599943044023737
 MonoBehaviour:
@@ -1278,7 +1292,7 @@ MonoBehaviour:
   m_targetMask:
     serializedVersion: 2
     m_Bits: 256
-  m_attackSource: {fileID: 0}
+  m_attackSource: {fileID: 3969599943044023731}
   m_baseDamageMod: 0
   m_lastAttackName: 
   m_myData:
