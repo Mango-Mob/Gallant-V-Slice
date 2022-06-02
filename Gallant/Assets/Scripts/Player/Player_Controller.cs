@@ -60,6 +60,13 @@ public class Player_Controller : MonoBehaviour
     private bool m_godMode = false;
     [SerializeField] private GameObject m_damageVFXPrefab;
 
+    [Header("Camera Target Focus")]
+    private Vector3 m_defaultCameraPosition = Vector3.zero;
+    private Transform m_cameraFocusTransform;
+    private Vector3 m_lastCameraFocusPosition = Vector3.zero;
+    private float m_cameraFocusLerp = 0.0f;
+    private float m_cameraFocusLerpSpeed = 1.0f;
+
     // Zoom
     [Header("Camera Zoom")]
     private float m_zoomLerp = 0.0f;
@@ -107,6 +114,8 @@ public class Player_Controller : MonoBehaviour
     {
         playerCamera = Camera.main;
         m_startZoom = playerCamera.fieldOfView;
+        m_defaultCameraPosition = playerCamera.transform.parent.localPosition;
+
         LoadPlayerInfo();
 
         if (m_spawnWithAnimation)
@@ -119,24 +128,6 @@ public class Player_Controller : MonoBehaviour
     public void FinishSpawn()
     {
         m_spawning = false;
-    }
-
-    private void FixedUpdate()
-    {
-        if (!m_cameraFreeze)
-        {
-            if (m_shake > 0.0f)
-            {
-                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
-                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
-
-            }
-            else
-            {
-                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
-                m_shake = 0.0f;
-            }
-        }
     }
 
     // Update is called once per frame
@@ -391,8 +382,10 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_ZERO))
         {
-            //playerResources.ChangeBarrier(10.0f);
-            LevelManager.Instance.ReloadLevel();
+            if (testObject != null)
+            {
+                ChangeCameraFocus(testObject.transform, 2.0f, 3.0f);
+            }
         }
 
         // Item debug
@@ -799,11 +792,68 @@ public class Player_Controller : MonoBehaviour
         ScreenShake(5.0f);
     }
 
+    #region Camera Manipulation
+    private void FixedUpdate()
+    {
+        if (!m_cameraFreeze)
+        {
+            if (m_shake > 0.0f)
+            {
+                playerCamera.transform.localPosition += Random.insideUnitSphere * m_shakeAmount * m_shakeIntensityMult * Time.fixedDeltaTime;
+                m_shake -= Time.fixedDeltaTime * m_shakeDecreaseSpeed;
+
+            }
+            else
+            {
+                playerCamera.transform.localPosition = Vector3.Lerp(playerCamera.transform.localPosition, Vector3.zero, 0.3f);
+                m_shake = 0.0f;
+            }
+        }
+    }
+    private void LateUpdate()
+    {
+        // Camera focus lerp
+        m_cameraFocusLerp += m_cameraFocusLerpSpeed * (m_cameraFocusTransform != null ? 1.0f : -1.0f) * Time.deltaTime;
+        m_cameraFocusLerp = Mathf.Clamp01(m_cameraFocusLerp);
+
+        playerCamera.transform.parent.localPosition = Vector3.Lerp(m_defaultCameraPosition,
+           transform.InverseTransformPoint((m_cameraFocusTransform != null ? m_cameraFocusTransform.position : m_lastCameraFocusPosition)) + m_defaultCameraPosition, m_cameraFocusLerp);
+    }
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed)
+    {
+        m_cameraFocusTransform = _focusTarget;
+        m_cameraFocusLerpSpeed = _transitionSpeed;
+    }
+    public void ResetCameraFocus(float _transitionSpeed)
+    {
+        if (m_cameraFocusTransform)
+            m_lastCameraFocusPosition = m_cameraFocusTransform.transform.position;
+
+        m_cameraFocusTransform = null;
+        m_cameraFocusLerpSpeed = _transitionSpeed;
+    }
+    public void ChangeCameraFocus(Transform _focusTarget, float _transitionSpeed, float _duration)
+    {
+        m_cameraFocusTransform = _focusTarget;
+        m_cameraFocusLerpSpeed = _transitionSpeed;
+
+        StartCoroutine(CameraFocusCoroutine(_duration));
+    }
+    IEnumerator CameraFocusCoroutine(float _duration)
+    {
+        yield return new WaitForSeconds(_duration);
+        if (m_cameraFocusTransform)
+            m_lastCameraFocusPosition = m_cameraFocusTransform.transform.position;
+        m_cameraFocusTransform = null;
+    }
+
     public void ScreenShake(float _intensity, float _shake = 0.3f)
     {
         m_shakeIntensityMult = _intensity;
         m_shake = _shake;
     }
+    #endregion
+
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
