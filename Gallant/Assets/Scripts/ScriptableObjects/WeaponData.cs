@@ -449,6 +449,7 @@ public class WeaponData : ScriptableObject
         this.m_damage = other.m_damage;
         this.m_speed = other.m_speed;
         this.m_impact = other.m_impact;
+        this.m_piercing = other.m_piercing;
         this.m_projectileSpeed = other.m_projectileSpeed;
         this.m_attackMoveSpeed = other.m_attackMoveSpeed;
         this.m_dashSpeed = other.m_dashSpeed;

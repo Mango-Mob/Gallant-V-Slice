@@ -118,7 +118,7 @@ public class Player_Movement : MonoBehaviour
         var animControllers = playerController.animator.runtimeAnimatorController;
         foreach (var clip in animControllers.animationClips)
         {
-            if (clip.name == "knight dodge roll")
+            if (clip.name == "InkMan DodgeRoll")
             {
                 m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
                 break;
@@ -186,6 +186,8 @@ public class Player_Movement : MonoBehaviour
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
+        characterController.Move(transform.up * m_yVelocity * Time.fixedDeltaTime);
+
         EnemyHeadAvoision();
         RollUpdate();
         DashUpdate();
@@ -203,7 +205,7 @@ public class Player_Movement : MonoBehaviour
         foreach (var item in targets)
         {
             Actor actor = item.GetComponentInParent<Actor>();
-            if (actor != null)
+            if (actor != null && !actor.m_myBrain.IsDead)
             {
                 Vector3 direction = transform.position - actor.transform.position;
                 direction.y = 0.0f;
@@ -262,8 +264,7 @@ public class Player_Movement : MonoBehaviour
                 m_lastMoveDirection = playerModel.transform.forward;
 
             // Move player in stored direction while roll is active
-            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime
-                + transform.up * m_yVelocity * Time.fixedDeltaTime);
+            characterController.Move(m_lastMoveDirection.normalized * m_rollSpeed * (playerController.playerStats.m_movementSpeed) * Time.fixedDeltaTime);
             RotateToFaceDirection(new Vector3(m_lastMoveDirection.x, 0, m_lastMoveDirection.z));
 
             playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.WHILE_ROLLING);
@@ -361,9 +362,9 @@ public class Player_Movement : MonoBehaviour
             return;
 
         m_stunTimer = _stunDuration * (1 - playerController.playerSkills.m_stunDecrease);
-        m_knockbackVelocity = _knockbackVelocity;
+        m_knockbackVelocity = _knockbackVelocity * (1 - playerController.playerSkills.m_stunDecrease);
         m_knockbackVelocity.y = 0;
-        m_yVelocity = _knockbackVelocity.y;
+        m_yVelocity = _knockbackVelocity.y * (1 - playerController.playerSkills.m_stunDecrease);
         m_dashTimer = 0.0f;
 
         if (_stunDuration != 0.0f)
@@ -393,8 +394,7 @@ public class Player_Movement : MonoBehaviour
         if (m_knockbackVelocity.magnitude > m_minKnockbackSpeed) // If knockback speed is low enough
         {
             // Apply knockback
-            characterController.Move(m_knockbackVelocity * Time.deltaTime
-                + transform.up * m_yVelocity * Time.deltaTime);
+            characterController.Move(m_knockbackVelocity * Time.deltaTime);
             m_knockbackVelocity = Vector3.Lerp(m_knockbackVelocity, Vector3.zero, 5 * Time.fixedDeltaTime); // Adjust knockback speed
         }
         else
@@ -545,7 +545,7 @@ public class Player_Movement : MonoBehaviour
                 var animControllers = playerController.animator.runtimeAnimatorController;
                 foreach (var clip in animControllers.animationClips)
                 {
-                    if (clip.name == "knight dodge roll")
+                    if (clip.name == "InkMan DodgeRoll")
                         m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
                 }
 
@@ -613,7 +613,7 @@ public class Player_Movement : MonoBehaviour
         else
         {
             m_slideVelocity = Vector3.zero;
-            characterController.Move(movement + transform.up * m_yVelocity * Time.fixedDeltaTime);
+            characterController.Move(movement);
 
             m_wasOnIce = false;
         }

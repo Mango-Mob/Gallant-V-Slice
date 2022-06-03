@@ -571,7 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerModel: {fileID: 4967484959850702184}
   m_aimingArrow: {fileID: 633460672345088239}
-  m_aimingArrowMaxAlpha: 0.5
+  m_aimingArrowMaxAlpha: 0.25
   m_aimingArrowLerpSpeed: 5
   m_aimingArrowFadeDelay: 1
   m_aimingArrowFadeTimer: 0
@@ -589,6 +589,7 @@ MonoBehaviour:
   m_groundLayerMask:
     serializedVersion: 2
     m_Bits: 2048
+  m_lastVelocity: {x: 0, y: 0, z: 0}
   m_shadowDuration: 1
   m_adrenShadowPrefab: {fileID: 3504135104941125864, guid: 92efe45cf760c7f4e91eab82e06a0fef,
     type: 3}
@@ -741,6 +742,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localVolume: 1
   isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
   audioClips:
   - {fileID: 8300000, guid: 6e283b38a70fffc41a5aa1d574a6b4f7, type: 3}
   - {fileID: 8300000, guid: 9886ce1102a2fd84694790702cf59c1f, type: 3}

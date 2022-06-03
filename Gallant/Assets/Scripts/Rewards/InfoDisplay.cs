@@ -274,9 +274,6 @@ public class InfoDisplay : MonoBehaviour
         m_passiveLocation.SetActive(data.itemEffect != ItemEffect.NONE);
 
         string taglist = data.GetTagsString();
-        //string taglist = WeaponData.GetTags(data.weaponType) + ", ";
-        //if(data.abilityData != null)
-            //taglist += data.abilityData.tags;
 
         string[] tags = taglist.Split(',');
         List<TagDetails> activeTags = new List<TagDetails>();
@@ -433,7 +430,7 @@ public class InfoDisplay : MonoBehaviour
         CompareVariables(m_weaponData.m_damage, data.m_damage, m_damage);
         CompareVariables(m_weaponData.m_speed, data.m_speed, m_speed);
         CompareVariables(m_weaponData.m_impact, data.m_impact, m_impact);
-        CompareVariables(m_weaponData.m_piercing, data.m_impact, m_piercing);
+        CompareVariables(m_weaponData.m_piercing, data.m_piercing, m_piercing);
     }
 
     public bool UpdatePickupTimer(WeaponData _heldWeapon, Hand _hand)
