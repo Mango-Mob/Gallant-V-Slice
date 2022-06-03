@@ -18,7 +18,7 @@ public class CurrencyDrop : MonoBehaviour
 
     static bool m_isLayerCollisionConfigured = false;
 
-    static public void CreateCurrencyDropGroup(uint _count, Vector3 _position, float _valuePerOrb = 0.3f)
+    static public void CreateCurrencyDropGroup(uint _count, Vector3 _position, int _valuePerOrb = 1)
     {
         GameObject orbPrefab = Resources.Load<GameObject>("CurrencyDrop");
         if (orbPrefab == null)
@@ -34,7 +34,8 @@ public class CurrencyDrop : MonoBehaviour
 
             offset = offset.normalized * Random.Range(0.0f, 1.0f);
 
-            Instantiate(orbPrefab, _position + offset, Quaternion.Euler(0, 0, 0));
+            GameObject newObject = Instantiate(orbPrefab, _position + offset, Quaternion.Euler(0, 0, 0));
+            newObject.GetComponent<CurrencyDrop>().m_heldValue = _valuePerOrb;
         }
     }    
 

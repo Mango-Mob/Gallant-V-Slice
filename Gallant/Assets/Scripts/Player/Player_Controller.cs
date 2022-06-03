@@ -375,7 +375,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.2f, transform.up * 20.0f);
+            StunPlayer(0.0f, transform.up * 20.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
@@ -760,13 +760,18 @@ public class Player_Controller : MonoBehaviour
                     playerAbilities.m_leftAbility.ReduceCooldown((_damage / 8.0f));
                 if (playerAbilities.m_rightAbility)
                     playerAbilities.m_rightAbility.ReduceCooldown((_damage / 8.0f));
-                animator.SetTrigger("BlockHit");
+
+
 
                 if (playerResources.m_isExhausted)
                 {
                     playerAudioAgent.PlayShieldBlock(); // Guard break audio
                     animator.SetTrigger("HitPlayer");
                     return;
+                }
+                else if (sword == null)
+                {
+                    animator.SetTrigger("BlockHit");
                 }
                 playerAudioAgent.PlayShieldBlock();
 
