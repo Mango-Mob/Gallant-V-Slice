@@ -24,6 +24,7 @@ namespace ActorSystem.AI.Components
         public bool m_canBeKnocked = true;
         public bool m_isKnocked = false;
         public bool m_canRotate = true;
+        public float m_brainDecay = 0.0f;
 
         private bool m_isSeekingMesh = false;
 
@@ -49,7 +50,6 @@ namespace ActorSystem.AI.Components
         public Vector3 m_targetPosition { get; protected set; }
         public Quaternion m_targetRotation { get; protected set; }
 
-        private float m_delayTimer = 0f;
         public float m_baseStopDist { get; private set; }
 
         public float m_idealRange = 2f;
@@ -80,9 +80,9 @@ namespace ActorSystem.AI.Components
         // Update is called once per frame
         protected virtual void Update()
         {
-            m_delayTimer = Mathf.Clamp(m_delayTimer - Time.deltaTime, 0f, 1f);
+            m_brainDecay = Mathf.Clamp(m_brainDecay - Time.deltaTime, 0f, float.MaxValue);
             
-            if(m_delayTimer > 0)
+            if(m_brainDecay > 0)
                 return;
 
             if(m_agent.enabled && !m_agent.isOnNavMesh && !m_isKnocked && !m_agent.isStopped)
@@ -143,7 +143,7 @@ namespace ActorSystem.AI.Components
                 if (m_body.velocity.magnitude < 1.0f && NavMesh.SamplePosition(transform.position, out hitInfo, m_agent.radius * 0.75f, NavMesh.AllAreas))
                 {
                     m_isKnocked = false;
-                    m_delayTimer = 0.25f;
+                    m_brainDecay = 0.25f;
                 }
             }
             
