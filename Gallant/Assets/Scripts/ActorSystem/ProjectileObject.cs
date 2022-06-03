@@ -14,6 +14,7 @@ public class ProjectileObject : MonoBehaviour
     public GameObject m_hitVfX;
     public AudioClip m_hitSound;
     public AttackData m_damageDetails;
+    public GameObject m_source;
 
     private float m_timer = 0;
 
@@ -46,8 +47,8 @@ public class ProjectileObject : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Player_Controller player = other.GetComponent<Player_Controller>();
-            player.DamagePlayer(m_damage, CombatSystem.DamageType.Physical, gameObject);
-            AttackData.ApplyEffect(player, transform, m_damageDetails.onHitEffect, m_damageDetails.effectPower);
+            player.DamagePlayer(m_damage, CombatSystem.DamageType.Physical, m_source);
+            AttackData.ApplyEffect(player, m_source.transform, m_damageDetails.onHitEffect, m_damageDetails.effectPower);
             Instantiate(m_hitVfX, transform.position, Quaternion.identity);
 
             AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);

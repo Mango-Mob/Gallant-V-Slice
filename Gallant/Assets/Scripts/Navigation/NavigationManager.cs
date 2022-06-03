@@ -235,8 +235,8 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
             else
             {
                 //Decrease
-                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_levelFloors[i].minSize);
-                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_levelFloors[i].minSize);
+                int min = Mathf.Max(prevNodes.Count - 2, (int)data.m_levelFloors[i].minSize, 1);
+                int max = Mathf.Max(prevNodes.Count - 1, (int)data.m_levelFloors[i].minSize, 1);
                 nodesToCreate = Random.Range(min, max + 1);
             }
             float widthStep = m_generatedLevel.m_width / nodesToCreate;

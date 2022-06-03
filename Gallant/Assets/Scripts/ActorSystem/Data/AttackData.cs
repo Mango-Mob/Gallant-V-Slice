@@ -30,6 +30,7 @@ namespace ActorSystem.Data
             NULL,
             KNOCK_BACK,
             KNOCK_UP,
+            STUN,
         }
 
         [Header("Effect Data")]
@@ -83,10 +84,15 @@ namespace ActorSystem.Data
                 case AttackData.Effect.NULL:
                     break;
                 case AttackData.Effect.KNOCK_BACK:
-                    target.StunPlayer(0.2f, source.position.DirectionTo(target.transform.position) * power);
+                    Vector3 direction = target.transform.position - source.position;
+                    direction.y = 0;
+                    target.StunPlayer(0.2f, direction.normalized * power);
                     break;
                 case AttackData.Effect.KNOCK_UP:
                     target.StunPlayer(0.2f, Vector3.up * power);
+                    break;
+                case AttackData.Effect.STUN:
+                    target.StunPlayer(power, Vector3.zero);
                     break;
                 default:
                     break;
