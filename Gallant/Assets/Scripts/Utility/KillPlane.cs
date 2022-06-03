@@ -24,12 +24,12 @@ public class KillPlane : MonoBehaviour
                 //Enemy
                 if (canRespawnColliders)
                 {
-                    other.GetComponent<Actor>().DealDamage(damageOnHit, CombatSystem.DamageType.True);
-                    other.GetComponent<Actor>().Respawn(false);
+                    other.GetComponent<Actor>()?.DealDamage(damageOnHit, CombatSystem.DamageType.True);
+                    other.GetComponent<Actor>()?.Respawn(false);
                 }
                 else
                 {
-                    other.GetComponent<Actor>().Kill();
+                    other.GetComponent<Actor>()?.Kill();
                 }
             }
             else if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
@@ -37,7 +37,8 @@ public class KillPlane : MonoBehaviour
                 //Player
                 if (canRespawnColliders)
                 {
-                    other.GetComponent<Player_Controller>().RespawnPlayerToGround(false);
+                    //other.GetComponent<Player_Controller>().RespawnPlayerToGround(false);
+                    other.GetComponent<Player_Controller>().KillPlaneDeath(false);
                     other.GetComponent<Player_Controller>().DamagePlayer(damageOnHit,CombatSystem.DamageType.True, null, true);
                 }
                 else

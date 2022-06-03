@@ -39,7 +39,7 @@ namespace ActorSystem.Spawning
                 if (floor < 0)
                     return;
 
-                m_waves = data.EvaluateCombat((uint)floor);
+                m_waves = data.EvaluateCombat(NavigationManager.Instance.GetActiveFloor());
 
                 if(m_waves == null)
                 {
@@ -176,7 +176,7 @@ namespace ActorSystem.Spawning
                     m_myActors.Add(spawn);
                     spawn.SetTarget(GameManager.Instance.m_player);
                     spawn.m_lastSpawner = this;
-                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnLoc);
+                    spawn.Spawn((uint)Mathf.FloorToInt(GameManager.currentLevel), spawnLoc, Quaternion.identity);
                 }
 
                 activeRoutines--;

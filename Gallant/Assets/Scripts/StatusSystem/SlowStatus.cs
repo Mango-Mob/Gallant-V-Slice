@@ -39,6 +39,11 @@ public class SlowStatus : StatusEffect
     {
         if(_actor.m_myBrain.m_legs != null && !_actor.m_myBrain.IsStunned)
             _actor.m_myBrain.m_legs.m_speedModifier = 1.0f - m_strength;
+
+        foreach (var item in _actor.m_myBrain.m_materials)
+        {
+            item.StartFreeze(0.4f);
+        }
     }
 
     public override void StartPlayer(Player_Controller _player)
@@ -54,6 +59,10 @@ public class SlowStatus : StatusEffect
             float strength = Mathf.Lerp(1.0f - m_strength, 1.0f, lerp);
             _actor.m_myBrain.m_legs.m_speedModifier = strength;
 
+            foreach (var item in _actor.m_myBrain.m_indicators)
+            {
+                item.m_speed = Mathf.Min(strength, item.m_speed);
+            }
         }
 
         m_duration -= dt;
@@ -73,6 +82,11 @@ public class SlowStatus : StatusEffect
         foreach (var material in _actor.m_myBrain.m_materials)
         {
             material.RefreshColor();
+        }
+
+        foreach (var item in _actor.m_myBrain.m_indicators)
+        {
+            item.m_speed = 1.0f;
         }
     }
 

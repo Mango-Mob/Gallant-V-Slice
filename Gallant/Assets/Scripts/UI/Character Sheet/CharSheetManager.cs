@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 
 public class CharSheetManager : MonoBehaviour
@@ -62,7 +63,7 @@ public class CharSheetManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_joystickCursor.SetActive(m_isActive);
+        m_joystickCursor.SetActive(m_isActive && InputManager.Instance.isInGamepadMode);
 
         if (m_isActive)
         {

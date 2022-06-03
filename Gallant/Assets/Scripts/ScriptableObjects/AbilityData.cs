@@ -54,6 +54,7 @@ public class AbilityData : ScriptableObject
     public bool isPassive = false;
 
     public Sprite overwriteStaffIcon;
+
     public static string EvaluateDescription(AbilityData data)
     {
         string description = data.description;

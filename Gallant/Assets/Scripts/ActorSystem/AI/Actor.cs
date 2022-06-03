@@ -4,6 +4,7 @@ using ActorSystem.Spawning;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 namespace ActorSystem.AI
 {
@@ -25,6 +26,9 @@ namespace ActorSystem.AI
         public GameObject m_target { get { return m_myBrain.m_target; }}
 
         public List<State.Type> m_states { get; private set; }
+
+        public UnityEvent m_onSpawnEvent;
+        public UnityEvent m_onDeathEvent;
 
         protected virtual void Awake()
         {
@@ -65,12 +69,12 @@ namespace ActorSystem.AI
             m_myBrain.m_canStagger = m_states.Contains(State.Type.STAGGER);
         }
 
-        public void Spawn(uint level, Vector3 spawnLoc)
+        public void Spawn(uint level, Vector3 spawnLoc, Quaternion rotation)
         {
             m_myLevel = level;
             m_myBrain.LoadData(m_myData, level);
             m_mySpawn.SetEnabled(true);
-            m_mySpawn.StartSpawn(spawnLoc);
+            m_mySpawn.StartSpawn(spawnLoc, rotation);
         }
 
         public void SetLevel(uint level)
@@ -155,6 +159,7 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
+                    m_onDeathEvent?.Invoke();
                     return true;
                 }
             }
@@ -177,6 +182,7 @@ namespace ActorSystem.AI
                     }
                     m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
                     SetState(new State_Dead(this));
+                    m_onDeathEvent?.Invoke();
                     return true;
                 }
             }

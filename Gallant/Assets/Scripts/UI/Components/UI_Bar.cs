@@ -47,6 +47,19 @@ public class UI_Bar : UI_Element
     {
         m_value = Mathf.Clamp(_value, 0.0f, 1.0f);
     }
+
+    public void InstantUpdate(float _value)
+    {
+        m_value = Mathf.Clamp(_value, 0.0f, 1.0f);
+
+        m_barImage.fillAmount = m_value;
+
+        if (m_chasingBarImage != null)
+        {
+            m_chasingBarImage.fillAmount = m_value;
+        }
+    }
+
     public float GetValue()
     {
         return m_value;

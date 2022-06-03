@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using Utility;
 
 namespace ActorSystem.AI.Components
@@ -59,8 +60,6 @@ namespace ActorSystem.AI.Components
         private Timer m_refreshTimer;
 
         private UI_Bar m_staminaBar;
-        private float m_damageTimer = 0;
-        private float m_damageHold = 0;
 
         public bool m_isDisolving { 
             get {
@@ -101,9 +100,13 @@ namespace ActorSystem.AI.Components
 
         public void Update()
         {
+            m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
             if (IsStunned || IsDead)
             {
-                m_ui?.SetBar("Health", (float)m_currHealth / m_startHealth);
+                foreach (var item in m_indicators)
+                {
+                    item.m_speed = 0.0f;
+                }
                 m_legs?.Halt();
                 return;
             }
@@ -129,7 +132,8 @@ namespace ActorSystem.AI.Components
         {
             if(m_animator != null && m_animator.m_hasVelocity)
             {
-                m_animator?.SetFloat("VelocityHaste", (m_legs != null) ? m_legs.m_speedModifier : 1.0f);
+                m_animator.m_speed = (m_legs != null) ? m_legs.m_speedModifier : 1.0f;
+                m_animator.SetFloat("VelocityHaste", 1.0f);
                 m_animator?.SetVector3("VelocityHorizontal", "", "VelocityVertical", (m_legs != null) ? m_legs.scaledVelocity : Vector3.zero);
             }
             if (m_animator != null && m_animator.HasParameter("RotationVelocity"))

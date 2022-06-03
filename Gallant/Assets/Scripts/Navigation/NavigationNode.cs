@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 public class NavigationNode : MonoBehaviour
 {
+    public FloorData m_myFloor;
     public SceneData m_myData;
     public int m_myIndex = 0;
     public int m_myDepth = 0;
 
     private bool IsCompleted = false;
     private Image mainIconLoc;
+    private Image backImageLoc;
     public struct Connection
     {
         public LineRenderer render;
@@ -122,7 +124,6 @@ public class NavigationNode : MonoBehaviour
         nodeObj.transform.localScale = Vector3.one;
 
         nodeObj.AddComponent(typeof(Button));
-        nodeBackground.AddComponent<Image>().sprite = data.iconBack;
 
         ColorBlock temp = nodeObj.GetComponent<Button>().colors;
         temp.selectedColor = Color.cyan;
@@ -130,14 +131,74 @@ public class NavigationNode : MonoBehaviour
         nodeObj.GetComponent<Button>().colors = temp;
 
         NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
+        nav.m_myFloor = null;
         nav.m_myData = data;
+        nav.backImageLoc = nodeBackground.AddComponent<Image>();
+
         nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
         nodeObj.GetComponent<Button>().interactable = false;
         nav.mainIconLoc = nodeImage.AddComponent<Image>();
         nodeObj.GetComponent<Button>().targetGraphic = nav.mainIconLoc;
-        nodeImage.GetComponent<Image>().sprite = data.sceneIcon;
 
         return nodeObj;
+    }
+
+    public static GameObject CreateNode(FloorData data, Transform parent)
+    {
+        GameObject nodeObj = new GameObject();
+        GameObject nodeImage = new GameObject();
+        GameObject nodeBackground = new GameObject();
+        nodeBackground.transform.SetParent(nodeObj.transform);
+        nodeImage.transform.SetParent(nodeObj.transform);
+
+        nodeObj.name = $"NavNode ({data.name})";
+        nodeObj.AddComponent<RectTransform>();
+        nodeObj.transform.SetParent(parent);
+        nodeObj.transform.localPosition = Vector3.zero;
+        nodeObj.transform.localRotation = Quaternion.identity;
+        nodeObj.transform.localScale = Vector3.one;
+
+        nodeObj.AddComponent(typeof(Button));
+
+        ColorBlock temp = nodeObj.GetComponent<Button>().colors;
+        temp.selectedColor = Color.cyan;
+        temp.disabledColor = Color.gray;
+        nodeObj.GetComponent<Button>().colors = temp;
+
+        NavigationNode nav = nodeObj.AddComponent<NavigationNode>();
+        nav.m_myFloor = data;
+
+        nav.backImageLoc = nodeBackground.AddComponent<Image>();
+
+        nodeObj.GetComponent<Button>().onClick.AddListener(nodeObj.GetComponent<NavigationNode>().Navigate);
+        nodeObj.GetComponent<Button>().interactable = false;
+        nav.mainIconLoc = nodeImage.AddComponent<Image>();
+        nodeObj.GetComponent<Button>().targetGraphic = nav.mainIconLoc;
+
+        return nodeObj;
+    }
+
+    //Recursive
+    public void EvaluateSelf(List<Extentions.WeightedOption<SceneData>> options = null)
+    {
+        //Start case: null options
+        if (m_myData == null)
+        {
+            if (options == null)
+                m_myData = m_myFloor.GetScene();
+            else
+                m_myData = Extentions.GetFromList<SceneData>(options);
+        }
+
+        mainIconLoc.sprite = m_myData.sceneIcon;
+        backImageLoc.sprite = m_myData.iconBack;
+
+        //Break case: No connections remaining
+        foreach (var connection in m_myConnections)
+        {
+            var sceneList = SceneData.EvaluateWeights(m_myData, connection.other.m_myFloor.potentialScenes);
+            connection.other.EvaluateSelf(sceneList);
+        }
     }
 
     public void OnDrawGizmos()

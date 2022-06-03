@@ -4,21 +4,32 @@ using UnityEngine;
 
 public class BowString : MonoBehaviour
 {
+    [Range(0.0f, 1.0f)]
+    public float m_lerp = 0.0f;
     public float m_lineHeight = 0.39f;
+    public Transform m_bindTransform;
+    public Transform m_startLine;
+    public Transform m_endLine;
 
-    private Vector3 m_midPoint;
     private LineRenderer m_renderer;
+
     // Start is called before the fir
     // st frame update
     void Start()
     {
         m_renderer = GetComponent<LineRenderer>();
-        m_midPoint = new Vector3(0, 0, m_lineHeight);
+        m_renderer.SetPosition(1, (m_startLine.position + m_endLine.position) / 2);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.worldToLocalMatrix;
+        if (m_bindTransform != null)
+            m_renderer.SetPosition(1, Vector3.Lerp((m_startLine.position + m_endLine.position) / 2, m_bindTransform.position, m_lerp));
+        else
+            m_renderer.SetPosition(1, (m_startLine.position + m_endLine.position) / 2);
+
+        m_renderer.SetPosition(0, m_startLine.position);
+        m_renderer.SetPosition(2, m_endLine.position);
     }
 }

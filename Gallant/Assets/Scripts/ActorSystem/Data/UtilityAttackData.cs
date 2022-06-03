@@ -8,7 +8,7 @@ namespace ActorSystem.Data
     [CreateAssetMenu(fileName = "UtilityAttack_Data", menuName = "Game Data/Attack Data/Utility", order = 1)]
     public class UtilityAttackData : AttackData
     {
-        public enum UtilityType { Teleport, Tracker}
+        public enum UtilityType { Teleport, Tracker, Bomber}
         public UtilityType m_type;
         public float m_intensity = 5;
         public float m_speed = 5f;
@@ -18,6 +18,7 @@ namespace ActorSystem.Data
         private float m_startIntensity;
         private Vector3 targetPoint;
         private GameObject m_proj; 
+
         public override bool InvokeAttack(Transform parent, ref GameObject source, int filter, uint id = 0, float damageMod = 1)
         {
             switch (m_type)
@@ -31,6 +32,24 @@ namespace ActorSystem.Data
                     Destroy(m_proj);
                     m_proj = null;
                     break;
+                case UtilityType.Bomber:
+                    m_intensity = m_startIntensity;
+
+                    Collider[] targets = GetDamageOverlap(parent, filter, id);
+                    foreach (var item in targets)
+                    {
+                        if (item.gameObject.layer == LayerMask.NameToLayer("Player"))
+                        {
+                            Player_Controller player = item.GetComponentInParent<Player_Controller>();
+                            player.DamagePlayer(baseDamage * damageMod, damageType, source, true);
+                            ApplyEffect(player, parent, onHitEffect, effectPower);
+                        }
+                        else if (item.gameObject.layer == LayerMask.NameToLayer("Destructible"))
+                        {
+                            item.GetComponentInParent<Destructible>().ExplodeObject(damageColliders[0].GetHitlocation(parent), baseDamage * damageMod, 5f, false);
+                        }
+                    }
+                    return true;
                 default:
                     break;
             }
@@ -49,6 +68,10 @@ namespace ActorSystem.Data
                 case UtilityType.Tracker:
                     m_proj = Instantiate(m_projPrefab, user.transform.position, Quaternion.identity);
                     m_proj.transform.localScale = Vector3.one * 0.25f;
+                    m_startIntensity = m_intensity;
+                    break;
+                case UtilityType.Bomber:
+                    user.SetTargetLocation(user.m_target.transform.position, true);
                     m_startIntensity = m_intensity;
                     break;
                 default:
@@ -81,6 +104,17 @@ namespace ActorSystem.Data
                         }
                     }
                     break;
+                case UtilityType.Bomber:
+                    if(m_intensity > 0)
+                    {
+                        user.SetTargetLocation(user.m_target.transform.position, true);
+                        m_intensity -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        user.SetTargetLocation(user.transform.position, false);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -99,6 +133,8 @@ namespace ActorSystem.Data
                     {
                         Destroy(m_proj);
                     }
+                    break;
+                case UtilityType.Bomber:
                     break;
                 default:
                     break;
@@ -129,7 +165,19 @@ namespace ActorSystem.Data
 
         public override void PostInvoke(Transform user, uint id)
         {
-
+            base.PostInvoke(user, id);
+            switch (m_type)
+            {
+                case UtilityType.Teleport:
+                    break;
+                case UtilityType.Tracker:
+                    break;
+                case UtilityType.Bomber:
+                    user.GetComponent<Actor>().DestroySelf();
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void ApplyEffect(float damMod = 1.0f)

@@ -10,6 +10,8 @@ public class CollectableData : ScriptableObject
     public string itemName;
     public Sprite itemIcon;
 
+    public GameObject physicalPrefab;
+
     [TextArea(10, 15)]
     public List<string> descriptions;
 }

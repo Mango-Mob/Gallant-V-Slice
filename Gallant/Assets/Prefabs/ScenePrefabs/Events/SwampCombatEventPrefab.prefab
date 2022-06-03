@@ -184,11 +184,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ceb53520df32be4d999a0162fb5e492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_eventDialog: While adventuring, you spot enemies ahead! You have a choice...
+  m_probText: movement speed
+  m_successText: You sneak around them!
+  m_failureText: The enemies have spotted you!
+  m_confirmText: Fight
+  m_declineText: Sneak Past
   m_combatScenarios:
   - {fileID: 11400000, guid: c6128c78ef41a7a43873073969ef3a74, type: 2}
   - {fileID: 11400000, guid: a1e895b05717e2a48918f6e087e3c58a, type: 2}
   - {fileID: 11400000, guid: fafeef199b432e44498cafc06e398ee6, type: 2}
   - {fileID: 11400000, guid: 24a2f4e595bb2da4bb572596b8cf84e7, type: 2}
+  m_probVariable: 1
+  m_probCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 30
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 6
+      value: 100
+      inSlope: 0.19857788
+      outSlope: 0.19857788
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.375
+    - serializedVersion: 3
+      time: 10
+      value: 100
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8415645213779707948
 GameObject:
   m_ObjectHideFlags: 0

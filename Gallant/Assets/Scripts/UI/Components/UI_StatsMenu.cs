@@ -67,6 +67,11 @@ public class UI_StatsMenu : UI_Element
         m_offsetLerp = Mathf.Clamp(m_offsetLerp + (m_active ? 1.0f : -1.0f) * Time.deltaTime * 5.0f, 0.0f, 1.0f);
 
         m_statCanvasGroup.alpha = m_offsetLerp;
+        m_statCanvasGroup.blocksRaycasts = m_statCanvasGroup.alpha != 0.0f;
+
+        m_leftWeaponDisplay.gameObject.SetActive(m_statCanvasGroup.alpha != 0.0f && m_leftWeaponDisplay.m_weaponData != null);
+        m_rightWeaponDisplay.gameObject.SetActive(m_statCanvasGroup.alpha != 0.0f && m_rightWeaponDisplay.m_weaponData != null);
+
         m_balanceCanvasGroup.alpha = Mathf.Max(m_balanceDisplayLerp, m_offsetLerp);
         //Color backgroundColor = m_background.color;
         //backgroundColor.a = 0.85f * m_offsetLerp;

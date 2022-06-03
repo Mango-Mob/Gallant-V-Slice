@@ -28,7 +28,8 @@ public class SoloAudioAgent : AudioAgent
     {
         base.Awake();
         player = new AudioPlayer(this.gameObject, mainClip, AudioManager.Instance.GetVolume(channel, this) * localVolume);
-
+        player.is3D = is3D;
+        player.Set3DRange(min3D_Dist, max3D_Dist);
         Update();
 
         if (isPlayOnAwake && this.isActiveAndEnabled)
@@ -42,6 +43,9 @@ public class SoloAudioAgent : AudioAgent
 
     protected override void Update()
     {
+        player.is3D = is3D;
+        player.Set3DRange(min3D_Dist, max3D_Dist);
+
         if (isMuted)
             player.SetVolume(0.0f);
         else

@@ -426,10 +426,13 @@ public class Player_Attack : MonoBehaviour
         //    DropWeapon(_hand, _weapon.transform.position);
         //    ApplyWeaponData(_hand);
         //}
+        if (_hand == Hand.LEFT && m_leftWeaponData != null && m_rightWeaponData == null
+            || _hand == Hand.RIGHT && m_rightWeaponData != null && m_leftWeaponData == null)
+            SwapWeapons();
 
         // Drop old weapon
         DropWeapon(_hand, _weapon.transform.position);
-        ApplyWeaponData(_hand);
+        //ApplyWeaponData(_hand);
         switch (_hand)
         {
             case Hand.LEFT:
@@ -576,8 +579,6 @@ public class Player_Attack : MonoBehaviour
                 break;
         }
 
-
-
         if (m_leftWeaponIcon != null)
         {
             if (IsTwoHanded())
@@ -587,7 +588,6 @@ public class Player_Attack : MonoBehaviour
             else
                 m_altAttackIcon.SetIconSprite(null);
         }
-
 
         // Set idle animations
         if (m_leftWeaponData != null && !IsTwoHanded())
@@ -606,6 +606,7 @@ public class Player_Attack : MonoBehaviour
             {
                 playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.LEFT);
                 playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.LEFT);
+                Debug.Log(Weapon.SWORD);
             }
             else
             {
@@ -623,12 +624,14 @@ public class Player_Attack : MonoBehaviour
             {
                 playerController.playerCombatAnimator.SetIdleAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
                 playerController.playerCombatAnimator.SetRunAnimation(m_rightWeaponData.weaponType, Hand.LEFT);
+                Debug.Log(m_rightWeaponData.weaponType);
             }
         }
         else
         {
             playerController.playerCombatAnimator.SetIdleAnimation(Weapon.SWORD, Hand.RIGHT);
             playerController.playerCombatAnimator.SetRunAnimation(Weapon.SWORD, Hand.RIGHT);
+            Debug.Log(Weapon.SWORD);
         }
 
         m_leftWeaponIcon.SetDisabledState(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
@@ -636,7 +639,8 @@ public class Player_Attack : MonoBehaviour
 
         ToggleTwohandedMode(m_rightWeaponData && m_rightWeaponData.isTwoHanded);
 
-
+        playerController.playerAbilities.ToggleIconActive(Hand.LEFT, !(m_rightWeaponData && m_rightWeaponData.isTwoHanded));
+        playerController.playerAbilities.ToggleIconActive(Hand.RIGHT, !(m_leftWeaponData && m_leftWeaponData.isTwoHanded));
 
         playerController.playerAudioAgent.EquipWeapon();
     }
@@ -706,7 +710,6 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Debug.Log("Source = " + _damageSource);
         Vector3 damageSource = (_damageSource == Vector3.zero ? transform.position : _damageSource);
 
         Actor actor = _target.GetComponentInParent<Actor>();
@@ -737,7 +740,15 @@ public class Player_Attack : MonoBehaviour
 
             bool killedEnemy = actor.DealDamage(_damage * damageMult, _damageType, _piercingVal, transform.position);
             actor.DealImpactDamage(_impactForce, _piercingVal, impactDirection.normalized, _damageType);
-            playerController.playerSkills.ActivateSkills(_abilityTags, actor, damageMult * damageMult, killedEnemy);
+            playerController.playerSkills.ActivateSkills(_abilityTags, actor, _damage * damageMult, killedEnemy);
+
+            if (_damageType == CombatSystem.DamageType.Physical)
+            {
+                if (playerController.playerAbilities.m_leftAbility)
+                    playerController.playerAbilities.m_leftAbility.ReduceCooldown(playerController.playerStats.m_abilityCD * _damage * damageMult / 8.0f);
+                if (playerController.playerAbilities.m_rightAbility)
+                    playerController.playerAbilities.m_rightAbility.ReduceCooldown(playerController.playerStats.m_abilityCD * _damage * damageMult / 8.0f);
+            }
         }
 
         Destructible destructible = _target.GetComponentInParent<Destructible>();
@@ -781,6 +792,8 @@ public class Player_Attack : MonoBehaviour
             m_leftWeaponEffect = ItemEffect.NONE;
             if (m_leftWeapon)
                 m_leftWeapon.m_weaponObject.transform.SetParent(m_backHolster);
+
+            playerController.playerAbilities.m_passiveVFX.HideVFX(Hand.LEFT, true);
         }
         else
         {
@@ -793,6 +806,7 @@ public class Player_Attack : MonoBehaviour
                 }
                 m_leftWeapon.m_weaponObject.transform.SetParent(m_leftHandTransform);
             }
+            playerController.playerAbilities.m_passiveVFX.HideVFX(Hand.LEFT, false);
         }
         if (m_leftWeapon)
         {

@@ -31,6 +31,8 @@ public class Combo : StateMachineBehaviour
 
         animator.SetBool("IsHealing", false);
         animator.SetInteger("ComboCount", 0);
+
+        animator.SetBool("CanRotate", true);
         //animator.SetBool("LeftShield", false);
         //animator.SetBool("RightShield", false);
 

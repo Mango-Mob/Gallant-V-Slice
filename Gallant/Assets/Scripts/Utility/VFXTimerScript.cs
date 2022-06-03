@@ -9,7 +9,7 @@ public class VFXTimerScript : MonoBehaviour
     public float m_timer = 1.0f;
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (m_startedTimer)
         {
@@ -19,7 +19,8 @@ public class VFXTimerScript : MonoBehaviour
                 Destroy(gameObject);
         }
     }
-    public void Finish()
+
+    public virtual void Finish()
     {
         m_timer = 0;
     }

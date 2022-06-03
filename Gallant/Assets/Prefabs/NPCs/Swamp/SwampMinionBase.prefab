@@ -1031,7 +1031,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d8f79a1eeb4ef34c961f26725ca5724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitMaterial: {fileID: 2100000, guid: a35d7d69d7d41924a890a7b42459b975, type: 2}
+  m_hitColor: {r: 1, g: 1, b: 1, a: 1}
+  m_freezeMaterial: {fileID: 2100000, guid: 21eec25bfeb7ace49a5b3c3d4e7afb98, type: 2}
+  m_myMaterial: {fileID: 2100000, guid: 591140bdd70b0ee4b84d6bf7c4d0cd68, type: 2}
 --- !u!114 &470287543585166027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1593,6 +1595,12 @@ MonoBehaviour:
   m_HurtVFXPrefab: {fileID: 8570472178638923569, guid: 46523189da3c5034b9e059fdd4ad27ed,
     type: 3}
   m_myData: {fileID: 11400000, guid: 2058dedf721e45a429a20acf9b171341, type: 2}
+  m_onSpawnEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_onDeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3222191498181553983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1698,6 +1706,7 @@ MonoBehaviour:
   m_canRotate: 1
   m_rotationSpeed: 270
   m_pivotMin: 120
+  m_idealRange: 2
 --- !u!136 &3222191498181553982
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2348,6 +2357,18 @@ MonoBehaviour:
   eventFour:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 186574064184179108}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_Indicator, Assembly-CSharp
+        m_MethodName: SetEnabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Throw
+          m_BoolArgument: 1
+        m_CallState: 2
       - m_Target: {fileID: 5931487972185270781}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
         m_MethodName: Play
@@ -2358,7 +2379,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Throw
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   eventFive:
     m_PersistentCalls:
@@ -2418,6 +2439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2923061399318506880}
   - component: {fileID: 5931487972185270781}
+  - component: {fileID: 186574064184179108}
   m_Layer: 22
   m_Name: Indicator
   m_TagString: Untagged
@@ -2459,6 +2481,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &186574064184179108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4594376770155289903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7191e97eaef6ddd46aefc9df62280c1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4630832941243637453
 GameObject:
   m_ObjectHideFlags: 0

@@ -188,6 +188,15 @@ public class Player_Resources : MonoBehaviour
             playerController.playerAudioAgent.PlayDeath();
             playerController.playerAttack.ShowWeapons(false);
             playerController.animator.SetTrigger("KillPlayer");
+
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("IdleArmL"));
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("IdleArmR"));
+
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("RunArmL"));
+            playerController.animator.Play("Default", playerController.animator.GetLayerIndex("RunArmR"));
+
+            playerController.animator.SetBool("LeftAttackHeld", false);
+            playerController.animator.SetBool("RightAttackHeld", false);
             //StartCoroutine(BackToMenu());
         }
         m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
@@ -259,7 +268,14 @@ public class Player_Resources : MonoBehaviour
         m_dead = false;
     }
 
-    public void SetHealth(float _health) { m_health = _health; }
+    public void SetHealth(float _health) 
+    { 
+        m_health = _health;
+
+        float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+
+        healthBar.InstantUpdate(healthPercentage); 
+    }
     public void SetOrbCount(int _orbs) { m_adrenaline = _orbs; }
 
     public float GetPotentialHealth()
