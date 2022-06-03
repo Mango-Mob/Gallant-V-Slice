@@ -322,7 +322,7 @@ public class InfoDisplay : MonoBehaviour
             m_costQuantity.SetText(data.m_costQuantity.ToString());
             m_costDescription.SetText(data.m_costRune.description);
 
-            m_title.text = "Trade";
+            m_title.text = data.m_gainRune.itemName;
             m_level.SetText("Obtained: "+GameManager.Instance.m_player.GetComponent<Player_Controller>().playerStats.GetEffectQuantity(data.m_gainRune.itemEffect));
             m_exchangeData = data;
         }

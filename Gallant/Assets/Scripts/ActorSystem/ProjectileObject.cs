@@ -54,7 +54,7 @@ public class ProjectileObject : MonoBehaviour
             AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);
             Destroy(gameObject);
         }
-        else if(other.gameObject.layer == LayerMask.NameToLayer("Destructable"))
+        else if(other.gameObject.layer == LayerMask.NameToLayer("Destructible"))
         {
             other.GetComponentInParent<Destructible>().ExplodeObject(transform.position, 2f, 2f, false);
             Destroy(gameObject);
