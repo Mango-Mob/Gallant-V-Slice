@@ -362,9 +362,9 @@ public class Player_Movement : MonoBehaviour
             return;
 
         m_stunTimer = _stunDuration * (1 - playerController.playerSkills.m_stunDecrease);
-        m_knockbackVelocity = _knockbackVelocity;
+        m_knockbackVelocity = _knockbackVelocity * (1 - playerController.playerSkills.m_stunDecrease);
         m_knockbackVelocity.y = 0;
-        m_yVelocity = _knockbackVelocity.y;
+        m_yVelocity = _knockbackVelocity.y * (1 - playerController.playerSkills.m_stunDecrease);
         m_dashTimer = 0.0f;
 
         if (_stunDuration != 0.0f)
