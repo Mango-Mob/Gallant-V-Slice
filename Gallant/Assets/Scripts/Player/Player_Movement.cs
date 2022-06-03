@@ -205,7 +205,7 @@ public class Player_Movement : MonoBehaviour
         foreach (var item in targets)
         {
             Actor actor = item.GetComponentInParent<Actor>();
-            if (actor != null)
+            if (actor != null && !actor.m_myBrain.IsDead)
             {
                 Vector3 direction = transform.position - actor.transform.position;
                 direction.y = 0.0f;
