@@ -22,6 +22,7 @@ public class UI_Bar : UI_Element
 
     [SerializeField] private float m_promptThreshold = 0.3f;
     [SerializeField] private Image m_warningFrame;
+    [SerializeField] private Animator m_barAnimator;
     [SerializeField] private Animator m_promptAnimator;
     [SerializeField] private UI_OrbCount m_orbCount;
 
@@ -41,6 +42,9 @@ public class UI_Bar : UI_Element
             else if (m_chasingBarImage.fillAmount > m_value)
                 m_chasingBarImage.fillAmount -= m_chaseSpeed * Time.deltaTime;
         }
+
+        if (m_barAnimator != null)
+            m_barAnimator.SetBool("Active", m_barImage.fillAmount <= m_promptThreshold);
 
         if (m_promptAnimator != null && m_orbCount != null)
             m_promptAnimator.SetBool("Active", m_barImage.fillAmount <= m_promptThreshold && m_orbCount.GetValue() > 0);
