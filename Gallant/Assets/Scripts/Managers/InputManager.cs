@@ -256,8 +256,8 @@ public class InputManager : SingletonPersistent<InputManager>
         m_binds.Add("Consume", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.V), new Bind(typeof(ButtonType), (int)ButtonType.NORTH) });
         m_binds.Add("Pause", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.ESC), new Bind(typeof(ButtonType), (int)ButtonType.START) });
         m_binds.Add("Toggle_Zoom", new Bind[] { new Bind(typeof(KeyType), (int)KeyType.Z), new Bind(typeof(ButtonType), (int)ButtonType.LS) });
-        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
-        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
+        m_binds.Add("Right_Pickup", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.LEFT) });
+        m_binds.Add("Left_Pickup", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.RIGHT), new Bind(typeof(ButtonType), (int)ButtonType.RIGHT) });
 
         //SkillTree
         m_binds.Add("Skill_Select", new Bind[] { new Bind(typeof(MouseButton), (int)MouseButton.LEFT), new Bind(typeof(ButtonType), (int)ButtonType.SOUTH) });
@@ -416,24 +416,24 @@ public class InputManager : SingletonPersistent<InputManager>
 
         bindHasUpdated = true;
 
-        foreach (var item in m_binds)
-        {
-            if(item.Key != _id && item.Value != null)
-            {
-                for (int i = 0; i < item.Value.Length; i++)
-                {
-                    foreach (var newBinds in _binds)
-                    {
-                        if (newBinds.Equals(item.Value[i]))
-                        {
-                            //Found Dupe, clearing old dupe
-                            item.Value[i] = null;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+        //foreach (var item in m_binds)
+        //{
+        //    if(item.Key != _id && item.Value != null)
+        //    {
+        //        for (int i = 0; i < item.Value.Length; i++)
+        //        {
+        //            foreach (var newBinds in _binds)
+        //            {
+        //                if (newBinds.Equals(item.Value[i])) 
+        //                {
+        //                    //Found Dupe, clearing old dupe
+        //                    item.Value[i] = null;
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     public bool IsBindDown(string bindName, int gamepadID = 0)

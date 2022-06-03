@@ -63,21 +63,17 @@ public class InfoDisplay : MonoBehaviour
     [SerializeField] private Image m_itemImageLoc;
     [SerializeField] private Text m_itemDescription;
 
-    [Header("Drop Information")]
-    [SerializeField] private GameObject m_leftHand;
-    [SerializeField] private Image m_leftKeyboard;
-    [SerializeField] private Image m_leftController;
-    [SerializeField] private Image m_leftBar;
-
-    [SerializeField] private GameObject m_rightHand;
-    [SerializeField] private Image m_rightKeyboard;
-    [SerializeField] private Image m_rightController;
-    [SerializeField] private Image m_rightBar;
-
-    [SerializeField] private GameObject m_mainHand;
-    [SerializeField] private Image m_mainKeyboard;
-    [SerializeField] private Image m_mainController;
-    [SerializeField] private Image m_mainBar;
+    [Serializable]
+    public struct DropHandInfo
+    {
+        public GameObject m_interactDisplay;
+        public Image m_keyboardUI;
+        public Image m_GamepadUI;
+        public Image m_timingBar;
+    }
+    [SerializeField] private DropHandInfo m_mainHandSingle;
+    [SerializeField] private DropHandInfo m_offHandSingle;
+    [SerializeField] private DropHandInfo m_mainHandDouble;
 
     [Header("Spellbook Information")]
     [SerializeField] private GameObject m_upgradeAbilityDetailsLoc;
@@ -101,10 +97,10 @@ public class InfoDisplay : MonoBehaviour
     private bool m_selected = false;
     private void Start()
     {
-        if(m_leftHand != null)
-            m_leftHand.SetActive(IsADrop);
-        if (m_rightHand != null)
-            m_rightHand.SetActive(IsADrop);
+        if(m_offHandSingle.m_interactDisplay != null)
+            m_offHandSingle.m_interactDisplay.SetActive(IsADrop);
+        if (m_mainHandSingle.m_interactDisplay != null)
+            m_mainHandSingle.m_interactDisplay.SetActive(IsADrop);
 
         m_animator = GetComponent<Animator>();
 
@@ -128,36 +124,41 @@ public class InfoDisplay : MonoBehaviour
     {
         if(IsADrop)
         {
-            m_leftKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-            m_rightKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-            m_leftController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
-            m_leftController.sprite = InputManager.Instance.GetBindImage("Left_Pickup");
-            m_rightController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
-            m_rightController.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
+            m_mainHandDouble.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
+            m_offHandSingle.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
+            m_mainHandSingle.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
 
-            m_mainKeyboard.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
-            m_mainController.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
-            m_mainController.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
+            m_offHandSingle.m_GamepadUI.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+            m_offHandSingle.m_GamepadUI.sprite = InputManager.Instance.GetBindImage("Left_Pickup");
 
-            m_leftBar.fillAmount = Mathf.Clamp(m_leftBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
-            m_rightBar.fillAmount = Mathf.Clamp(m_rightBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
-            m_mainBar.fillAmount = Mathf.Clamp(m_mainBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
+            m_mainHandSingle.m_GamepadUI.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+            m_mainHandSingle.m_GamepadUI.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
+
+            m_mainHandDouble.m_GamepadUI.gameObject.SetActive(InputManager.Instance.isInGamepadMode);
+            m_mainHandDouble.m_GamepadUI.sprite = InputManager.Instance.GetBindImage("Right_Pickup");
+
+
+            m_offHandSingle.m_timingBar.fillAmount = Mathf.Clamp(m_offHandSingle.m_timingBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
+            m_mainHandSingle.m_timingBar.fillAmount = Mathf.Clamp(m_mainHandSingle.m_timingBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
+            m_mainHandDouble.m_timingBar.fillAmount = Mathf.Clamp(m_mainHandDouble.m_timingBar.fillAmount - 0.5f * Time.deltaTime, 0.0f, 1.0f);
 
             m_animator?.SetBool("IsDrop", IsADrop || IsEquip);
 
             if(m_weaponData)
             {
-                m_mainHand?.SetActive(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded);
-                m_leftHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
-                m_rightHand?.SetActive(!(m_weaponData.isTwoHanded && playerController.playerAttack.m_rightWeapon.m_weaponData.isTwoHanded));
+                //If weapon is two handed, and the player doesn't have to choose:
+                m_mainHandDouble.m_interactDisplay?.SetActive(m_weaponData.isTwoHanded);
+
+                //if weapon is not two handed, and the player is not currently holding a two handed weapon
+                m_offHandSingle.m_interactDisplay?.SetActive(!m_weaponData.isTwoHanded);
+                m_mainHandSingle.m_interactDisplay?.SetActive(!m_weaponData.isTwoHanded);
             }
             else if (IsBook)
             {
-                m_mainHand?.SetActive(false);
-
+                m_mainHandDouble.m_interactDisplay?.SetActive(false);
                 // If has a weapon and either weapon does not have ability or weapon has ability and is not the same as the book.
 
-                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon != null // Has weapon in hand
+                m_offHandSingle.m_interactDisplay?.SetActive(playerController.playerAttack.m_leftWeapon != null // Has weapon in hand
                     && (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData == null // Has no ability
                     || playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData != null // Has an ability
                     && (playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
@@ -165,7 +166,7 @@ public class InfoDisplay : MonoBehaviour
                     && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel < 3 // Current power level is less than max
                     && playerController.playerAttack.m_leftWeapon.m_weaponData.abilityData.starPowerLevel <= m_abilityData.starPowerLevel)))); // Check power level of weapon is <= to the power level of the spell
 
-                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null // Has weapon in hand
+                m_mainHandSingle.m_interactDisplay?.SetActive(playerController.playerAttack.m_rightWeapon != null // Has weapon in hand
                     && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData == null // Has no ability
                     || playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData != null // Has an ability
                     && (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower != m_abilityData.abilityPower // Not the same ability as book
@@ -175,9 +176,10 @@ public class InfoDisplay : MonoBehaviour
             }
             else
             {
-                m_mainHand?.SetActive(false);
-                m_leftHand?.SetActive(playerController.playerAttack.m_leftWeapon != null && playerController.playerAttack.m_leftWeapon.m_weaponData != null);
-                m_rightHand?.SetActive(playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData != null);
+                m_mainHandDouble.m_interactDisplay?.SetActive(false);
+
+                m_offHandSingle.m_interactDisplay?.SetActive(playerController.playerAttack.m_leftWeapon != null && playerController.playerAttack.m_leftWeapon.m_weaponData != null);
+                m_mainHandSingle.m_interactDisplay?.SetActive(playerController.playerAttack.m_rightWeapon != null && playerController.playerAttack.m_rightWeapon.m_weaponData != null);
             }
 
         }
@@ -407,10 +409,9 @@ public class InfoDisplay : MonoBehaviour
     {
         if(IsADrop)
         {
-            m_leftBar.fillAmount = 0.0f;
-            m_rightBar.fillAmount = 0.0f;
-            m_mainBar.fillAmount = 0.0f;
-        }
+            m_offHandSingle.m_timingBar.fillAmount = 0.0f;
+            m_mainHandSingle.m_timingBar.fillAmount = 0.0f;
+        }   m_mainHandDouble.m_timingBar.fillAmount = 0.0f;
     }
 
     public void InitDisplayValues(WeaponData data, Hand loc)
@@ -437,16 +438,16 @@ public class InfoDisplay : MonoBehaviour
     {
         m_currentHandInUse = _hand;
         
-        if(m_mainHand.activeInHierarchy)
+        if(m_mainHandDouble.m_interactDisplay.activeInHierarchy)
         {
             if(_hand == Hand.RIGHT)
             {
-                Image timer = m_mainBar;
+                Image timer = m_mainHandDouble.m_timingBar;
 
                 InitDisplayValues(playerController.playerAttack.m_rightWeapon.m_weaponData, _hand);
 
                 Color active = Color.white;
-                m_mainController.color = active;
+                m_mainHandDouble.m_GamepadUI.color = active;
 
                 timer.fillAmount = Mathf.Clamp(timer.fillAmount + 2.0f * Time.deltaTime, 0.0f, 1.0f);
                 if (timer.fillAmount >= 1.0f)
@@ -457,9 +458,7 @@ public class InfoDisplay : MonoBehaviour
         {
             if (m_currentHandInUse != _hand)
             {
-                m_leftBar.fillAmount = 0.0f;
-                m_rightBar.fillAmount = 0.0f;
-                m_mainBar.fillAmount = 0.0f;
+                ResetPickupTimer();
                 InitDisplayValues(_heldWeapon, _hand);
 
                 bool usingLeft = _hand == Hand.LEFT;
@@ -469,17 +468,17 @@ public class InfoDisplay : MonoBehaviour
 
                 if (InputManager.Instance.isInGamepadMode)
                 {
-                    m_leftController.color = usingLeft ? active : deactive;
-                    m_rightController.color = !usingLeft ? active : deactive;
+                    m_offHandSingle.m_GamepadUI.color = usingLeft ? active : deactive;
+                    m_mainHandSingle.m_GamepadUI.color = !usingLeft ? active : deactive;
                 }
                 else
                 {
-                    m_leftKeyboard.color = usingLeft ? active : deactive;
-                    m_rightKeyboard.color = !usingLeft ? active : deactive;
+                    m_offHandSingle.m_keyboardUI.color = usingLeft ? active : deactive;
+                    m_mainHandSingle.m_keyboardUI.color = !usingLeft ? active : deactive;
                 }
             }
 
-            Image timer = m_currentHandInUse == Hand.LEFT ? m_leftBar : m_rightBar;
+            Image timer = m_currentHandInUse == Hand.LEFT ? m_offHandSingle.m_timingBar : m_mainHandSingle.m_timingBar;
 
             timer.fillAmount = Mathf.Clamp(timer.fillAmount + 2.0f * Time.deltaTime, 0.0f, 1.0f);
             if (timer.fillAmount >= 1.0f)
