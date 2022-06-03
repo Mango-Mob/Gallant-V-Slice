@@ -42,7 +42,7 @@ public class SlowStatus : StatusEffect
 
         foreach (var item in _actor.m_myBrain.m_materials)
         {
-            item.StartFreeze(0.4f);
+            item.StartFreeze(0.6f);
         }
     }
 

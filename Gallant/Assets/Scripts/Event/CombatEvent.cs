@@ -25,7 +25,7 @@ public class CombatEvent : SceneEvent
 
         DialogManager.Instance.SetCharacter(null);
         m_prob = Mathf.FloorToInt(m_probCurve.Evaluate(GameManager.Instance.m_player.GetComponent<Player_Controller>().playerStats.GetEffectQuantity(m_probVariable)));
-        DialogManager.Instance.SetDialogText(m_eventDialog + $"({m_prob}% chance based on {m_probText}).");
+        DialogManager.Instance.SetDialogText(m_eventDialog + $"({m_prob}% success based on your {m_probText}).");
 
         DialogManager.Instance.SetButtonOption(0, m_confirmText, Fight);
         DialogManager.Instance.SetButtonOption(1, m_declineText, Sneak);
