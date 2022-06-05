@@ -785,8 +785,10 @@ public class Player_Controller : MonoBehaviour
 
         //Debug.Log($"Player is damaged: {_damage} points of health.");
         if (!m_godMode)
+        {
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
-
+            playerAudioAgent.PlayHurt();
+        }
         // Create VFX
         if (m_damageVFXPrefab != null && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Flinch")).IsName("Flinch"))
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
