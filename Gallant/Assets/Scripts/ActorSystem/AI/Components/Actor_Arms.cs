@@ -93,6 +93,14 @@ namespace ActorSystem.AI.Components
             return null;
         }
 
+        public void StartAttackFromAnim()
+        {
+            if (m_activeAttack.HasValue && m_myData[m_activeAttack.Value] != null)
+            {
+                m_myData[m_activeAttack.Value].StartActor(m_mainComponent);
+            }
+        }
+
         public bool Invoke(uint id = 0)
         {
             if (m_activeAttack != null)

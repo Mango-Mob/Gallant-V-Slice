@@ -111,6 +111,11 @@ namespace ActorSystem.Data
             }
         }
 
+        public virtual void StartActor(Actor user)
+        {
+            //Do nothing
+        }
+
         public virtual void UpdateActor(Actor user)
         {
             if (canAttackMove)

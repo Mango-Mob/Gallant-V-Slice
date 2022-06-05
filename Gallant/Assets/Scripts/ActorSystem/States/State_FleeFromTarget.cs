@@ -54,7 +54,7 @@ public class State_FleeFromTarget : State
         if (sampleHit.hit)
         {
             NavMeshPath path = new NavMeshPath();
-            if (NavMesh.CalculatePath(sampleLoc, sampleHit.position, ~0, path))
+            if (NavMesh.CalculatePath(m_myActor.transform.position, sampleHit.position, ~0, path))
             {
                 m_myActor.SetTargetLocation(sampleHit.position, false);
             }
