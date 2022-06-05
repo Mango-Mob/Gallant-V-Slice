@@ -8,6 +8,8 @@ public class HUDManager : Singleton<HUDManager>
     [Header("UI Objects")]
     public UI_Element[] m_UIElements;
 
+    public Animator m_WaveAnimator;
+    public Animator m_EnemyAnimator;
     private void Start()
     {
         gameObject.name = $"HUDManager ({gameObject.name})";
@@ -87,5 +89,19 @@ public class HUDManager : Singleton<HUDManager>
                 return item as UI_DamageDisplay;
         }
         return null;
+    }
+
+    public void DisplayWaveUpdate(int current, int total)
+    {
+        m_WaveAnimator.SetTrigger("Show");
+
+        GetElement<UI_TextPro>("WaveText").m_myText = $"Wave: {current}/{total}";
+    }
+
+    public void DisplayEnemyUpdate(int current, bool visible)
+    {
+        m_EnemyAnimator.SetBool("Visible", visible);
+
+        GetElement<UI_TextPro>("EnemyText").m_myText = current.ToString();
     }
 }
