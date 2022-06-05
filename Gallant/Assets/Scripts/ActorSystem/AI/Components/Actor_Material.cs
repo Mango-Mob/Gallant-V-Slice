@@ -18,7 +18,7 @@ namespace ActorSystem.AI.Components
         private Renderer m_myMesh;
 
         private float m_timer = 0.0f;
-        private float m_disolveTime = 7.5f;
+        private float m_disolveTime = 3.0f;
 
         private Coroutine m_hit;
 

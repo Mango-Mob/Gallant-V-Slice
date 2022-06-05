@@ -127,7 +127,7 @@ namespace ActorSystem.Data
         {
             if(isIdleAfterAttack)
             {
-                user.SetState(new State_Idle(user, brainLag * 0.5f));
+                user.SetState(new State_Idle(user, brainLag));
             }    
             else if (canAttackMove)
             {

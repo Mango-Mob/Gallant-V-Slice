@@ -27,6 +27,8 @@ namespace ActorSystem.Spawning
         private bool hasAReward = true;
         private int activeRoutines = 0;
         private float spawnDelay = 0.5f;
+        private int m_currentWave = 0;
+        private int m_maxWave = 0;
         //MonoBehaviour
         private void Awake()
         {
@@ -40,8 +42,8 @@ namespace ActorSystem.Spawning
                     return;
 
                 m_waves = data.EvaluateCombat(NavigationManager.Instance.GetActiveFloor());
-
-                if(m_waves == null)
+                m_maxWave = m_waves.Count;
+                if (m_waves == null)
                 {
                     Destroy(this);
                     return;
@@ -146,6 +148,7 @@ namespace ActorSystem.Spawning
             if (wave == null)
                 return;
 
+            HUDManager.Instance.DisplayWaveUpdate(++m_currentWave, m_maxWave);
 
             foreach (var item in wave.m_waveInformation)
             {
@@ -188,11 +191,15 @@ namespace ActorSystem.Spawning
         //MonoBehaviour
         void Update()
         {
-            if(m_hasStarted && m_myActors.Count == 0 && activeRoutines == 0)
+            if(m_hasStarted && activeRoutines == 0)
+                HUDManager.Instance.DisplayEnemyUpdate(m_myActors.Count, m_myActors.Count > 0 && m_myActors.Count <= 5);
+
+            if (m_hasStarted && m_myActors.Count == 0 && activeRoutines == 0)
             {
                 if (spawnDelay > 0.0f)
                     spawnDelay -= Time.deltaTime;
 
+                
                 if (m_waves.Count == 0 && spawnDelay <= 0)
                 {
                     Stop();
