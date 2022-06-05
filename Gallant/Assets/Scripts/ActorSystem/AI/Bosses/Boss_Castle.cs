@@ -26,6 +26,7 @@ namespace ActorSystem.AI.Bosses
         public AnimationCurve m_chargeMSpeedMod;
 
         [Header("Flee variables")]
+        public float m_slamDamage = 10f;
         public float m_fleeHealthReq = 0.5f;
         public Transform m_fleeLocation;
         public float m_fleeTime = 45f;
@@ -35,6 +36,7 @@ namespace ActorSystem.AI.Bosses
         private bool m_hasJumpBack = false;
         private float m_cameraDelay = 0.0f;
         private bool m_cameraReturned = false;
+        public GameObject m_buttSlamIndicator;
 
         [Header("System")]
         public Phase m_phase;
@@ -193,7 +195,7 @@ namespace ActorSystem.AI.Bosses
                     return;
                 }
 
-                if (!m_myBrain.m_arms.m_activeAttack.HasValue && dist >= m_minDistForCharge && m_chargeCurrCd <= 0)
+                if (!m_myBrain.m_arms.m_activeAttack.HasValue && m_myBrain.m_arms.m_brainLag <= 0f && dist >= m_minDistForCharge && m_chargeCurrCd <= 0)
                 {
                     TransitionToPhase(Phase.CHARGE);
                 }
@@ -223,7 +225,7 @@ namespace ActorSystem.AI.Bosses
                     if (!m_spikesStarted)
                     {
                         m_spikesStarted = true;
-                        m_spikeGroup.m_playingInSeconds = 45.0f;
+                        m_spikeGroup.m_playingInSeconds = m_fleeTime;
                     }
                     else if (m_spikesStarted && m_spikeGroup.m_playingInSeconds <= 0 && m_spikeGroup.IsReady())
                     {
@@ -233,10 +235,10 @@ namespace ActorSystem.AI.Bosses
                         Vector3 randOnUnitSphere = UnityEngine.Random.onUnitSphere;
                         randOnUnitSphere.y = 0;
 
-                        if (NavMesh.SamplePosition(m_target.transform.position + randOnUnitSphere.normalized * 5f, out hit, 3, ~0))
+                        if (NavMesh.SamplePosition(m_target.transform.position + randOnUnitSphere.normalized * 3f, out hit, 3, ~0))
                         {
-                            StartCoroutine(JumpTo(hit.position, 1.0f, true));
-                            TransitionToPhase(Phase.ATTACK);
+                            Instantiate(m_buttSlamIndicator, hit.position, Quaternion.identity).SetActive(true);
+                            StartCoroutine(JumpTo(hit.position, 1.5f, true));
                         }
                     }
                 }
@@ -268,7 +270,9 @@ namespace ActorSystem.AI.Bosses
 
                             if (m_chargeControlled)
                             {
-                                SetTargetLocation(m_target.transform.position, true);
+                                Vector3 targetForward = (m_target.transform.position - transform.position).normalized;
+                                Vector3 averageForward = (targetForward * 0.3f + transform.forward * 0.7f).normalized;
+                                SetTargetLocation(transform.position + averageForward, true);
                                 //If the charge is within distance, lose control.
                                 if(Vector3.Distance(transform.position, m_target.transform.position) <= m_chargeAimDist)
                                 {
@@ -346,13 +350,20 @@ namespace ActorSystem.AI.Bosses
                 jumpTimer = Mathf.Clamp(jumpTimer + timePerFrame * Time.deltaTime, 0, 1);
                 transform.position = MathParabola.Parabola(initialPos, location, 5f, jumpTimer);
 
-                if (jumpTimer > 0.9f)
-                    m_myBrain.m_animator.SetBool("Landed", true);
+                m_myBrain.m_animator.SetFloat("Landed", (enableLegsAfter) ? jumpTimer : -jumpTimer);
 
                 yield return new WaitForEndOfFrame();
             } while (jumpTimer < 1.0f);
 
             m_myBrain.m_legs.SetEnabled(enableLegsAfter);
+            m_myBrain.m_legs.m_brainDecay = 2f;
+            m_myBrain.m_arms.SetBrainLag(2f, false);
+
+            if (enableLegsAfter)
+            {
+                TransitionToPhase(Phase.ATTACK);
+            }
+
             yield return null;
         }
 
@@ -383,6 +394,19 @@ namespace ActorSystem.AI.Bosses
         {
             m_isJumping = true;
             m_myBrain.m_legs.m_rotationDirection = 0.0f;
+        }
+
+        public void ButtSlam()
+        {
+            float dist = Vector3.Distance(m_target.transform.position, transform.position);
+            if (dist <= 15.0f)
+            {
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(10 * (1.0f - dist/15f), 0.3f);
+                if (dist <= 5.0f)
+                {
+                    m_target.GetComponent<Player_Controller>().DamagePlayer(m_slamDamage, CombatSystem.DamageType.Physical, this.gameObject, true);
+                }
+            }
         }
 
         public void OnDrawGizmos()
