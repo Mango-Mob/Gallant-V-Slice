@@ -170,7 +170,7 @@ public class Player_Movement : MonoBehaviour
         m_grounded = characterController.isGrounded;
         if (m_grounded)
         {
-            m_yVelocity = -1.0f;
+            m_yVelocity = 0.0f;
 
             if (Physics.Raycast(transform.position + transform.forward * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
                 Physics.Raycast(transform.position - transform.forward * 0.5f, -Vector3.up, characterController.height * 0.5f + 0.1f, m_groundLayerMask) &&
@@ -205,7 +205,7 @@ public class Player_Movement : MonoBehaviour
         foreach (var item in targets)
         {
             Actor actor = item.GetComponentInParent<Actor>();
-            if (actor != null)
+            if (actor != null && !actor.m_myBrain.IsDead)
             {
                 Vector3 direction = transform.position - actor.transform.position;
                 direction.y = 0.0f;
@@ -602,7 +602,7 @@ public class Player_Movement : MonoBehaviour
                 {
                     m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
                 }
-                characterController.Move(m_slideVelocity + transform.up * m_yVelocity * Time.fixedDeltaTime);
+                characterController.Move(m_slideVelocity);
             }
             else
             {

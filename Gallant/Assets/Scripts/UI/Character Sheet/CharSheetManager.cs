@@ -141,7 +141,7 @@ public class CharSheetManager : MonoBehaviour
                     }
 
                     m_damageOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerAttack.m_rightWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
-                    m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
+                    m_speedOffHand.SetInformation(playerController.animator.GetFloat("LeftAttackSpeed").ToString("F2"));
                     m_impactOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact * playerController.playerAttack.m_rightWeaponData.m_altImpactMult}");
                     m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
                 }
@@ -153,7 +153,7 @@ public class CharSheetManager : MonoBehaviour
                 }
 
                 m_damageMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_damage * playerController.playerStats.m_physicalDamage}");
-                m_speedMainHand.SetInformation($"{playerController.animator.GetFloat("RightAttackSpeed")}");
+                m_speedMainHand.SetInformation(playerController.animator.GetFloat("RightAttackSpeed").ToString("F2"));
                 m_impactMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_impact}");
                 m_pierceMainHand.SetInformation($"{playerController.playerAttack.m_rightWeaponData.m_piercing}");
             }
@@ -179,7 +179,7 @@ public class CharSheetManager : MonoBehaviour
                     }
 
                     m_damageOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_damage * playerController.playerAttack.m_leftWeaponData.m_altDamageMult * playerController.playerStats.m_physicalDamage}");
-                    m_speedOffHand.SetInformation($"{playerController.animator.GetFloat("LeftAttackSpeed")}");
+                    m_speedOffHand.SetInformation(playerController.animator.GetFloat("LeftAttackSpeed").ToString("F2"));
                     m_impactOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_impact * playerController.playerAttack.m_leftWeaponData.m_altImpactMult}");
                     m_pierceOffHand.SetInformation($"{playerController.playerAttack.m_leftWeaponData.m_piercing}");
                 }

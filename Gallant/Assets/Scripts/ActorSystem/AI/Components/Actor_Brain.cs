@@ -402,7 +402,7 @@ namespace ActorSystem.AI.Components
 
         public void DropOrbs(int amount, Vector3 position)
         {
-            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, m_adrenalineGain.GetRandom() / amount);
+            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, 3);
         }
 
         public void DrawGizmos()
