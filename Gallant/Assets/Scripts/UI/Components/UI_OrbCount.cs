@@ -52,6 +52,11 @@ public class UI_OrbCount : UI_Element
         m_value = _value;
     }
 
+    public int GetValue()
+    {
+        return m_value;
+    }
+
     #region Parent override functions
     public override bool IsContainingVector(Vector2 _pos)
     {

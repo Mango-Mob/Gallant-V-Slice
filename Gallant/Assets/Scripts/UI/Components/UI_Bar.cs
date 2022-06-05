@@ -20,6 +20,12 @@ public class UI_Bar : UI_Element
     [SerializeField] bool m_hasChasingBar;
     [SerializeField] private Image m_chasingBarImage;
 
+    [SerializeField] private float m_promptThreshold = 0.3f;
+    [SerializeField] private Image m_warningFrame;
+    [SerializeField] private Animator m_barAnimator;
+    [SerializeField] private Animator m_promptAnimator;
+    [SerializeField] private UI_OrbCount m_orbCount;
+
     private void Start()
     {
         m_startColor = m_barImage.color;
@@ -36,6 +42,15 @@ public class UI_Bar : UI_Element
             else if (m_chasingBarImage.fillAmount > m_value)
                 m_chasingBarImage.fillAmount -= m_chaseSpeed * Time.deltaTime;
         }
+
+        if (m_barAnimator != null)
+            m_barAnimator.SetBool("Active", m_barImage.fillAmount <= m_promptThreshold);
+
+        if (m_promptAnimator != null && m_orbCount != null)
+            m_promptAnimator.SetBool("Active", m_barImage.fillAmount <= m_promptThreshold && m_orbCount.GetValue() > 0);
+
+        if (m_warningFrame != null)
+            m_warningFrame.enabled = m_barImage.fillAmount <= m_promptThreshold;
     }
 
     /*******************

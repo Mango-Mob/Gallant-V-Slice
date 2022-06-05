@@ -281,6 +281,17 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                     m_hiddenMode = true;
                     break;
                 }
+                else
+                {
+                    m_hiddenMode = true;
+                    foreach (var item2 in item.m_unlockDependencies)
+                    {
+                        if (item2.m_upgradeAmount > 0)
+                        {
+                            break;
+                        }
+                    }
+                }
             }
             if (m_hiddenMode)
                 break;
@@ -297,6 +308,17 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             {
                 unlockable = true;
             }
+            //else
+            //{
+            //    foreach (var item2 in item.m_unlockDependencies)
+            //    {
+            //        if (item2.m_upgradeAmount > 0)
+            //        {
+            //            unlockable = true;
+            //            break;
+            //        }
+            //    }
+            //}
         }
 
         if (!unlockable && m_hiddenMode)
