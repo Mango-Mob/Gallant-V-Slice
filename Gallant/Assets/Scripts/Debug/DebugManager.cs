@@ -89,6 +89,7 @@ namespace Exceed.Debug
             m_cameraSensitivity.minValue = 1f;
             m_cameraSensitivity.maxValue = 10f;
             m_cameraSensitivity.SetValueWithoutNotify(1.0f);
+
             OnLevelLoad();
         }
 

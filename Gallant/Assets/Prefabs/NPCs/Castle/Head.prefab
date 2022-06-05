@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 170359068460091934}
   - component: {fileID: 5040509484557245229}
   - component: {fileID: 5217936721239882469}
+  - component: {fileID: 3474665719166536635}
+  - component: {fileID: 5567155456871244864}
   m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
@@ -253,6 +255,7 @@ MonoBehaviour:
   m_canBeKnocked: 1
   m_isKnocked: 0
   m_canRotate: 1
+  m_brainDecay: 0
   m_rotationSpeed: 360
   m_pivotMin: 160
   m_idealRange: 2
@@ -318,6 +321,40 @@ MonoBehaviour:
   IsImmuneToFlame: 1
   IsImmuneToStun: 0
   IsImmuneToWeaken: 0
+--- !u!114 &3474665719166536635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170359068460091926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013d2f1b59b0f71408bb9ba816659dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
+  audioClips: []
+  audioPlayersCount: 5
+  channel: 1
+--- !u!114 &5567155456871244864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170359068460091926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_attackClips:
+  - {fileID: 8300000, guid: dd016123b5627774a8adbcb4b5668c6e, type: 3}
 --- !u!1 &170359069567286994
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,6 +440,18 @@ MonoBehaviour:
       - m_Target: {fileID: 170359068460091920}
         m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_Brain, Assembly-CSharp
         m_MethodName: InvokeAttack
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 5567155456871244864}
+        m_TargetAssemblyTypeName: ActorSystem.AI.Components.Actor_AudioAgent, Assembly-CSharp
+        m_MethodName: PlayAttackTemporarily
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

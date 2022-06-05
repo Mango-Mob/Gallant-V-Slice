@@ -174,7 +174,7 @@ namespace ActorSystem.AI
             }
             if (!m_myBrain.IsDead)
             {
-                if (m_myBrain.HandleDamage(_damage, 0, _type, transform.position, false, false, false))
+                if (m_myBrain.HandleDamage(_damage, 0, _type, null, false, false, false))
                 {
                     foreach (var collider in GetComponentsInChildren<Collider>())
                     {

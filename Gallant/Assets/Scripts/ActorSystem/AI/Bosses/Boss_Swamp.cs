@@ -53,7 +53,6 @@ namespace ActorSystem.AI.Bosses
         protected override void Awake()
         {
             base.Awake();
-            ActorManager.Instance.m_actorDeathTime = 5f;
             m_restingTransformL = m_tentacleL.transform.parent;
             m_restingTransformR = m_tentacleR.transform.parent;
             
@@ -367,7 +366,7 @@ namespace ActorSystem.AI.Bosses
                     m_myBrain.m_animator.SetFloat("playSpeed", 0.25f);
                     foreach (var material in m_myBrain.m_materials)
                     {
-                        material.StartDisolve();
+                        material.StartDisolve(5f);
                     }
                     Submerge();
                     return true;
@@ -430,7 +429,6 @@ namespace ActorSystem.AI.Bosses
 
         private void End()
         {
-            ActorManager.Instance.m_actorDeathTime = 7f;
             GameManager.Instance.FinishLevel();
         }
 

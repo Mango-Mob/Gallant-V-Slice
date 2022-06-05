@@ -18,17 +18,18 @@ namespace ActorSystem.AI.Components
         private Renderer m_myMesh;
 
         private float m_timer = 0.0f;
-        private float m_disolveTime = 7.5f;
+        private float m_disolveTime = 3.0f;
 
         private Coroutine m_hit;
 
         private void Awake()
         {
+            m_myMaterial = Instantiate(m_myMaterial);
             m_myMesh = GetComponent<Renderer>();
             m_myMesh.material = m_myMaterial;
             m_mainTexture = m_myMaterial.GetTexture("TextureAlbedo");
-
-            if(m_freezeMaterial != null)
+            
+            if (m_freezeMaterial != null)
             {
                 m_freezeMaterial = Instantiate(m_freezeMaterial);
                 m_freezeMaterial.SetTexture("_MainTexture", m_mainTexture);

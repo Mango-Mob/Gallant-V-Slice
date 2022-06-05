@@ -256,7 +256,7 @@ public class Player_Controller : MonoBehaviour
             if (playerAttack.GetCurrentUsedHand() == Hand.NONE)
             {
                 // Left hand pickup
-                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.LEFT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.LEFT, gamepadID))
+                if (InputManager.Instance.IsBindPressed("Left_Pickup", gamepadID))
                 {
                     DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                     if (droppedWeapon != null)
@@ -269,7 +269,7 @@ public class Player_Controller : MonoBehaviour
                 }
 
                 // Right hand pickup
-                if (InputManager.Instance.IsMouseButtonPressed(MouseButton.RIGHT) || InputManager.Instance.IsGamepadButtonPressed(ButtonType.RIGHT, gamepadID))
+                if (InputManager.Instance.IsBindPressed("Right_Pickup", gamepadID))
                 {
                     DroppedWeapon droppedWeapon = playerPickup.GetClosestWeapon();
                     if (droppedWeapon != null)

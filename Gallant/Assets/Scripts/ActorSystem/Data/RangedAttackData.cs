@@ -45,6 +45,7 @@ namespace ActorSystem.Data
                         GameObject prefabInWorld = GameObject.Instantiate(projPrefab, source.transform.position, Quaternion.LookRotation(source.transform.forward, Vector3.up));
                         prefabInWorld.transform.localScale = Vector3.one * scale;
                         ProjectileObject projInWorld = prefabInWorld.GetComponent<ProjectileObject>();
+                        projInWorld.m_source = parent.gameObject;
                         projInWorld.m_damageDetails = this;
                         projInWorld.m_velocity = ((item.transform.position + Vector3.up * 1.0f) - source.transform.position).normalized * projSpeed;
                         projInWorld.m_damage = damageMod * baseDamage;
