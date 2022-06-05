@@ -10,9 +10,10 @@ namespace ActorSystem.AI.Components
 
         public MultiAudioAgent m_myAgent { get; protected set; }
 
+        public List<AudioClip> m_attackClips;
         protected List<AudioClip> m_hurtClips;
         protected List<AudioClip> m_deathClips;
-
+        
         public void Awake()
         {
             m_myAgent = GetComponent<MultiAudioAgent>();
@@ -51,8 +52,17 @@ namespace ActorSystem.AI.Components
                     m_myAgent.audioClips.Add(item);
                 }
             }
-
+            m_myAgent.audioClips.AddRange(m_attackClips);
             m_myAgent.UpdateList();
+        }
+
+        public void PlayAttack(int index)
+        {
+            m_myAgent.Play(m_attackClips[index].name, false, Random.Range(0.85f, 1.25f));
+        }
+        public void PlayAttackTemporarily(int index)
+        {
+            AudioManager.Instance.PlayAudioTemporary(transform.position, m_attackClips[index]);
         }
 
         public void PlayHurt()

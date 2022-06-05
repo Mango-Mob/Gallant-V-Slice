@@ -748,6 +748,8 @@ GameObject:
   - component: {fileID: 1550552339540298203}
   - component: {fileID: 7928889429245526614}
   - component: {fileID: 5422016193375699579}
+  - component: {fileID: 4949496568624654179}
+  - component: {fileID: 2853965098655694924}
   m_Layer: 9
   m_Name: HeadlessKnight
   m_TagString: Untagged
@@ -1073,6 +1075,38 @@ MonoBehaviour:
     fillPass:
       shader: {fileID: 0}
       serializedProperties: []
+--- !u!114 &4949496568624654179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550552339540298201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013d2f1b59b0f71408bb9ba816659dc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
+  audioClips: []
+  audioPlayersCount: 5
+  channel: 1
+--- !u!114 &2853965098655694924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1550552339540298201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1550552340142986941
 GameObject:
   m_ObjectHideFlags: 0
@@ -4469,6 +4503,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bfe5c658e2a67a4d99692b644e94cb4, type: 3}
+--- !u!23 &163605692160813140 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
+    type: 3}
+  m_PrefabInstance: {fileID: 1550552339857323216}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1300997538104857403 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
@@ -4478,12 +4518,6 @@ Transform:
 --- !u!1 &1821075971845228929 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1550552339857323216}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &163605692160813140 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
     type: 3}
   m_PrefabInstance: {fileID: 1550552339857323216}
   m_PrefabAsset: {fileID: 0}
@@ -4607,9 +4641,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bfe5c658e2a67a4d99692b644e94cb4, type: 3}
---- !u!1 &1821075972045035333 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
+--- !u!23 &163605691684222608 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
     type: 3}
   m_PrefabInstance: {fileID: 1550552339921988116}
   m_PrefabAsset: {fileID: 0}
@@ -4619,9 +4653,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1550552339921988116}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &163605691684222608 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
+--- !u!1 &1821075972045035333 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2bfe5c658e2a67a4d99692b644e94cb4,
     type: 3}
   m_PrefabInstance: {fileID: 1550552339921988116}
   m_PrefabAsset: {fileID: 0}
