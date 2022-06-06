@@ -53,7 +53,7 @@ public class Weapon_Sword : WeaponBase
                 break;
         }
 
-        MeleeAttack(m_weaponData, transform.position);
+        MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
@@ -65,7 +65,7 @@ public class Weapon_Sword : WeaponBase
             VFX.transform.SetParent(transform);
 
             playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-            MeleeAttack(m_weaponData, transform.position);
+            MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
             m_attackReady = false;
         }
         else
