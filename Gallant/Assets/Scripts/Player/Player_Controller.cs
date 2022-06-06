@@ -757,11 +757,9 @@ public class Player_Controller : MonoBehaviour
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
                 if (playerAbilities.m_leftAbility)
-                    playerAbilities.m_leftAbility.ReduceCooldown((_damage / 8.0f));
+                    playerAbilities.m_leftAbility.ReduceCooldown((_damage / 4.0f));
                 if (playerAbilities.m_rightAbility)
-                    playerAbilities.m_rightAbility.ReduceCooldown((_damage / 8.0f));
-
-
+                    playerAbilities.m_rightAbility.ReduceCooldown((_damage / 4.0f));
 
                 if (playerResources.m_isExhausted)
                 {

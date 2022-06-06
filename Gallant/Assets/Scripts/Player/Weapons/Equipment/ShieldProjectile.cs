@@ -55,6 +55,14 @@ public class ShieldProjectile : BasePlayerProjectile
         if (hitList.Count < 1 || m_returning)
         {
             ProjectileReturnUpdate();
+
+            if (m_returning)
+            {
+                // Get direction towards target
+                Vector3 direction = m_projectileUser.transform.position - transform.position;
+                direction.y = 0;
+                transform.forward = direction;
+            }
         }
         else
         {
@@ -97,6 +105,7 @@ public class ShieldProjectile : BasePlayerProjectile
             direction.Normalize();
 
             transform.position += m_projectileSpeed * direction * Time.fixedDeltaTime; // Move projectile
+            transform.forward = direction;
         }
 
     }
