@@ -73,6 +73,12 @@ public class SoloAudioAgent : AudioAgent
         player.Play();
     }
 
+    public void SetClip(AudioClip audioClip)
+    {
+        mainClip = audioClip;
+        player.SetClip(mainClip);
+    }
+
     /// <summary>
     /// Play the audio clip alone
     /// </summary>
@@ -100,6 +106,7 @@ public class SoloAudioAgent : AudioAgent
     {
         if(!player.isMutating)
         {
+            player.SetVolume(0.0f);
             player.Play();
             StartCoroutine(player.FadeIn(fadeInTime));
         }
