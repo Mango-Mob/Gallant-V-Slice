@@ -710,7 +710,7 @@ public class Player_Attack : MonoBehaviour
         playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
         playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.HIT_DEALT, _target.gameObject, _damage);
 
-        Vector3 damageSource = (_damageSource == Vector3.zero ? transform.position : _damageSource);
+        Vector3 damageSource = (_damageSource == Vector3.zero ? transform.position + Vector3.up * m_swingHeight : _damageSource);
 
         Actor actor = _target.GetComponentInParent<Actor>();
         if (actor != null)

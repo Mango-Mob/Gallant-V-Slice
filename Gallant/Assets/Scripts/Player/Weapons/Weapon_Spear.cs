@@ -24,13 +24,13 @@ public class Weapon_Spear : WeaponBase
     public override void WeaponFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        LongMeleeAttack(m_weaponData, transform.position);
+        LongMeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
     }
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        MeleeAttack(m_weaponData, transform.position, Hand.LEFT);
+        MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight, Hand.LEFT);
         GameObject VFX = SpawnVFX(m_objectAltPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
         VFX.transform.localScale *= m_weaponData.altHitSize * 0.4f;
         VFX.transform.SetParent(transform);

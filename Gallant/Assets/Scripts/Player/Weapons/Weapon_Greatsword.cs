@@ -47,7 +47,7 @@ public class Weapon_Greatsword : Weapon_Sword
             VFX.transform.localScale.z);
 
         isDashing = false;
-        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
-        MeleeAttack(m_weaponData, transform.position, Hand.LEFT);
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+        MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight, Hand.LEFT);
     }
 }
