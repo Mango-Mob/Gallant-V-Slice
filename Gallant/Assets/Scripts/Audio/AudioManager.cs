@@ -27,6 +27,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
 
     public JukeboxAgent m_mainPlayer;
     public JukeboxAgent m_backPlayer;
+    public JukeboxAgent m_combatPlayer;
 
     //private array of volumes
     public float[] volumes;
@@ -53,6 +54,20 @@ public class AudioManager : SingletonPersistent<AudioManager>
         for (int i = 0; i < volumes.Length; i++)
         {
             volumes[i] = PlayerPrefs.GetFloat($"volume{i}", 1.0f);
+        }
+    }
+
+    public void Update()
+    {
+        if(GameManager.HasInstance() && GameManager.Instance.IsInCombat && !m_combatPlayer.IsPlaying())
+        {
+            m_combatPlayer.Shuffle();
+            m_combatPlayer.Play();
+        }
+        else if(GameManager.HasInstance() && !GameManager.Instance.IsInCombat && m_combatPlayer.IsPlaying())
+        {
+            m_combatPlayer.Stop();
+            m_mainPlayer.Play();
         }
     }
 
@@ -174,12 +189,14 @@ public class AudioManager : SingletonPersistent<AudioManager>
         return max;
     }
 
-    public void PlayAudioTemporary(Vector3 _position, AudioClip _clip, VolumeChannel _channel = VolumeChannel.SOUND_EFFECT)
+    public void PlayAudioTemporary(Vector3 _position, AudioClip _clip, VolumeChannel _channel = VolumeChannel.SOUND_EFFECT, float range = -1.0f)
     {
         GameObject temp = new GameObject();
         temp.transform.position = _position;
 
         VFXAudioAgent agent = temp.AddComponent<VFXAudioAgent>();
+        agent.is3D = range > 0;
+        agent.max3D_Dist = range;
         agent.channel = _channel;
         agent.Play(_clip);
     }
