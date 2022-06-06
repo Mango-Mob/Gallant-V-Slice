@@ -592,6 +592,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localVolume: 1
   isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
   mainClip: {fileID: 8300000, guid: 584fad8a3b6a76e4ba35b2fd2fd2aca1, type: 3}
   channel: 1
   isPlayOnAwake: 0
@@ -938,6 +941,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3669931664201860721}
   - component: {fileID: 3669931664201860722}
+  - component: {fileID: 1829937548821380227}
+  - component: {fileID: 5118255093829945321}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -971,8 +976,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aeab66c21b2b284d90341265a5ea3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_clipRanges:
+  - min: 0
+    max: 0
+  - min: 1
+    max: 1
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  - min: 2
+    max: 2
+  m_backgroundMusic:
+  - {fileID: 8300000, guid: 0b8adf6534c8b0c45921dfb7716a50e8, type: 3}
+  - {fileID: 8300000, guid: e6b4900435640264eb332842089ce45f, type: 3}
+  - {fileID: 8300000, guid: f91044f853090db4d875fa588b2b41b4, type: 3}
+  m_mainPlayer: {fileID: 1829937548821380227}
+  m_backPlayer: {fileID: 5118255093829945321}
   volumes: []
   m_globalPitch: 1
+--- !u!114 &1829937548821380227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3669931664201860720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8322d6a446375a440a64ab9977c024ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
+  audioClips: []
+  isShuffled: 0
+  isPlayingOnAwake: 0
+  isLoopingQueue: 1
+  hasFadeTransitions: 1
+  fadeTime: 2
+  currentlyPlaying: {fileID: 0}
+--- !u!114 &5118255093829945321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3669931664201860720}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8322d6a446375a440a64ab9977c024ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  localVolume: 1
+  isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
+  audioClips: []
+  isShuffled: 0
+  isPlayingOnAwake: 0
+  isLoopingQueue: 1
+  hasFadeTransitions: 1
+  fadeTime: 2
+  currentlyPlaying: {fileID: 0}
 --- !u!1 &3669931664910297133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,7 +1147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f97beafd5842864f85f4d3e8fd531d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_actorDeathTime: 7
   m_activeSpawnners: []
 --- !u!1 &3669931665668459603
 GameObject:

@@ -41,7 +41,7 @@ public class JukeboxAgent : AudioAgent
             currentList.Add(clip);
         }
 
-        currentlyPlaying = audioClips[0];
+        currentlyPlaying = (audioClips.Count > 0) ? audioClips[0] : null;
 
         if (isShuffled)
         {
@@ -131,18 +131,23 @@ public class JukeboxAgent : AudioAgent
             currentList[k] = currentList[n];
             currentList[n] = temp;
         }
-        currentIndex = GetIndexOf(currentlyPlaying);
+        if(currentlyPlaying != null && currentList.Contains(currentlyPlaying))
+            currentIndex = GetIndexOf(currentlyPlaying);
         isCurrentlyShuffled = true;
         player.Stop();
     }
 
     public void ResetOrder()
     {
-        for (int i = 0; i < currentList.Count; i++)
+        currentList.Clear();
+        for (int i = 0; i < audioClips.Count; i++)
         {
-            currentList[i] = audioClips[i];
+            currentList.Add(audioClips[i]);
         }
-        currentIndex = GetIndexOf(currentlyPlaying);
+
+        if (currentlyPlaying != null && currentList.Contains(currentlyPlaying))
+            currentIndex = GetIndexOf(currentlyPlaying);
+
         isCurrentlyShuffled = false;
     }
 
@@ -161,6 +166,9 @@ public class JukeboxAgent : AudioAgent
 
     public bool Play(uint index = 0)
     {
+        if (currentList == null || currentList.Count == 0)
+            return false;
+
         //Wrap arround:
         index += (uint)currentList.Count;
         index %= (uint)currentList.Count;
@@ -173,7 +181,6 @@ public class JukeboxAgent : AudioAgent
             StartCoroutine(player.FadeIn(fadeTime));
         }
             
-
         player.Play();
         isPlaying = true;
         currentIndex = (int)index;
