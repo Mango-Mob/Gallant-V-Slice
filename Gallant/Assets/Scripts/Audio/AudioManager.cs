@@ -32,7 +32,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
     public float[] volumes;
     public float m_globalPitch = 1.0f;
 
-    private int lastLoadedScene;
+    private int lastLoadedScene = -1;
 
     //Volume types: 
     //(Add more to dynamically expand the above array)
