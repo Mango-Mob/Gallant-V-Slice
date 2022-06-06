@@ -150,6 +150,10 @@ public class Player_AudioAgent : MultiAudioAgent
     {
         base.PlayOnce("UseAdrenaline", false, 1.0f);
     }
+    public void PlayHurt()
+    {
+        base.PlayOnce("PlayerDamage", false, Random.Range(0.95f, 1.05f));
+    }
     public void PlayDeath()
     {
         base.PlayOnce("PlayerDeath", false, Random.Range(0.95f, 1.05f));
