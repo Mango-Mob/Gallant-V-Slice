@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Utility;
 
 ///
 /// <author> Michael Jordan </author> 
@@ -20,9 +22,17 @@ public class AudioManager : SingletonPersistent<AudioManager>
     public List<AudioAgent> agents { get; private set; } = new List<AudioAgent>();
     public List<ListenerAgent> listeners { get; private set; } = new List<ListenerAgent>();
 
+    public List<IntRange> m_clipRanges;
+    public List<AudioClip> m_backgroundMusic;
+
+    public JukeboxAgent m_mainPlayer;
+    public JukeboxAgent m_backPlayer;
+
     //private array of volumes
     public float[] volumes;
     public float m_globalPitch = 1.0f;
+
+    private int lastLoadedScene;
 
     //Volume types: 
     //(Add more to dynamically expand the above array)
@@ -45,6 +55,44 @@ public class AudioManager : SingletonPersistent<AudioManager>
             volumes[i] = PlayerPrefs.GetFloat($"volume{i}", 1.0f);
         }
     }
+
+    private void Start()
+    {
+        LoadMusic();
+    }
+
+    public void OnLevelWasLoaded(int level)
+    {
+        LoadMusic();
+    }
+
+    private void LoadMusic()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == lastLoadedScene)
+            return;
+
+        lastLoadedScene = SceneManager.GetActiveScene().buildIndex;
+
+        if (m_mainPlayer.currentlyPlaying)
+            m_mainPlayer.Stop();
+
+        //Switch players;
+        var temp = m_mainPlayer;
+        m_mainPlayer = m_backPlayer;
+        m_backPlayer = temp;
+
+        int select = SceneManager.GetActiveScene().buildIndex;
+        m_mainPlayer.audioClips.Clear();
+        for (int i = m_clipRanges[select].min; i < m_clipRanges[select].max + 1; i++)
+        {
+            m_mainPlayer.audioClips.Add(m_backgroundMusic[i]);
+        }
+
+        m_mainPlayer.ResetOrder();
+        m_mainPlayer.Shuffle();
+        m_mainPlayer.Play();
+    }
+
     public void SaveData()
     {
         for (int i = 0; i < volumes.Length; i++)

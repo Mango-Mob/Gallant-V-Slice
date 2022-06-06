@@ -25,7 +25,6 @@ public class GameManager : Singleton<GameManager>
     public static float m_damageDealt = 0.0f;
     public static float m_healingDealt = 0.0f;
 
-    public AtmosphereScript music { get; private set; }
     public float m_deathDelay = 1.0f;
 
     public static bool m_joystickCursorEnabled = false;
@@ -41,7 +40,6 @@ public class GameManager : Singleton<GameManager>
     {
         m_player = GameObject.FindGameObjectWithTag("Player");
         m_activeCamera = Camera.main;
-        music = GetComponentInChildren<AtmosphereScript>();
 
         for (int i = 0; i < 31; i++)
             Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Water"), i);
