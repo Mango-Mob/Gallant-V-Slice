@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Interactable : MonoBehaviour
 {
+    public bool m_usable = true;
+
     public UnityEvent m_interactFunction;
     public bool m_isReady = false;
     public float m_holdDuration = 1.0f;
@@ -28,30 +30,38 @@ public class Interactable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        display?.gameObject.SetActive(m_isReady);
-
-        if (m_isReady && m_interactFunction != null && !m_player.m_isDisabledInput)
+        if (!m_usable)
         {
-            if(InputManager.Instance.IsBindPressed("Interact", InputManager.Instance.GetAnyGamePad()))
+            display?.gameObject.SetActive(false);
+            m_timer = 0.0f;
+        }
+        else
+        {
+            display?.gameObject.SetActive(m_isReady);
+
+            if (m_isReady && m_interactFunction != null && !m_player.m_isDisabledInput)
             {
-                m_timer += Time.unscaledDeltaTime;
-                if(m_timer >= m_holdDuration)
+                if(InputManager.Instance.IsBindPressed("Interact", InputManager.Instance.GetAnyGamePad()))
                 {
-                    Interact();
-                    m_timer = 0.0f;
+                    m_timer += Time.unscaledDeltaTime;
+                    if(m_timer >= m_holdDuration)
+                    {
+                        Interact();
+                        m_timer = 0.0f;
+                    }
+                }
+                else
+                {
+                    m_timer = Mathf.Clamp(m_timer - Time.unscaledDeltaTime, 0.0f, m_holdDuration);
                 }
             }
             else
             {
-                m_timer = Mathf.Clamp(m_timer - Time.unscaledDeltaTime, 0.0f, m_holdDuration);
+                m_timer = 0.0f;
             }
         }
-        else
-        {
-            m_timer = 0.0f;
-        }
 
-        if(display != null)
+        if (display != null)
             display.timer = m_timer / m_holdDuration;
     }
 

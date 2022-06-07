@@ -40,7 +40,7 @@ public class Weapon_Shield : WeaponBase
     public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-        MeleeAttack(m_weaponData, transform.position);
+        MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
         BeginBlock();
     }
     public override void WeaponAltRelease() { }

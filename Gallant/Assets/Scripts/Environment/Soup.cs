@@ -27,6 +27,7 @@ public class Soup : MonoBehaviour
         m_interactableUI.gameObject.SetActive(false);
         m_soupAvailable = false;
 
+        GetComponentInChildren<Interactable>().m_usable = false;
         //m_interactable.gameObject.SetActive(false);
     }
 

@@ -45,7 +45,7 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
         m_particles.GetComponent<VFXTimerScript>().m_startedTimer = true;
 
         if (m_hitSound)
-            AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound);
+            AudioManager.Instance.PlayAudioTemporary(transform.position, m_hitSound, AudioManager.VolumeChannel.SOUND_EFFECT);
     }
     protected abstract void DetonateProjectile(bool hitTarget = false);
     protected bool ProjectileCollide(Collider other)

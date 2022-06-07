@@ -149,6 +149,8 @@ public class Player_Controller : MonoBehaviour
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
 
+            playerMovement.ForceGravityUpdate(Time.deltaTime);
+
             return;
         }
 
@@ -757,11 +759,9 @@ public class Player_Controller : MonoBehaviour
                 // PLAY BLOCK SOUND
                 Debug.Log("BLOCK");
                 if (playerAbilities.m_leftAbility)
-                    playerAbilities.m_leftAbility.ReduceCooldown((_damage / 8.0f));
+                    playerAbilities.m_leftAbility.ReduceCooldown((_damage / 4.0f));
                 if (playerAbilities.m_rightAbility)
-                    playerAbilities.m_rightAbility.ReduceCooldown((_damage / 8.0f));
-
-
+                    playerAbilities.m_rightAbility.ReduceCooldown((_damage / 4.0f));
 
                 if (playerResources.m_isExhausted)
                 {
@@ -787,12 +787,13 @@ public class Player_Controller : MonoBehaviour
         if (!m_godMode)
         {
             playerResources.ChangeHealth(-playerResources.ChangeBarrier(-_damage * (1.0f - playerStats.m_damageResistance)));
-            playerAudioAgent.PlayHurt();
         }
         // Create VFX
         if (m_damageVFXPrefab != null && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Flinch")).IsName("Flinch"))
+        {
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
-
+            playerAudioAgent.PlayHurt();
+        }
         animator.SetTrigger("HitPlayer");
 
         //if (animatorCamera)

@@ -53,6 +53,9 @@ public class UI_StatsMenu : UI_Element
     // Update is called once per frame
     void Update()
     {
+        if ((RewardManager.Instance != null && RewardManager.isShowing) && m_active)
+            ToggleActive();
+
         float balanceDifference = PlayerPrefs.GetInt($"Player Balance {GameManager.m_saveSlotInUse}") - m_displayedBalance;
         m_displayedBalance += (balanceDifference * Time.deltaTime * m_balanceChangeSpeed);
 

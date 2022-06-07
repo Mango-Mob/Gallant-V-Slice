@@ -26,7 +26,9 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private LevelPortal m_portal;
     [SerializeField] private CanvasGroup m_transitionGroup;
     [SerializeField] private ButtonHeldCheck m_buttonHeldCheck;
+    [SerializeField] private GameObject[] m_navButtonObjects;
     [SerializeField] private Image m_locked;
+    [SerializeField] private Interactable m_interactable;
 
     [Header("Settings")]
     public Destination[] m_destinations;
@@ -68,6 +70,13 @@ public class NavigationTelescope : MonoBehaviour
     {
         m_useButton.SetActive(!m_isActive);
         m_selectCanvas.SetActive(m_isActive && m_targetIndex != -1);
+
+        foreach (var navObject in m_navButtonObjects)
+        {
+            navObject.SetActive(m_isActive && m_targetIndex != -1 && !m_destinations[m_targetIndex].levelLocked);
+        }
+
+
         if (m_selectCanvas.activeInHierarchy && m_targetIndex != -1)
         {
             m_levelTitleText.text = m_destinations[m_targetIndex].levelTitle;
@@ -209,6 +218,7 @@ public class NavigationTelescope : MonoBehaviour
         {
             m_animator.SetTrigger("Fade");
         }
+        m_interactable.m_usable = _closing;
     }
 
     public void ToggleNavigation()
