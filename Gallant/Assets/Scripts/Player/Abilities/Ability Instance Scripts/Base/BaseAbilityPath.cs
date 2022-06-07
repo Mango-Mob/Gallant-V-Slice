@@ -14,7 +14,7 @@ public abstract class BaseAbilityPath : MonoBehaviour
 
     private bool m_beganLife = false;
 
-    private float m_lifeTimer = 0.0f;
+    protected float m_lifeTimer = 0.0f;
 
     private bool m_hasStartPosition = false;
     private Vector3 m_startPos;

@@ -33,7 +33,7 @@ public class Weapon_Crossbow : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
-        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
         ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }
