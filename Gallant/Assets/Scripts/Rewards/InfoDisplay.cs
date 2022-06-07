@@ -124,6 +124,14 @@ public class InfoDisplay : MonoBehaviour
     {
         if(IsADrop)
         {
+            foreach (var item in m_flipBtns)
+            {
+                item.gameObject.SetActive(IsAWeapon);
+            }
+            foreach (var item in m_controllerFlips)
+            {
+                item.gameObject.SetActive(IsAWeapon);
+            }
             m_mainHandDouble.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
             m_offHandSingle.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
             m_mainHandSingle.m_keyboardUI.gameObject.SetActive(!InputManager.Instance.isInGamepadMode);
