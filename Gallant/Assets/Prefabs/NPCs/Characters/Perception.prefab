@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19eca36e06ba8a94f92fba93e42d6cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_usable: 1
   m_interactFunction:
     m_PersistentCalls:
       m_Calls:
@@ -118,10 +119,19 @@ MonoBehaviour:
   m_HurtVFXPrefab: {fileID: 8570472178638923569, guid: bf7abd9370a56814cbbb23c6ceaab78c,
     type: 3}
   m_myData: {fileID: 11400000, guid: 335b77aa619c7174d99830634f64e306, type: 2}
+  m_onSpawnEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_onDeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
   m_potentialDialogs:
   - minVisits: 0
     maxVisits: 1
     dialog: {fileID: 4900000, guid: 29cdf0fc8aee30d43b00fa2d2e4c164c, type: 3}
+  - minVisits: 1
+    maxVisits: 2
+    dialog: {fileID: 4900000, guid: 4d6d0986b6bd95f4785d0c0437e7ec1c, type: 3}
   m_interactDisplay: {fileID: 413747602637400104}
   isWaiting: 0
   interactRange: 1.5
