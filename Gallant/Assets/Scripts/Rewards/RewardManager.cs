@@ -99,7 +99,7 @@ public class RewardManager : Singleton<RewardManager>
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
-            Show(10, RewardType.STANDARD);
+            ShowSolo(10, RewardType.STANDARD);
         }
 #endif
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
@@ -165,6 +165,114 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
+    public void ShowSolo(int level, RewardType type = RewardType.STANDARD)
+    {
+        m_audio.Play();
+        m_rewardTitle.text = "Reward";
+        m_window.SetActive(true);
+        m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
+        m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
+        m_currentWeapons.SetActive(true);
+        m_currentRunes.SetActive(false);
+        m_player.m_isDisabledInput = true;
+        m_onResult = GiveReward;
+
+        if(level >= 0)
+        {
+            List<ScriptableObject> rewards = new List<ScriptableObject>();
+            switch (type)
+            {
+                case RewardType.STANDARD:
+                case RewardType.GENERAL:
+                    if (IsAWeaponReward())
+                    {
+                        rewards.Add(GenerateWeapon(rewards, level));
+                    }
+                    else
+                    {
+                        rewards.Add(GenerateUtility(rewards, level));
+                    }
+                    break;
+                case RewardType.WEAPONS:
+                    rewards.Add(GenerateWeapon(rewards, level));
+                    break;
+                case RewardType.RUNE:
+                    rewards.Add(ExchangeData.CreateExchange(GenerateRune(rewards, 1), 3, m_randomRune, 3));
+                    break;
+                case RewardType.BOOK:
+                    rewards.Add(GenerateBook(rewards, level));
+                    break;
+                default:
+                    break;
+            }
+
+            foreach (var item in m_rewardSlots)
+            {
+                item.gameObject.SetActive(false);
+            }
+            m_rewardSlots[1].gameObject.SetActive(true);
+
+            m_rewardSlots[1].GetComponent<Button>().interactable = false;
+            if (rewards[0].GetType() == typeof(WeaponData))
+            {
+                m_rewardSlots[1].LoadWeapon(rewards[0] as WeaponData);
+            }
+            else if (rewards[0].GetType() == typeof(AbilityData))
+            {
+                m_rewardSlots[1].LoadAbility(rewards[0] as AbilityData);
+            }
+            else if (rewards[0].GetType() == typeof(ExchangeData))
+            {
+                m_rewardSlots[1].LoadExchange(rewards[0] as ExchangeData);
+            }
+            else
+            {
+                m_rewardSlots[1].LoadItem(rewards[0] as ItemData);
+            }
+
+            m_select = 1;
+        }
+    }
+
+    public void ShowSolo(ScriptableObject data, UnityAction<int> onResult = null)
+    {
+        m_window.SetActive(true);
+        m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
+        m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
+        m_player.m_isDisabledInput = true;
+
+        m_rewardSlots[0].gameObject.SetActive(false);
+        m_rewardSlots[1].gameObject.SetActive(true);
+        m_rewardSlots[2].gameObject.SetActive(false);
+
+        m_currentWeapons.SetActive(true);
+        m_currentRunes.SetActive(false);
+
+        if (data.GetType() == typeof(WeaponData))
+        {
+            m_rewardSlots[1].LoadWeapon(data as WeaponData);
+        }
+        else if (data.GetType() == typeof(AbilityData))
+        {
+            m_rewardSlots[1].LoadAbility(data as AbilityData);
+        }
+        else if (data.GetType() == typeof(ExchangeData))
+        {
+            m_rewardSlots[1].LoadExchange(data as ExchangeData);
+        }
+        else if(data.GetType() == typeof(ItemData))
+        {
+            m_rewardSlots[1].LoadItem(data as ItemData);
+        }
+
+        if (onResult != null)
+            m_onResult = onResult;
+        else
+            m_onResult = GiveReward;
+
+        m_select = 1;
+    }
+
     public void Show(WeaponData data1, WeaponData data2, WeaponData data3, UnityAction<int> onResult = null)
     {
         m_window.SetActive(true);
@@ -178,6 +286,11 @@ public class RewardManager : Singleton<RewardManager>
 
         m_currentWeapons.SetActive(true);
         m_currentRunes.SetActive(false);
+
+        foreach (var item in m_rewardSlots)
+        {
+            item.gameObject.SetActive(true);
+        }
 
         m_onResult = onResult;
 
@@ -195,6 +308,11 @@ public class RewardManager : Singleton<RewardManager>
         m_currentRunes.SetActive(false);
         m_player.m_isDisabledInput = true;
         m_onResult = GiveReward;
+
+        foreach (var item in m_rewardSlots)
+        {
+            item.gameObject.SetActive(true);
+        }
 
         if (level >= 0)
         {
