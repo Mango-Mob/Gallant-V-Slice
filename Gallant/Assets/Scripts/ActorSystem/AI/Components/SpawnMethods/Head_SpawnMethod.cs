@@ -18,22 +18,31 @@ namespace ActorSystem.AI.Components.SpawnMethods
         public void Start()
         {
             m_myActor = GetComponent<Actor>();
-            m_myHead = m_myActor.m_myBrain.m_animator.GetComponentInChildren<Renderer>().gameObject;
+            m_myHead = GetComponentInChildren<Renderer>().gameObject;
         }
 
         public override void StartSpawn(Vector3 spawnLoc, Quaternion rotation)
         {
             dt = 0;
-            m_myActor.m_myBrain.SetEnabled(false);
-            m_myActor.m_myBrain.m_animator.SetEnabled(false);
-            m_myActor.GetComponent<Rigidbody>().isKinematic = true;
-            m_myActor.transform.position = spawnLoc;
+            Actor_Brain myBrain = null;
+            if (m_myActor != null)
+                myBrain = m_myActor.m_myBrain;
+            else
+            {
+                myBrain = GetComponent<Actor_Brain>();
+                m_myActor = GetComponent<Actor>();
+                m_myHead = GetComponentInChildren<Renderer>().gameObject;
+            }
+
+            myBrain.SetEnabled(false);
+            myBrain.GetComponent<Rigidbody>().isKinematic = true;
+            myBrain.transform.position = spawnLoc;
 
             NavMeshHit hit;
             if(NavMesh.SamplePosition(spawnLoc, out hit, 3, ~0))
             {
                 Vector3 diff = spawnLoc - hit.position;
-                m_myActor.transform.position = hit.position;
+                transform.position = hit.position;
                 m_myHead.transform.localPosition = diff;
             }
             m_myHead.transform.rotation = rotation;

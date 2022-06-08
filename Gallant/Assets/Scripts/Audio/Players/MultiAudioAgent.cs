@@ -56,10 +56,14 @@ public class MultiAudioAgent : AudioAgent
 
     public void UpdateList()
     {
-        audioLibrary = new Dictionary<string, AudioClip>();
+        if(audioLibrary == null)
+            audioLibrary = new Dictionary<string, AudioClip>();
+
+        audioLibrary.Clear();
         foreach (var item in audioClips)
         {
-            audioLibrary.Add(item.name, item);
+            if(!audioLibrary.ContainsKey(item.name))
+                audioLibrary.Add(item.name, item);
         }
     }
 
