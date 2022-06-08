@@ -63,7 +63,7 @@ public class UI_AbilityIcon : UI_Element
         // Hide/Show bindings
         foreach (var item in m_bindButtonObjects)
         {
-            item.SetActive(m_isBindActive && _fill >= 1.0f);
+            item.SetActive(!m_disabled.enabled && (m_isBindActive && _fill >= 1.0f));
         }
 
         m_cooldown.fillAmount = _fill;
