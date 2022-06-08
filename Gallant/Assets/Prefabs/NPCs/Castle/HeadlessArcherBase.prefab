@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 8699761225959755655}
   - component: {fileID: 5921618744318865030}
   - component: {fileID: 3370400466690682264}
+  - component: {fileID: 7614095747449997181}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -217,6 +218,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26886137917d30644a0f22f339d2a623, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7614095747449997181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117457216194157747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &235673170535544026
@@ -824,6 +837,7 @@ GameObject:
   - component: {fileID: 4851896459737389767}
   - component: {fileID: 7735342148899635376}
   - component: {fileID: 810346042185692296}
+  - component: {fileID: 1227913669274137642}
   m_Layer: 13
   m_Name: BowString
   m_TagString: Untagged
@@ -964,6 +978,18 @@ MonoBehaviour:
   m_bindTransform: {fileID: 2238641560237204176}
   m_startLine: {fileID: 5030762766059464822}
   m_endLine: {fileID: 3978071197831639233}
+--- !u!114 &1227913669274137642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205584160811225774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1239446455321201880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,12 +1494,12 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 0
+  - IsVisible: 1
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
     backEdgeDilateAmount: 5
-    renderer: {fileID: 211059073159227354}
+    renderer: {fileID: 8016390071240497675}
     SubmeshIndex: 0
     BoundsMode: 0
     Bounds:
@@ -1489,7 +1515,7 @@ MonoBehaviour:
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
     backEdgeDilateAmount: 5
-    renderer: {fileID: 211059072821934366}
+    renderer: {fileID: 7735342148899635376}
     SubmeshIndex: 0
     BoundsMode: 0
     Bounds:
@@ -1506,6 +1532,22 @@ MonoBehaviour:
     frontEdgeDilateAmount: 5
     backEdgeDilateAmount: 5
     renderer: {fileID: 2541919306316259528}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 8699761225959755655}
     SubmeshIndex: 0
     BoundsMode: 0
     Bounds:
@@ -3084,6 +3126,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2232547915507078457}
   - component: {fileID: 4626452178155285379}
+  - component: {fileID: 8664600227568006134}
   m_Layer: 0
   m_Name: head1
   m_TagString: Untagged
@@ -3158,6 +3201,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.09184331, y: 0.12599137, z: 0.000000029802322}
     m_Extent: {x: 0.3449731, y: 0.35631865, z: 0.31040746}
   m_DirtyAABB: 0
+--- !u!114 &8664600227568006134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262229547515262390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3304131063117385395
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,6 +3935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2174371842595958846}
   - component: {fileID: 5980014672691802506}
+  - component: {fileID: 8339353507158100464}
   m_Layer: 0
   m_Name: hair
   m_TagString: Untagged
@@ -3961,6 +4017,18 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.19147606, y: -0.4773847, z: 0.000000059604645}
     m_Extent: {x: 0.25873786, y: 0.614609, z: 0.14344977}
   m_DirtyAABB: 0
+--- !u!114 &8339353507158100464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4207859525128736308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4241754190884036502
 GameObject:
   m_ObjectHideFlags: 0
@@ -4686,7 +4754,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b14bc48c013103c4480197755c86ab38, type: 2}
+  - {fileID: 2100000, guid: bf7d38ddb8823dc41a1969eac6ab637d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5295,6 +5363,7 @@ GameObject:
   - component: {fileID: 7568774128922659489}
   - component: {fileID: 5298689869802012531}
   - component: {fileID: 6781097884413013788}
+  - component: {fileID: 2856970064035519382}
   m_Layer: 0
   m_Name: Bonfire
   m_TagString: Untagged
@@ -5395,6 +5464,18 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2856970064035519382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6012988841739959359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6319054135009501437
 GameObject:
   m_ObjectHideFlags: 0
@@ -6175,6 +6256,7 @@ GameObject:
   - component: {fileID: 7197082808284765503}
   - component: {fileID: 3408819699128353736}
   - component: {fileID: 5043632396397887984}
+  - component: {fileID: 3523652113830552034}
   m_Layer: 13
   m_Name: Weapon
   m_TagString: Untagged
@@ -6291,6 +6373,18 @@ MonoBehaviour:
   m_hitColor: {r: 1, g: 1, b: 1, a: 1}
   m_freezeMaterial: {fileID: 2100000, guid: 21eec25bfeb7ace49a5b3c3d4e7afb98, type: 2}
   m_myMaterial: {fileID: 2100000, guid: 7d9f714d95603f149a04b5dd2e48cf03, type: 2}
+--- !u!114 &3523652113830552034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8376427284439874526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8404806860353822793
 GameObject:
   m_ObjectHideFlags: 0
@@ -6799,6 +6893,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6289153747863243261}
   - component: {fileID: 3374882761563711548}
+  - component: {fileID: 6145527044678947225}
   m_Layer: 0
   m_Name: Ranged
   m_TagString: Untagged
@@ -6871,6 +6966,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6145527044678947225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9010918540677535067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9178206717629942716
 GameObject:
   m_ObjectHideFlags: 0
