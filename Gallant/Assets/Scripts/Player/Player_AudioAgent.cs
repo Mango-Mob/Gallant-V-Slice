@@ -110,7 +110,7 @@ public class Player_AudioAgent : MultiAudioAgent
     }
     public void FireRoll()
     {
-        base.PlayOnce("FireballCast", false, Random.Range(1.25f, 1.35f));
+        base.PlayOnce("FlameRoll", false, Random.Range(0.95f, 1.05f));
     }
     public void Iceroll()
     {
