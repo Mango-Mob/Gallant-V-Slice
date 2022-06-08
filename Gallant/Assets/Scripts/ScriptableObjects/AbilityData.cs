@@ -52,6 +52,7 @@ public class AbilityData : ScriptableObject
 
     [HideInInspector] public float lastCooldown = 0.0f;
     public bool isPassive = false;
+    public bool useSwingCast = false;
 
     public Sprite overwriteStaffIcon;
 
@@ -171,6 +172,7 @@ public class AbilityData : ScriptableObject
         
         this.lastCooldown = other.lastCooldown;
         this.isPassive = other.isPassive;
+        this.useSwingCast = other.useSwingCast;
 
         this.overwriteStaffIcon = other.overwriteStaffIcon;
     }
