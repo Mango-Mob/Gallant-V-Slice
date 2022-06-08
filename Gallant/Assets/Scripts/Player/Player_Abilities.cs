@@ -81,14 +81,28 @@ public class Player_Abilities : MonoBehaviour
             case Hand.LEFT:
                 if (m_leftHandGlobalTimer <= 0.0f && m_leftAbility != null && m_leftAbility.m_canUse && !m_leftAbility.m_isPassive)
                 {
-                    playerController.animator.SetBool("LeftCast", true);
+                    if (m_leftAbility.m_data.useSwingCast)
+                    {
+                        playerController.animator.SetBool("LeftSwingCast", true);
+                    }
+                    else
+                    {
+                        playerController.animator.SetBool("LeftCast", true);
+                    }
                     m_leftHandGlobalTimer = m_globalCooldown;
                 }
                 break;
             case Hand.RIGHT:
                 if (m_rightHandGlobalTimer <= 0.0f && m_rightAbility != null && m_rightAbility.m_canUse && !m_rightAbility.m_isPassive)
                 {
-                    playerController.animator.SetBool("RightCast", true);
+                    if (m_rightAbility.m_data.useSwingCast)
+                    {
+                        playerController.animator.SetBool("RightSwingCast", true);
+                    }
+                    else
+                    {
+                        playerController.animator.SetBool("RightCast", true);
+                    }
                     m_rightHandGlobalTimer = m_globalCooldown;
                 }
                 break;

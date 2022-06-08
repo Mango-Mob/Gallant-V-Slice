@@ -15,7 +15,15 @@ public class Player_AudioAgent : MultiAudioAgent
         switch (_weapon)
         {
             case Weapon.CROSSBOW:
-                base.PlayOnce("BowLaunch", false, Random.Range(0.95f, 1.05f));
+                switch (_sound)
+                {
+                    case 1:
+                        base.PlayOnce("BowLaunch", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    case 2:
+                        base.PlayOnce("BowLaunch", false, Random.Range(0.75f, 0.85f));
+                        break;
+                }
                 break;
             case Weapon.BOW:
                 base.PlayOnce("BowLoad", false, Random.Range(0.95f, 1.05f));
@@ -99,6 +107,10 @@ public class Player_AudioAgent : MultiAudioAgent
     public void FirewaveLaunch()
     {
         base.PlayOnce("FireballCast", false, Random.Range(0.95f, 1.05f));
+    }
+    public void FireRoll()
+    {
+        base.PlayOnce("FireballCast", false, Random.Range(1.25f, 1.35f));
     }
     public void Iceroll()
     {
