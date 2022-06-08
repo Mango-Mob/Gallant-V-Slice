@@ -44,6 +44,9 @@ public class EndScreenMenu : MonoBehaviour
             m_victoryText.SetActive(false);
         }
 
+        GameManager.ClearPlayerInfoFromFile();
+        GameManager.ResetPlayerInfo();
+
         Restart();
     }
 

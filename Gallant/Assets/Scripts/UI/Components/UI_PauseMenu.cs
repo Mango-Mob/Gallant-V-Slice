@@ -72,6 +72,9 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void ReturnToHub()
     {
+        GameManager.ClearPlayerInfoFromFile();
+        GameManager.ResetPlayerInfo();
+
         m_confirmPannel.SetActive(true);
         EventSystem.current.SetSelectedGameObject(m_noButton);
         foreach (var item in m_allButtons)

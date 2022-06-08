@@ -664,6 +664,10 @@ public class Player_Movement : MonoBehaviour
                 0.5f, ref m_turnAnimationVelocity, m_turnAnimationTime);
             //playerController.animator.SetFloat("Rotate", targetRotateAnim);
         }
+
+        if (float.IsNaN(targetRotateAnim))
+            targetRotateAnim = 0.5f;
+
         playerController.animator.SetFloat("Rotate", targetRotateAnim);
     }
 
