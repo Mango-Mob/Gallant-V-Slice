@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dfa1dfadb91e8544a7ef6e4536d0e97, type: 3}
   m_Name: ShieldBash
   m_EditorClassIdentifier: 
-  debugShow: 0
+  debugShow: 1
   animID: Shield
   priority: 10
   cooldown: 10
@@ -27,18 +27,18 @@ MonoBehaviour:
   isIdleAfterAttack: 0
   detectCollider:
     start: {x: 0, y: 0, z: 0}
-    center: {x: 0, y: 0, z: 2}
+    center: {x: -1, y: 0, z: 2}
     end: {x: 0, y: 0, z: 0}
     type: 1
     size: {x: 0, y: 0, z: 0}
     radius: 3
   damageColliders:
-  - start: {x: 0, y: 0, z: 0}
+  - start: {x: -3.22, y: 0, z: 1.5}
     center: {x: -0.22, y: 2, z: 2.5}
-    end: {x: 0, y: 0, z: 0}
-    type: 1
+    end: {x: 0.33, y: 0, z: 3.6}
+    type: 2
     size: {x: 0, y: 0, z: 0}
-    radius: 1.5
+    radius: 1.85
   onHitEffect: 1
   effectPower: 15
   hitsCount: 1
