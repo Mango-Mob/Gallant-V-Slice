@@ -11,6 +11,7 @@ namespace ActorSystem.AI.Components
         public MultiAudioAgent m_myAgent { get; protected set; }
 
         public List<AudioClip> m_attackClips;
+        public List<AudioClip> m_footstepClips;
         protected List<AudioClip> m_hurtClips;
         protected List<AudioClip> m_deathClips;
         
@@ -53,12 +54,17 @@ namespace ActorSystem.AI.Components
                 }
             }
             m_myAgent.audioClips.AddRange(m_attackClips);
+            m_myAgent.audioClips.AddRange(m_footstepClips);
             m_myAgent.UpdateList();
         }
 
         public void PlayAttack(int index)
         {
             m_myAgent.Play(m_attackClips[index].name, false, Random.Range(0.85f, 1.25f));
+        }
+        public void PlayFootstep()
+        {
+            m_myAgent.Play(m_footstepClips[Random.Range(0, m_footstepClips.Count)].name, false, Random.Range(0.85f, 1.25f));
         }
         public void PlayAttackTemporarily(int index)
         {

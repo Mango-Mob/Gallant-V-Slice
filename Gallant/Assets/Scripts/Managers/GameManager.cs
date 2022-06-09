@@ -226,7 +226,7 @@ public class GameManager : Singleton<GameManager>
             m_containsPlayerInfo = true;
         }
 
-        if (Instance?.m_player != null)
+        if (Instance?.m_player != null && m_playerInfo.m_validSave)
             Instance.m_player.GetComponent<Player_Controller>().LoadPlayerInfo();
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect, float _health, int _orbs)
