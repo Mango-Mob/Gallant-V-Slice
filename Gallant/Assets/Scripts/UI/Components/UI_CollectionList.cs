@@ -36,7 +36,8 @@ public class UI_CollectionList : UI_Element
     // Update is called once per frame
     void Update()
     {
-        
+        m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
+        m_nextBtn.gameObject.SetActive(m_currentPage != m_currentCollectable.descriptions.Count - 1 && m_currentCollectable.descriptions.Count > 1);
     }
 
     public void ShowItem(CollectableData data, int page = 0)

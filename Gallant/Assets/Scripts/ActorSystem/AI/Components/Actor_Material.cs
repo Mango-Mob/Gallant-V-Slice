@@ -26,7 +26,7 @@ namespace ActorSystem.AI.Components
         {
             m_myMaterial = Instantiate(m_myMaterial);
             m_myMesh = GetComponent<Renderer>();
-            m_myMesh.material = m_myMaterial;
+            SetMaterial(m_myMaterial);
             m_mainTexture = m_myMaterial.GetTexture("TextureAlbedo");
             
             if (m_freezeMaterial != null)
@@ -83,7 +83,7 @@ namespace ActorSystem.AI.Components
             m_timer = 0.0f;
             if (m_myMesh == null)
                 return;
-
+            
             EndFreeze();
 
             if (m_myMaterial.HasProperty("Fade") || m_hit != null)
@@ -160,12 +160,21 @@ namespace ActorSystem.AI.Components
             }
         }
 
+        public void SetMaterial(Material _toReplace)
+        {
+            for (int i = 0; i < m_myMesh.materials.Length; i++)
+            {
+                m_myMesh.materials[i] = _toReplace;
+
+            }
+        }
+
         private IEnumerator SetFreezeStatus(float target, float time)
         {
             float timer = 0.0f;
 
             float start = (m_myMesh.material.HasProperty("_IceSlider")) ? m_freezeMaterial.GetFloat("_IceSlider") : 0f;
-            m_myMesh.material = m_freezeMaterial;
+            SetMaterial(m_freezeMaterial);
             while (timer <= time)
             {
                 m_freezeMaterial.SetFloat("_IceSlider", Mathf.Lerp(start, target, timer / time));
@@ -175,7 +184,7 @@ namespace ActorSystem.AI.Components
 
             if(target <= 0.0f)
             {
-                m_myMesh.material = m_myMaterial;
+                SetMaterial(m_myMaterial);
             }
 
             yield return null;

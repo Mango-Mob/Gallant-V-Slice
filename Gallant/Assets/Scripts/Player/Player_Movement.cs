@@ -167,7 +167,9 @@ public class Player_Movement : MonoBehaviour
     void FixedUpdate()
     {
         // Gravity physics
-        m_grounded = characterController.isGrounded;
+        //m_grounded = characterController.isGrounded;
+        m_grounded = Physics.CheckSphere(transform.position + transform.up * characterController.radius * 0.6f, characterController.radius * 0.9f, m_groundLayerMask);
+        
         if (m_grounded)
         {
             m_yVelocity = 0.0f;
@@ -186,12 +188,15 @@ public class Player_Movement : MonoBehaviour
         else if (m_knockbackVelocity.y <= 0.0f)
             m_yVelocity -= m_gravityMult * Time.fixedDeltaTime;
 
-        characterController.Move(transform.up * m_yVelocity * Time.fixedDeltaTime);
-
         EnemyHeadAvoision();
         RollUpdate();
         DashUpdate();
         StunUpdate();
+    }
+
+    public void ForceGravityUpdate(float _deltaTime)
+    {
+        characterController.Move(transform.up * m_yVelocity * _deltaTime);
     }
 
     /*******************
@@ -602,7 +607,7 @@ public class Player_Movement : MonoBehaviour
                 {
                     m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
                 }
-                characterController.Move(m_slideVelocity);
+                characterController.Move(m_slideVelocity + transform.up * m_yVelocity * _deltaTime);
             }
             else
             {
@@ -613,7 +618,7 @@ public class Player_Movement : MonoBehaviour
         else
         {
             m_slideVelocity = Vector3.zero;
-            characterController.Move(movement);
+            characterController.Move(movement + transform.up * m_yVelocity * _deltaTime);
 
             m_wasOnIce = false;
         }
@@ -659,6 +664,10 @@ public class Player_Movement : MonoBehaviour
                 0.5f, ref m_turnAnimationVelocity, m_turnAnimationTime);
             //playerController.animator.SetFloat("Rotate", targetRotateAnim);
         }
+
+        if (float.IsNaN(targetRotateAnim))
+            targetRotateAnim = 0.5f;
+
         playerController.animator.SetFloat("Rotate", targetRotateAnim);
     }
 
@@ -732,7 +741,7 @@ public class Player_Movement : MonoBehaviour
 
     public void Footstep(bool _left)
     {
-        if (m_steppedThisFrame || (playerController.GetPlayerMovementVector(true).magnitude <= 0.3f) || !characterController.isGrounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
+        if (m_steppedThisFrame || (playerController.GetPlayerMovementVector(true).magnitude <= 0.3f) || !m_grounded || (playerController.animator.GetFloat("Horizontal") == 0.0f && playerController.animator.GetFloat("Vertical") == 0.0f))
             return;
 
         m_steppedThisFrame = true;
@@ -774,5 +783,7 @@ public class Player_Movement : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawLine(transform.position, transform.position + playerModel.transform.forward * 2.0f);
+        float radius = 0.5f;
+        Gizmos.DrawWireSphere(transform.position + transform.up * radius * 0.6f, radius * 0.9f);
     }
 }

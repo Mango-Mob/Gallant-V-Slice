@@ -14,6 +14,7 @@ public enum ItemEffect
     ABILITY_DEFENCE,
     DAMAGE_RESISTANCE,
     ARCANE_FOCUS,
+    ALL,
 }
 /****************
  * Player_Stats: Manages the stats of the player including effects
@@ -55,6 +56,16 @@ public class Player_Stats : MonoBehaviour
         if (_effect == ItemEffect.NONE)
             return;
 
+        if(_effect == ItemEffect.ALL)
+        {
+            for (int i = 0; i <= (int)ItemEffect.ABILITY_DEFENCE; i++)
+            {
+                if(!ReachedRuneCap((ItemEffect)i))
+                    AddEffect((ItemEffect)i);
+            }
+            return;
+        }
+
         bool foundEffect = false;
         foreach (var effect in m_effects) // Check if effect is already in dictionary
         {
@@ -88,6 +99,16 @@ public class Player_Stats : MonoBehaviour
     {
         if (_effect == ItemEffect.NONE)
             return;
+
+        if (_effect == ItemEffect.ALL)
+        {
+            for (int i = 0; i <= (int)ItemEffect.ABILITY_DEFENCE; i++)
+            {
+                if (GetEffectQuantity((ItemEffect)i) > 0)
+                    RemoveEffect((ItemEffect)i);
+            }
+            return;
+        }
 
         bool foundEffect = false;
         List<EffectData> removeList = new List<EffectData>();

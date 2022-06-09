@@ -27,7 +27,9 @@ public class Combo : StateMachineBehaviour
         animator.SetBool("UsingRight", false);
 
         animator.SetBool("LeftCast", false);
+        animator.SetBool("LeftSwingCast", false);
         animator.SetBool("RightCast", false);
+        animator.SetBool("RightSwingCast", false);
 
         animator.SetBool("IsHealing", false);
         animator.SetInteger("ComboCount", 0);

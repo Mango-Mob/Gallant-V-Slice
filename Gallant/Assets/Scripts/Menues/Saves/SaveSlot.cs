@@ -48,7 +48,6 @@ public class SaveSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (m_isSelected != checkSelected)
             {
                 m_isSelected = checkSelected;
-                Debug.Log($"Setting m_isSelected to {m_isSelected}.");
                 SelectProcess();
             }
 
@@ -190,10 +189,14 @@ public class SaveSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         PlayerPrefs.SetInt($"Player Balance {m_slotNumber}", 0);
 
-        if (_alterVisuals)
-        {
-            AlterVisuals();
-        }
+        m_titleText.text = "Empty Slot";
+        m_currencyText.transform.parent.gameObject.SetActive(false);
+
+        SetButtonStates(SaveSlotButtonState.EMPTY);
+        //if (_alterVisuals)
+        //{
+        //    AlterVisuals();
+        //}
     }
     public void LoadSave()
     {

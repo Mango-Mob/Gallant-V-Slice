@@ -25,6 +25,9 @@ public class NavigationPortal : MonoBehaviour
     public SoloAudioAgent m_audio;
 
     public Animator m_portalAnimator = null;
+    public NavigationGuide m_guide;
+
+    public float m_guideDist = 500;
 
     private void Start()
     {
@@ -50,9 +53,28 @@ public class NavigationPortal : MonoBehaviour
 
     public void Update()
     {
-        m_portalMainObj.SetActive(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
-        m_portalAnimator?.SetBool("IsVisible", !GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible );
+        m_portalMainObj?.SetActive(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
+        m_portalAnimator?.SetBool("IsVisible", !GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible);
         GetComponent<Collider>().enabled = !GameManager.Instance.IsInCombat && !NavigationManager.Instance.IsVisible;
+
+        if(!GameManager.Instance.IsInCombat && !RewardManager.Instance.IsVisible)
+        {
+            if (Vector3.Distance(GameManager.Instance.m_player.transform.position, transform.position) > m_guideDist)
+            {
+                m_guide.gameObject.SetActive(true);
+                if (m_guide.isReady)
+                {
+                    m_guide?.StartTrace(transform.position);
+                }
+            }
+            else if (m_guide.gameObject.activeInHierarchy)
+            {
+                if (m_guide.isReady)
+                {
+                    m_guide.gameObject.SetActive(false);
+                }
+            }
+        }
     }
 
     public void Interact()
@@ -72,6 +94,7 @@ public class NavigationPortal : MonoBehaviour
         portalMain.SetVector4("Particle Color", portalColor);
         portalBurst.SetVector4("Particle Color", flairColor);
         portalFlair.SetVector4("Particle Color", flairColor);
+        m_guide?.SetColor(color);
     }
 
     private void OnTriggerEnter(Collider other)

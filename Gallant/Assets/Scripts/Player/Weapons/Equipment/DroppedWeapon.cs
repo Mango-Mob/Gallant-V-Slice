@@ -178,8 +178,4 @@ public class DroppedWeapon : MonoBehaviour
         return droppedWeapon;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawSphere(m_weaponBubble.transform.position, m_weaponBubble.transform.localScale.x / 2.0f);
-    }
 }

@@ -16,13 +16,15 @@ MonoBehaviour:
   animID: rightAtk
   priority: 10
   cooldown: 6
+  brainLag: 1
   damageType: 0
-  baseDamage: 10
+  baseDamage: 5
   postVFXPrefab: {fileID: 0}
   canContinueAfterMiss: 1
   canBeCanceled: 1
   canTrackTarget: 1
   canAttackMove: 1
+  isIdleAfterAttack: 0
   detectCollider:
     start: {x: 0, y: 0, z: 0}
     center: {x: 0, y: 0.75, z: 0.75}
@@ -37,7 +39,7 @@ MonoBehaviour:
     type: 1
     size: {x: 0, y: 0, z: 0}
     radius: 0.75
-  onHitEffect: 0
-  effectPower: 0
+  onHitEffect: 1
+  effectPower: 5
   hitsCount: 1
   ignoreIFrames: 0

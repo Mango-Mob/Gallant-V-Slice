@@ -48,7 +48,16 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 100
+        m_Name: Rate
+        m_Overridden: 1
+      - m_Value: 10
+        m_Name: LifeTime
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Size
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -749,16 +758,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6e283b38a70fffc41a5aa1d574a6b4f7, type: 3}
   - {fileID: 8300000, guid: 9886ce1102a2fd84694790702cf59c1f, type: 3}
   - {fileID: 8300000, guid: d12d9ba58d580af438450bdb916d5be0, type: 3}
-  - {fileID: 8300000, guid: 1641c990f515b06499381a5f1dfd2263, type: 3}
-  - {fileID: 8300000, guid: 3c49871afd32b8a4a8c693dc649f98af, type: 3}
-  - {fileID: 8300000, guid: ce5c685759459d4499068c79dcd0f0d9, type: 3}
+  - {fileID: 8300000, guid: 469ef7f216c9def48a416e859e0db5c7, type: 3}
+  - {fileID: 8300000, guid: 77ec97cf3fdd81042bc7c74e0994613f, type: 3}
+  - {fileID: 8300000, guid: 40b722857ca65ab4db15a9706d6138cb, type: 3}
   - {fileID: 8300000, guid: b1d6d7b9ae7e52c4596400d7b8d36557, type: 3}
+  - {fileID: 8300000, guid: 2c1a53c4d53920040ac0cddba85cde00, type: 3}
   - {fileID: 8300000, guid: 5ad3ec5b218abd744a3e48a8b81a6ce9, type: 3}
   - {fileID: 8300000, guid: 5044f2044dc7b5a41a69f6211358e05c, type: 3}
-  - {fileID: 8300000, guid: 128d0ae253ac77b44952955c8e57c6d5, type: 3}
+  - {fileID: 8300000, guid: f93ad2cb972d484409216458b553e66a, type: 3}
   - {fileID: 8300000, guid: f6bc85187cbc04b449171c6d340289b8, type: 3}
-  - {fileID: 8300000, guid: d9dcbc719cb510e4ba05d9f25f069009, type: 3}
-  - {fileID: 8300000, guid: d8b9418d4b4926048bfd9e992da94034, type: 3}
+  - {fileID: 8300000, guid: 0d60e023d6724c34fb2fc738aa06dfec, type: 3}
+  - {fileID: 8300000, guid: 30f991758ab679949970f880bfa91716, type: 3}
+  - {fileID: 8300000, guid: 79dc04e3c274a3e42ad3c42a0a5aec2e, type: 3}
   - {fileID: 8300000, guid: c115a81a7d623bd4c95a48cf21f46a80, type: 3}
   - {fileID: 8300000, guid: a3cc999489bbb664e87ffdaa4c1dc7dc, type: 3}
   - {fileID: 8300000, guid: fefaa1969f9b1fc4db239803a6d20a0f, type: 3}
@@ -770,11 +781,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: c9cb247895fbd3e48bb7d8e32e7bbd13, type: 3}
   - {fileID: 8300000, guid: c8b892fb314a4e14497f5afaf65fda6b, type: 3}
   - {fileID: 8300000, guid: 01be1ddbd00afeb4589108d9c128fa15, type: 3}
-  - {fileID: 8300000, guid: 6ad6bad051aca1449893397b25309452, type: 3}
+  - {fileID: 8300000, guid: 4438387d68b09e74e802549a7b9e3e89, type: 3}
   - {fileID: 8300000, guid: 84cd33f4d1863f44684641fb07dd628d, type: 3}
-  - {fileID: 8300000, guid: ed5f2b0ee9e20b14ab3edc98c52ad069, type: 3}
+  - {fileID: 8300000, guid: 74b76d72468d962419397532fa520341, type: 3}
   - {fileID: 8300000, guid: d1d7acffc8104a149934be8268d54a7f, type: 3}
-  - {fileID: 8300000, guid: 3ce4a44051a78354c85dcaf22d0bb3e6, type: 3}
+  - {fileID: 8300000, guid: 2603ba22f41ee8b4d90c23be31e1beb1, type: 3}
   - {fileID: 8300000, guid: 2cd758d8ce8718d4dad91965488fae6b, type: 3}
   - {fileID: 8300000, guid: 0665c9f36ca1751439916cb265f2b5f2, type: 3}
   audioPlayersCount: 12
@@ -1236,7 +1247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75343419b2c47fa4592ae5d44986f275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_offHandRingSizeMult: 0.75
+  m_offHandRingSizeMult: 0.55
   m_flamerollPrefab: {fileID: 3999597639582780383, guid: 673b280d0d0944445a889b1fd138eca8,
     type: 3}
   m_frostrollPrefab: {fileID: 0}

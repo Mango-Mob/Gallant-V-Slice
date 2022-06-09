@@ -189,7 +189,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
         return max;
     }
 
-    public void PlayAudioTemporary(Vector3 _position, AudioClip _clip, VolumeChannel _channel = VolumeChannel.SOUND_EFFECT, float range = -1.0f)
+    public void PlayAudioTemporary(Vector3 _position, AudioClip _clip, VolumeChannel _channel = VolumeChannel.SOUND_EFFECT, float range = -1.0f, float _localVolume = 1.0f)
     {
         GameObject temp = new GameObject();
         temp.transform.position = _position;
@@ -198,6 +198,7 @@ public class AudioManager : SingletonPersistent<AudioManager>
         agent.is3D = range > 0;
         agent.max3D_Dist = range;
         agent.channel = _channel;
+        agent.localVolume = _localVolume;
         agent.Play(_clip);
     }
 }

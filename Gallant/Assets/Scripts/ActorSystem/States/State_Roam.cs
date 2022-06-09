@@ -18,7 +18,16 @@ public class State_Roam : State
 
         if(NavMesh.SamplePosition(currPos + Random.insideUnitSphere * distance, out hit, distance, NavMesh.AllAreas))
         {
-            targetLoc = hit.position;
+            NavMeshPath path = new NavMeshPath();
+            if(NavMesh.CalculatePath(m_myUser.transform.position, hit.position, ~0, path) && path.status == NavMeshPathStatus.PathComplete)
+            {
+                
+                targetLoc = hit.position;
+            }
+            else
+            {
+                m_myUser.SetState(new State_Idle(m_myUser));
+            }
         }
         else
         {

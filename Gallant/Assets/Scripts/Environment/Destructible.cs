@@ -5,6 +5,7 @@ public class Destructible : MonoBehaviour
 {
     public GameObject crackedObject;
     public AudioClip m_soundClip;
+    [Range(0.0f, 1.0f)] public float m_soundLocalVolume = 1.0f;
     public bool m_letPlayerDestroy = true;
     public bool m_letRollDestroy = true;
 
@@ -28,7 +29,7 @@ public class Destructible : MonoBehaviour
         destructObject.ApplyExplosionForce(forceLoc, forceVal, maxDist);
 
         if (m_soundClip != null)
-            AudioManager.Instance.PlayAudioTemporary(transform.position, m_soundClip);
+            AudioManager.Instance.PlayAudioTemporary(transform.position, m_soundClip, AudioManager.VolumeChannel.SOUND_EFFECT, -1.0f, m_soundLocalVolume);
 
         Destroy(gameObject);
     }

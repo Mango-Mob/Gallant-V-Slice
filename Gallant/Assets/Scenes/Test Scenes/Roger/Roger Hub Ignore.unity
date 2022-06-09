@@ -6474,8 +6474,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 183006976}
   m_LocalRotation: {x: -0, y: 0.38268343, z: -0, w: 0.92387956}
-  m_LocalPosition: {x: 3.3934636, y: 0.19578385, z: 46.5114}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalPosition: {x: 3.27, y: 0.19578385, z: 46.51}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 237131585}
   - {fileID: 1046326569}
@@ -6752,6 +6752,7 @@ Transform:
   - {fileID: 3775680114488815050}
   - {fileID: 2028596543}
   - {fileID: 1226299292}
+  - {fileID: 1203306270}
   - {fileID: 616163161}
   m_Father: {fileID: 1664032731}
   m_RootOrder: 9
@@ -6832,6 +6833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19eca36e06ba8a94f92fba93e42d6cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_usable: 1
   m_interactFunction:
     m_PersistentCalls:
       m_Calls: []
@@ -14437,7 +14439,7 @@ PrefabInstance:
     - target: {fileID: 7414964957755577535, guid: 6ec21abc9a22a7447a71f8a53bd3e15d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 112
+      value: 113
       objectReference: {fileID: 0}
     - target: {fileID: 7414964957755577535, guid: 6ec21abc9a22a7447a71f8a53bd3e15d,
         type: 3}
@@ -19086,6 +19088,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19eca36e06ba8a94f92fba93e42d6cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_usable: 1
   m_interactFunction:
     m_PersistentCalls:
       m_Calls: []
@@ -24801,6 +24804,102 @@ Transform:
   m_Father: {fileID: 1664032731}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1203306269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1203306270}
+  - component: {fileID: 1203306273}
+  - component: {fileID: 1203306272}
+  - component: {fileID: 1203306271}
+  m_Layer: 11
+  m_Name: Hub Rails (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1203306270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203306269}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -1.2299995, y: -0.63, z: 15.389999}
+  m_LocalScale: {x: 0.6771637, y: 0.62205, z: 0.62205}
+  m_Children: []
+  m_Father: {fileID: 230577608}
+  m_RootOrder: 112
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!64 &1203306271
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203306269}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 6268262287371755569, guid: 226269fae506a554398b7779ab2ff4cd, type: 3}
+--- !u!23 &1203306272
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203306269}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: ba5424b311a4be240bf6ec5dc379d5ff, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1203306273
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203306269}
+  m_Mesh: {fileID: 6268262287371755569, guid: 226269fae506a554398b7779ab2ff4cd, type: 3}
 --- !u!1 &1210977903
 GameObject:
   m_ObjectHideFlags: 0
@@ -29472,7 +29571,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh998912
+  m_Name: pb_Mesh215980
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -40329,7 +40428,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40345,7 +40444,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40361,7 +40460,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40377,7 +40476,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40393,7 +40492,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40409,7 +40508,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40425,7 +40524,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -40502,7 +40601,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3122777057096381856}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -40512,7 +40611,7 @@ Transform:
   - {fileID: 47848768}
   m_Father: {fileID: 216315092}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!143 &3122777057096381859
 CharacterController:
   m_ObjectHideFlags: 0
@@ -43088,6 +43187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19eca36e06ba8a94f92fba93e42d6cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_usable: 1
   m_interactFunction:
     m_PersistentCalls:
       m_Calls: []
