@@ -99,7 +99,7 @@ public class RewardManager : Singleton<RewardManager>
 #if UNITY_EDITOR
         if (InputManager.Instance.IsKeyDown(KeyType.O))
         {
-            ShowSolo(10, RewardType.STANDARD);
+            Show(10, RewardType.RUNE);
         }
 #endif
         m_keyboardButton.SetActive(!InputManager.Instance.isInGamepadMode && m_select != -1);
