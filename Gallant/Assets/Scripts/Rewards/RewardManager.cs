@@ -44,7 +44,7 @@ public class RewardManager : Singleton<RewardManager>
     public Animator m_inventoryAnimator;
     public Image m_inventoryImage;
     public GameObject m_currentlyEquip;
-
+    
     [Header("Probabilities")]
     public AnimationCurve[] m_spellTierWeight;
 
@@ -52,7 +52,7 @@ public class RewardManager : Singleton<RewardManager>
     private int m_select = -1;
     private float m_timer = 0.0f;
     private SoloAudioAgent m_audio;
-
+    private bool m_isDialogueReward = false;
     private UnityAction<int> m_onResult;
     public bool IsVisible { get { return m_window.activeInHierarchy; } }
     public enum RewardType
@@ -165,7 +165,7 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
-    public void ShowSolo(int level, RewardType type = RewardType.STANDARD)
+    public void ShowSolo(int level, RewardType type = RewardType.STANDARD, bool isDialogue = false)
     {
         m_audio.Play();
         m_rewardTitle.text = "Reward";
@@ -176,6 +176,8 @@ public class RewardManager : Singleton<RewardManager>
         m_currentRunes.SetActive(false);
         m_player.m_isDisabledInput = true;
         m_onResult = GiveReward;
+        m_isDialogueReward = isDialogue;
+
         m_currentlyEquip.SetActive(false);
         if (level >= 0)
         {
@@ -234,9 +236,10 @@ public class RewardManager : Singleton<RewardManager>
         }
     }
 
-    public void ShowSolo(ScriptableObject data, UnityAction<int> onResult = null)
+    public void ShowSolo(ScriptableObject data, UnityAction<int> onResult = null, bool isDialogue = false)
     {
         m_window.SetActive(true);
+        m_rewardTitle.text = "Reward";
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
         m_player.m_isDisabledInput = true;
@@ -244,6 +247,7 @@ public class RewardManager : Singleton<RewardManager>
         m_rewardSlots[0].gameObject.SetActive(false);
         m_rewardSlots[1].gameObject.SetActive(true);
         m_rewardSlots[2].gameObject.SetActive(false);
+        m_isDialogueReward = isDialogue;
 
         m_currentWeapons.SetActive(true);
         m_currentRunes.SetActive(false);
@@ -285,6 +289,7 @@ public class RewardManager : Singleton<RewardManager>
         m_rewardSlots[0].LoadWeapon(data1);
         m_rewardSlots[1].LoadWeapon(data2);
         m_rewardSlots[2].LoadWeapon(data3);
+        m_isDialogueReward = false;
 
         m_currentWeapons.SetActive(true);
         m_currentRunes.SetActive(false);
@@ -299,7 +304,7 @@ public class RewardManager : Singleton<RewardManager>
         EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].gameObject);
     }
 
-    public void Show(int level, RewardType type = RewardType.STANDARD)
+    public void Show(int level, RewardType type = RewardType.STANDARD, bool isDialogue = false)
     {
         m_audio.Play();
         m_rewardTitle.text = "Choose";
@@ -310,6 +315,7 @@ public class RewardManager : Singleton<RewardManager>
         m_currentRunes.SetActive(false);
         m_player.m_isDisabledInput = true;
         m_onResult = GiveReward;
+        m_isDialogueReward = isDialogue;
 
         foreach (var item in m_rewardSlots)
         {
@@ -577,6 +583,12 @@ public class RewardManager : Singleton<RewardManager>
     public void GiveReward(int selected)
     {
         m_rewardSlots[selected].GiveReward();
+
+        if (m_isDialogueReward)
+        {
+            DialogManager.Instance.Show();
+            m_isDialogueReward = false;
+        }
     }
 
     public void Hide()

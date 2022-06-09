@@ -84,7 +84,7 @@ namespace ActorSystem.AI.Users
                 return;
             }
 
-            if(m_myBrain.m_target != null)
+            if(m_myBrain.m_target != null && m_myBrain.m_legs != null)
                 this.SetTargetOrientaion(m_myBrain.m_legs.m_targetPosition);
 
             m_myBrain.m_myOutline.enabled = m_potentialDialogs.Count > 0;
@@ -138,9 +138,9 @@ namespace ActorSystem.AI.Users
         {
             DialogManager.Instance.Hide();
             if (m_reward == null)
-                RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.STANDARD, true);
             else
-                RewardManager.Instance.ShowSolo(m_reward);
+                RewardManager.Instance.ShowSolo(m_reward, null, true);
 
             DialogManager.Instance.m_interact = null;
             rewardGiven = true;
