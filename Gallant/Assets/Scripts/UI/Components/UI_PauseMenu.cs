@@ -28,6 +28,11 @@ public class UI_PauseMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(m_defaultButton);
 
         m_tomeList.UpdateTomes();
+
+        if (!state)
+        {
+            m_settingsPannel.SetActive(false);
+        }
     }
 
     // Start is called before the first frame update
