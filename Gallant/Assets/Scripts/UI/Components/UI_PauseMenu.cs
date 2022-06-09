@@ -52,6 +52,11 @@ public class UI_PauseMenu : MonoBehaviour
         }
         isPaused = m_window.activeInHierarchy;
 
+        foreach (var button in m_allButtons)
+        {
+            button.enabled = !m_settingsPannel.activeInHierarchy;
+        }
+
         if(!m_settingsPannel.activeInHierarchy && isPaused)
         {
             if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
