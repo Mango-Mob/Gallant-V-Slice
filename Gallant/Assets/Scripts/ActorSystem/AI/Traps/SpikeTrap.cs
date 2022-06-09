@@ -19,7 +19,6 @@ namespace ActorSystem.AI.Traps
         public LayerMask m_damageLayers;
         public BoxCollider m_damageCollider;
 
-
         public bool isFinished { get { return m_animator.GetBool("Ready"); } }
         private bool hasDetected = false;
         private float m_delay = 0.0f;
@@ -57,19 +56,7 @@ namespace ActorSystem.AI.Traps
 
         public void DealDamage()
         {
-            Collider[] hits = GetDamagedColliders();
-
-            foreach (var hit in hits)
-            {
-                if(hit.gameObject.layer == LayerMask.NameToLayer("Player"))
-                {
-                    hit.GetComponent<Player_Controller>().DamagePlayer(m_baseDamage, CombatSystem.DamageType.Physical, null, true);
-                }
-                else if(hit.gameObject.layer == LayerMask.NameToLayer("Attackable"))
-                {
-                    hit.GetComponent<Actor>().DealDamage(m_baseDamage, CombatSystem.DamageType.Physical, 0, null);
-                }
-            }
+            GetComponentInChildren<Spike>().m_damage = m_baseDamage;
 
             m_delay = m_postAttackDelay;
         }
@@ -81,18 +68,6 @@ namespace ActorSystem.AI.Traps
                 m_delay = m_postDetectDelay;
                 hasDetected = true;
             }
-        }
-
-        private Collider[] GetDamagedColliders()
-        {
-            return Physics.OverlapBox(m_damageCollider.transform.position + m_damageCollider.center, m_damageCollider.size / 2f, transform.rotation, m_damageLayers);
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            Gizmos.color = GetDamagedColliders().Length > 0 ? Color.green : Color.red;
-
-            Gizmos.DrawCube(m_damageCollider.transform.position + m_damageCollider.center, m_damageCollider.size);
         }
     }
 }
