@@ -359,7 +359,9 @@ public class Player_Controller : MonoBehaviour
 
         if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
             && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
-            && playerAttack.GetCurrentUsedHand() == Hand.NONE)
+            && playerAttack.GetCurrentUsedHand() == Hand.NONE
+            && !m_hasRecentDialogue
+            && !playerMovement.m_isRolling)
         {
             playerAttack.SwapWeapons();
         }
@@ -874,7 +876,7 @@ public class Player_Controller : MonoBehaviour
     }
     public void LoadPlayerInfo()
     {
-        if (GameManager.m_containsPlayerInfo)
+        if (GameManager.m_containsPlayerInfo && GameManager.RetrieveValidSaveState())
         {
             playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);

@@ -56,17 +56,13 @@ public class Weapon_Staff : WeaponBase
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
 
-        GameObject vfx = ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
+        ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
 
-        if (m_weaponData.abilityData != null)
-        {
-            ParticleSystem[] particleSystems = vfx.GetComponentsInChildren<ParticleSystem>();
-            foreach (var particle in particleSystems)
-            {
-                ParticleSystem.MainModule mainModule = particle.main;
-                mainModule.startColor = new ParticleSystem.MinMaxGradient(m_weaponData.abilityData.droppedEnergyColor);
-            }
-        }
+        GameObject VFX = SpawnVFX(m_objectAltPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
+        VFX.transform.localScale *= (m_weaponData.altHitCenterOffset + m_weaponData.altHitSize) * 1.0f;
+        VFX.transform.SetParent(transform);
+
+        VFX.transform.position += playerController.playerMovement.playerModel.transform.forward * 1.5f;
     }
     public override void WeaponAltRelease() { }
 }

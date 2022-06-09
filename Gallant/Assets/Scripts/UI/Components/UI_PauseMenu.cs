@@ -28,6 +28,11 @@ public class UI_PauseMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(m_defaultButton);
 
         m_tomeList.UpdateTomes();
+
+        if (!state)
+        {
+            m_settingsPannel.SetActive(false);
+        }
     }
 
     // Start is called before the first frame update
@@ -47,6 +52,14 @@ public class UI_PauseMenu : MonoBehaviour
         }
         isPaused = m_window.activeInHierarchy;
 
+        foreach (var button in m_allButtons)
+        {
+            button.enabled = !m_settingsPannel.activeInHierarchy;
+        }
+
+        if (EventSystem.current.currentSelectedGameObject != null)
+            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+
         if(!m_settingsPannel.activeInHierarchy && isPaused)
         {
             if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
@@ -60,6 +73,11 @@ public class UI_PauseMenu : MonoBehaviour
         }
     }
     
+    public void SelectDefault()
+    {
+        EventSystem.current.SetSelectedGameObject(m_defaultButton);
+    }
+
     public void OnDisable()
     {
         Time.timeScale = 1.0f;
@@ -85,7 +103,6 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void Quit()
     {
-        GameManager.SavePlayerInfoToFile();
         isPaused = false;
         SetPause(false);
         ActorManager.Instance.ClearActors();
@@ -104,5 +121,7 @@ public class UI_PauseMenu : MonoBehaviour
         {
             item.interactable = true;
         }
+
+        SelectDefault();
     }
 }
