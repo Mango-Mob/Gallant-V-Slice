@@ -491,7 +491,7 @@ public class Player_Controller : MonoBehaviour
         yield return new WaitForSeconds(m_controlReturnDelay);
         m_hasRecentPickup = false;
     }
-    IEnumerator DelaySwapControl()
+    public IEnumerator DelaySwapControl()
     {
         m_hasRecentDialogue = true;
         yield return new WaitForSeconds(m_controlReturnDelay);

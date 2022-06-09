@@ -32,7 +32,7 @@ namespace ActorSystem.Spawning
         {
             if (m_toSpawn != null)
             {
-                Actor spawn = ActorManager.Instance.GetReservedActor(m_toSpawn.name);
+                Actor spawn = ActorManager.Instance.GetReservedActor(m_toSpawn.ActorName);
                 if (spawn != null && GetComponentInParent<Actor>() != null)
                 {
                     spawn.m_lastSpawner = GetComponentInParent<Actor>().m_lastSpawner;
