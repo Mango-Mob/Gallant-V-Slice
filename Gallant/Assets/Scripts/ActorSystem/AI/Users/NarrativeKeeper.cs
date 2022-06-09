@@ -18,10 +18,11 @@ namespace ActorSystem.AI.Users
 
         public List<DialogNarrative> m_potentialDialogs;
         public ScriptableObject m_reward;
-
+        
         public Interactable m_interactDisplay;
         public bool isWaiting = false;
         public float interactRange = 1.5f;
+        public bool isTestMode = true;
 
         private bool rewardGiven = false;
         private bool hasInteractedWith = false;
@@ -70,7 +71,9 @@ namespace ActorSystem.AI.Users
             }
             m_player = GameManager.Instance.m_player;
             visits = NarrativeManager.Instance.m_visitNPC[m_myData.ActorName];
-            EvaluateDialogOptions(visits);
+
+            if(!isTestMode)
+                EvaluateDialogOptions(visits);
         }
 
         protected override void Update()
@@ -96,29 +99,24 @@ namespace ActorSystem.AI.Users
                     isWaiting = false;
                 }
             }
-
-#if UNITY_EDITOR
-            if (InputManager.Instance.IsKeyDown(KeyType.I))
-            {
-                Reward();
-            }
-#endif
             base.Update();
         }
 
         public void TalkTo()
         {
+            if (m_potentialDialogs.Count == 0)
+                return;
+
             this.SetTargetOrientaion(m_player.transform.position);
             isWaiting = true;
 
-            if(!hasInteractedWith)
+            if(!hasInteractedWith && !isTestMode)
             {
                 hasInteractedWith = true;
                 NarrativeManager.Instance.UpdateVisit(m_myData.ActorName, visits + 1);
-                PlayerPrefs.SetInt($"{m_myData.ActorName}Visits", visits + 1);
             }
 
-            int select = UnityEngine.Random.Range(0, m_potentialDialogs.Count);
+            int select = 0; 
 
             DialogManager.Instance.LoadDialog(m_potentialDialogs[select].dialog);
             DialogManager.Instance.m_onDialogFinish = new UnityEvent();

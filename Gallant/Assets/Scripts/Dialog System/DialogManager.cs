@@ -133,9 +133,10 @@ public class DialogManager : Singleton<DialogManager>
             LoadScene(m_currentScene);
         }
 
+        m_interact = new List<UnityEvent>();
         for (int i = 0; i < 4; i++)
         {
-            m_interact[i] = null;
+            m_interact.Add(null);
         }
     }
 
