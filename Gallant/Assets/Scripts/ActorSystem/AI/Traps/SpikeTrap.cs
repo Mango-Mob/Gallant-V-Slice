@@ -57,7 +57,6 @@ namespace ActorSystem.AI.Traps
         public void DealDamage()
         {
             GetComponentInChildren<Spike>().m_damage = m_baseDamage;
-
             m_delay = m_postAttackDelay;
         }
 

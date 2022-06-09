@@ -6,6 +6,10 @@ namespace ActorSystem.AI.Traps
     {
         public float m_damage = 0f;
         private float m_decay = 0.5f;
+
+
+        private List<Collider> m_hitColliders;
+
         public void OnTriggerStay(Collider other)
         {
             if (m_damage <= 0)
@@ -26,7 +30,7 @@ namespace ActorSystem.AI.Traps
             if (m_damage <= 0.005f)
                 m_damage = 0;
 
-            m_damage = Mathf.Clamp(m_damage * m_decay, 0, float.MaxValue);
+            m_damage = Mathf.Clamp(m_damage - m_damage * m_decay * Time.deltaTime, 0, float.MaxValue);
         }
     }
 }
