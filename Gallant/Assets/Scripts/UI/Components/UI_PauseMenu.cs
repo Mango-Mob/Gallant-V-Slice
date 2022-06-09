@@ -85,7 +85,6 @@ public class UI_PauseMenu : MonoBehaviour
 
     public void Quit()
     {
-        GameManager.SavePlayerInfoToFile();
         isPaused = false;
         SetPause(false);
         ActorManager.Instance.ClearActors();
