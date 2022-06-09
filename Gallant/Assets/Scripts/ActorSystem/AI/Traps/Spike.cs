@@ -5,33 +5,37 @@ namespace ActorSystem.AI.Traps
 {
     public class Spike : MonoBehaviour
     {
-        public float m_damage = 0f;
-        private float m_decay = 0.5f;
+        private List<Collider> m_hitColliders = new List<Collider>();
 
-
-        private List<Collider> m_hitColliders;
-
-        public void OnTriggerStay(Collider other)
+        public void OnTriggerEnter(Collider other)
         {
-            if (m_damage <= 0)
-                return;
-
-            if(other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
             {
-                other.GetComponent<Player_Controller>().DamagePlayer(m_damage, CombatSystem.DamageType.Physical, null, true);
-            }
-            else if(other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
-            {
-                other.GetComponent<Actor>().DealDamage(m_damage, CombatSystem.DamageType.Physical, 0, null);
+                m_hitColliders.Add(other);
             }
         }
 
-        public void LateUpdate()
+        public void OnTriggerExit(Collider other)
         {
-            if (m_damage <= 0.005f)
-                m_damage = 0;
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player") || other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+            {
+                m_hitColliders.Remove(other);
+            }
+        }
 
-            m_damage = Mathf.Clamp(m_damage - m_damage * m_decay * Time.deltaTime, 0, float.MaxValue);
+        public void DamageColliders(float damage)
+        {
+            foreach (var other in m_hitColliders)
+            {
+                if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+                {
+                    other.GetComponent<Player_Controller>().DamagePlayer(damage, CombatSystem.DamageType.Physical, null, false);
+                }
+                else if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+                {
+                    other.GetComponent<Actor>().DealDamage(damage, CombatSystem.DamageType.Physical, 0, null);
+                }
+            }
         }
     }
 }
