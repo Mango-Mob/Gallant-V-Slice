@@ -20,6 +20,7 @@ public class Player_Controller : MonoBehaviour
     public AvatarMask armsMask;
     public LayerMask m_mouseAimingRayLayer;
     public bool m_isDisabledInput = false;
+    public bool m_isKneeling = false;
     public bool m_isNearDrop = false;
     public bool m_isDisabledAttacks = false;
     private bool m_hasRecentPickup = false;
@@ -144,7 +145,7 @@ public class Player_Controller : MonoBehaviour
         if (playerAttack.m_isBlocking)
             playerResources.ChangeStamina(-10.0f * Time.deltaTime);
 
-        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned || m_focusInputDisabled)
+        if (UI_PauseMenu.isPaused || playerResources.m_dead || m_isDisabledInput || m_spawning || playerMovement.m_isStunned || m_focusInputDisabled || m_isKneeling)
         {
             animator.SetFloat("Horizontal", 0.0f);
             animator.SetFloat("Vertical", 0.0f);
@@ -357,7 +358,8 @@ public class Player_Controller : MonoBehaviour
         }
 
         if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
-            && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded))
+            && !(playerAttack.m_rightWeaponData != null && playerAttack.m_rightWeaponData.isTwoHanded)
+            && playerAttack.GetCurrentUsedHand() == Hand.NONE)
         {
             playerAttack.SwapWeapons();
         }
@@ -976,6 +978,19 @@ public class Player_Controller : MonoBehaviour
     {
         Vector3 targetPosition = playerMovement.m_lastGroundedPosition/* - playerMovement.m_lastGroundedVelocity.normalized * 2.0f*/;
         RespawnPlayerTo(targetPosition, _isFullHP);
+    }
+    public void StartKneel(ClassData _class)
+    {
+        StartCoroutine(KneelRoutine(_class));
+    }
+    IEnumerator KneelRoutine(ClassData _class)
+    {
+        animator.SetTrigger("Kneel");
+        m_isKneeling = true;
+        yield return new WaitForSeconds(1.0f);
+        SelectClass(_class);
+        yield return new WaitForSeconds(1.0f);
+        m_isKneeling = false;
     }
     public void SelectClass(ClassData _class)
     {
