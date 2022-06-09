@@ -43,7 +43,7 @@ public class Weapon_Spear : WeaponBase
                 //    VFX.transform.localScale.y,
                 //    VFX.transform.localScale.z);
                 //VFX.transform.Rotate(new Vector3(0.0f, 30.0f, 0.0f));
-                VFX.transform.position += VFX.transform.up * 0.5f;
+                VFX.transform.position += VFX.transform.up * 0.005f;
                 //VFX.transform.position += playerController.playerMovement.playerModel.transform.right * 0.15f;
 
                 break;
@@ -52,7 +52,7 @@ public class Weapon_Spear : WeaponBase
                 //VFX2.transform.localScale *= (m_weaponData.hitCenterOffset + m_weaponData.hitSize) * 1.5f;
                 VFX2.transform.SetParent(m_weaponObject.transform);
 
-                VFX2.transform.position += VFX2.transform.up;
+                VFX2.transform.position += VFX2.transform.up * 0.005f;
                 //VFX.transform.Rotate(new Vector3(0.0f, -30.0f, 0.0f));
                 break;
         }
