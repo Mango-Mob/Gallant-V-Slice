@@ -285,13 +285,13 @@ public abstract class WeaponBase : MonoBehaviour
         Collider[] colliders = playerController.GetCollidersInfrontOfPlayer(_angle, _data.altHitSize, true).ToArray();
         DamageColliders(_data, _pos, colliders, _hand);
 
-        GameObject vfx = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
-        ParticleSystem particleSystem = vfx.GetComponentInChildren<ParticleSystem>();
-        ParticleSystem.MainModule mainModule = particleSystem.main;
-        mainModule.startLifetime = ((_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize)) / mainModule.startSpeed.constant;
-        particleSystem.Play();
+        //GameObject vfx = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, _pos, Quaternion.LookRotation(playerController.playerMovement.playerModel.transform.forward, Vector3.up));
+        //ParticleSystem particleSystem = vfx.GetComponentInChildren<ParticleSystem>();
+        //ParticleSystem.MainModule mainModule = particleSystem.main;
+        //mainModule.startLifetime = ((_hand == Hand.LEFT ? _data.altHitSize : _data.hitSize)) / mainModule.startSpeed.constant;
+        //particleSystem.Play();
 
-        return vfx;
+        return null;
     }
 
     protected GameObject ShootProjectile(Vector3 _pos, WeaponData _data, Hand _hand, float _charge = 1.0f, bool _canCharge = false)

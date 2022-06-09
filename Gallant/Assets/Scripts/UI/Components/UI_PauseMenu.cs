@@ -57,6 +57,9 @@ public class UI_PauseMenu : MonoBehaviour
             button.enabled = !m_settingsPannel.activeInHierarchy;
         }
 
+        if (EventSystem.current.currentSelectedGameObject != null)
+            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+
         if(!m_settingsPannel.activeInHierarchy && isPaused)
         {
             if (InputManager.Instance.isInGamepadMode && EventSystem.current.currentSelectedGameObject == null)
@@ -70,6 +73,11 @@ public class UI_PauseMenu : MonoBehaviour
         }
     }
     
+    public void SelectDefault()
+    {
+        EventSystem.current.SetSelectedGameObject(m_defaultButton);
+    }
+
     public void OnDisable()
     {
         Time.timeScale = 1.0f;
@@ -113,5 +121,7 @@ public class UI_PauseMenu : MonoBehaviour
         {
             item.interactable = true;
         }
+
+        SelectDefault();
     }
 }
