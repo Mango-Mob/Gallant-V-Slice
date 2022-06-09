@@ -125,7 +125,9 @@ namespace ActorSystem.AI.Users
 
             DialogManager.Instance.m_interact[0] = new UnityEvent();
             DialogManager.Instance.m_interact[0].AddListener(Reward);
-            
+            DialogManager.Instance.m_interact[1] = new UnityEvent();
+            DialogManager.Instance.m_interact[1].AddListener(RewardReturn);
+
             NarrativeManager.Instance.AddSeenDialog(m_potentialDialogs[select].dialog);
 
             this.SetTargetOrientaion(GameManager.Instance.m_player.transform.position);
@@ -141,6 +143,17 @@ namespace ActorSystem.AI.Users
                 RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.STANDARD, true);
             else
                 RewardManager.Instance.ShowSolo(m_reward, null, true);
+
+            DialogManager.Instance.m_interact = null;
+            rewardGiven = true;
+        }
+        private void RewardReturn()
+        {
+            DialogManager.Instance.Hide();
+            if (m_reward == null)
+                RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel), RewardManager.RewardType.STANDARD, false);
+            else
+                RewardManager.Instance.ShowSolo(m_reward, null, false);
 
             DialogManager.Instance.m_interact = null;
             rewardGiven = true;
