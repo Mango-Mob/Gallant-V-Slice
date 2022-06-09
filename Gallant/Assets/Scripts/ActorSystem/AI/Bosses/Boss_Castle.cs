@@ -167,6 +167,7 @@ namespace ActorSystem.AI.Bosses
                     }
                     RewardManager.giveRewardUponLoad = true;
                     GameManager.currentLevel++;
+                    GameManager.m_saveInfo.m_completedCastle = 1;
                     break;
                 default:
                     break;

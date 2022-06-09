@@ -950,7 +950,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d8f79a1eeb4ef34c961f26725ca5724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitMaterial: {fileID: 2100000, guid: a35d7d69d7d41924a890a7b42459b975, type: 2}
+  m_hitColor: {r: 0, g: 0, b: 0, a: 0}
+  m_freezeMaterial: {fileID: 2100000, guid: 21eec25bfeb7ace49a5b3c3d4e7afb98, type: 2}
+  m_myMaterial: {fileID: 2100000, guid: e0193fe60054227448181b6d622bb83f, type: 2}
 --- !u!114 &407982552234559140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1444,6 +1446,12 @@ MonoBehaviour:
   m_selfTargetTransform: {fileID: 4334076524688368962}
   m_HurtVFXPrefab: {fileID: 0}
   m_myData: {fileID: 11400000, guid: d21e69251dbe7934ab9586e716a4fa18, type: 2}
+  m_onSpawnEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_onDeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
   m_inkSlamDamage: 40
   m_rotationDeg: 40
   m_rotationSpeed: 5
@@ -1725,6 +1733,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localVolume: 1
   isMuted: 0
+  is3D: 0
+  min3D_Dist: 1
+  max3D_Dist: 500
   audioClips:
   - {fileID: 8300000, guid: dca7f11d79d23364399435d4bac0af93, type: 3}
   - {fileID: 8300000, guid: 6dc448241cc31ad4ab33954e47a93681, type: 3}
@@ -1742,6 +1753,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c47db05cd06c547aeeb7e956a127f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_attackClips: []
+  m_footstepClips: []
 --- !u!114 &3450740905111738071
 MonoBehaviour:
   m_ObjectHideFlags: 0
