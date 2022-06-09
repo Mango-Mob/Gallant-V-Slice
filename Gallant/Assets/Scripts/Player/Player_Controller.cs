@@ -353,6 +353,7 @@ public class Player_Controller : MonoBehaviour
         {
             // Heal from adrenaline
             animator.SetTrigger("Heal");
+            animator.SetBool("IsHealing", true);
         }
 
         if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking 
