@@ -167,6 +167,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
         m_canQuit = true;
         loadToScene.Invoke();
+        m_activeNodes[index].MarkCompleted();
         yield return null;
     }
 
