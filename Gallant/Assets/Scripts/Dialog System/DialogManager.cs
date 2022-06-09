@@ -70,7 +70,7 @@ public class DialogManager : Singleton<DialogManager>
                     if (m_options[i].interactable)
                         m_options[i].onClick?.Invoke();
 
-                    //StartCoroutine(m_player);
+                    StartCoroutine(m_player.DelaySwapControl());
                 }
             }
             foreach (var btn in gamepadButtons)
@@ -89,6 +89,7 @@ public class DialogManager : Singleton<DialogManager>
     {
         m_window.SetActive(false);
         m_player.m_isDisabledInput = false;
+        StartCoroutine(m_player.DelayAttackControl());
     }
 
     public void ProcessOption(int i)
@@ -126,16 +127,18 @@ public class DialogManager : Singleton<DialogManager>
     public void LoadDialog(TextAsset file)
     {
         m_file = JsonUtility.FromJson(file.text, typeof(DialogFile)) as DialogFile;
-        if(m_file != null)
+
+        m_interact = new List<UnityEvent>();
+        for (int i = 0; i < 4; i++)
+        {
+            m_interact.Add(null);
+        }
+
+        if (m_file != null)
         {
             SetCharacter(Resources.Load<CharacterData>(m_file.m_characterFile));
             m_currentScene = 0;
             LoadScene(m_currentScene);
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
-            m_interact[i] = null;
         }
     }
 

@@ -45,7 +45,7 @@ public class CombatEvent : SceneEvent
             Instantiate(m_combatScenarios[select].prefabPropsToLoad[selectProps], Vector3.zero, Quaternion.identity);
         }
         DialogManager.Instance.Hide();
-
+        HUDManager.Instance.gameObject.SetActive(true);
         Destroy(gameObject);
     }
 
