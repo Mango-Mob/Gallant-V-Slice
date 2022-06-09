@@ -400,9 +400,9 @@ namespace ActorSystem.AI.Components
             m_ragDoll?.DisableRagdoll();
         }
 
-        public void DropOrbs(int amount, Vector3 position)
+        public void DropOrbs(int amount, Vector3 position, int value)
         {
-            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, 3);
+            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, value);
         }
 
         public void DrawGizmos()

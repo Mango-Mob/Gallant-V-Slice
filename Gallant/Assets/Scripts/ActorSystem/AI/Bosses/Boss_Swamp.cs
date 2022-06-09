@@ -202,14 +202,14 @@ namespace ActorSystem.AI.Bosses
                     m_tentacleO.Kill(); m_tentacleO.Submerge(false);
                     m_tentacleI.Kill(); m_tentacleI.Submerge(false);
 
-                    m_myBrain.DropOrbs(Random.Range(5, 10), GameManager.Instance.m_player.transform.position);
+                    m_myBrain.DropOrbs(Random.Range(5, 10), GameManager.Instance.m_player.transform.position, Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax));
 
                     foreach (var hold in m_holdingTentacles)
                     {
                         hold.StartDisolve();
                     }
 
-                    PlayerPrefs.SetInt("SwampLevel", 1);
+                    GameManager.m_saveInfo.m_completedSwamp = 1;
                     RewardManager.giveRewardUponLoad = true;
                     GameManager.currentLevel++;
                     m_gameOverTimer.Start(6f);

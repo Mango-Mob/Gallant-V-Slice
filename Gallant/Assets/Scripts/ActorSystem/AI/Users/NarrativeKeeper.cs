@@ -155,7 +155,7 @@ namespace ActorSystem.AI.Users
 
         public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
-            if (!m_myBrain.IsDead)
+            if (!m_myBrain.IsDead && !m_myData.invincible)
             {
                 m_potentialDialogs.Clear();
                 if (base.DealDamage(_damage, _type, piercingVal, _damageLoc))
@@ -171,7 +171,7 @@ namespace ActorSystem.AI.Users
         }
         public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
-            if(!m_myBrain.IsDead)
+            if(!m_myBrain.IsDead && !m_myData.invincible)
             {
                 if (base.DealDamageSilent(_damage, _type))
                 {

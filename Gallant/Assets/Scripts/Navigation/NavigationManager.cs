@@ -167,6 +167,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         }
         m_canQuit = true;
         loadToScene.Invoke();
+        m_activeNodes[index].MarkCompleted();
         yield return null;
     }
 
@@ -201,7 +202,7 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
     public void Generate(LevelData data)
     {
-        Clear(false);
+        Clear(true);
 
         m_generatedLevel = data;
         GameManager.deltaLevel = data.m_levelUpPerFloor;
@@ -315,6 +316,9 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
 
                 //If node A and B aren't on the same depth
                 if (nodeA.m_myDepth != nodeB.m_myDepth)
+                    continue;
+
+                if (nodeA == this.m_rootNode || nodeB == this.m_rootNode)
                     continue;
 
                 for (int i = nodeA.m_myConnections.Count - 1; i >= 0; i--)

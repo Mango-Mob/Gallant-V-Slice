@@ -27,16 +27,16 @@ public class NavigationGuide : MonoBehaviour
         {
             agent.SetDestination(targetPosition);
         }
-        
+        GetComponentInChildren<Animator>().SetBool("IsVisible", true);
         GetComponentInChildren<TrailRenderer>().Clear();
     }
 
     public void SetColor(Color _newColor)
     {
-        Color endColor = new Color(_newColor.r, _newColor.g, _newColor.b, _newColor.a * 0.5f);
-
-        GetComponentInChildren<Renderer>().material.color = _newColor;
-        GetComponentInChildren<TrailRenderer>().startColor = _newColor;
-        GetComponentInChildren<TrailRenderer>().endColor = endColor;
+        //Color endColor = new Color(_newColor.r, _newColor.g, _newColor.b, _newColor.a * 0.5f);
+        //
+        //GetComponentInChildren<Renderer>().material.color = _newColor;
+        //GetComponentInChildren<TrailRenderer>().startColor = _newColor;
+        //GetComponentInChildren<TrailRenderer>().endColor = endColor;
     }
 }

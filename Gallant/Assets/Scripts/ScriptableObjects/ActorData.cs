@@ -17,9 +17,9 @@ public class ActorData : ScriptableObject
     public string ActorName;
     public float baseSpeed;
 
-    public float adrenalineGainMin;
+    public int adrenalineGainMin;
     
-    public float adrenalineGainMax;
+    public int adrenalineGainMax;
 
     [Tooltip("Used to calculate how effective knockbacks are.")]
     public float mass;

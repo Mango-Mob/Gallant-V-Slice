@@ -43,6 +43,7 @@ public class RewardManager : Singleton<RewardManager>
 
     public Animator m_inventoryAnimator;
     public Image m_inventoryImage;
+    public GameObject m_currentlyEquip;
 
     [Header("Probabilities")]
     public AnimationCurve[] m_spellTierWeight;
@@ -175,8 +176,8 @@ public class RewardManager : Singleton<RewardManager>
         m_currentRunes.SetActive(false);
         m_player.m_isDisabledInput = true;
         m_onResult = GiveReward;
-
-        if(level >= 0)
+        m_currentlyEquip.SetActive(false);
+        if (level >= 0)
         {
             List<ScriptableObject> rewards = new List<ScriptableObject>();
             switch (type)
@@ -246,7 +247,7 @@ public class RewardManager : Singleton<RewardManager>
 
         m_currentWeapons.SetActive(true);
         m_currentRunes.SetActive(false);
-
+        m_currentlyEquip.SetActive(false);
         if (data.GetType() == typeof(WeaponData))
         {
             m_rewardSlots[1].LoadWeapon(data as WeaponData);
@@ -278,6 +279,8 @@ public class RewardManager : Singleton<RewardManager>
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
         m_player.m_isDisabledInput = true;
+
+        m_currentlyEquip.SetActive(true);
 
         m_rewardSlots[0].LoadWeapon(data1);
         m_rewardSlots[1].LoadWeapon(data2);
@@ -312,6 +315,7 @@ public class RewardManager : Singleton<RewardManager>
         {
             item.gameObject.SetActive(true);
         }
+        m_currentlyEquip.SetActive(true);
 
         if (level >= 0)
         {
@@ -364,6 +368,7 @@ public class RewardManager : Singleton<RewardManager>
                         rewards.Add(ExchangeData.CreateExchange(GenerateRune(rewards, 1), 3, m_randomRune, 3));
                     }
                     m_rewardTitle.text = "Exchange";
+                    m_currentlyEquip.SetActive(false);
                     break;
                 case RewardType.BOOK:
                     //Only Abilities
