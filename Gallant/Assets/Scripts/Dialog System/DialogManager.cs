@@ -69,6 +69,8 @@ public class DialogManager : Singleton<DialogManager>
                 {
                     if (m_options[i].interactable)
                         m_options[i].onClick?.Invoke();
+
+                    //StartCoroutine(m_player);
                 }
             }
             foreach (var btn in gamepadButtons)

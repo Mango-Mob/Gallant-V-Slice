@@ -157,7 +157,7 @@ namespace ActorSystem.AI
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position, Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax));
                     SetState(new State_Dead(this));
                     m_onDeathEvent?.Invoke();
                     return true;
@@ -180,7 +180,7 @@ namespace ActorSystem.AI
                     {
                         collider.enabled = false;
                     }
-                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position);
+                    m_myBrain.DropOrbs(Random.Range(2, 6), transform.position, Random.Range(m_myData.adrenalineGainMin, m_myData.adrenalineGainMax));
                     SetState(new State_Dead(this));
                     m_onDeathEvent?.Invoke();
                     return true;

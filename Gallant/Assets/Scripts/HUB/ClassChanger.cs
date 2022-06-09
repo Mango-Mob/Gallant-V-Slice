@@ -24,7 +24,7 @@ public class ClassChanger : MonoBehaviour
     }
     private void Update()
     {
-        
+        m_myInterface.m_usable = !GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isKneeling;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,6 +50,6 @@ public class ClassChanger : MonoBehaviour
 
     public void Change()
     {
-        GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_classData);
+        GameManager.Instance.m_player.GetComponent<Player_Controller>().StartKneel(m_classData);
     }
 }

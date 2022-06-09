@@ -22,8 +22,13 @@ namespace ActorSystem.AI.Bosses
         public float m_chargeAimDist = 5f;
         public float m_chargeHitDist = 2.5f;
         public float m_chargeKnockback = 20.0f;
+        public float m_chargeDamage = 10f;
+        public float m_wallStun = 3.5f;
         public bool m_chargeControlled = true;
         public AnimationCurve m_chargeMSpeedMod;
+        public GameObject m_wallStunVFX;
+        private float m_speedMod = 1.0f;
+        public float m_chargeCooldown = 3.0f;
 
         [Header("Flee variables")]
         public float m_slamDamage = 10f;
@@ -37,6 +42,7 @@ namespace ActorSystem.AI.Bosses
         private float m_cameraDelay = 0.0f;
         private bool m_cameraReturned = false;
         public GameObject m_buttSlamIndicator;
+        public float m_fleeHeal = 1f;
 
         [Header("System")]
         public Phase m_phase;
@@ -44,7 +50,7 @@ namespace ActorSystem.AI.Bosses
         public CastleWallController[] m_myWalls;
         public SpikeTrapGroup m_spikeGroup;
 
-        public float m_chargeCooldown = 3.0f;
+        
         private float m_chargeCurrCd = 0.0f;
         private float m_recoveryCd = 0.0f;
         private float m_chargeTimer = 0.0f;
@@ -87,6 +93,7 @@ namespace ActorSystem.AI.Bosses
                     FleePhaseFunc();
                     break;
                 case Phase.DEAD:
+                    DeadPhaseFunc();
                     break;
                 default:
                     break;
@@ -110,6 +117,9 @@ namespace ActorSystem.AI.Bosses
                         m_chargeCurrCd = m_chargeCooldown;
                         break;
                     case Phase.FLEE:
+                        m_speedMod = 1.5f;
+                        m_chargeCooldown *= 0.8f;
+                        m_wallStun *= 0.8f;
                         break;
                     case Phase.DEAD:
                         break;
@@ -151,6 +161,13 @@ namespace ActorSystem.AI.Bosses
                     m_cameraDelay = 1.0f;
                     break;
                 case Phase.DEAD:
+                    foreach (var item in m_myBrain.m_materials)
+                    {
+                        item.StartDisolve(2.5f);
+                    }
+                    RewardManager.giveRewardUponLoad = true;
+                    GameManager.currentLevel++;
+                    GameManager.m_saveInfo.m_completedCastle = 1;
                     break;
                 default:
                     break;
@@ -160,6 +177,23 @@ namespace ActorSystem.AI.Bosses
         public void EndChargeAim()
         {
             m_cPhase = ChargePhase.RUNNING;
+        }
+
+        private void DeadPhaseFunc()
+        {
+            bool hasEnded = true;
+            foreach (var item in m_myBrain.m_materials)
+            {
+                if(item.m_isDisolving != 0)
+                {
+                    hasEnded = false;
+                }
+            }
+
+            if(hasEnded)
+            {
+                GameManager.Instance.FinishLevel();
+            }
         }
 
         private void WaitPhaseFunc()
@@ -222,6 +256,7 @@ namespace ActorSystem.AI.Bosses
                     Vector3 forward = m_target.transform.position - transform.position;
                     forward.y = 0;
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(forward.normalized, Vector3.up), 120);
+                    m_myBrain.m_currHealth += m_fleeHeal * Time.deltaTime;
                     if (!m_spikesStarted)
                     {
                         m_spikesStarted = true;
@@ -266,7 +301,7 @@ namespace ActorSystem.AI.Bosses
                         if (m_myBrain.m_legs.enabled)
                         {
                             m_chargeTimer = Mathf.Clamp(m_chargeTimer + Time.deltaTime, 0, m_chargeMSpeedMod.keys[m_chargeMSpeedMod.keys.Count() - 1].time);
-                            m_myBrain.m_legs.m_baseSpeed = m_myData.baseSpeed * m_chargeMSpeedMod.Evaluate(m_chargeTimer);
+                            m_myBrain.m_legs.m_baseSpeed = m_myData.baseSpeed * m_chargeMSpeedMod.Evaluate(m_chargeTimer) * m_speedMod;
 
                             if (m_chargeControlled)
                             {
@@ -291,6 +326,8 @@ namespace ActorSystem.AI.Bosses
                                 {
                                     //Hit player
                                     EnterRecovery(1.0f, false);
+                                    m_myBrain.m_audioAgent.PlayAttack(1);
+                                    m_target.GetComponent<Player_Controller>().DamagePlayer(m_chargeDamage, CombatSystem.DamageType.Physical, null, true);
                                     m_target.GetComponent<Player_Controller>().StunPlayer(0.2f,  (m_target.transform.position - transform.position).normalized * m_chargeKnockback);
                                     m_target.GetComponent<Player_Controller>().ScreenShake(5.0f);
                                 }
@@ -305,9 +342,15 @@ namespace ActorSystem.AI.Bosses
                 case ChargePhase.RECOVERY:
                     {
                         m_myBrain.m_legs.Halt();
-                        if(m_recoveryCd <= 0)
+
+                        if (m_wallStunVFX.activeInHierarchy)
+                            m_myBrain.m_animator.Shake(0.025f * m_recoveryCd / m_wallStun);
+
+                        if (m_recoveryCd <= 0)
                         {
+                            m_wallStunVFX.SetActive(false);
                             TransitionToPhase(Phase.ATTACK);
+                            
                         }
                         break;
                     };
@@ -319,6 +362,13 @@ namespace ActorSystem.AI.Bosses
         private void EnterRecovery(float delay, bool wasHit = true)
         {
             m_recoveryCd = delay;
+
+            if(wasHit)
+            {
+                m_wallStunVFX.SetActive(true);
+                m_myBrain.m_audioAgent.PlayAttack(2);
+            }
+
             m_myBrain.m_animator.SetInteger("ChargeStatus", (wasHit) ? -1 : 1);
             m_myBrain.m_legs.Halt();
             m_cPhase = ChargePhase.RECOVERY;
@@ -362,6 +412,7 @@ namespace ActorSystem.AI.Bosses
             if (enableLegsAfter)
             {
                 TransitionToPhase(Phase.ATTACK);
+                m_myBrain.m_audioAgent.PlayAttack(2);
             }
 
             yield return null;
@@ -371,7 +422,9 @@ namespace ActorSystem.AI.Bosses
         {
             if(m_phase == Phase.CHARGE)
             {
-                EnterRecovery(1.5f, true);
+                EnterRecovery(m_wallStun, true);
+                float dist = Vector3.Distance(m_target.transform.position, transform.position);
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(10 * (1.0f - dist / 15f), 0.3f);
             }
         }
 
@@ -382,12 +435,23 @@ namespace ActorSystem.AI.Bosses
 
         public override bool DealDamage(float _damage, CombatSystem.DamageType _type, float piercingVal = 0, Vector3? _damageLoc = null)
         {
-            return base.DealDamage(_damage, _type, piercingVal, null);
+            if(base.DealDamage(_damage, _type, piercingVal, null))
+            {
+                TransitionToPhase(Phase.DEAD);
+                return true;
+            }
+            return false;
         }
 
         public override bool DealDamageSilent(float _damage, CombatSystem.DamageType _type)
         {
-            return base.DealDamageSilent(_damage, _type);
+            if(base.DealDamageSilent(_damage, _type))
+            {
+                TransitionToPhase(Phase.DEAD);
+                return true;
+            }
+
+            return false;
         }
 
         public void StartJump()
