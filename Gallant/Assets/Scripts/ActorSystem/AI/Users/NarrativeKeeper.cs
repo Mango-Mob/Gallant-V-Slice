@@ -17,6 +17,7 @@ namespace ActorSystem.AI.Users
         }
 
         public List<DialogNarrative> m_potentialDialogs;
+        public ScriptableObject m_reward;
 
         public Interactable m_interactDisplay;
         public bool isWaiting = false;
@@ -95,6 +96,13 @@ namespace ActorSystem.AI.Users
                     isWaiting = false;
                 }
             }
+
+#if UNITY_EDITOR
+            if (InputManager.Instance.IsKeyDown(KeyType.I))
+            {
+                Reward();
+            }
+#endif
             base.Update();
         }
 
@@ -131,7 +139,11 @@ namespace ActorSystem.AI.Users
         private void Reward()
         {
             DialogManager.Instance.Hide();
-            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+            if (m_reward == null)
+                RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+            else
+                RewardManager.Instance.ShowSolo(m_reward);
+
             DialogManager.Instance.m_interact = null;
             rewardGiven = true;
         }
