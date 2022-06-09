@@ -251,13 +251,14 @@ Transform:
   m_LocalPosition: {x: -8.672461, y: 2.3450155, z: 2.2590623}
   m_LocalScale: {x: 1.3941755, y: 1.394176, z: 1.3941754}
   m_Children:
-  - {fileID: 7141979126334713620}
+  - {fileID: 2421951364109043895}
   - {fileID: 3332968911474931928}
   - {fileID: 2934278509075547560}
+  - {fileID: 6797156273936923698}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
---- !u!1 &2335989947903998212
+--- !u!1 &6133772069040793224
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -265,45 +266,75 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7141979126334713620}
-  - component: {fileID: 492326783813608416}
-  - component: {fileID: 6846530210982267587}
+  - component: {fileID: 6797156273936923698}
   m_Layer: 0
-  m_Name: StoneLantern_Base_CompletedStuff
+  m_Name: WallTorch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7141979126334713620
+--- !u!4 &6797156273936923698
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2335989947903998212}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 6133772069040793224}
+  m_LocalRotation: {x: 0.19134139, y: -0.3314138, z: 0.46193945, w: 0.80010337}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_Children: []
+  m_Father: {fileID: 1191434205878566375}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 37.761, y: -26.565, z: 50.768}
+--- !u!1 &8269005503155697350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2421951364109043895}
+  - component: {fileID: 6586943610887124892}
+  - component: {fileID: 9800109351402826}
+  m_Layer: 0
+  m_Name: WallTorchHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2421951364109043895
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8269005503155697350}
+  m_LocalRotation: {x: 0.14644633, y: -0.35355353, z: 0.35355315, w: 0.85355353}
+  m_LocalPosition: {x: -0.524, y: -0.404, z: -0}
+  m_LocalScale: {x: 0.5000001, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1191434205878566375}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &492326783813608416
+  m_LocalEulerAnglesHint: {x: 30, y: -35.264, z: 35.264}
+--- !u!33 &6586943610887124892
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2335989947903998212}
-  m_Mesh: {fileID: 4044933701607115186, guid: 82e69efb8d7263f45bbcd598b4292397, type: 3}
---- !u!23 &6846530210982267587
+  m_GameObject: {fileID: 8269005503155697350}
+  m_Mesh: {fileID: 7209250414797606717, guid: 59ace72081f4a8c4687b29ea2a757133, type: 3}
+--- !u!23 &9800109351402826
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2335989947903998212}
+  m_GameObject: {fileID: 8269005503155697350}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -316,7 +347,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a19448fe47d6d844ab6acbc67306c97e, type: 2}
+  - {fileID: 2100000, guid: 2e2a294f61a24b8458a0959fc94f8280, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
