@@ -89,6 +89,7 @@ public class DialogManager : Singleton<DialogManager>
     {
         m_window.SetActive(false);
         m_player.m_isDisabledInput = false;
+        StartCoroutine(m_player.DelayAttackControl());
     }
 
     public void ProcessOption(int i)

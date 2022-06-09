@@ -485,7 +485,7 @@ public class Player_Controller : MonoBehaviour
         playerPickup.RemoveDropFromList(_drop);
         StartCoroutine(DelayAttackControl());
     }
-    IEnumerator DelayAttackControl()
+    public IEnumerator DelayAttackControl()
     {
         m_hasRecentPickup = true;
         yield return new WaitForSeconds(m_controlReturnDelay);
