@@ -153,10 +153,10 @@ public class GameManager : Singleton<GameManager>
         public bool m_validSave;
 
         public SerializedWeapon m_leftWeapon;
-        public AbilityData m_leftAbility;
+        //public AbilityData m_leftAbility;
 
         public SerializedWeapon m_rightWeapon;
-        public AbilityData m_rightAbility;
+        //public AbilityData m_rightAbility;
 
         public ClassData m_classData;
 
@@ -185,6 +185,8 @@ public class GameManager : Singleton<GameManager>
 
     public static void ClearPlayerInfoFromFile()
     {
+        Debug.Log("Deleting file player info");
+
         m_playerInfo = new PlayerInfo();
         m_containsPlayerInfo = false;
         m_playerInfo.m_validSave = false;
@@ -215,6 +217,8 @@ public class GameManager : Singleton<GameManager>
     }
     public static void LoadPlayerInfoFromFile()
     {
+        Debug.Log("Loading player info");
+
         if (File.Exists(Application.persistentDataPath + $"/saveSlot{m_saveSlotInUse}/playerInfo.json"))
         {
             // Read the json from the file into a string
@@ -231,30 +235,32 @@ public class GameManager : Singleton<GameManager>
     }
     public static void StorePlayerInfo(WeaponData _leftWeapon, WeaponData _rightWeapon, Dictionary<EffectData, int> _effects, ClassData _class, ItemEffect _leftWeaponEffect, ItemEffect _rightWeaponEffect, float _health, int _orbs)
     {
+        Debug.Log("Storing player info");
+
         if (_leftWeapon != null)
         {
             m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon);
-            m_playerInfo.m_leftAbility = _leftWeapon.abilityData;
-            if (m_playerInfo.m_leftAbility)
-                m_playerInfo.m_leftOutlineColor = m_playerInfo.m_leftAbility.droppedEnergyColor;
+            //m_playerInfo.m_leftAbility = _leftWeapon.abilityData;
+            //if (m_playerInfo.m_leftAbility)
+            //    m_playerInfo.m_leftOutlineColor = m_playerInfo.m_leftAbility.droppedEnergyColor;
         }
         else
         {
             m_playerInfo.m_leftWeapon = SerializedWeapon.SerializeWeapon(_leftWeapon); ;
-            m_playerInfo.m_leftAbility = null;
+            //m_playerInfo.m_leftAbility = null;
         }
 
         if (_rightWeapon != null)
         {
             m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon);
-            m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
-            if (m_playerInfo.m_rightAbility)
-                m_playerInfo.m_rightOutlineColor = m_playerInfo.m_rightAbility.droppedEnergyColor;
+            //m_playerInfo.m_rightAbility = _rightWeapon.abilityData;
+            //if (m_playerInfo.m_rightAbility)
+            //    m_playerInfo.m_rightOutlineColor = m_playerInfo.m_rightAbility.droppedEnergyColor;
         }
         else
         {
             m_playerInfo.m_rightWeapon = SerializedWeapon.SerializeWeapon(_rightWeapon); ;
-            m_playerInfo.m_rightAbility = null;
+            //m_playerInfo.m_rightAbility = null;
         }
 
         m_playerInfo.m_leftWeaponEffect = _leftWeaponEffect;
@@ -326,37 +332,37 @@ public class GameManager : Singleton<GameManager>
         }
         return data;
     }
-    public static AbilityData RetrieveAbilityData(Hand _hand)
-    {
-        //switch (_hand)
-        //{
-        //    case Hand.LEFT:
-        //        return m_playerInfo.m_leftAbility;
-        //    case Hand.RIGHT:
-        //        return m_playerInfo.m_rightAbility;
-        //    default:
-        //        return null;
-        //}
-        AbilityData data = AbilityData.CreateInstance<AbilityData>();
-        switch (_hand)
-        {
-            case Hand.LEFT:
-                if (m_playerInfo.m_leftAbility)
-                    data.Clone(m_playerInfo.m_leftAbility);
-                else
-                    return null;
-                break;
-            case Hand.RIGHT:
-                if (m_playerInfo.m_rightAbility)
-                    data.Clone(m_playerInfo.m_rightAbility);
-                else
-                    return null;
-                break;
-            default:
-                return null;
-        }
-        return data;
-    }
+    //public static AbilityData RetrieveAbilityData(Hand _hand)
+    //{
+    //    //switch (_hand)
+    //    //{
+    //    //    case Hand.LEFT:
+    //    //        return m_playerInfo.m_leftAbility;
+    //    //    case Hand.RIGHT:
+    //    //        return m_playerInfo.m_rightAbility;
+    //    //    default:
+    //    //        return null;
+    //    //}
+    //    AbilityData data = AbilityData.CreateInstance<AbilityData>();
+    //    switch (_hand)
+    //    {
+    //        case Hand.LEFT:
+    //            if (m_playerInfo.m_leftAbility)
+    //                data.Clone(m_playerInfo.m_leftAbility);
+    //            else
+    //                return null;
+    //            break;
+    //        case Hand.RIGHT:
+    //            if (m_playerInfo.m_rightAbility)
+    //                data.Clone(m_playerInfo.m_rightAbility);
+    //            else
+    //                return null;
+    //            break;
+    //        default:
+    //            return null;
+    //    }
+    //    return data;
+    //}
     
     public static ItemEffect RetrieveWeaponEffect(Hand _hand)
     {
@@ -447,6 +453,7 @@ public class GameManager : Singleton<GameManager>
         public int m_completedTutorial = 0;
         public int m_completedSwamp = 0;
         public int m_completedCastle = 0;
+        public int m_completedMagma = 0;
 
         //NPCs
         public int m_rowanVisits = 0;
@@ -489,8 +496,6 @@ public class GameManager : Singleton<GameManager>
 
             // Pass the json to JsonUtility, and tell it to create a RunInfo object from it
             m_saveInfo = JsonUtility.FromJson<SaveInfo>(dataAsJson);
-
-            m_containsPlayerInfo = true;
         }
     }
     #endregion

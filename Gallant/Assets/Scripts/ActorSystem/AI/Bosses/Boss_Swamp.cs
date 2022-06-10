@@ -19,6 +19,8 @@ namespace ActorSystem.AI.Bosses
         public GameObject m_inkBallVFX;
         public GameObject m_igniteVFX;
 
+        public bool m_isLava = false;
+
         [Header("External Tentacles")]
         public Tentacle_AI m_tentacleL;
         public Tentacle_AI m_tentacleR;
@@ -209,8 +211,13 @@ namespace ActorSystem.AI.Bosses
                         hold.StartDisolve();
                     }
 
-                    GameManager.m_saveInfo.m_completedSwamp = 1;
+                    if (m_isLava)
+                        GameManager.m_saveInfo.m_completedMagma = 1;
+                    else
+                        GameManager.m_saveInfo.m_completedSwamp = 1;
+
                     RewardManager.giveRewardUponLoad = true;
+                    
                     GameManager.currentLevel++;
                     m_gameOverTimer.Start(6f);
                     break;

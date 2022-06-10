@@ -510,10 +510,14 @@ public class Player_Controller : MonoBehaviour
         if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             return;
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
-        VFXTimerScript m_stunVFXTimer = Instantiate(m_stunVFXPrefab, transform).GetComponent<VFXTimerScript>();
-        m_stunVFXTimer.m_timer = _stunDuration;
-        m_stunVFXTimer.transform.position += transform.up * 2.0f;
-        m_stunVFXTimer.transform.localScale *= 0.5f;
+
+        if (m_stunVFXPrefab != null)
+        {
+            VFXTimerScript m_stunVFXTimer = Instantiate(m_stunVFXPrefab, transform).GetComponent<VFXTimerScript>();
+            m_stunVFXTimer.m_timer = _stunDuration;
+            m_stunVFXTimer.transform.position += transform.up * 2.0f;
+            m_stunVFXTimer.transform.localScale *= 0.5f;
+        }
     }
     public Vector2 GetPlayerMovementVector(bool _rawInput = false)
     {
@@ -881,23 +885,23 @@ public class Player_Controller : MonoBehaviour
     }
     public void LoadPlayerInfo()
     {
-        if (GameManager.m_containsPlayerInfo && GameManager.RetrieveValidSaveState())
+        if (GameManager.m_containsPlayerInfo)
         {
             playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
-            if (playerAttack.m_leftWeaponData)
-            {
-                WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, GameManager.RetrieveAbilityData(Hand.LEFT));
-                if (playerAttack.m_leftWeaponData.abilityData)
-                    playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
-            }
-            if (playerAttack.m_rightWeaponData)
-            {
-                WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, GameManager.RetrieveAbilityData(Hand.RIGHT));
-                if (playerAttack.m_rightWeaponData.abilityData)
-                    playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
-            }
+            //if (playerAttack.m_leftWeaponData)
+            //{
+            //    WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, GameManager.RetrieveAbilityData(Hand.LEFT));
+            //    if (playerAttack.m_leftWeaponData.abilityData)
+            //        playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
+            //}
+            //if (playerAttack.m_rightWeaponData)
+            //{
+            //    WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, GameManager.RetrieveAbilityData(Hand.RIGHT));
+            //    if (playerAttack.m_rightWeaponData.abilityData)
+            //        playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
+            //}
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();

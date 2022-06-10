@@ -78,7 +78,7 @@ public class RewardManager : Singleton<RewardManager>
         m_audio = GetComponent<SoloAudioAgent>();
         if (giveRewardUponLoad)
         {
-            Show(Mathf.FloorToInt(GameManager.currentLevel));
+            Show(Mathf.FloorToInt(GameManager.currentLevel), RewardType.WEAPONS);
             giveRewardUponLoad = false;
         }
         else
@@ -239,7 +239,7 @@ public class RewardManager : Singleton<RewardManager>
     public void ShowSolo(ScriptableObject data, UnityAction<int> onResult = null, bool isDialogue = false)
     {
         m_window.SetActive(true);
-        m_rewardTitle.text = "Reward";
+        m_rewardTitle.text = "Here you go!";
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
         m_player.m_isDisabledInput = true;

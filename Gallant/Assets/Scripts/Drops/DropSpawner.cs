@@ -9,6 +9,7 @@ public class DropSpawner : MonoBehaviour
         WEAPON,
         UPGRADE,
         SPELLBOOK,
+        SPECIFIC_WEAPON
     }
 
     [SerializeField] private Vector3 m_spawnLoc;
@@ -19,6 +20,7 @@ public class DropSpawner : MonoBehaviour
     [SerializeField] private Weapon m_weaponType;
     [SerializeField] private Ability m_abilityType;
     [Range(1, 3)] [SerializeField] private int m_abilityPowerLevel = 1;
+    [SerializeField] private WeaponData m_weaponData;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +47,25 @@ public class DropSpawner : MonoBehaviour
                 InfoDisplay display3 = droppedSpellbook.GetComponentInChildren<InfoDisplay>();
 
                 display3.m_abilityData = abilityData;
+                break;
+            case DropType.SPECIFIC_WEAPON:
+                GameManager.LoadSaveInfoFromFile();
+                if (GameManager.m_saveInfo.m_completedMagma != 0)
+                {
+                    WeaponData newData = ScriptableObject.CreateInstance<WeaponData>();
+                    newData.Clone(m_weaponData);
+
+                    GameObject droppedSpecificWeapon = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData);
+                    InfoDisplay display4 = droppedSpecificWeapon.GetComponentInChildren<InfoDisplay>();
+
+                    display4.m_weaponData = newData;
+
+                    droppedSpecificWeapon.GetComponent<DroppedWeapon>().m_weaponMoves = false;
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
                 break;
             default:
                 break;

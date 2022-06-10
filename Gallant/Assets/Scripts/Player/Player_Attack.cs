@@ -342,9 +342,9 @@ public class Player_Attack : MonoBehaviour
         bool usingRight = false;
         bool usingLeft = false;
 
-        if (playerController.animator.GetBool("RightCast"))
+        if (playerController.animator.GetBool("RightCast") || playerController.animator.GetBool("RightSwingCast"))
             usingRight = true;
-        if (playerController.animator.GetBool("LeftCast"))
+        if (playerController.animator.GetBool("LeftCast") || playerController.animator.GetBool("LeftSwingCast"))
             usingLeft = true;
 
         if (usingRight == usingLeft)

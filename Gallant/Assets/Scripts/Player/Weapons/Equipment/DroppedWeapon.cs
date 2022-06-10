@@ -10,6 +10,8 @@ using UnityEngine;
  */
 public class DroppedWeapon : MonoBehaviour
 {
+    public bool m_weaponMoves = true;
+
     public DropSpawner.DropType m_dropType;
 
     public WeaponData m_weaponData; // Data of contained weapon
@@ -45,7 +47,15 @@ public class DroppedWeapon : MonoBehaviour
             {
                 m_weaponModel.transform.GetChild(0).localPosition = Vector3.zero;
             }
-            m_weaponModel.transform.GetChild(0).rotation = Quaternion.Euler(-75, 0, 0);
+            if (m_weaponMoves)
+            {
+                m_weaponModel.transform.GetChild(0).rotation = Quaternion.Euler(-75, 0, 0);
+            }
+            else
+            {
+                m_weaponModel.transform.localRotation = Quaternion.Euler(100, 100, 40);
+                m_weaponModel.transform.position += Vector3.up;
+            }
             m_weaponModel.transform.GetChild(0).localScale *= m_weaponData.m_dropScaleMultiplier; 
 
             if (m_weaponData.abilityData != null)
@@ -94,8 +104,11 @@ public class DroppedWeapon : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        m_defaultModel.transform.Rotate(new Vector3(0, 30, 0) * Time.fixedDeltaTime);
-        m_defaultModel.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Mathf.Sin(Time.timeSinceLevelLoad * 1.0f) * 30.0f);
+        if (m_weaponMoves)
+        {
+            m_defaultModel.transform.Rotate(new Vector3(0, 30, 0) * Time.fixedDeltaTime);
+            m_defaultModel.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, Mathf.Sin(Time.timeSinceLevelLoad * 1.0f) * 30.0f);
+        }
     }
 
     public void ToggleDisplay(bool _enabled)

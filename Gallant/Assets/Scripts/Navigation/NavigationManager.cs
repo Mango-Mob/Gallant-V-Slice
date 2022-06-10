@@ -118,7 +118,10 @@ public class NavigationManager : SingletonPersistent<NavigationManager>
         ConstructScene();
         Instance.SetVisibility(false);
     }
-
+    public void SetVisibility(bool status)
+    {
+        SetVisibility(status, true);
+    }
     public void SetVisibility(bool status, bool canQuit = true)
     {
         m_myCamera.gameObject.SetActive(status);
