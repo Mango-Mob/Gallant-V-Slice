@@ -881,23 +881,23 @@ public class Player_Controller : MonoBehaviour
     }
     public void LoadPlayerInfo()
     {
-        if (GameManager.m_containsPlayerInfo && GameManager.RetrieveValidSaveState())
+        if (GameManager.m_containsPlayerInfo)
         {
             playerAttack.m_leftWeaponData = GameManager.RetrieveWeaponData(Hand.LEFT);
             playerAttack.m_rightWeaponData = GameManager.RetrieveWeaponData(Hand.RIGHT);
 
-            if (playerAttack.m_leftWeaponData)
-            {
-                WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, GameManager.RetrieveAbilityData(Hand.LEFT));
-                if (playerAttack.m_leftWeaponData.abilityData)
-                    playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
-            }
-            if (playerAttack.m_rightWeaponData)
-            {
-                WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, GameManager.RetrieveAbilityData(Hand.RIGHT));
-                if (playerAttack.m_rightWeaponData.abilityData)
-                    playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
-            }
+            //if (playerAttack.m_leftWeaponData)
+            //{
+            //    WeaponData.ApplyAbilityData(playerAttack.m_leftWeaponData, GameManager.RetrieveAbilityData(Hand.LEFT));
+            //    if (playerAttack.m_leftWeaponData.abilityData)
+            //        playerAttack.m_leftWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.LEFT);
+            //}
+            //if (playerAttack.m_rightWeaponData)
+            //{
+            //    WeaponData.ApplyAbilityData(playerAttack.m_rightWeaponData, GameManager.RetrieveAbilityData(Hand.RIGHT));
+            //    if (playerAttack.m_rightWeaponData.abilityData)
+            //        playerAttack.m_rightWeaponData.abilityData.droppedEnergyColor = GameManager.RetrieveOutlineColor(Hand.RIGHT);
+            //}
 
             playerStats.m_effects = GameManager.RetrieveEffectsDictionary();
             m_inkmanClass = GameManager.RetrieveClassData();

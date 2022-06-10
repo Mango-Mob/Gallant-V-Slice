@@ -63,6 +63,10 @@ public class NavigationTelescope : MonoBehaviour
             m_camera.transform.localRotation.eulerAngles.z);
         m_animator = GetComponent<Animator>();
         m_locked.enabled = false;
+
+        GameManager.LoadSaveInfoFromFile();
+        m_destinations[1].levelLocked = GameManager.m_saveInfo.m_completedSwamp == 0;
+        m_destinations[2].levelLocked = GameManager.m_saveInfo.m_completedCastle == 0;
     }
 
     // Update is called once per frame
