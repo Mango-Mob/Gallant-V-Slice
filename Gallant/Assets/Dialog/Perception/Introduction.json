@@ -39,7 +39,7 @@
         {
             "nameID": 0,
             "bodyID": 0,
-            "faceID": 2,
+            "faceID": 5,
             "m_dialog": "Regardless, I hope you're having fun. Feel free to drop by for a chat, it gets awfully lonely here.",
             "results": [
                 {
@@ -56,9 +56,9 @@
         },
         {
             "nameID": 0,
-            "bodyID": 1,
-            "faceID": 3,
-            "m_dialog": "Where's my body? The model's not in yet, so you get to look at this wonderful chair, and these placeholder sprites. My name is Perception, by the way. ",
+            "bodyID": 0,
+            "faceID": 0,
+            "m_dialog": "Where's my body? The model's not in yet, so you get to look at this wonderful chair. My name is Perception, by the way.",
             "results": [
                 {
                     "resultText": "[Try to shake hands with her]",
@@ -75,8 +75,8 @@
         {
             "nameID": 1,
             "bodyID": 0,
-            "faceID": 2,
-            "m_dialog": "You're rather polite, aren't you? That's good, I like that in my humans. Now, before my dialogue starts looping again, is there anything else you want to know?",
+            "faceID": 3,
+            "m_dialog": "You're rather polite, aren't you? That's good, I like that in my humans. Now, is there anything else you want to know?",
             "results": [
                 {
                     "resultText": "[Point at her]",
@@ -121,7 +121,13 @@
             "bodyID": 0,
             "faceID": 2,
             "m_dialog": "Rude.",
-            "results": []
+            "results": [
+                {
+                    "resultText": "[...]",
+                    "resultType": "END",
+                    "other": "-2"
+                }
+            ]
         }
     ],
     "m_characterFile": "Data/Characters/Perception"
