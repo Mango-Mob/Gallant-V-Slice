@@ -75,7 +75,10 @@ namespace ActorSystem.AI.Components.SpawnMethods
         {
             m_myActor.DestroySelf();
         }
-
+        public void ResetSelf()
+        {
+            m_myActor.m_myBrain.m_animator.PlayAnimation("Locomotion");
+        }
         public override void StopSpawning()
         {
             m_hasResentlySpawnned = false;
