@@ -78,7 +78,7 @@ public class RewardManager : Singleton<RewardManager>
         m_audio = GetComponent<SoloAudioAgent>();
         if (giveRewardUponLoad)
         {
-            Show(Mathf.FloorToInt(GameManager.currentLevel));
+            Show(Mathf.FloorToInt(GameManager.currentLevel), RewardType.WEAPONS);
             giveRewardUponLoad = false;
         }
         else

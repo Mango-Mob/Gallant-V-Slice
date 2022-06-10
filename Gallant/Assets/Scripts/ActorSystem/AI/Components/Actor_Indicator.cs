@@ -4,7 +4,16 @@ namespace ActorSystem.AI.Components
 {
     public class Actor_Indicator : Actor_Component
     {
-        public float m_speed { get { return GetComponent<Animator>().speed; } set { GetComponent<Animator>().speed = value; } }
+        public float m_speed { get {
+                if (GetComponent<Animator>() != null)
+                    return GetComponent<Animator>().speed;
+                return 1.0f;
+            } 
+            set { 
+                if(GetComponent<Animator>() != null) 
+                    GetComponent<Animator>().speed = value; 
+            } 
+        }
 
         public void Start()
         {
