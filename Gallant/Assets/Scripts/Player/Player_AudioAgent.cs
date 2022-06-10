@@ -14,6 +14,17 @@ public class Player_AudioAgent : MultiAudioAgent
     {
         switch (_weapon)
         {
+            case Weapon.SWORD:
+                switch (_sound)
+                {
+                    case 1:
+                        base.PlayOnce("WeaponSwing", false, Random.Range(0.95f, 1.05f));
+                        break;
+                    case 2:
+                        base.PlayOnce("Parry", false, Random.Range(1.0f, 1.0f));
+                        break;
+                }
+                break;
             case Weapon.CROSSBOW:
                 switch (_sound)
                 {

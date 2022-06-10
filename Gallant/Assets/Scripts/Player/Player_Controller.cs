@@ -510,6 +510,7 @@ public class Player_Controller : MonoBehaviour
         if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             return;
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
+        
 
         if (m_stunVFXPrefab != null)
         {
