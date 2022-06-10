@@ -49,17 +49,23 @@ public class DropSpawner : MonoBehaviour
                 display3.m_abilityData = abilityData;
                 break;
             case DropType.SPECIFIC_WEAPON:
-                WeaponData newData = ScriptableObject.CreateInstance<WeaponData>();
-                newData.Clone(m_weaponData);
+                GameManager.LoadSaveInfoFromFile();
+                if (GameManager.m_saveInfo.m_completedMagma != 0)
+                {
+                    WeaponData newData = ScriptableObject.CreateInstance<WeaponData>();
+                    newData.Clone(m_weaponData);
 
-                GameObject droppedSpecificWeapon = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData);
-                InfoDisplay display4 = droppedSpecificWeapon.GetComponentInChildren<InfoDisplay>();
+                    GameObject droppedSpecificWeapon = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData);
+                    InfoDisplay display4 = droppedSpecificWeapon.GetComponentInChildren<InfoDisplay>();
 
-                display4.m_weaponData = newData;
+                    display4.m_weaponData = newData;
 
-                droppedSpecificWeapon.GetComponent<DroppedWeapon>().m_weaponMoves = false;
-
-                gameObject.SetActive(true);
+                    droppedSpecificWeapon.GetComponent<DroppedWeapon>().m_weaponMoves = false;
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+                }
                 break;
             default:
                 break;
