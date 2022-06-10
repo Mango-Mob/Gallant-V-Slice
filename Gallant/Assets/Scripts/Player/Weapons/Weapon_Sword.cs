@@ -66,7 +66,7 @@ public class Weapon_Sword : WeaponBase
         if (m_attackReady)
         {
             GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
-            VFX.transform.localScale *= (m_weaponData.hitCenterOffset + m_weaponData.hitSize) * 1.0f;
+            VFX.transform.localScale *= (m_weaponData.altHitCenterOffset + m_weaponData.altHitSize) * 1.0f;
             VFX.transform.position += m_weaponData.hitCenterOffset * playerController.playerMovement.playerModel.transform.forward;
             VFX.transform.SetParent(transform);
 
@@ -76,6 +76,7 @@ public class Weapon_Sword : WeaponBase
         }
         else
         {
+            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
             m_attackReady = true;
         }
 

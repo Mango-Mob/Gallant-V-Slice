@@ -375,6 +375,7 @@ public class Player_Movement : MonoBehaviour
         playerController.animator.SetBool("RightAttackHeld", false);
         playerController.animator.SetBool("LeftAttackHeld", false);
 
+        Debug.Log("Stun applied");
 
         if (_stunDuration != 0.0f)
         {
