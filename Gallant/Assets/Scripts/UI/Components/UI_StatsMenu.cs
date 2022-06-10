@@ -72,8 +72,8 @@ public class UI_StatsMenu : UI_Element
         m_statCanvasGroup.alpha = m_offsetLerp;
         m_statCanvasGroup.blocksRaycasts = m_statCanvasGroup.alpha != 0.0f;
 
-        m_leftWeaponDisplay.gameObject.SetActive(m_statCanvasGroup.alpha != 0.0f && m_leftWeaponDisplay.m_weaponData != null);
-        m_rightWeaponDisplay.gameObject.SetActive(m_statCanvasGroup.alpha != 0.0f && m_rightWeaponDisplay.m_weaponData != null);
+         m_leftWeaponDisplay.gameObject.SetActive(/*m_statCanvasGroup.alpha != 0.0f && */m_leftWeaponDisplay.m_weaponData != null);
+        m_rightWeaponDisplay.gameObject.SetActive(/*m_statCanvasGroup.alpha != 0.0f && */m_rightWeaponDisplay.m_weaponData != null);
 
         m_balanceCanvasGroup.alpha = Mathf.Max(m_balanceDisplayLerp, m_offsetLerp);
         //Color backgroundColor = m_background.color;
