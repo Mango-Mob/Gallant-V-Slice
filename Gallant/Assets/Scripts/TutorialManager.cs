@@ -76,6 +76,10 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             tutorialPosition = 4;
             targetDialog = 0;
         }
+        else if(tutorialPosition >= 3)
+        {
+            targetDialog = 0;
+        }
     }
     public void InteractFunction()
     {
