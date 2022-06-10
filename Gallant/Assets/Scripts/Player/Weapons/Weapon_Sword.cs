@@ -76,6 +76,7 @@ public class Weapon_Sword : WeaponBase
         }
         else
         {
+            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
             m_attackReady = true;
         }
 
