@@ -174,6 +174,13 @@ namespace ActorSystem.AI.Bosses
             }
         }
 
+        public void Roar()
+        {
+            m_myBrain.m_legs.Halt();
+            m_target.GetComponent<Player_Controller>().StunPlayer(0.5f, (m_target.transform.position - transform.position).normalized * m_chargeKnockback * 1.5f);
+            m_target.GetComponent<Player_Controller>().ScreenShake(10.0f, 1.0f);
+        }
+
         public void EndChargeAim()
         {
             m_cPhase = ChargePhase.RUNNING;
@@ -382,7 +389,7 @@ namespace ActorSystem.AI.Bosses
         {
             //Lift off
             SetTargetOrientaion(m_fleeLocation.position);
-            m_myBrain.m_animator.PlayAnimation("JumpStart");
+            m_myBrain.m_animator.PlayAnimation((!enableLegsAfter) ? "Roar" : "JumpStart");
             do
             {
                 yield return new WaitForEndOfFrame();
@@ -408,7 +415,7 @@ namespace ActorSystem.AI.Bosses
             m_myBrain.m_legs.SetEnabled(enableLegsAfter);
             m_myBrain.m_legs.m_brainDecay = 2f;
             m_myBrain.m_arms.SetBrainLag(2f, false);
-
+            m_target.GetComponent<Player_Controller>().ScreenShake(10.0f, 0.4f);
             if (enableLegsAfter)
             {
                 TransitionToPhase(Phase.ATTACK);
@@ -465,7 +472,7 @@ namespace ActorSystem.AI.Bosses
             float dist = Vector3.Distance(m_target.transform.position, transform.position);
             if (dist <= 15.0f)
             {
-                GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(10 * (1.0f - dist/15f), 0.3f);
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().ScreenShake(10 * (1.0f - dist/15f), 0.5f);
                 if (dist <= 5.0f)
                 {
                     m_target.GetComponent<Player_Controller>().DamagePlayer(m_slamDamage, CombatSystem.DamageType.Physical, this.gameObject, true);
