@@ -402,7 +402,19 @@ namespace ActorSystem.AI.Components
 
         public void DropOrbs(int amount, Vector3 position, int value)
         {
-            CurrencyDrop.CreateCurrencyDropGroup((uint) amount, position, value);
+            if (value % 2 == 0)
+            {
+                amount = value / 2;
+                value = 2;
+            }
+            else
+            {
+                amount = value;
+                value = 1;
+            }
+                
+
+            CurrencyDrop.CreateCurrencyDropGroup((uint)amount, position, value);
         }
 
         public void DrawGizmos()
