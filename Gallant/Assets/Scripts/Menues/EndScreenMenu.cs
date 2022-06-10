@@ -30,6 +30,8 @@ public class EndScreenMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = true;
+
         m_timeText.text = CaluclateTime();
         m_levelReachedText.text = (Mathf.FloorToInt(GameManager.currentLevel) + 1).ToString();
         m_roomsClearedText.text = (roomsCleared).ToString();
