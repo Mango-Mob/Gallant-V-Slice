@@ -10,6 +10,10 @@ public class TutorialPopup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(NavigationManager.Instance.IsVisible)
+        {
+            Destroy(gameObject);
+        }
         GamepadDisplay.SetActive(InputManager.Instance.isInGamepadMode);
         KeyboardDisplay.SetActive(!InputManager.Instance.isInGamepadMode);
     }
