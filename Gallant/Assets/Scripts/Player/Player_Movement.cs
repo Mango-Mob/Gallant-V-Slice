@@ -372,6 +372,10 @@ public class Player_Movement : MonoBehaviour
         m_yVelocity = _knockbackVelocity.y * (1 - playerController.playerSkills.m_stunDecrease);
         m_dashTimer = 0.0f;
 
+        playerController.animator.SetBool("RightAttackHeld", false);
+        playerController.animator.SetBool("LeftAttackHeld", false);
+
+
         if (_stunDuration != 0.0f)
         {
             m_isStunned = true;

@@ -65,16 +65,16 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             Color newColor = m_weaponData.abilityData.droppedEnergyColor;
             foreach (var effect in m_effects)
             {
-                ParticleSystem particleSystem = effect.GetComponentInChildren<ParticleSystem>();
-                if (particleSystem != null)
+                ParticleSystem[] particleSystems = effect.GetComponentsInChildren<ParticleSystem>();
+                foreach (var particleSystem in particleSystems)
                 {
                     ParticleSystem.MainModule mainModule = particleSystem.main;
                     newColor.a = mainModule.startColor.color.a;
                     mainModule.startColor = new ParticleSystem.MinMaxGradient(newColor);
                 }
 
-                TrailRenderer trailRenderer = effect.GetComponentInChildren<TrailRenderer>();
-                if (trailRenderer != null)
+                TrailRenderer[] trailRenderers = effect.GetComponentsInChildren<TrailRenderer>();
+                foreach (var trailRenderer in trailRenderers)
                 {
                     newColor.a = trailRenderer.startColor.a;
                     trailRenderer.startColor = newColor;
