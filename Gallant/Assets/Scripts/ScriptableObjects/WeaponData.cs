@@ -19,6 +19,7 @@ public class SerializedWeapon
     public float m_piercing = 0;
     public float m_projectileSpeed = 0;
     public string m_weaponModel;
+    public string m_abilityName;
 
     public static SerializedWeapon SerializeWeapon(WeaponData _data)
     {
@@ -39,6 +40,9 @@ public class SerializedWeapon
         weapon.m_projectileSpeed = _data.m_projectileSpeed;
         weapon.m_weaponModel = _data.weaponModelPrefab.name;
 
+        if (_data.abilityData)
+            weapon.m_abilityName = _data.abilityData.name;
+
         return weapon;
     }
 
@@ -54,6 +58,7 @@ public class SerializedWeapon
         data.m_impact = _weapon.m_impact;
         data.m_projectileSpeed = _weapon.m_projectileSpeed;
         data.weaponModelPrefab = Resources.Load<GameObject>("Weapons/Held Weapons/" + _weapon.m_weaponModel);
+        WeaponData.ApplyAbilityData(data, Resources.Load<AbilityData>($"Data/Abilities/{_weapon.m_abilityName}"));
 
         return data;
     }
