@@ -33,6 +33,7 @@ public class DropSpawnerArray : MonoBehaviour
             foreach (Ability ability in System.Enum.GetValues(typeof(Ability)))
             {
                 GameObject gameObject = Instantiate(spawnerPrefab, transform.position + new Vector3(row * m_spacing, 0.0f, col * m_spacing), Quaternion.identity);
+                gameObject.transform.SetParent(transform);
                 gameObject.GetComponent<DropSpawner>().Configure(m_weaponLevel, weapon, ability, m_abilityPowerLevel);
                 row++;
             }

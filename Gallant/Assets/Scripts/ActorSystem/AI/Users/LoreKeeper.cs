@@ -15,7 +15,7 @@ namespace ActorSystem.AI.Users
         public TextAsset[] m_dialog;
         public int myTutorialPosition = 0;
         public float m_idealDistance = 1.5f;
-        
+        public int setTutorialPositionOnLoad = 0;
         private Interactable m_myInteractLogic;
 
         private UI_Text m_keyboardInput;
@@ -36,6 +36,7 @@ namespace ActorSystem.AI.Users
         {
             base.Awake();
             m_myInteractLogic = GetComponentInChildren<Interactable>();
+            TutorialManager.Instance.tutorialPosition = setTutorialPositionOnLoad;
         }
 
         protected override void Start()

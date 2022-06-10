@@ -75,7 +75,7 @@ public class ShieldProjectile : BasePlayerProjectile
             foreach (var collider in colliders)
             {
                 Actor actor = collider.GetComponentInParent<Actor>();
-                if (actor == null || hitList.Contains(actor.gameObject) || actor.m_myBrain.IsDead)
+                if (actor == null || hitList.Contains(actor.gameObject) || actor.m_myBrain.IsDead || !actor.m_myBrain.m_canBeTarget)
                     continue;
 
                 if (m_pursueTimer > m_pursueDuration)

@@ -60,6 +60,7 @@ public class Player_Controller : MonoBehaviour
 
     private bool m_godMode = false;
     [SerializeField] private GameObject m_damageVFXPrefab;
+    [SerializeField] private GameObject m_stunVFXPrefab;
 
     [Header("Camera Target Focus")]
     private bool m_focusInputDisabled = false;
@@ -382,7 +383,7 @@ public class Player_Controller : MonoBehaviour
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FOUR))
         {
-            StunPlayer(0.0f, transform.up * 20.0f);
+            StunPlayer(2.0f, transform.up * 20.0f);
         }
         if (InputManager.Instance.IsKeyDown(KeyType.NUM_FIVE))
         {
@@ -485,7 +486,7 @@ public class Player_Controller : MonoBehaviour
         playerPickup.RemoveDropFromList(_drop);
         StartCoroutine(DelayAttackControl());
     }
-    IEnumerator DelayAttackControl()
+    public IEnumerator DelayAttackControl()
     {
         m_hasRecentPickup = true;
         yield return new WaitForSeconds(m_controlReturnDelay);
@@ -509,6 +510,10 @@ public class Player_Controller : MonoBehaviour
         if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))
             return;
         playerMovement.StunPlayer(_stunDuration, _knockbackVelocity);
+        VFXTimerScript m_stunVFXTimer = Instantiate(m_stunVFXPrefab, transform).GetComponent<VFXTimerScript>();
+        m_stunVFXTimer.m_timer = _stunDuration;
+        m_stunVFXTimer.transform.position += transform.up * 2.0f;
+        m_stunVFXTimer.transform.localScale *= 0.5f;
     }
     public Vector2 GetPlayerMovementVector(bool _rawInput = false)
     {
