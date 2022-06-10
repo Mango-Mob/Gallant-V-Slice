@@ -57,8 +57,8 @@ public class UI_PauseMenu : MonoBehaviour
             button.enabled = !m_settingsPannel.activeInHierarchy;
         }
 
-        if (EventSystem.current.currentSelectedGameObject != null)
-            Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+        //if (EventSystem.current.currentSelectedGameObject != null)
+            //Debug.Log(EventSystem.current.currentSelectedGameObject.name);
 
         if(!m_settingsPannel.activeInHierarchy && isPaused)
         {
