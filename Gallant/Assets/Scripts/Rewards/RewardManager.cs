@@ -11,6 +11,7 @@ public class RewardManager : Singleton<RewardManager>
     public static bool isShowing { get { return Instance.m_window.activeInHierarchy; } }
 
     public GameObject m_window;
+	public GameObject m_collectedText;
     public Text m_rewardTitle;
     public InfoDisplay[] m_rewardSlots;
 
@@ -239,7 +240,7 @@ public class RewardManager : Singleton<RewardManager>
     public void ShowSolo(ScriptableObject data, UnityAction<int> onResult = null, bool isDialogue = false)
     {
         m_window.SetActive(true);
-        m_rewardTitle.text = "Reward";
+        m_rewardTitle.text = "Here you go!";
         m_leftHand?.LoadWeapon(m_player.playerAttack.m_leftWeaponData);
         m_rightHand?.LoadWeapon(m_player.playerAttack.m_rightWeaponData);
         m_player.m_isDisabledInput = true;
@@ -252,6 +253,7 @@ public class RewardManager : Singleton<RewardManager>
         m_currentWeapons.SetActive(true);
         m_currentRunes.SetActive(false);
         m_currentlyEquip.SetActive(false);
+		m_collectedText.SetActive(false);
         if (data.GetType() == typeof(WeaponData))
         {
             m_rewardSlots[1].LoadWeapon(data as WeaponData);

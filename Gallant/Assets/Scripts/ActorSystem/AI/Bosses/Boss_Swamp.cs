@@ -212,7 +212,7 @@ namespace ActorSystem.AI.Bosses
                     }
 
                     if (m_isLava)
-                        GameManager.m_saveInfo.m_completedSwamp = 1;
+                        GameManager.m_saveInfo.m_completedMagma = 1;
                     else
                         GameManager.m_saveInfo.m_completedSwamp = 1;
 
