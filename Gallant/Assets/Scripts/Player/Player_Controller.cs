@@ -947,7 +947,6 @@ public class Player_Controller : MonoBehaviour
             playerClassArmour.SetClassArmour(m_inkmanClass.inkmanClass);
         else
             playerClassArmour.SetClassArmour(InkmanClass.GENERAL);
-
     }
 
     public void RespawnPlayerTo(Vector3 _position, bool _isFullHP = false)
