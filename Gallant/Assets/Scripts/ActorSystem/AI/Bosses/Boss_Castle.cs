@@ -50,7 +50,7 @@ namespace ActorSystem.AI.Bosses
         public CastleWallController[] m_myWalls;
         public SpikeTrapGroup m_spikeGroup;
 
-        
+        private float m_deathTimer = 5.0f;
         private float m_chargeCurrCd = 0.0f;
         private float m_recoveryCd = 0.0f;
         private float m_chargeTimer = 0.0f;
@@ -199,7 +199,9 @@ namespace ActorSystem.AI.Bosses
 
             if(hasEnded)
             {
-                GameManager.Instance.FinishLevel();
+                m_deathTimer -= Time.deltaTime;
+                if(m_deathTimer <= 0.0f)
+                    GameManager.Instance.FinishLevel();
             }
         }
 
