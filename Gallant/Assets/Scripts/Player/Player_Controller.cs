@@ -507,8 +507,16 @@ public class Player_Controller : MonoBehaviour
      */
     public void StunPlayer(float _stunDuration, Vector3 _knockbackVelocity, GameObject _attacker = null)
     {
-        Weapon_Sword sword = GetComponent<Weapon_Sword>();
-        if (playerAttack.m_isBlocking || (sword != null && sword.m_attackReady))
+        Weapon_Sword[] swords = GetComponents<Weapon_Sword>();
+        foreach (var sword in swords)
+        {
+            if (sword.m_attackReady)
+            {
+
+            }
+        }
+
+        if (playerMovement.m_isRolling || playerAttack.m_isBlocking)
             return;
 
         if (_attacker != null && IsInfrontOfPlayer(playerAttack.m_blockingAngle, _attacker.transform.position))

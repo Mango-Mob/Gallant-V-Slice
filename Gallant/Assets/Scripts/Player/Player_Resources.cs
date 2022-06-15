@@ -264,7 +264,7 @@ public class Player_Resources : MonoBehaviour
 
     public void FullHeal()
     {
-        m_health = m_maxHealth;
+        m_health += 2000;
         m_dead = false;
     }
 
