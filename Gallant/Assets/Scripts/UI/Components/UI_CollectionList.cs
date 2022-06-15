@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UI_CollectionList : UI_Element
 {
     public GameObject m_collectablePrefab;
+    public Image m_selectFrame;
 
     [Header("Display Window")]
     public GameObject m_window;
