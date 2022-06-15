@@ -31,7 +31,7 @@ namespace Exceed.Debug
         [SerializeField] private Button[] m_toggleSelectedButtons;
         [SerializeField] private Button m_killOneBtn;
         [SerializeField] private Debug_ActorDetail m_detailActorView;
-        
+        [SerializeField] private Toggle m_AIEnabled;
         [SerializeField] private GameObject m_detailRoomView;
         [SerializeField] private Image m_toggleButtonImage;
         [SerializeField] private GameObject m_actorFieldPrefab;

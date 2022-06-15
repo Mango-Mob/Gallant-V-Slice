@@ -15,6 +15,7 @@ public class ClassChanger : MonoBehaviour
         if (GameManager.m_saveInfo.m_startedRun)
         {
             GetComponentInChildren<Outlinable>().enabled = false;
+            m_myInterface.display.gameObject.SetActive(false);
             Destroy(m_myInterface);
             Destroy(this);
             return;
