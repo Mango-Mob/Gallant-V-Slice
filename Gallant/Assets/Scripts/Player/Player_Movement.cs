@@ -108,7 +108,7 @@ public class Player_Movement : MonoBehaviour
     void Start()
     {
         // Skill implementation.
-        m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
+        //m_moveSpeed *= playerController.playerSkills.m_moveSpeedIncrease;
         m_rollDistanceMult *= playerController.playerSkills.m_rollDistanceIncrease;
 
         m_lockonTarget = HUDManager.Instance.GetElement<UI_LockonTarget>("LockonTarget");
@@ -486,7 +486,7 @@ public class Player_Movement : MonoBehaviour
                     m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
 
-            float speed = m_moveSpeed * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
+            float speed = m_moveSpeed * playerController.playerSkills.m_moveSpeedIncrease * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
             if (m_bogSlow > 0.0f) // If the player is walking in bog.
             {
                 speed *= 1.0f - m_bogSlow;

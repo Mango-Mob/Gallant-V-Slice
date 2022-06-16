@@ -54,6 +54,18 @@ public class UI_CollectionList : UI_Element
             }
         }
 
+        if (m_window.activeInHierarchy && InputManager.Instance.isInGamepadMode)
+        {
+            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0))
+            {
+                PreviousPage();
+            }
+            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0))
+            {
+                NextPage();
+            }
+        }
+
         m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
         m_nextBtn.gameObject.SetActive(m_currentPage != m_currentCollectable.descriptions.Count - 1 && m_currentCollectable.descriptions.Count > 1);
     }
