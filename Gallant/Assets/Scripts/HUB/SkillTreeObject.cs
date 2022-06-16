@@ -61,6 +61,7 @@ public class SkillTreeObject : MonoBehaviour
             HUDManager.Instance.gameObject.SetActive(true);
 
         m_interactable.m_usable = true;
+        Debug.Log("Closing Skill Tree");
     }
 
     IEnumerator DelayControl()

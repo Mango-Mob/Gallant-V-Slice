@@ -15,6 +15,7 @@ public class NavigationTelescope : MonoBehaviour
         public int dangerLevel;
         public Color m_portalColor;
         public bool levelLocked;
+        public bool levelComplete;
     }
 
     [SerializeField] private int m_startingLocationIndex;
@@ -28,6 +29,7 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private ButtonHeldCheck m_buttonHeldCheck;
     [SerializeField] private GameObject[] m_navButtonObjects;
     [SerializeField] private Image m_locked;
+    [SerializeField] private Image m_completed;
     [SerializeField] private Interactable m_interactable;
 
     [Header("Settings")]
@@ -63,10 +65,15 @@ public class NavigationTelescope : MonoBehaviour
             m_camera.transform.localRotation.eulerAngles.z);
         m_animator = GetComponent<Animator>();
         m_locked.enabled = false;
+        m_completed.enabled = false;
 
         GameManager.LoadSaveInfoFromFile();
-        m_destinations[1].levelLocked = GameManager.m_saveInfo.m_completedSwamp == 0;
-        m_destinations[2].levelLocked = GameManager.m_saveInfo.m_completedCastle == 0;
+        m_destinations[0].levelComplete = GameManager.m_saveInfo.m_completedSwamp == 1;
+        m_destinations[1].levelComplete = GameManager.m_saveInfo.m_completedCastle == 1;
+        m_destinations[2].levelComplete = GameManager.m_saveInfo.m_completedMagma == 1;
+
+        m_destinations[1].levelLocked = !m_destinations[1].levelComplete && GameManager.m_saveInfo.m_completedSwamp == 0;
+        m_destinations[2].levelLocked = !m_destinations[2].levelComplete && GameManager.m_saveInfo.m_completedCastle == 0;
     }
 
     // Update is called once per frame
@@ -144,11 +151,13 @@ public class NavigationTelescope : MonoBehaviour
                 m_targetIndex = closestDestinationIndex;
 
                 m_locked.enabled = m_destinations[m_targetIndex].levelLocked;
+                m_completed.enabled = m_destinations[m_targetIndex].levelComplete;
             }
             else
             {
                 m_targetIndex = -1;
                 m_locked.enabled = false;
+                m_completed.enabled = false;
             }
         }
 

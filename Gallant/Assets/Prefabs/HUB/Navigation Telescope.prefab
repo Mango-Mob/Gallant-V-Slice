@@ -777,6 +777,81 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &1899842036563449056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 88871138436974172}
+  - component: {fileID: 3151158590426981513}
+  - component: {fileID: 138417434201053035}
+  m_Layer: 5
+  m_Name: Completed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &88871138436974172
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899842036563449056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
+  m_Children: []
+  m_Father: {fileID: 3403824983777334551}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -75}
+  m_SizeDelta: {x: 750, y: 750}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3151158590426981513
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899842036563449056}
+  m_CullTransparentMesh: 1
+--- !u!114 &138417434201053035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899842036563449056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: eb2386a3f607d6e48bf5611a092a9925, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2865209453637255165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,6 +1741,7 @@ MonoBehaviour:
   - {fileID: 1294868592446066409}
   - {fileID: 6739392988856072776}
   m_locked: {fileID: 2017645728}
+  m_completed: {fileID: 138417434201053035}
   m_interactable: {fileID: 5535145769391921773}
   m_destinations:
   - levelTitle: Fractal of Despair
@@ -1674,18 +1750,21 @@ MonoBehaviour:
     dangerLevel: 1
     m_portalColor: {r: 0.03529412, g: 0.7490196, b: 0, a: 1}
     levelLocked: 0
+    levelComplete: 0
   - levelTitle: Fractal of Denial
     sceneName: CastleBegin
     locationAngle: 180
     dangerLevel: 2
     m_portalColor: {r: 0.03529412, g: 0.21568628, b: 0.7490196, a: 1}
     levelLocked: 1
+    levelComplete: 0
   - levelTitle: Fractal of Rage
     sceneName: MagmaBegin
     locationAngle: 225
     dangerLevel: 3
     m_portalColor: {r: 0.42745098, g: 0, b: 0.7490196, a: 1}
     levelLocked: 1
+    levelComplete: 0
   m_turnSpeed: 60
   m_targetThreshold: 15
   m_selectSpeed: 1
@@ -1693,6 +1772,7 @@ MonoBehaviour:
   m_angleClamp: 60
   m_levelTitleText: {fileID: 5665467054768174084}
   m_dangerLevelText: {fileID: 6523923589592541318}
+  m_isActive: 0
 --- !u!95 &3044350630262985746
 Animator:
   serializedVersion: 3
@@ -2351,6 +2431,7 @@ RectTransform:
   - {fileID: 7892896957904759848}
   - {fileID: 3587501595169324511}
   - {fileID: 2017645727}
+  - {fileID: 88871138436974172}
   m_Father: {fileID: 5449640170580995136}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2971,7 +3052,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!1 &9005653450453672907
 GameObject:
