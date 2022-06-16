@@ -50,6 +50,7 @@ namespace ActorSystem.AI.Bosses
         public CastleWallController[] m_myWalls;
         public SpikeTrapGroup m_spikeGroup;
 
+        private bool m_showSpike = false;
         private float m_deathTimer = 5.0f;
         private float m_chargeCurrCd = 0.0f;
         private float m_recoveryCd = 0.0f;
@@ -77,6 +78,9 @@ namespace ActorSystem.AI.Bosses
 
             if (m_recoveryCd > 0)
                 m_recoveryCd -= Time.deltaTime;
+
+            if (m_showSpike && m_phase != Phase.DEAD)
+                m_spikeGroup.m_playingInSeconds = 10.0f;
 
             switch (m_phase)
             {
@@ -161,6 +165,7 @@ namespace ActorSystem.AI.Bosses
                     m_cameraDelay = 1.0f;
                     break;
                 case Phase.DEAD:
+                    m_spikeGroup.m_playingInSeconds = 0.0f;
                     foreach (var item in m_myBrain.m_materials)
                     {
                         item.StartDisolve(2.5f);
@@ -221,7 +226,11 @@ namespace ActorSystem.AI.Bosses
             if (dist > m_myBrain.m_legs.m_idealRange)
                 SetTargetLocation(m_target.transform.position, true);
             else
+            {
+                SetTargetOrientaion(m_target.transform.position);
                 m_myBrain.m_legs.Halt();
+            }
+                
 
             int index = m_myBrain.GetNextAttack();
             if(index >= 0)
@@ -282,7 +291,11 @@ namespace ActorSystem.AI.Bosses
                         if (NavMesh.SamplePosition(m_target.transform.position + randOnUnitSphere.normalized * 3f, out hit, 3, ~0))
                         {
                             Instantiate(m_buttSlamIndicator, hit.position, Quaternion.identity).SetActive(true);
+
+                            m_spikeGroup.m_delayInSeconds *= 1.5f;
+
                             StartCoroutine(JumpTo(hit.position, 1.5f, true));
+                            m_showSpike = true;
                         }
                     }
                 }
