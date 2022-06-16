@@ -21,6 +21,11 @@ public class Interactable : MonoBehaviour
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
     }
 
+    private void OnDisable()
+    {
+        display.gameObject.SetActive(false);
+    }
+
     private void OnDestroy()
     {
         if(display)

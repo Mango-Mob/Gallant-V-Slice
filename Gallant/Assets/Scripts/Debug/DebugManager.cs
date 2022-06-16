@@ -31,7 +31,7 @@ namespace Exceed.Debug
         [SerializeField] private Button[] m_toggleSelectedButtons;
         [SerializeField] private Button m_killOneBtn;
         [SerializeField] private Debug_ActorDetail m_detailActorView;
-        
+        [SerializeField] private Toggle m_AIEnabled;
         [SerializeField] private GameObject m_detailRoomView;
         [SerializeField] private Image m_toggleButtonImage;
         [SerializeField] private GameObject m_actorFieldPrefab;
@@ -145,6 +145,7 @@ namespace Exceed.Debug
             if (InputManager.Instance.IsKeyDown(KeyType.TILDE))
             {
                 GetComponent<Animator>().SetTrigger("StateUpdate");
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks = !GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks;
             }
             if (m_contentParent.activeInHierarchy)
             {
