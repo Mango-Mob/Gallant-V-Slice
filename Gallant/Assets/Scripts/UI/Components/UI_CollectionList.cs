@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UI_CollectionList : UI_Element
 {
@@ -17,6 +18,9 @@ public class UI_CollectionList : UI_Element
     public Button m_prevBtn;
     public Button m_nextBtn;
 
+    private List<Button> m_collectionButtons = new List<Button>();
+    public GameObject m_returnButton;
+
     private int m_currentPage;
     private CollectableData m_currentCollectable;
     // Start is called before the first frame update
@@ -29,6 +33,7 @@ public class UI_CollectionList : UI_Element
             GameObject button = GameObject.Instantiate(m_collectablePrefab, this.transform);
             button.GetComponent<UI_Collectable>().SetData(item);
             button.GetComponent<UI_Collectable>().SetParentList(this);
+            m_collectionButtons.Add(button.GetComponentInChildren<Button>());
         }
 
         ShowItem(data[0]);
@@ -36,7 +41,19 @@ public class UI_CollectionList : UI_Element
 
     // Update is called once per frame
     void Update()
-    {
+    { 
+        if (m_window.activeInHierarchy && InputManager.Instance.isInGamepadMode && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<SkillButton>()))
+        {
+            if (m_collectionButtons.Count > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(m_collectionButtons[0].gameObject);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(m_returnButton);
+            }
+        }
+
         m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
         m_nextBtn.gameObject.SetActive(m_currentPage != m_currentCollectable.descriptions.Count - 1 && m_currentCollectable.descriptions.Count > 1);
     }

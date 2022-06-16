@@ -19,6 +19,10 @@ public class UI_PauseMenu : MonoBehaviour
     public Button[] m_allButtons;
     public GameObject m_confirmPannel;
     public GameObject m_noButton;
+
+    private NavigationTelescope m_telescopeInstance;
+    private CollectableRoom m_collectionInstance;
+
     public void SetPause(bool state)
     {
         Time.timeScale = state ? 0.0f : 1.0f;
@@ -41,12 +45,19 @@ public class UI_PauseMenu : MonoBehaviour
         m_window.SetActive(false);
         m_confirmPannel.SetActive(false);
         m_returnToHubButton.interactable = (GameManager.m_saveInfo.m_startedRun);
+
+        m_telescopeInstance = FindObjectOfType<NavigationTelescope>();
+        m_collectionInstance = FindObjectOfType<CollectableRoom>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!NavigationManager.Instance.IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsGamepadButtonDown(ButtonType.START, 0)))
+        bool telescopeActive = m_telescopeInstance != null && m_telescopeInstance.m_isActive;
+        bool collectionsActive = m_collectionInstance != null && m_collectionInstance.m_display.activeInHierarchy;
+        bool transitionActive = LevelManager.transition;
+
+        if(!telescopeActive && !collectionsActive && !transitionActive && !NavigationManager.Instance.IsVisible && (InputManager.Instance.IsKeyDown(KeyType.ESC) || InputManager.Instance.IsGamepadButtonDown(ButtonType.START, 0)))
         {
             SetPause(!m_window.activeInHierarchy);
         }

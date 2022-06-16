@@ -51,7 +51,20 @@ public class SerializedWeapon
         if (_weapon.m_level == -2)
             return null;
 
-        WeaponData data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Length > 6 && _weapon.m_weaponModel.Contains("Wooden")));
+        WeaponData data;
+        if (_weapon.m_weaponModel == "Visage")
+        {
+            data = ScriptableObject.CreateInstance<WeaponData>();
+            WeaponData visageData = Resources.Load<WeaponData>($"Data/BaseWeapons/visageData");
+
+            if (visageData != null)
+            {
+                data.Clone(visageData);
+                return data;
+            }
+        }
+
+        data = WeaponData.GenerateSpecificWeapon(_weapon.m_level, _weapon.weaponType, Ability.NONE, 1, (_weapon.m_weaponModel.Length > 6 && _weapon.m_weaponModel.Contains("Wooden")));
 
         data.m_damage = _weapon.m_damage;
         data.m_speed = _weapon.m_speed;

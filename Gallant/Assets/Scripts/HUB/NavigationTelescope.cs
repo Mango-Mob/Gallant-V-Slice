@@ -43,7 +43,7 @@ public class NavigationTelescope : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_dangerLevelText;
 
     private Player_Controller playerController;
-    private bool m_isActive = false;
+    [HideInInspector] public bool m_isActive = false;
     private float m_currentVelocity = 0.0f;
 
     private int m_targetIndex = -1;
