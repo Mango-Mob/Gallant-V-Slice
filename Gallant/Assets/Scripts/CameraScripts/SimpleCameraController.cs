@@ -136,7 +136,7 @@ public class SimpleCameraController : MonoBehaviour
         Vector2 delta = InputManager.Instance.GetMouseDelta();
         var mouseMovement = new Vector2(delta.x, delta.y * (invertY ? 1 : -1));
 
-        if (InputManager.Instance.IsKeyPressed(KeyType.L))
+        if (InputManager.Instance.IsKeyDown(KeyType.L))
         {
             isLocked = !isLocked;
         }

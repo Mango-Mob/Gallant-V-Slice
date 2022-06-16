@@ -31,14 +31,17 @@ public class UI_CollectionList : UI_Element
             button.GetComponent<UI_Collectable>().SetParentList(this);
         }
 
-        ShowItem(data[0]);
+        ShowItem(null);
     }
 
     // Update is called once per frame
     void Update()
     {
-        m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
-        m_nextBtn.gameObject.SetActive(m_currentPage != m_currentCollectable.descriptions.Count - 1 && m_currentCollectable.descriptions.Count > 1);
+        if(m_currentCollectable != null)
+        {
+            m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
+            m_nextBtn.gameObject.SetActive(m_currentPage != m_currentCollectable.descriptions.Count - 1 && m_currentCollectable.descriptions.Count > 1);
+        }
     }
 
     public void ShowItem(CollectableData data, int page = 0)
@@ -47,19 +50,32 @@ public class UI_CollectionList : UI_Element
             return;
 
         m_currentCollectable = data;
-        m_currentPage = page;
-        m_itemTitle.text = data.itemName;
-        m_itemDescription.text = data.descriptions[page];
-        m_itemIcon.sprite = data.itemIcon;
 
-        m_nextBtn.interactable = data.descriptions.Count > page;
-        m_prevBtn.interactable = page > 0;
-
-        if(PlayerPrefs.GetInt(data.collectableID, 0) > 1)
+        if (data != null)
         {
-            PlayerPrefs.SetInt(data.collectableID, 1);
-        }
+            m_currentPage = page;
+            m_itemTitle.text = data.itemName;
+            m_itemDescription.text = data.descriptions[page];
+            m_itemIcon.sprite = data.itemIcon;
 
+            m_nextBtn.interactable = data.descriptions.Count > page;
+            m_prevBtn.interactable = page > 0;
+
+            if (PlayerPrefs.GetInt(data.collectableID, 0) > 1)
+            {
+                PlayerPrefs.SetInt(data.collectableID, 1);
+            }
+        }
+        else
+        {
+            m_itemTitle.text = "";
+            m_itemDescription.text = "";
+            m_itemIcon.sprite = null;
+            m_currentPage = 0;
+
+            m_nextBtn.interactable = false;
+            m_prevBtn.interactable = false;
+        }
         m_window.SetActive(true);
     }
 
