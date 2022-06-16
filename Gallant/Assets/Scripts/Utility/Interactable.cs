@@ -35,6 +35,9 @@ public class Interactable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UI_PauseMenu.isPaused)
+            return;
+
         if (!m_usable)
         {
             display?.gameObject.SetActive(false);

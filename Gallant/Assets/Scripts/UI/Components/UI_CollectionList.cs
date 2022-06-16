@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class UI_CollectionList : UI_Element
 {
@@ -17,6 +18,9 @@ public class UI_CollectionList : UI_Element
     public Button m_prevBtn;
     public Button m_nextBtn;
 
+    private List<Button> m_collectionButtons = new List<Button>();
+    public GameObject m_returnButton;
+
     private int m_currentPage;
     private CollectableData m_currentCollectable;
     // Start is called before the first frame update
@@ -29,6 +33,7 @@ public class UI_CollectionList : UI_Element
             GameObject button = GameObject.Instantiate(m_collectablePrefab, this.transform);
             button.GetComponent<UI_Collectable>().SetData(item);
             button.GetComponent<UI_Collectable>().SetParentList(this);
+            m_collectionButtons.Add(button.GetComponentInChildren<Button>());
         }
 
         ShowItem(null);
@@ -36,7 +41,31 @@ public class UI_CollectionList : UI_Element
 
     // Update is called once per frame
     void Update()
-    {
+    { 
+        if (m_window.activeInHierarchy && InputManager.Instance.isInGamepadMode && (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.GetComponent<SkillButton>()))
+        {
+            if (m_collectionButtons.Count > 0)
+            {
+                EventSystem.current.SetSelectedGameObject(m_collectionButtons[0].gameObject);
+            }
+            else
+            {
+                EventSystem.current.SetSelectedGameObject(m_returnButton);
+            }
+        }
+
+        if (m_window.activeInHierarchy && InputManager.Instance.isInGamepadMode)
+        {
+            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.LB, 0))
+            {
+                PreviousPage();
+            }
+            if (InputManager.Instance.IsGamepadButtonDown(ButtonType.RB, 0))
+            {
+                NextPage();
+            }
+        }
+
         if(m_currentCollectable != null)
         {
             m_prevBtn.gameObject.SetActive(m_currentPage != 0 && m_currentCollectable.descriptions.Count > 1);
