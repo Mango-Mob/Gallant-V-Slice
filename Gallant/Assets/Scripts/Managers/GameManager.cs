@@ -75,9 +75,18 @@ public class GameManager : Singleton<GameManager>
         m_activeCamera = Camera.main;
     }
 
-    public void FinishLevel()
+    public void FinishLevel(bool showCredits = false)
     {
-        LevelManager.Instance.LoadHubWorld(false);
+        if(showCredits)
+        {
+            SavePlayerInfoToFile();
+            CreditsScript.IsStillPlaying = true;
+            LevelManager.Instance.LoadNewLevel("Credits", LevelManager.Transition.CROSSFADE_SPLIT);
+        }
+        else
+        {
+            LevelManager.Instance.LoadHubWorld(false);
+        }
     }
 
     public static void Advance()
