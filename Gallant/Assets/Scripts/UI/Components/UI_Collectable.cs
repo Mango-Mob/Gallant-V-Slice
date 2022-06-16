@@ -48,6 +48,9 @@ public class UI_Collectable : UI_Element
     public override void OnMouseDownEvent()
     {
         m_list.ShowItem(m_data);
+        m_list.m_selectFrame.enabled = true;
+        m_list.m_selectFrame.transform.SetParent(transform);
+        m_list.m_selectFrame.transform.position = transform.position;
     }
 
     public override void OnMouseUpEvent()
