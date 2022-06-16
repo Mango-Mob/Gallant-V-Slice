@@ -131,6 +131,11 @@ public class MainMenu : MonoBehaviour
         m_settingsMenu.gameObject.SetActive(false);
     }
 
+    public void Credits()
+    {
+        LevelManager.Instance.LoadNewLevel("Credits");
+    }
+
     public void QuitGame()
     {
         #if UNITY_EDITOR
