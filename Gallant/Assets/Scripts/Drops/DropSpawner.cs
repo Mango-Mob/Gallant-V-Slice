@@ -50,22 +50,41 @@ public class DropSpawner : MonoBehaviour
                 break;
             case DropType.SPECIFIC_WEAPON:
                 GameManager.LoadSaveInfoFromFile();
-                if (GameManager.m_saveInfo.m_completedMagma != 0)
+                switch (m_weaponData.weaponType)
                 {
-                    WeaponData newData = ScriptableObject.CreateInstance<WeaponData>();
-                    newData.Clone(m_weaponData);
+                    case Weapon.GREATSWORD:
+                        if (GameManager.m_saveInfo.m_completedMagma != 0)
+                        {
+                            WeaponData newData = ScriptableObject.CreateInstance<WeaponData>();
+                            newData.Clone(m_weaponData);
 
-                    GameObject droppedSpecificWeapon = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData);
-                    InfoDisplay display4 = droppedSpecificWeapon.GetComponentInChildren<InfoDisplay>();
+                            GameObject droppedSpecificWeapon = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData);
+                            InfoDisplay display4 = droppedSpecificWeapon.GetComponentInChildren<InfoDisplay>();
 
-                    display4.m_weaponData = newData;
+                            display4.m_weaponData = newData;
 
-                    droppedSpecificWeapon.GetComponent<DroppedWeapon>().m_weaponMoves = false;
+                            droppedSpecificWeapon.GetComponent<DroppedWeapon>().m_weaponMoves = false;
+                        }
+                        else
+                        {
+                            gameObject.SetActive(false);
+                        }
+                        break;
+                    case Weapon.BRICK:
+                        WeaponData newData2 = ScriptableObject.CreateInstance<WeaponData>();
+                        newData2.Clone(m_weaponData);
+
+                        GameObject droppedSpecificWeapon2 = DroppedWeapon.CreateDroppedWeapon(transform.position + m_spawnLoc, newData2);
+                        InfoDisplay display5 = droppedSpecificWeapon2.GetComponentInChildren<InfoDisplay>();
+
+                        display5.m_weaponData = newData2;
+
+                        droppedSpecificWeapon2.GetComponent<DroppedWeapon>().m_weaponMoves = false;
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    gameObject.SetActive(false);
-                }
+
                 break;
             default:
                 break;
@@ -83,5 +102,9 @@ public class DropSpawner : MonoBehaviour
     void Update()
     {
         
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawCube(transform.position + m_spawnLoc, new Vector3(0.5f, 0.5f, 0.5f));
     }
 }
