@@ -145,6 +145,7 @@ namespace Exceed.Debug
             if (InputManager.Instance.IsKeyDown(KeyType.TILDE))
             {
                 GetComponent<Animator>().SetTrigger("StateUpdate");
+                GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks = !GameManager.Instance.m_player.GetComponent<Player_Controller>().m_isDisabledAttacks;
             }
             if (m_contentParent.activeInHierarchy)
             {

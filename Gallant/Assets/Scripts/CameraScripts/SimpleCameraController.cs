@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.IO;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class SimpleCameraController : MonoBehaviour
 {
@@ -65,8 +68,9 @@ public class SimpleCameraController : MonoBehaviour
     [Tooltip("Whether or not to invert our Y axis for mouse input to rotation.")]
     public bool invertY = false;
 
+    public Animator m_screenshotDisplay;
     public bool canQuitWithEsc = true;
-
+    public bool isLocked = false;
     void OnEnable()
     {
         if(m_targetTransform != null)
@@ -77,7 +81,7 @@ public class SimpleCameraController : MonoBehaviour
 
         m_TargetCameraState.SetFromTransform(transform);
         m_InterpolatingCameraState.SetFromTransform(transform);
-        
+        isLocked = false;
     }
 
     Vector3 GetInputTranslationDirection()
@@ -132,7 +136,25 @@ public class SimpleCameraController : MonoBehaviour
         Vector2 delta = InputManager.Instance.GetMouseDelta();
         var mouseMovement = new Vector2(delta.x, delta.y * (invertY ? 1 : -1));
 
+        if (InputManager.Instance.IsKeyPressed(KeyType.L))
+        {
+            isLocked = !isLocked;
+        }
 
+        if (InputManager.Instance.IsKeyDown(KeyType.K))
+        {
+            string path = Application.dataPath + "/Screenshots/";
+            Directory.CreateDirectory(path);
+
+            path += DateTime.Now.ToString("yyyy-dd-M-HH-mm-ss") + ".png";
+            m_screenshotDisplay.gameObject.SetActive(false);
+            ScreenCapture.CaptureScreenshot(path, 5);
+            Texture2D shot = ScreenCapture.CaptureScreenshotAsTexture(2);
+            m_screenshotDisplay.gameObject.SetActive(true);
+            m_screenshotDisplay.GetComponent<Image>().sprite = Sprite.Create(shot, new Rect(0, 0, shot.width, shot.height), Vector2.one * 0.5f);
+            m_screenshotDisplay.SetTrigger("Screenshot");
+            Debug.Log($"Created Screenshot at: {path}");
+        }
 
         // Translation
         var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude * 0.005f) * rotationMultiplier;
@@ -148,17 +170,20 @@ public class SimpleCameraController : MonoBehaviour
             translation *= 5.0f;
         }
         
-        m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
-        m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch + mouseMovement.y * mouseSensitivityFactor, -89.9f, 89.9f);
-        m_TargetCameraState.Translate(translation * Time.deltaTime);
+        if(!isLocked)
+        {
+            m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
+            m_TargetCameraState.pitch = Mathf.Clamp(m_TargetCameraState.pitch + mouseMovement.y * mouseSensitivityFactor, -89.9f, 89.9f);
+            m_TargetCameraState.Translate(translation * Time.unscaledDeltaTime);
 
-        // Framerate-independent interpolation
-        // Calculate the lerp amount, such that we get 99% of the way to our target in the specified time
-        var positionLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / positionLerpTime) * Time.deltaTime);
-        var rotationLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / rotationLerpTime) * Time.deltaTime);
-        m_InterpolatingCameraState.LerpTowards(m_TargetCameraState, positionLerpPct, rotationLerpPct);
+            // Framerate-independent interpolation
+            // Calculate the lerp amount, such that we get 99% of the way to our target in the specified time
+            var positionLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / positionLerpTime) * Time.unscaledDeltaTime);
+            var rotationLerpPct = 1f - Mathf.Exp((Mathf.Log(1f - 0.99f) / rotationLerpTime) * Time.unscaledDeltaTime);
+            m_InterpolatingCameraState.LerpTowards(m_TargetCameraState, positionLerpPct, rotationLerpPct);
 
-        UpdateTransform(m_InterpolatingCameraState);
+            UpdateTransform(m_InterpolatingCameraState);
+        }
     }
 
     public void SetTarget(Transform transform)
