@@ -496,6 +496,19 @@ public class Player_Attack : MonoBehaviour
 
     public void ApplyWeaponData(Hand _hand)
     {
+        if (playerController.playerAbilities == null)
+            Debug.Log("PLAYER ABILTIIES NULL");
+
+        if (m_leftWeaponData == null)
+            Debug.Log("LEFT WEAPON DATA NULL");
+        else if (m_leftWeaponData.abilityData == null)
+            Debug.Log("LEFT ABILITY DATA NULL");
+
+        if (m_rightWeaponData == null)
+            Debug.Log("RIGHT WEAPON DATA NULL");
+        else if (m_rightWeaponData.abilityData == null)
+            Debug.Log("RIGHT ABILITY DATA NULL");
+
         switch (_hand)
         {
             case Hand.LEFT:
@@ -527,6 +540,13 @@ public class Player_Attack : MonoBehaviour
                         else
                             m_altAttackIcon.SetIconSprite(m_leftWeaponData.altAttackIcon);
                     }
+
+                    if (playerController.playerAbilities == null)
+                        Debug.Log("PLAYER ABILTIIES NULL");
+                    if (m_leftWeaponData == null)
+                        Debug.Log("LEFT WEAPON DATA NULL");
+                    if (m_leftWeaponData.abilityData == null)
+                        Debug.Log("LEFT ABILITY DATA NULL");
 
                     playerController.playerAbilities.SetAbility(m_leftWeaponData.abilityData, Hand.LEFT);
                 }

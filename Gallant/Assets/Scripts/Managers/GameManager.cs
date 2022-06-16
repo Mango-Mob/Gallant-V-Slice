@@ -227,7 +227,7 @@ public class GameManager : Singleton<GameManager>
             // Pass the json to JsonUtility, and tell it to create a PlayerInfo object from it
             m_playerInfo = JsonUtility.FromJson<PlayerInfo>(dataAsJson);
 
-            m_containsPlayerInfo = true;
+            m_containsPlayerInfo = m_playerInfo.m_validSave;
         }
 
         if (Instance?.m_player != null && m_playerInfo.m_validSave)

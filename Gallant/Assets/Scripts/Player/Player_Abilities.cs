@@ -43,11 +43,12 @@ public class Player_Abilities : MonoBehaviour
     {
         m_leftAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("SpellL");
         m_rightAbilityIcon = HUDManager.Instance.GetElement<UI_AbilityIcon>("SpellR");
+
+        m_passiveVFX = GetComponentInChildren<AbilityPassiveVFX>();
+        playerController = GetComponent<Player_Controller>();
     }
     private void Start()
     {
-        playerController = GetComponent<Player_Controller>();
-        m_passiveVFX = GetComponentInChildren<AbilityPassiveVFX>();
     }
 
     // Update is called once per frame
@@ -158,43 +159,47 @@ public class Player_Abilities : MonoBehaviour
      */
     public void SetAbility(AbilityData _ability, Hand _hand)
     {
+        Debug.Log("Reached Set Ability");
+
         AbilityBase abilityScript = null;
         if (_ability)
-        switch (_ability.abilityPower)
         {
-            case Ability.FIREWAVE:
-                abilityScript = gameObject.AddComponent<Ability_Firewave>();
-                break;
-            case Ability.SAND_MISSILE:
-                abilityScript = gameObject.AddComponent<Ability_SandMissile>();
-                break;
-            case Ability.LIGHTNING_BOLT:
-                abilityScript = gameObject.AddComponent<Ability_Lightning>();
-                break;
-            case Ability.ICE_ROLL:
-                abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
-                break;
-            case Ability.HP_BUFF:
-                abilityScript = gameObject.AddComponent<Ability_Barrier>();
-                break;
-            case Ability.THORNS:
-                abilityScript = gameObject.AddComponent<Ability_Thorns>();
-                break;
-            case Ability.ARCANE_BOLT:
-                abilityScript = gameObject.AddComponent<Ability_ArcaneBolt>();
-                break;
-            case Ability.FLAME_ROLL:
-                abilityScript = gameObject.AddComponent<Ability_FlameEvade>();
-                break;
-            case Ability.ROLL_BASH:
-                abilityScript = gameObject.AddComponent<Ability_RollBash>();
-                break;
-            case Ability.WHIRLPOOL:
-                abilityScript = gameObject.AddComponent<Ability_Whirlpool>();
-                break;
+            switch (_ability.abilityPower)
+            {
+                case Ability.FIREWAVE:
+                    abilityScript = gameObject.AddComponent<Ability_Firewave>();
+                    break;
+                case Ability.SAND_MISSILE:
+                    abilityScript = gameObject.AddComponent<Ability_SandMissile>();
+                    break;
+                case Ability.LIGHTNING_BOLT:
+                    abilityScript = gameObject.AddComponent<Ability_Lightning>();
+                    break;
+                case Ability.ICE_ROLL:
+                    abilityScript = gameObject.AddComponent<Ability_FrostEvade>();
+                    break;
+                case Ability.HP_BUFF:
+                    abilityScript = gameObject.AddComponent<Ability_Barrier>();
+                    break;
+                case Ability.THORNS:
+                    abilityScript = gameObject.AddComponent<Ability_Thorns>();
+                    break;
+                case Ability.ARCANE_BOLT:
+                    abilityScript = gameObject.AddComponent<Ability_ArcaneBolt>();
+                    break;
+                case Ability.FLAME_ROLL:
+                    abilityScript = gameObject.AddComponent<Ability_FlameEvade>();
+                    break;
+                case Ability.ROLL_BASH:
+                    abilityScript = gameObject.AddComponent<Ability_RollBash>();
+                    break;
+                case Ability.WHIRLPOOL:
+                    abilityScript = gameObject.AddComponent<Ability_Whirlpool>();
+                    break;
                 default:
-                Debug.Log("No ability script set for " + _ability);
-                break;
+                    Debug.Log("No ability script set for " + _ability);
+                    break;
+            }
         }
 
         if (abilityScript != null)
@@ -203,10 +208,17 @@ public class Player_Abilities : MonoBehaviour
             abilityScript.m_attachedHand = _hand;
         }
 
+        Debug.Log("Check point 2");
+        if (m_leftAbilityIcon == null)
+            Debug.Log("LEFT ICON NULL");
+        if (m_rightAbilityIcon == null)
+            Debug.Log("RIGHT ICON NULL");
+
         switch (_hand)
         {
             case Hand.LEFT:
                 Destroy(m_leftAbility);
+                Debug.Log("Check point 3");
 
                 if (m_rightAbility != null)
                     m_rightAbility.m_synergyData = null;
@@ -222,6 +234,7 @@ public class Player_Abilities : MonoBehaviour
                 break;
             case Hand.RIGHT:
                 Destroy(m_rightAbility);
+                Debug.Log("Check point 3");
 
                 if (m_rightAbility != null)
                     m_rightAbility.m_synergyData = null;
