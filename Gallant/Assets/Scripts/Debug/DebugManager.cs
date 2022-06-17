@@ -126,6 +126,8 @@ namespace Exceed.Debug
         {
             if (HUDManager.Instance != null)
                 HUDManager.Instance.gameObject.SetActive(!m_HudCheck.isOn);
+
+            Actor_UI.m_HUDShow = !m_HudCheck.isOn;
         }
 
         private void OnLevelWasLoaded(int level)
