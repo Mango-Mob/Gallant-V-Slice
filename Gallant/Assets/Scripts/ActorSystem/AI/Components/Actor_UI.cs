@@ -13,16 +13,24 @@ namespace ActorSystem.AI.Components
     [RequireComponent(typeof(Canvas))]
     public class Actor_UI : Actor_Component
     {
+        public static bool m_HUDShow = true;
+
         protected UI_Element[] m_UIElements;
         private Canvas m_myCanvas;
         private CanvasGroup m_myGroup;
         private Animator m_animator;
+
         public void Awake()
         {
             m_UIElements = GetComponentsInChildren<UI_Element>();
             m_myCanvas = GetComponent<Canvas>();
             m_animator = GetComponentInChildren<Animator>();
             m_myGroup = GetComponentInChildren<CanvasGroup>();
+        }
+
+        public void Update()
+        {
+            m_myCanvas.enabled = m_HUDShow;
         }
 
         public override void SetEnabled(bool status)

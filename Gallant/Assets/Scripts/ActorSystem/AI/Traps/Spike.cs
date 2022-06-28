@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ActorSystem.AI.Bosses;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActorSystem.AI.Traps
@@ -33,7 +34,10 @@ namespace ActorSystem.AI.Traps
                 }
                 else if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
                 {
-                    other.GetComponent<Actor>().DealDamage(damage, CombatSystem.DamageType.Physical, 0, null);
+                    if (!(other.GetComponent<Actor>() is Boss_Castle))
+                    {
+                        other.GetComponent<Actor>().DealDamage(damage, CombatSystem.DamageType.Physical, 0, null);
+                    }
                 }
             }
         }

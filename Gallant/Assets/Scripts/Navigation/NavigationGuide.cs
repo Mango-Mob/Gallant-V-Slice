@@ -22,13 +22,17 @@ public class NavigationGuide : MonoBehaviour
         Vector3 start = GameManager.Instance.m_player.transform.position;
         Vector3 direct = (targetPosition - start).normalized;
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
-
+        
         if(agent.Warp(start + direct * m_spawnDist))
         {
             agent.SetDestination(targetPosition);
+            GetComponentInChildren<Animator>().SetBool("IsVisible", true);
+            GetComponentInChildren<TrailRenderer>().Clear();
         }
-        GetComponentInChildren<Animator>().SetBool("IsVisible", true);
-        GetComponentInChildren<TrailRenderer>().Clear();
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void SetColor(Color _newColor)

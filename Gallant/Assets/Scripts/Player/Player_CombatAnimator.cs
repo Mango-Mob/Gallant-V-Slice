@@ -23,6 +23,11 @@ public class Player_CombatAnimator : MonoBehaviour
             {
                 playerController.animator.SetBool("CanRotate", false);
             }
+            if (_animName == "Left Brick")
+            {
+                transitionDuration = 0.2f;
+                playerController.animator.SetBool("CanRotate", false);
+            }
             if (_animName == "Left Hammer" || _animName == "Left Greatsword")
             {
                 playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);

@@ -21,6 +21,11 @@ public class Interactable : MonoBehaviour
         m_player = GameManager.Instance.m_player.GetComponent<Player_Controller>();
     }
 
+    private void OnDisable()
+    {
+        display.gameObject.SetActive(false);
+    }
+
     private void OnDestroy()
     {
         if(display)
@@ -30,6 +35,9 @@ public class Interactable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (UI_PauseMenu.isPaused)
+            return;
+
         if (!m_usable)
         {
             display?.gameObject.SetActive(false);

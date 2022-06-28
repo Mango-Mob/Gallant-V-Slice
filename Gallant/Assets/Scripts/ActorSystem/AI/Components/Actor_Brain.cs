@@ -33,7 +33,6 @@ namespace ActorSystem.AI.Components
         public Actor_Indicator[] m_indicators { get; private set; }
         public Outlinable m_myOutline { get; private set; }
         #endregion
-
         public bool IsDead { get{ return m_currHealth <= 0 && !m_isInvincible; } }
         public bool IsStunned { get; set; } = false;
         public bool m_canBeTarget = true;

@@ -436,7 +436,7 @@ namespace ActorSystem.AI.Bosses
 
         private void End()
         {
-            GameManager.Instance.FinishLevel();
+            GameManager.Instance.FinishLevel(m_isLava);
         }
 
         public void Slam(int tentacleId)

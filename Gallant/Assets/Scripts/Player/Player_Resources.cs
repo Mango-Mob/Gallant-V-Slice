@@ -86,7 +86,8 @@ public class Player_Resources : MonoBehaviour
         if (m_inRegenMode)
         {
             m_health += Time.deltaTime * 10.0f;
-            m_adrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
+            if (m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs > m_adrenaline)
+                m_adrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
         }
 
         if (m_barrierDecayTimer >= 0.0f)
@@ -264,7 +265,7 @@ public class Player_Resources : MonoBehaviour
 
     public void FullHeal()
     {
-        m_health = m_maxHealth;
+        m_health += 2000;
         m_dead = false;
     }
 

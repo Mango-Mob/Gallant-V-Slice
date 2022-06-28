@@ -43,6 +43,8 @@ public class SkillTreeObject : MonoBehaviour
 
         if (HUDManager.Instance != null)
             HUDManager.Instance.gameObject.SetActive(false);
+
+        m_interactable.m_usable = false;
     }
 
     public void CloseSkillTree()
@@ -57,6 +59,8 @@ public class SkillTreeObject : MonoBehaviour
 
         if (HUDManager.Instance != null)
             HUDManager.Instance.gameObject.SetActive(true);
+
+        m_interactable.m_usable = true;
     }
 
     IEnumerator DelayControl()
