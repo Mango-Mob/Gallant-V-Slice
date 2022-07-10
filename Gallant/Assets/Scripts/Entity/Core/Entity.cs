@@ -67,7 +67,7 @@ namespace EntitySystem.Core
         /// <summary>
         /// Reset's this entity back to spawning stats
         /// </summary>
-        protected void RefreshEntity()
+        protected virtual void RefreshEntity()
         {
             this.HP = this.MaxHP;
             this.Speed = this.DefaultSpeed;
