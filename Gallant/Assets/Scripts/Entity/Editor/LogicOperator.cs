@@ -16,6 +16,9 @@ namespace EntitySystem.Editor
             controller.AddParameter("Health%", AnimatorControllerParameterType.Float);
             controller.AddParameter("Stamina%", AnimatorControllerParameterType.Float);
 
+            var rootStateMachine = controller.layers[0].stateMachine;
+
+            rootStateMachine.AddState("Idle");
         }
     }
 }

@@ -2,9 +2,9 @@
 {
     public abstract class CoreComponent
     {
-        public Entity Owner { get; protected set; }
+        public AIEntity Owner { get; protected set; }
 
-        public CoreComponent(Entity _owner)
+        public CoreComponent(AIEntity _owner)
         {
             Owner = _owner;
         }

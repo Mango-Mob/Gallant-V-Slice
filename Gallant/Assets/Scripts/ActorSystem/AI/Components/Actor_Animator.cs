@@ -229,7 +229,7 @@ namespace ActorSystem.AI.Components
         }
 
         /*******************
-        * BlendFloatValue : Checks the animator params, for if a specific one exists.
+        * HasParameter : Checks the animator params, for if a specific one exists.
         * @author : Michael Jordan
         * @param : (string) name of the parameter to test for, in the animator.
         * @return : (bool) if the parameter exists.
