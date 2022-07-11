@@ -50,7 +50,7 @@ public class Weapon_Bow : WeaponBase
                 m_chargingShot = false;
             playerController.playerResources.ChangeStamina(-12.0f * Time.deltaTime * speedMult);
 
-            if (playerController.playerResources.m_stamina <= 0.0f)
+            if (playerController.Stamina <= 0.0f)
             {
                 playerController.animator.SetBool("LeftAttackHeld", false);
                 m_chargingShot = false;

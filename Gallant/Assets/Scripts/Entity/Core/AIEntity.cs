@@ -13,7 +13,7 @@ namespace EntitySystem.Core.AI
             base.Awake();
         }
 
-        public override bool DealDamageToEntity(Damage _damage, GameObject _source = null, bool _playHurtSound = false)
+        public override bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false)
         {
             throw new System.NotImplementedException();
         }
