@@ -13,23 +13,23 @@ namespace EntitySystem.Core
         [Header("Base Entity Stats")]
         //Current Health and maximum health
         public float HP;
-        protected float MaxHP { get { return DataOnLoad.HP; } }
+        public float MaxHP { get { return DataOnLoad.HP; } }
 
         //Current speed and default speed
         public float Speed;
-        protected float DefaultSpeed { get { return DataOnLoad.Speed; } }
+        public float DefaultSpeed { get { return DataOnLoad.Speed; } }
 
         //Current Stamina and maximum stamina
         public float Stamina;
-        protected float MaxStamina { get { return DataOnLoad.Stamina; } }
+        public float MaxStamina { get { return DataOnLoad.Stamina; } }
 
         //Current Defence and maximum defence
         public float Defence;
-        protected float DefaultDefence { get { return DataOnLoad.Defence; } }
+        public float DefaultDefence { get { return DataOnLoad.Defence; } }
 
         //Current Ward and maximum ward
         public float Ward;
-        protected float DefaultWard { get { return DataOnLoad.Ward; } }
+        public float DefaultWard { get { return DataOnLoad.Ward; } }
 
         public bool IsDead { get { return HP <= 0; } }
 

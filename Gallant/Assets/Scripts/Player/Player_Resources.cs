@@ -72,7 +72,7 @@ public class Player_Resources : MonoBehaviour
     {
         // Skill implementation.
         m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
-        m_maxHealth = playerController.HP +playerController.playerSkills.m_healthIncrease;
+        m_maxHealth = playerController.MaxHP +playerController.playerSkills.m_healthIncrease;
         playerController.HP = m_maxHealth;
         playerController.Stamina = m_maxStamina;
 
