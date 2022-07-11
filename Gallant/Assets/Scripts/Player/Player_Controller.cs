@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EntitySystem.Core;
 using UnityEngine.SceneManagement;
 
 /****************
@@ -10,8 +11,16 @@ using UnityEngine.SceneManagement;
  * @file : Player_Controller.cs
  * @year : 2021
  */
-public class Player_Controller : MonoBehaviour
+public class Player_Controller : Entity
 {
+    #region EntityClass
+    //public override bool DealDamageToEntity(float _damage, float _pen, Entity.DamageType _type, GameObject _source = null, bool _playHurtSound = false, bool _bypassInvincibility = false)
+    //{
+    //    DamagePlayer(_damage, _type, _source, bool _bypassInvincibility = false);
+    //    return false;
+    //}
+    #endregion
+
     public bool m_spawnWithAnimation = false;
     private bool m_spawning = false;
     public GameObject testObject;

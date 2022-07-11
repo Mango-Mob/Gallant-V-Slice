@@ -62,7 +62,7 @@ namespace EntitySystem.Core
         /// <param name="_source">Source of the damage</param>
         /// <param name="_playHurtSound">Weither the attack should play hurt sounds.</param>
         /// <returns>Status of the entity, if it has been killed by this attack.</returns>
-        protected abstract bool DealDamageToEntity(float _damage, float _pen, Entity.DamageType _type, GameObject _source = null, bool _playHurtSound = false);
+        public abstract bool DealDamageToEntity(float _damage, float _pen, Entity.DamageType _type, GameObject _source = null, bool _playHurtSound = false);
 
         /// <summary>
         /// Reset's this entity back to spawning stats
