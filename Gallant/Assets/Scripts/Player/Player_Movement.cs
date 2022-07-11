@@ -486,7 +486,7 @@ public class Player_Movement : MonoBehaviour
                     m_aimingArrowFadeTimer = m_aimingArrowFadeDelay;
             }
 
-            float speed = m_moveSpeed * playerController.playerSkills.m_moveSpeedIncrease * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
+            float speed = playerController.Speed * playerController.playerSkills.m_moveSpeedIncrease * playerController.playerSkills.m_movementSpeedStatusBonus * playerController.playerStats.m_movementSpeed; // Player movement speed
             if (m_bogSlow > 0.0f) // If the player is walking in bog.
             {
                 speed *= 1.0f - m_bogSlow;
@@ -495,7 +495,7 @@ public class Player_Movement : MonoBehaviour
             {
                 speed *= 1.0f + m_speedBoost;
             }
-            playerController.animator.SetFloat("MovementSpeed", speed / m_moveSpeed);
+            playerController.animator.SetFloat("MovementSpeed", speed / playerController.Speed);
 
             Vector3 normalizedMove = Vector3.zero;
 
@@ -608,9 +608,9 @@ public class Player_Movement : MonoBehaviour
                 m_slideVelocity -= m_slideVelocity * _deltaTime;
                 m_slideVelocity += movement * m_iceSlip * _deltaTime;
 
-                if (m_slideVelocity.magnitude > m_moveSpeed)
+                if (m_slideVelocity.magnitude > playerController.Speed)
                 {
-                    m_slideVelocity = m_slideVelocity.normalized * m_moveSpeed;
+                    m_slideVelocity = m_slideVelocity.normalized * playerController.Speed;
                 }
                 characterController.Move(m_slideVelocity + transform.up * m_yVelocity * _deltaTime);
             }
