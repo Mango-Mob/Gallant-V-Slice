@@ -40,6 +40,11 @@ namespace EntitySystem.Core
             True
         }
 
+        public struct Damage
+        {
+
+        }
+
         protected virtual void Awake()
         {
             if(DataOnLoad)
@@ -62,7 +67,7 @@ namespace EntitySystem.Core
         /// <param name="_source">Source of the damage</param>
         /// <param name="_playHurtSound">Weither the attack should play hurt sounds.</param>
         /// <returns>Status of the entity, if it has been killed by this attack.</returns>
-        public abstract bool DealDamageToEntity(float _damage, float _pen, Entity.DamageType _type, GameObject _source = null, bool _playHurtSound = false);
+        public abstract bool DealDamageToEntity(Damage _damage, GameObject _source = null, bool _playHurtSound = false);
 
         /// <summary>
         /// Reset's this entity back to spawning stats

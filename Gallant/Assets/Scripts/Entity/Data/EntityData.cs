@@ -10,6 +10,7 @@ namespace EntitySystem.Data
         public float HP;
         public float Speed;
         public float Stamina;
+        
         [Range(0, 400)]
         public float Defence;
         [Range(0, 400)]
