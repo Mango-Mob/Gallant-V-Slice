@@ -9,7 +9,13 @@ namespace EntitySystem.Editor
         [MenuItem("Tools/Execute/CreateLogicAnimator")]
         static void CreateLogicAnimator()
         {
-            AssetDatabase.CreateAsset(new AnimatorController(), "");
+            var controller = UnityEditor.Animations.AnimatorController.CreateAnimatorControllerAtPath(AssetDatabase.GenerateUniqueAssetPath("Assets/LogicAnimator/StateMachine.controller"));
+
+            controller.AddParameter("IsDead", AnimatorControllerParameterType.Bool);
+            controller.AddParameter("DistToTarget", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Health%", AnimatorControllerParameterType.Float);
+            controller.AddParameter("Stamina%", AnimatorControllerParameterType.Float);
+
         }
     }
 }
