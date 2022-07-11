@@ -24,8 +24,8 @@ namespace EntitySystem.Core.AI
         {
             Brain.Update(Time.deltaTime);
         }
-
-        public override bool DealDamageToEntity(Damage _damage, bool _playHurtSound = false)
+		
+        public override bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false)
         {
             throw new System.NotImplementedException();
         }

@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
  */
 public class Player_Resources : MonoBehaviour
 {
-    public float m_health { get; private set; } = 100.0f;
+    //public float m_health { get; private set; } = 100.0f;
     public float m_maxHealth { get; private set; } = 100.0f;
     public float m_defaultHealth { get; private set; } = 100.0f;
 
@@ -21,7 +21,7 @@ public class Player_Resources : MonoBehaviour
     public int m_startingAdrenaline = 3;
     public int m_defaultAdrenaline { get; private set; } = 3;
 
-    public float m_stamina { get; private set; } = 100.0f;
+    //public float m_stamina { get; private set; } = 100.0f;
     public float m_maxStamina { get; private set; } = 100.0f;
     public float m_staminaRegenDelayTimer = 0.0f;
     public float m_exhaustDurationTimer = 0.0f;
@@ -72,9 +72,9 @@ public class Player_Resources : MonoBehaviour
     {
         // Skill implementation.
         m_adrenalineHeal *= 1.0f + playerController.playerSkills.m_healPowerIncrease;
-        m_maxHealth += playerController.playerSkills.m_healthIncrease;
-        m_health = m_maxHealth;
-        m_stamina = m_maxStamina;
+        m_maxHealth = playerController.MaxHP +playerController.playerSkills.m_healthIncrease;
+        playerController.HP = m_maxHealth;
+        playerController.Stamina = m_maxStamina;
 
         m_startingAdrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
         ResetResources();
@@ -85,7 +85,7 @@ public class Player_Resources : MonoBehaviour
     {
         if (m_inRegenMode)
         {
-            m_health += Time.deltaTime * 10.0f;
+            playerController.HP += Time.deltaTime * 10.0f;
             if (m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs > m_adrenaline)
                 m_adrenaline = m_defaultAdrenaline + playerController.playerSkills.m_extraHealOrbs;
         }
@@ -105,11 +105,11 @@ public class Player_Resources : MonoBehaviour
         {
             m_staminaRegenDelayTimer -= Time.deltaTime;
         }
-        else if (m_stamina < m_maxStamina && !playerController.playerAttack.m_isBlocking)
+        else if (playerController.Stamina < m_maxStamina && !playerController.playerAttack.m_isBlocking)
         {
-            m_stamina += m_staminaRegenRate * playerController.playerSkills.m_staminaRegenRate * Time.deltaTime * (m_isExhausted ? m_exhaustRegenMult : 1.0f);
-            m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
-            m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
+            playerController.Stamina += m_staminaRegenRate * playerController.playerSkills.m_staminaRegenRate * Time.deltaTime * (m_isExhausted ? m_exhaustRegenMult : 1.0f);
+            playerController.Stamina = Mathf.Clamp(playerController.Stamina, 0.0f, m_maxStamina);
+            playerController.Stamina = Mathf.Clamp(playerController.Stamina, 0.0f, m_maxStamina);
         }
 
         m_isExhausted = m_exhaustDurationTimer > 0.0f;
@@ -118,7 +118,7 @@ public class Player_Resources : MonoBehaviour
             m_exhaustDurationTimer -= Time.deltaTime;
         }
 
-        float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+        float healthPercentage = playerController.HP / (m_maxHealth * playerController.playerStats.m_maximumHealth);
 
         if (healthBar != null)
         {
@@ -141,7 +141,7 @@ public class Player_Resources : MonoBehaviour
         {
             staminaBar.SetEnabled(!m_isExhausted);
 
-            staminaBar.SetValue((0.5f - m_staminaBarRadialRange) + (m_stamina / m_maxStamina) * m_staminaBarRadialRange * 2.0f);
+            staminaBar.SetValue((0.5f - m_staminaBarRadialRange) + (playerController.Stamina / m_maxStamina) * m_staminaBarRadialRange * 2.0f);
         }
 
     }
@@ -150,7 +150,7 @@ public class Player_Resources : MonoBehaviour
     public void ResetResources()
     {
         m_adrenaline = m_startingAdrenaline;
-        m_health = m_maxHealth * playerController.playerStats.m_maximumHealth;
+        playerController.HP = m_maxHealth * playerController.playerStats.m_maximumHealth;
         m_dead = false;
     }
 
@@ -161,13 +161,13 @@ public class Player_Resources : MonoBehaviour
    */
     public void ChangeStamina(float _amount)
     {
-        m_stamina += _amount;
+        playerController.Stamina += _amount;
         m_staminaRegenDelayTimer = m_staminaRegenDelay;
 
-        if (m_stamina < 0.0f)
+        if (playerController.Stamina < 0.0f)
             m_exhaustDurationTimer = m_exhaustDuration;
 
-        m_stamina = Mathf.Clamp(m_stamina, 0.0f, m_maxStamina);
+        playerController.Stamina = Mathf.Clamp(playerController.Stamina, 0.0f, m_maxStamina);
     }
 
     /*******************
@@ -177,12 +177,12 @@ public class Player_Resources : MonoBehaviour
     */
     public void ChangeHealth(float _amount)
     {
-        m_health += _amount;
+        playerController.HP += _amount;
 
         if (_amount > 0.0f)
             GameManager.m_healingDealt += _amount;
 
-        if (m_health <= 0.0f && !m_dead)
+        if (playerController.HP <= 0.0f && !m_dead)
         {
             // Kill
             m_dead = true;
@@ -200,7 +200,7 @@ public class Player_Resources : MonoBehaviour
             playerController.animator.SetBool("RightAttackHeld", false);
             //StartCoroutine(BackToMenu());
         }
-        m_health = Mathf.Clamp(m_health, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
+        playerController.HP = Mathf.Clamp(playerController.HP, 0.0f, (m_maxHealth * playerController.playerStats.m_maximumHealth));
     }
 
     /*******************
@@ -250,7 +250,7 @@ public class Player_Resources : MonoBehaviour
      */
     public void UseAdrenaline()
     {
-        if (m_adrenaline >= 1 && m_health > 0.0f)
+        if (m_adrenaline >= 1 && playerController.HP > 0.0f)
         {
             playerController.playerAudioAgent.PlayUseAdrenaline(); // Audio
             Debug.Log(m_adrenalineHeal * (m_maxHealth / 100.0f) * playerController.playerStats.m_maximumHealth);
@@ -265,15 +265,15 @@ public class Player_Resources : MonoBehaviour
 
     public void FullHeal()
     {
-        m_health += 2000;
+        playerController.HP += 2000;
         m_dead = false;
     }
 
     public void SetHealth(float _health) 
-    { 
-        m_health = _health;
+    {
+        playerController.HP = _health;
 
-        float healthPercentage = m_health / (m_maxHealth * playerController.playerStats.m_maximumHealth);
+        float healthPercentage = playerController.HP / (m_maxHealth * playerController.playerStats.m_maximumHealth);
 
         healthBar.InstantUpdate(healthPercentage); 
     }
@@ -281,6 +281,6 @@ public class Player_Resources : MonoBehaviour
 
     public float GetPotentialHealth()
     {
-        return m_health + m_adrenaline * m_adrenalineHeal;
+        return playerController.HP + m_adrenaline * m_adrenalineHeal;
     }
 }

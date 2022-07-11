@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EntitySystem.Core;
 using UnityEngine.SceneManagement;
 
 /****************
@@ -10,8 +11,18 @@ using UnityEngine.SceneManagement;
  * @file : Player_Controller.cs
  * @year : 2021
  */
-public class Player_Controller : MonoBehaviour
+public class Player_Controller : Entity
 {
+    #region EntityClass
+    public override bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false)
+    {
+        DamagePlayer(_damage.value * CalculateDamageNegated(_damage.type, GetResistanceValue(_damage.type), _damage.pen), CombatSystem.DamageType.True, _damage.source, _damage.bypassInvincibility, _playHurtSound);
+        return false;
+    }
+    #endregion
+
+    [Header("Player Controller")]
+
     public bool m_spawnWithAnimation = false;
     private bool m_spawning = false;
     public GameObject testObject;
@@ -91,7 +102,7 @@ public class Player_Controller : MonoBehaviour
     private float m_walkRunLerp = 0.0f;
     private float m_walkRunLerpSpeed = 2.0f;
 
-    private void Awake()
+    private new void Awake()
     {
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         if (m_statsMenu == null)
@@ -748,21 +759,10 @@ public class Player_Controller : MonoBehaviour
 
         return dot >= Mathf.Cos(_angle * Mathf.Deg2Rad);
     }
-    public void DamagePlayer(float _damage, CombatSystem.DamageType _damageType, GameObject _attacker = null, bool _bypassInvincibility = false)
+    public void DamagePlayer(float _damage, CombatSystem.DamageType _damageType, GameObject _attacker = null, bool _bypassInvincibility = false, bool _playHurt = true)
     {
         if (!_bypassInvincibility && playerMovement.m_isRollInvincible)
             return;
-
-        float resistance = 0;
-        if (_damageType == CombatSystem.DamageType.Ability)
-        {
-            resistance += playerSkills.m_magicalDefenceIncrease + playerStats.m_abilityDefence;
-        }
-        else if (_damageType == CombatSystem.DamageType.Physical)
-        {
-            resistance += playerSkills.m_physicalDefenceIncrease + playerStats.m_physicalDefence;
-        }
-        float actualDamage = _damage * (1.0f - CombatSystem.CalculateDamageNegated(_damageType, 0.5f, 0f));
 
         Weapon_Sword sword = GetComponent<Weapon_Sword>();
         if ((sword != null && sword.m_attackReady) || (playerAttack.m_isBlocking && _attacker != null))
@@ -821,6 +821,8 @@ public class Player_Controller : MonoBehaviour
             Instantiate(m_damageVFXPrefab, transform.position + transform.up, Quaternion.identity);
             playerAudioAgent.PlayHurt();
         }
+
+        if (_playHurt)
         animator.SetTrigger("HitPlayer");
 
         //if (animatorCamera)
@@ -894,7 +896,7 @@ public class Player_Controller : MonoBehaviour
     public void StorePlayerInfo()
     {
         GameManager.StorePlayerInfo(playerAttack.m_leftWeaponData, playerAttack.m_rightWeaponData, playerStats.m_effects, 
-            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect, playerResources.m_health, playerResources.m_adrenaline);
+            m_inkmanClass, playerAttack.m_leftWeaponEffect, playerAttack.m_rightWeaponEffect, HP, playerResources.m_adrenaline);
     }
     public void LoadPlayerInfo()
     {

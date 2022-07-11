@@ -178,9 +178,11 @@ public class Player_Stats : MonoBehaviour
                     break;
                 case ItemEffect.PHYSICAL_DEFENCE:
                     m_physicalDefence = effect.Key.GetEffectValue(effect.Value);
+                    playerController.Defence = m_physicalDefence;
                     break;
                 case ItemEffect.ABILITY_DEFENCE:
                     m_abilityDefence = effect.Key.GetEffectValue(effect.Value);
+                    playerController.Ward = m_abilityDefence;
                     break;
                 case ItemEffect.ARCANE_FOCUS:
                     m_arcaneFocus = effect.Key.GetEffectValue(effect.Value);

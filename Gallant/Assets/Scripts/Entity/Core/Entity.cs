@@ -13,23 +13,23 @@ namespace EntitySystem.Core
         [Header("Base Entity Stats")]
         //Current Health and maximum health
         public float HP;
-        protected float MaxHP { get { return DataOnLoad.HP; } }
+        public float MaxHP { get { return DataOnLoad.HP; } }
 
         //Current speed and default speed
         public float Speed;
-        protected float DefaultSpeed { get { return DataOnLoad.Speed; } }
+        public float DefaultSpeed { get { return DataOnLoad.Speed; } }
 
         //Current Stamina and maximum stamina
         public float Stamina;
-        protected float MaxStamina { get { return DataOnLoad.Stamina; } }
+        public float MaxStamina { get { return DataOnLoad.Stamina; } }
 
         //Current Defence and maximum defence
         public float Defence;
-        protected float DefaultDefence { get { return DataOnLoad.Defence; } }
+        public float DefaultDefence { get { return DataOnLoad.Defence; } }
 
         //Current Ward and maximum ward
         public float Ward;
-        protected float DefaultWard { get { return DataOnLoad.Ward; } }
+        public float DefaultWard { get { return DataOnLoad.Ward; } }
 
         public bool IsDead { get { return HP <= 0; } }
 
@@ -40,9 +40,29 @@ namespace EntitySystem.Core
             True
         }
 
-        public struct Damage
+        /// <summary>
+        /// Struct that contains damage instance data
+        /// </summary>
+        public struct DamageInstance
         {
+            public DamageInstance(float _value, // Damage value applied to target
+            float _pen, // Penetration value of damage
+            DamageType _type, // Type of instance damage
+            GameObject _source = null, // Source of instance damage
+            bool __bypassInvincibility = false // Whether the attack bypasses invincibility frames
+            ){
+                value =_value;
+                pen =_pen;
+                type = _type;
+                source = _source;
+                bypassInvincibility = __bypassInvincibility;
+            }
 
+            public float value; // Damage value applied to target
+            public float pen; // Penetration value of damage
+            public DamageType type; // Type of instance damage
+            public GameObject source; // Source of instance damage
+            public bool bypassInvincibility;
         }
 
         protected virtual void Awake()
@@ -67,7 +87,7 @@ namespace EntitySystem.Core
         /// <param name="_source">Source of the damage</param>
         /// <param name="_playHurtSound">Weither the attack should play hurt sounds.</param>
         /// <returns>Status of the entity, if it has been killed by this attack.</returns>
-        public abstract bool DealDamageToEntity(Damage _damage, bool _playHurtSound = false);
+        public abstract bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false);
 
         /// <summary>
         /// Reset's this entity back to spawning stats
@@ -79,6 +99,20 @@ namespace EntitySystem.Core
             this.Stamina = this.MaxStamina;
             this.Defence = this.DefaultDefence;
             this.Ward = this.DefaultWard;
+        }
+
+        protected virtual float GetResistanceValue(DamageType _type)
+        {
+            switch (_type)
+            {
+                case DamageType.Physical:
+                    return Defence;
+                case DamageType.Ability:
+                    return Ward;
+                default:
+                case DamageType.True:
+                    return 0.0f;
+            }
         }
 
         /// <summary>
