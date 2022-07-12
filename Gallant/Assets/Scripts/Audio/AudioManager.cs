@@ -83,6 +83,9 @@ public class AudioManager : SingletonPersistent<AudioManager>
 
     private void LoadMusic()
     {
+        if (SceneManager.GetActiveScene().buildIndex >= m_clipRanges.Count)
+            return;
+
         if (SceneManager.GetActiveScene().buildIndex == lastLoadedScene)
             return;
 

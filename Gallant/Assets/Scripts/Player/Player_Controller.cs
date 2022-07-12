@@ -16,6 +16,17 @@ public class Player_Controller : Entity
     #region EntityClass
     public override bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false)
     {
+        float resistanceAdd = 0.0f;
+        switch (_damage.type)
+        {
+            case DamageType.Physical:
+                resistanceAdd += playerSkills.m_magicalDefenceIncrease;
+                break;
+            case DamageType.Ability:
+                resistanceAdd += playerSkills.m_magicalDefenceIncrease;
+                break;
+        }
+
         DamagePlayer(_damage.value * CalculateDamageNegated(_damage.type, GetResistanceValue(_damage.type), _damage.pen), CombatSystem.DamageType.True, _damage.source, _damage.bypassInvincibility, _playHurtSound);
         return false;
     }
@@ -104,6 +115,8 @@ public class Player_Controller : Entity
 
     private new void Awake()
     {
+        base.Awake();
+
         Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Rubble"));
         if (m_statsMenu == null)
             m_statsMenu = HUDManager.Instance.GetElement<UI_StatsMenu>("StatsMenu");
