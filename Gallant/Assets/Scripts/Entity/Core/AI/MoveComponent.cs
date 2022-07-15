@@ -10,16 +10,24 @@ namespace EntitySystem.Core.AI
         public Vector3 TargetPosition { get; private set; }
         public Quaternion TargetRotation { get; private set; }
 
+        public int RotateDirection { get; private set; }
+
+        public Vector3 Velocity { get { return (m_isKnocked) ? Vector3.zero : Navigator.velocity; } }
+        public Vector3 LocalVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(Owner.transform.rotation.eulerAngles.y, -Vector3.up) * Navigator.velocity; } }
+        public Vector3 ScaledVelocity { get { return LocalVelocity / Navigator.speed; } }
+
+        private bool m_isKnocked;
         private bool m_canRotate;
-        private int m_rotateDirection;
+        
         
         public MoveComponent(AIEntity _owner) : base(_owner)
         {
             Navigator = _owner.GetComponent<NavMeshAgent>();
             Body = _owner.GetComponent<Rigidbody>();
 
+            m_isKnocked = false;
             m_canRotate = true;
-            m_rotateDirection = 0;
+            RotateDirection = 0;
             TargetPosition = Owner.transform.position;
             TargetRotation = Owner.transform.rotation;
         }
@@ -47,21 +55,21 @@ namespace EntitySystem.Core.AI
                     {
                         if (Vector3.Dot(Owner.transform.right, TargetRotation * Vector3.forward) > 0)
                         {
-                            m_rotateDirection = 1;
+                            RotateDirection = 1;
                         }
                         else
                         {
-                            m_rotateDirection = -1;
+                            RotateDirection = -1;
                         }
                     }
                     else
                     {
-                        m_rotateDirection = 0;
+                        RotateDirection = 0;
                     }
                 }
                 else
                 {
-                    m_rotateDirection = 0;
+                    RotateDirection = 0;
                 }
             }
 
@@ -74,6 +82,12 @@ namespace EntitySystem.Core.AI
         {
             if (!Navigator.enabled || !Navigator.isOnNavMesh)
                 return;
+
+            if(target == Owner.transform.position)
+            {
+                Halt();
+                return;
+            }    
 
             Navigator.isStopped = false;
             TargetPosition = target;

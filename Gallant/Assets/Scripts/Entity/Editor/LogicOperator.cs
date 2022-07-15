@@ -15,6 +15,7 @@ namespace EntitySystem.Editor
             controller.AddParameter("DistToTarget", AnimatorControllerParameterType.Float);
             controller.AddParameter("Health%", AnimatorControllerParameterType.Float);
             controller.AddParameter("Stamina%", AnimatorControllerParameterType.Float);
+            controller.AddParameter("NxtAtk", AnimatorControllerParameterType.Int);
 
             var rootStateMachine = controller.layers[0].stateMachine;
 
