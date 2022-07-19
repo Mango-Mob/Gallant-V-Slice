@@ -2,127 +2,130 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_CombatAnimator : MonoBehaviour
+namespace PlayerSystem
 {
-    public Player_Controller playerController { private set; get; }
-    public float m_durationTransition = 0.4f;
-
-    // Start is called before the first frame update
-    void Awake()
+    public class Player_CombatAnimator : MonoBehaviour
     {
-        playerController = GetComponent<Player_Controller>();
-    }
+        public Player_Controller playerController { private set; get; }
+        public float m_durationTransition = 0.4f;
 
-    public void PlayAttack(string _animName)
-    {
-        if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
-            !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+        // Start is called before the first frame update
+        void Awake()
         {
-            float transitionDuration = m_durationTransition;
-            if (_animName == "Left Hammer")
+            playerController = GetComponent<Player_Controller>();
+        }
+
+        public void PlayAttack(string _animName)
+        {
+            if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
+                !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
             {
-                playerController.animator.SetBool("CanRotate", false);
+                float transitionDuration = m_durationTransition;
+                if (_animName == "Left Hammer")
+                {
+                    playerController.animator.SetBool("CanRotate", false);
+                }
+                if (_animName == "Left Brick")
+                {
+                    transitionDuration = 0.2f;
+                    playerController.animator.SetBool("CanRotate", false);
+                }
+                if (_animName == "Left Hammer" || _animName == "Left Greatsword")
+                {
+                    playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
+                    playerController.InstantRunStop();
+                }
+                playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
+
+                if (_animName[0] == 'L')
+                {
+                    playerController.animator.SetBool("UsingLeft", true);
+                    playerController.m_lastAttackHand = Hand.LEFT;
+                }
+                if (_animName[0] == 'R')
+                {
+                    playerController.animator.SetBool("UsingRight", true);
+                    playerController.m_lastAttackHand = Hand.RIGHT;
+                }
             }
-            if (_animName == "Left Brick")
+        }
+
+        public void SetIdleAnimation(Weapon _weapon, Hand _hand)
+        {
+            int layerIndex = 0;
+            switch (_hand)
             {
-                transitionDuration = 0.2f;
-                playerController.animator.SetBool("CanRotate", false);
+                case Hand.LEFT:
+                    layerIndex = playerController.animator.GetLayerIndex("IdleArmL");
+                    break;
+                case Hand.RIGHT:
+                    layerIndex = playerController.animator.GetLayerIndex("IdleArmR");
+                    break;
+                default:
+                    return;
             }
-            if (_animName == "Left Hammer" || _animName == "Left Greatsword")
+
+            string animName;
+            switch (_weapon)
             {
-                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
-                playerController.InstantRunStop();
+                case Weapon.BOW:
+                    animName = "Bow";
+                    break;
+                case Weapon.GREATSWORD:
+                    animName = "Greatsword";
+                    break;
+                case Weapon.CROSSBOW:
+                    animName = "Crossbow";
+                    break;
+                case Weapon.SPEAR:
+                    animName = "Spear";
+                    break;
+                default:
+                    animName = "Default";
+                    break;
             }
-            playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
 
-            if (_animName[0] == 'L')
+            if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
             {
-                playerController.animator.SetBool("UsingLeft", true);
-                playerController.m_lastAttackHand = Hand.LEFT;
+                playerController.animator.Play(animName, layerIndex);
             }
-            if (_animName[0] == 'R')
+        }
+        public void SetRunAnimation(Weapon _weapon, Hand _hand)
+        {
+            int layerIndex = 0;
+            switch (_hand)
             {
-                playerController.animator.SetBool("UsingRight", true);
-                playerController.m_lastAttackHand = Hand.RIGHT;
+                case Hand.LEFT:
+                    layerIndex = playerController.animator.GetLayerIndex("RunArmL");
+                    break;
+                case Hand.RIGHT:
+                    layerIndex = playerController.animator.GetLayerIndex("RunArmR");
+                    break;
+                default:
+                    return;
             }
-        }
-    }
 
-    public void SetIdleAnimation(Weapon _weapon, Hand _hand)
-    {
-        int layerIndex = 0;
-        switch (_hand)
-        {
-            case Hand.LEFT:
-                layerIndex = playerController.animator.GetLayerIndex("IdleArmL");
-                break;
-            case Hand.RIGHT:
-                layerIndex = playerController.animator.GetLayerIndex("IdleArmR");
-                break;
-            default:
-                return;
-        }
+            string animName;
+            switch (_weapon)
+            {
+                case Weapon.BOW:
+                    animName = "Bow";
+                    break;
+                case Weapon.GREATSWORD:
+                    animName = "Greatsword";
+                    break;
+                case Weapon.SPEAR:
+                    animName = "Spear";
+                    break;
+                default:
+                    animName = "Default";
+                    break;
+            }
 
-        string animName;
-        switch (_weapon)
-        {
-            case Weapon.BOW:
-                animName = "Bow";
-                break;
-            case Weapon.GREATSWORD:
-                animName = "Greatsword";
-                break;
-            case Weapon.CROSSBOW:
-                animName = "Crossbow";
-                break;
-            case Weapon.SPEAR:
-                animName = "Spear";
-                break;
-            default:
-                animName = "Default";
-                break;
-        }
-
-        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
-        {
-            playerController.animator.Play(animName, layerIndex);
-        }
-    }
-    public void SetRunAnimation(Weapon _weapon, Hand _hand)
-    {
-        int layerIndex = 0;
-        switch (_hand)
-        {
-            case Hand.LEFT:
-                layerIndex = playerController.animator.GetLayerIndex("RunArmL");
-                break;
-            case Hand.RIGHT:
-                layerIndex = playerController.animator.GetLayerIndex("RunArmR");
-                break;
-            default:
-                return;
-        }
-
-        string animName;
-        switch (_weapon)
-        {
-            case Weapon.BOW:
-                animName = "Bow";
-                break;
-            case Weapon.GREATSWORD:
-                animName = "Greatsword";
-                break;
-            case Weapon.SPEAR:
-                animName = "Spear";
-                break;
-            default:
-                animName = "Default";
-                break;
-        }
-
-        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
-        {
-            playerController.animator.Play(animName, layerIndex);
+            if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+            {
+                playerController.animator.Play(animName, layerIndex);
+            }
         }
     }
 }

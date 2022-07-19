@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using PlayerSystem;
 
 public abstract class BaseAbilityPath : MonoBehaviour
 {

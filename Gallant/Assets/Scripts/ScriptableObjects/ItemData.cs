@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 [CreateAssetMenu(fileName = "itemData", menuName = "Game Data/Item Data", order = 1)]
 public class ItemData : ScriptableObject

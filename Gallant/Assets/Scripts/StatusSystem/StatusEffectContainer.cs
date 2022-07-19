@@ -3,6 +3,7 @@ using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public class StatusEffectContainer : MonoBehaviour
 {

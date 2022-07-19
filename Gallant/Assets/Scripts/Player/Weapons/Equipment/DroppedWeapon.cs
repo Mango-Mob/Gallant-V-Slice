@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * DroppedWeapon: A dropped weapon which contains information of a weapon and can be picked up by the player.

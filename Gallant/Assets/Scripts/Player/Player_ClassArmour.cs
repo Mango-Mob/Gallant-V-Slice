@@ -2,46 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_ClassArmour : MonoBehaviour
+namespace PlayerSystem
 {
-    public Player_Controller playerController { private set; get; }
-
-    [Header("Slots")]
-    public GameObject m_knightClass;
-    public GameObject m_mageClass;
-    public GameObject m_hunterClass;
-
-    // Start is called before the first frame update
-    private void Awake()
+    public class Player_ClassArmour : MonoBehaviour
     {
-        playerController = GetComponent<Player_Controller>();
-    }
+        public Player_Controller playerController { private set; get; }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+        [Header("Slots")]
+        public GameObject m_knightClass;
+        public GameObject m_mageClass;
+        public GameObject m_hunterClass;
 
-    public void SetClassArmour(InkmanClass _class)
-    {
-        m_knightClass.SetActive(false);
-        m_mageClass.SetActive(false);
-        m_hunterClass.SetActive(false);
-
-        switch (_class)
+        // Start is called before the first frame update
+        private void Awake()
         {
-            case InkmanClass.KNIGHT:
-                m_knightClass.SetActive(true);
-                break;
-            case InkmanClass.MAGE:
-                m_mageClass.SetActive(true);
-                break;
-            case InkmanClass.HUNTER:
-                m_hunterClass.SetActive(true);
-                break;
-            default:
-                break;
+            playerController = GetComponent<Player_Controller>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+
+        public void SetClassArmour(InkmanClass _class)
+        {
+            m_knightClass.SetActive(false);
+            m_mageClass.SetActive(false);
+            m_hunterClass.SetActive(false);
+
+            switch (_class)
+            {
+                case InkmanClass.KNIGHT:
+                    m_knightClass.SetActive(true);
+                    break;
+                case InkmanClass.MAGE:
+                    m_mageClass.SetActive(true);
+                    break;
+                case InkmanClass.HUNTER:
+                    m_hunterClass.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

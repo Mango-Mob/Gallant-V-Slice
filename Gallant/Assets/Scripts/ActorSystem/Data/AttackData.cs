@@ -1,6 +1,7 @@
 ﻿using ActorSystem.AI;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 namespace ActorSystem.Data
 {

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PlayerSystem;
 
 public class NavigationManager : SingletonPersistent<NavigationManager>
 {
