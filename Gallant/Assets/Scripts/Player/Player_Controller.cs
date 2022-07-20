@@ -471,23 +471,24 @@ namespace PlayerSystem
                     playerAttack.PickUpWeapon(_drop, _hand);
                     break;
                 case DropSpawner.DropType.UPGRADE:
-                    if (_hand == Hand.LEFT)
+                    //if (_hand == Hand.LEFT)
                     {
                         if (playerAttack.m_leftWeaponData != null)
                         {
                             playerAttack.m_leftWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_leftWeaponData);
                             Destroy(_drop.gameObject);
+                            playerAttack.ApplyWeaponData(Hand.LEFT);
                         }
                     }
-                    else
+                    //else
                     {
                         if (playerAttack.m_rightWeaponData != null)
                         {
                             playerAttack.m_rightWeaponData = WeaponData.UpgradeWeaponLevel(playerAttack.m_rightWeaponData);
                             Destroy(_drop.gameObject);
+                            playerAttack.ApplyWeaponData(Hand.RIGHT);
                         }
                     }
-                    playerAttack.ApplyWeaponData(_hand);
                     break;
                 case DropSpawner.DropType.SPELLBOOK:
                     if (_hand == Hand.LEFT)
