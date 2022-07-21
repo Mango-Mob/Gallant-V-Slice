@@ -91,8 +91,13 @@ namespace PlayerSystem
                 case InputType.LeftCast:
                 case InputType.RightCast:
                 case InputType.Heal:
+                    // Heal from adrenaline
+                    playerController.animator.SetTrigger("Heal");
+                    playerController.animator.SetBool("IsHealing", true);
+                    break;
                 case InputType.Roll:
-
+                    // Activate roll
+                    playerController.playerMovement.Roll();
                     break;
                 default:
                     Debug.LogError("Unconfigured player animation queued");

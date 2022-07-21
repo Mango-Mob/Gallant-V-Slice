@@ -545,54 +545,25 @@ namespace PlayerSystem
                     playerController.animator.SetFloat("Vertical", 0);
                 }
 
-                if (!playerController.playerResources.m_isExhausted && _roll && m_rollCDTimer <= 0.0f && playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE) // If roll input is triggered
+                if (_roll) // If roll input is triggered
                 {
-                    playerController.playerResources.ChangeStamina(-m_rollCost);
-                    playerController.playerAudioAgent.PlayRoll(); // Audio
+                    playerController.playerCombatAnimator.AddAction(InputType.Roll, "Roll");
+                }
 
-                    playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
-                    playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
-
-                    playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / m_rollDistanceMult) * (playerController.playerStats.m_movementSpeed));
-                    var animControllers = playerController.animator.runtimeAnimatorController;
-                    foreach (var clip in animControllers.animationClips)
-                    {
-                        if (clip.name == "InkMan DodgeRoll")
-                            m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
-                    }
-
-                    m_rollCDTimer = m_rollCD;
-
-                    playerController.animator.SetTrigger("Roll");
-
-                    // Set roll to true
-                    m_isRolling = true;
-
-                    // Set roll duration
-                    m_rollTimer = m_rollDuration;
-
-                    // Create adrenaline provider
-                    //if (m_adrenShadowPrefab != null)
-                    //{
-                    //    AdrenalineProvider provider = Instantiate(m_adrenShadowPrefab, transform.position, Quaternion.identity).GetComponent<AdrenalineProvider>();
-                    //    provider.m_durationInSeconds = m_shadowDuration;
-                    //    provider.m_playerRef = this;
-                    //}
-
-                    if (normalizedMove.magnitude > 0.1f)
-                    {
-                        m_lastMoveDirection = normalizedMove;
-                    }
-                    else // Set last move direction to forward for rolling if player is not moving.
-                    {
-                        m_lastMoveDirection = playerModel.transform.forward;
-                    }
+                if (normalizedMove.magnitude > 0.1f)
+                {
+                    m_lastMoveDirection = normalizedMove;
+                }
+                else // Set last move direction to forward for rolling if player is not moving.
+                {
+                    m_lastMoveDirection = playerModel.transform.forward;
                 }
             }
             else
             {
                 playerController.animator.SetFloat("Rotate", 0.5f);
             }
+
 
             Vector3 horizLastMove = characterController.velocity;
             horizLastMove.y = 0;
@@ -635,6 +606,36 @@ namespace PlayerSystem
             // Move
             //characterController.Move((m_onIce ? horizLastMove + movement * m_slip * _deltaTime : movement) + transform.up * m_yVelocity * _deltaTime);
 
+        }
+
+        public void Roll()
+        {
+            if (!playerController.playerResources.m_isExhausted && m_rollCDTimer <= 0.0f) // If roll input is triggered
+            {
+                playerController.playerResources.ChangeStamina(-m_rollCost);
+                playerController.playerAudioAgent.PlayRoll(); // Audio
+
+                playerController.playerAbilities.PassiveProcess(Hand.LEFT, PassiveType.BEGIN_ROLL);
+                playerController.playerAbilities.PassiveProcess(Hand.RIGHT, PassiveType.BEGIN_ROLL);
+
+                playerController.animator.SetFloat("RollSpeed", (m_rollSpeed / m_rollDistanceMult) * (playerController.playerStats.m_movementSpeed));
+                var animControllers = playerController.animator.runtimeAnimatorController;
+                foreach (var clip in animControllers.animationClips)
+                {
+                    if (clip.name == "InkMan DodgeRoll")
+                        m_rollDuration = clip.length / playerController.animator.GetFloat("RollSpeed");
+                }
+
+                m_rollCDTimer = m_rollCD;
+
+                playerController.animator.SetTrigger("Roll");
+
+                // Set roll to true
+                m_isRolling = true;
+
+                // Set roll duration
+                m_rollTimer = m_rollDuration;
+            }
         }
 
         /*******************

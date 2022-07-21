@@ -207,8 +207,8 @@ namespace PlayerSystem
             bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID);
             bool leftAttackHeld = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
 
-            animator.SetBool("RightAttackHeld", rightAttackHeld);
-            animator.SetBool("LeftAttackHeld", leftAttackHeld);
+            //animator.SetBool("RightAttackHeld", rightAttackHeld);
+            //animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
             //float swordRunWeight = 0.0f;
             //if (playerAttack.m_leftWeaponData != null)
@@ -311,7 +311,7 @@ namespace PlayerSystem
                         }
                     }
                 }
-
+            }
                 bool rightWeaponAttack = InputManager.Instance.IsBindDown("Right_Attack", gamepadID);
                 bool leftWeaponAttack = InputManager.Instance.IsBindDown("Left_Attack", gamepadID);
 
@@ -326,65 +326,64 @@ namespace PlayerSystem
                     m_dualWieldBonus = 1.0f;
                 }
 
-                if (!m_hasRecentPickup && !m_isDisabledAttacks && !m_isNearDrop)
+            if (!m_hasRecentPickup && !m_isDisabledAttacks && !m_isNearDrop)
+            {
+                if (rightWeaponAttack && !animator.GetBool("UsingRight"))
                 {
+                    playerAttack.StartUsing(Hand.RIGHT);
+                }
+                else
+                {
+                    if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
+                        animator.SetTrigger("RightTrigger");
+                }
 
-                    if (rightWeaponAttack && !animator.GetBool("UsingRight"))
-                    {
-                        playerAttack.StartUsing(Hand.RIGHT);
-                    }
-                    else
-                    {
-                        if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
-                            animator.SetTrigger("RightTrigger");
-                    }
+                if (leftWeaponAttack && !animator.GetBool("UsingLeft"))
+                {
+                    playerAttack.StartUsing(Hand.LEFT);
+                }
+                else
+                {
+                    if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
+                        animator.SetTrigger("LeftTrigger");
+                }
 
-                    if (leftWeaponAttack && !animator.GetBool("UsingLeft"))
-                    {
-                        playerAttack.StartUsing(Hand.LEFT);
-                    }
-                    else
-                    {
-                        if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
-                            animator.SetTrigger("LeftTrigger");
-                    }
-
-                    // Weapon attacks
-                    //if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
-                    //{
-                    //    if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
-                    //    {
-                    //        if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
-                    //        {
-                    //            playerAttack.StartUsing(Hand.LEFT);
-                    //        }
-                    //        else
-                    //        {
-                    //            playerAttack.StartUsing(Hand.RIGHT);
-                    //        }
-                    //    }
-                    //    else if (rightWeaponAttack)
-                    //    {
-                    //        playerAttack.StartUsing(Hand.RIGHT);
-                    //    }
-                    //    else if (leftWeaponAttack)
-                    //    {
-                    //        playerAttack.StartUsing(Hand.LEFT);
-                    //    }
-                    //}
+                // Weapon attacks
+                //if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
+                //{
+                //    if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                //    {
+                //        if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
+                //        {
+                //            playerAttack.StartUsing(Hand.LEFT);
+                //        }
+                //        else
+                //        {
+                //            playerAttack.StartUsing(Hand.RIGHT);
+                //        }
+                //    }
+                //    else if (rightWeaponAttack)
+                //    {
+                //        playerAttack.StartUsing(Hand.RIGHT);
+                //    }
+                //    else if (leftWeaponAttack)
+                //    {
+                //        playerAttack.StartUsing(Hand.LEFT);
+                //    }
+                //}
 
 
-                    // Ability attacks
-                    if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
-                    {
-                        playerAbilities.StartUsing(Hand.RIGHT);
-                    }
-                    if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID) && !playerAttack.IsTwoHanded())
-                    {
-                        playerAbilities.StartUsing(Hand.LEFT);
-                    }
+                // Ability attacks
+                if (InputManager.Instance.IsBindDown("Right_Ability", gamepadID))
+                {
+                    playerAbilities.StartUsing(Hand.RIGHT);
+                }
+                if (InputManager.Instance.IsBindDown("Left_Ability", gamepadID) && !playerAttack.IsTwoHanded())
+                {
+                    playerAbilities.StartUsing(Hand.LEFT);
                 }
             }
+            
 
             if (InputManager.Instance.IsBindDown("Toggle_Lockon", gamepadID))
             {
@@ -395,9 +394,7 @@ namespace PlayerSystem
 
             if (InputManager.Instance.IsBindDown("Consume", gamepadID) && !animator.GetCurrentAnimatorStateInfo(animator.GetLayerIndex("Arm")).IsName("Heal"))
             {
-                // Heal from adrenaline
-                animator.SetTrigger("Heal");
-                animator.SetBool("IsHealing", true);
+                playerCombatAnimator.AddAction(InputType.Heal, "Heal");
             }
 
             if (InputManager.Instance.IsBindDown("Switch", gamepadID) && !playerAttack.m_isBlocking
