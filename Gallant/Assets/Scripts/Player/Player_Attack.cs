@@ -158,7 +158,8 @@ namespace PlayerSystem
             animatorTriggerName += " " + thisWeapon.GetWeaponName();
 
             //playerController.animator.SetBool(animatorTriggerName, true);
-            playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
+            //playerController.playerCombatAnimator.PlayAttack(animatorTriggerName);
+            playerController.playerCombatAnimator.AddAction(_hand == Hand.LEFT ? InputType.LeftAttack : InputType.RightAttack, animatorTriggerName);
             //playerController.animator.CrossFade(animatorTriggerName, 0.1f);
         }
 

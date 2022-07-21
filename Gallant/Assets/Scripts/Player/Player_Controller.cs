@@ -312,8 +312,8 @@ namespace PlayerSystem
                     }
                 }
 
-                bool rightWeaponAttack = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID);
-                bool leftWeaponAttack = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
+                bool rightWeaponAttack = InputManager.Instance.IsBindDown("Right_Attack", gamepadID);
+                bool leftWeaponAttack = InputManager.Instance.IsBindDown("Left_Attack", gamepadID);
 
                 if (playerAttack.IsDuelWielding() && rightWeaponAttack && leftWeaponAttack) // Dual attacking
                 {
@@ -328,34 +328,50 @@ namespace PlayerSystem
 
                 if (!m_hasRecentPickup && !m_isDisabledAttacks && !m_isNearDrop)
                 {
-                    if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
-                        animator.SetTrigger("RightTrigger");
-                    if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
-                        animator.SetTrigger("LeftTrigger");
+
+                    if (rightWeaponAttack && !animator.GetBool("UsingRight"))
+                    {
+                        playerAttack.StartUsing(Hand.RIGHT);
+                    }
+                    else
+                    {
+                        if (InputManager.Instance.IsBindDown("Right_Attack", gamepadID) && animator.GetBool("UsingRight"))
+                            animator.SetTrigger("RightTrigger");
+                    }
+
+                    if (leftWeaponAttack && !animator.GetBool("UsingLeft"))
+                    {
+                        playerAttack.StartUsing(Hand.LEFT);
+                    }
+                    else
+                    {
+                        if (InputManager.Instance.IsBindDown("Left_Attack", gamepadID) && animator.GetBool("UsingLeft"))
+                            animator.SetTrigger("LeftTrigger");
+                    }
 
                     // Weapon attacks
-                    if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
-                    {
-                        if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
-                        {
-                            if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
-                            {
-                                playerAttack.StartUsing(Hand.LEFT);
-                            }
-                            else
-                            {
-                                playerAttack.StartUsing(Hand.RIGHT);
-                            }
-                        }
-                        else if (rightWeaponAttack)
-                        {
-                            playerAttack.StartUsing(Hand.RIGHT);
-                        }
-                        else if (leftWeaponAttack)
-                        {
-                            playerAttack.StartUsing(Hand.LEFT);
-                        }
-                    }
+                    //if (playerAttack.GetCurrentAttackingHand() == Hand.NONE)
+                    //{
+                    //    if (rightWeaponAttack && leftWeaponAttack) // Dual attacking
+                    //    {
+                    //        if (m_lastAttackHand == Hand.RIGHT && playerAttack.m_leftWeapon != null && !playerAttack.m_leftWeapon.m_isInUse)
+                    //        {
+                    //            playerAttack.StartUsing(Hand.LEFT);
+                    //        }
+                    //        else
+                    //        {
+                    //            playerAttack.StartUsing(Hand.RIGHT);
+                    //        }
+                    //    }
+                    //    else if (rightWeaponAttack)
+                    //    {
+                    //        playerAttack.StartUsing(Hand.RIGHT);
+                    //    }
+                    //    else if (leftWeaponAttack)
+                    //    {
+                    //        playerAttack.StartUsing(Hand.LEFT);
+                    //    }
+                    //}
 
 
                     // Ability attacks
