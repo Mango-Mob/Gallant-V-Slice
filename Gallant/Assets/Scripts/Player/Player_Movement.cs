@@ -360,7 +360,7 @@ namespace PlayerSystem
 
                     float damage = _weapon.m_weaponData.m_damage * _weapon.m_weaponData.m_altDamageMult;
                     float impact = _weapon.m_weaponData.m_impact * _weapon.m_weaponData.m_altImpactMult;
-                    playerController.playerAttack.DamageTarget(actor.gameObject, damage, impact, _weapon.m_weaponData.m_piercing, CombatSystem.DamageType.Ability);
+                    playerController.playerAttack.DamageTarget(actor.gameObject, damage, impact, _weapon.m_weaponData.m_piercing, CombatSystem.DamageType.Physical);
 
                     _weapon.m_dashHitList.Add(actor);
 
