@@ -32,6 +32,9 @@ public abstract class WeaponBase : MonoBehaviour
     private bool m_altAttackedThisFrame = false;
     private bool m_altReleasedThisFrame = false;
 
+    public bool isDashing = false;
+    public List<Actor> m_dashHitList = new List<Actor>();
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -59,6 +62,11 @@ public abstract class WeaponBase : MonoBehaviour
         if (!playerController.animator.GetBool("UsingLeft") && !playerController.animator.GetBool("UsingRight"))
         {
             SetTrailActive(false);
+        }
+        if (!playerController.animator.GetBool("UsingLeft") && isDashing) // Dash stop
+        {
+            isDashing = false;
+            m_dashHitList.Clear();
         }
 
         m_attackedThisFrame = false;

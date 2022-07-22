@@ -207,8 +207,8 @@ namespace PlayerSystem
             bool rightAttackHeld = InputManager.Instance.IsBindPressed("Right_Attack", gamepadID);
             bool leftAttackHeld = InputManager.Instance.IsBindPressed("Left_Attack", gamepadID);
 
-            //animator.SetBool("RightAttackHeld", rightAttackHeld);
-            //animator.SetBool("LeftAttackHeld", leftAttackHeld);
+            animator.SetBool("RightAttackHeld", rightAttackHeld);
+            animator.SetBool("LeftAttackHeld", leftAttackHeld);
 
             //float swordRunWeight = 0.0f;
             //if (playerAttack.m_leftWeaponData != null)

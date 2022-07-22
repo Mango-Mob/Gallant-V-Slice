@@ -318,6 +318,7 @@ namespace PlayerSystem
                 characterController.Move(m_dashVelocity * Time.fixedDeltaTime);
 
                 DestructibleDetection();
+                ChargeDetection();
 
                 m_dashTimer -= Time.fixedDeltaTime;
             }
@@ -333,6 +334,37 @@ namespace PlayerSystem
                 if (dest != null && dest.m_letRollDestroy)
                 {
                     dest.ExplodeObject(transform.position, m_explodeForce, 20.0f);
+                }
+            }
+        }
+        public void ChargeDetection()
+        {
+            Collider[] targets = Physics.OverlapSphere(transform.position, m_detectDistance, playerController.playerAttack.m_attackTargets);
+
+            if (playerController.playerAttack.m_leftWeapon && playerController.playerAttack.m_leftWeapon.isDashing)
+                ChargeCollision(targets, playerController.playerAttack.m_leftWeapon);
+
+            //if (playerController.playerAttack.m_rightWeapon && playerController.playerAttack.m_rightWeapon.isDashing)
+            //    ChargeCollision(targets, playerController.playerAttack.m_rightWeapon);
+        }
+
+        private void ChargeCollision(Collider[] _collisions, WeaponBase _weapon)
+        {
+            foreach (var collision in _collisions)
+            {
+                Actor actor = collision.GetComponentInParent<Actor>();
+                if (actor)
+                {
+                    if (_weapon.m_dashHitList.Contains(actor))
+                        continue;
+
+                    float damage = _weapon.m_weaponData.m_damage * _weapon.m_weaponData.m_altDamageMult;
+                    float impact = _weapon.m_weaponData.m_impact * _weapon.m_weaponData.m_altImpactMult;
+                    playerController.playerAttack.DamageTarget(actor.gameObject, damage, impact, _weapon.m_weaponData.m_piercing, CombatSystem.DamageType.Ability);
+
+                    _weapon.m_dashHitList.Add(actor);
+
+                    playerController.playerAttack.CreateVFX(collision, transform.position);
                 }
             }
         }
