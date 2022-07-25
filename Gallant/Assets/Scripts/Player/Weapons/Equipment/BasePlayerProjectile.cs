@@ -56,6 +56,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
+        if (GetComponentInChildren<SphereCollider>())
         GetComponentInChildren<SphereCollider>().radius = m_hand == Hand.LEFT ? m_weaponData.altHitSize : m_weaponData.hitSize;
         m_startScale = transform.localScale;
 
@@ -83,6 +84,14 @@ public abstract class BasePlayerProjectile : MonoBehaviour
                     newColor.a = trailRenderer.endColor.a;
                     trailRenderer.endColor = newColor;
                 }
+            }
+        }
+
+        foreach (var effect in m_effects)
+        {
+            if (effect.GetComponentInChildren<VolumeBlendController>() != null)
+            {
+                effect.GetComponentInChildren<VolumeBlendController>().m_volumeEnabled = true;
             }
         }
     }
@@ -233,6 +242,9 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
             if (effect.GetComponentInChildren<ParticleSystem>() != null)
                 effect.GetComponentInChildren<ParticleSystem>().Stop();
+
+            if (effect.GetComponentInChildren<VolumeBlendController>() != null)
+                effect.GetComponentInChildren<VolumeBlendController>().m_volumeEnabled = false;
         }
 
         Destroy(gameObject);

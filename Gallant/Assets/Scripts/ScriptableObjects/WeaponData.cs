@@ -285,6 +285,12 @@ public class WeaponData : ScriptableObject
             case Weapon.BOW:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/bowData"));
                 break;
+            case Weapon.WAND:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/wandTomeData"));
+                break;
+            case Weapon.DAGGER:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                break;
         }
         _data.m_itemEffectData = null;
         _data.m_itemEffectData = EffectData.GetEffectData(_data.itemEffect);

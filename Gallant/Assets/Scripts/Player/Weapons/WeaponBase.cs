@@ -312,7 +312,7 @@ public abstract class WeaponBase : MonoBehaviour
         return projectile;
     }
 
-    protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected GameObject SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, transform);
         projectile.transform.position += Vector3.up * playerController.playerAttack.m_swingHeight + _pos;
@@ -322,5 +322,7 @@ public abstract class WeaponBase : MonoBehaviour
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
+
+        return projectile;
     }
 }

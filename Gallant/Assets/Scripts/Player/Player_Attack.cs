@@ -17,6 +17,8 @@ namespace PlayerSystem
         STAFF,
         GREATSWORD,
         BOW,
+        WAND,
+        DAGGER,
 
         BRICK,
     }
@@ -692,6 +694,10 @@ namespace PlayerSystem
                     return gameObject.AddComponent<Weapon_Bow>();
                 case Weapon.GREATSWORD:
                     return gameObject.AddComponent<Weapon_Greatsword>();
+                case Weapon.WAND:
+                    return gameObject.AddComponent<Weapon_Wand>();
+                case Weapon.DAGGER:
+                    return gameObject.AddComponent<Weapon_Sword>();
                 default:
                     return null;
             }
