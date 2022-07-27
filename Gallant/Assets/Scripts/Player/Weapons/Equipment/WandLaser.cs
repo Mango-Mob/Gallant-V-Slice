@@ -30,7 +30,7 @@ public class WandLaser : BasePlayerProjectile
         Vector3 forward = m_projectileUser.playerController.playerMovement.playerModel.transform.forward;
         //m_lineRenderer.SetPosition(1, transform.position + forward * 10.0f);
 
-        Collider[] colliders = Physics.OverlapCapsule(transform.position, transform.position + forward * 10.0f, 1, m_projectileUser.m_attackTargets);
+        Collider[] colliders = Physics.OverlapCapsule(transform.position, transform.position + forward * 20.0f, 1, m_projectileUser.m_attackTargets);
 
         hitList.Clear();
         foreach (var collider in colliders)
@@ -107,6 +107,13 @@ public class WandLaser : BasePlayerProjectile
         }
 
         return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 forward = transform.forward;
+        Gizmos.DrawWireSphere(transform.position, 1);
+        Gizmos.DrawWireSphere(transform.position + forward * 20.0f, 1);
     }
     protected override void EnvironmentCollision(Collider _other)
     {

@@ -51,6 +51,11 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     public float m_statusStrengthMult = 1.0f;
     public float m_statusDuration = 1.0f;
 
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     protected void Start()
     {
@@ -89,6 +94,12 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
         foreach (var effect in m_effects)
         {
+            ParticleSystem[] particleSystems = effect.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particleSystem in particleSystems)
+            {
+                particleSystem.Play();
+            }
+
             if (effect.GetComponentInChildren<VolumeBlendController>() != null)
             {
                 effect.GetComponentInChildren<VolumeBlendController>().m_volumeEnabled = true;
