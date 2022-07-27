@@ -90,6 +90,26 @@ namespace PlayerSystem
                     break;
                 case InputType.LeftCast:
                 case InputType.RightCast:
+                    if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
+                !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+                    {
+                        string animName = m_inputQueue.Peek().Value;
+                        playerController.animator.SetBool(animName, true);
+
+                        if (animName[0] == 'L')
+                        {
+                            playerController.animator.SetBool("UsingLeft", true);
+                            playerController.m_lastAttackHand = Hand.LEFT;
+                            playerController.playerAbilities.m_leftHandGlobalTimer = playerController.playerAbilities.m_globalCooldown;
+                        }
+                        if (animName[0] == 'R')
+                        {
+                            playerController.animator.SetBool("UsingRight", true);
+                            playerController.m_lastAttackHand = Hand.RIGHT;
+                            playerController.playerAbilities.m_rightHandGlobalTimer = playerController.playerAbilities.m_globalCooldown;
+                        }
+                    }
+                    break;
                 case InputType.Heal:
                     // Heal from adrenaline
                     playerController.animator.SetTrigger("Heal");

@@ -38,9 +38,9 @@ namespace PlayerSystem
         private UI_AbilityIcon m_leftAbilityIcon;
         private UI_AbilityIcon m_rightAbilityIcon;
 
-        [SerializeField] private float m_globalCooldown = 1.0f;
-        private float m_leftHandGlobalTimer = 0.0f;
-        private float m_rightHandGlobalTimer = 0.0f;
+        [SerializeField] public float m_globalCooldown { private set; get; } = 1.0f;
+        public float m_leftHandGlobalTimer = 0.0f;
+        public float m_rightHandGlobalTimer = 0.0f;
 
         private void Awake()
         {
@@ -87,13 +87,15 @@ namespace PlayerSystem
                     {
                         if (m_leftAbility.m_data.useSwingCast)
                         {
-                            playerController.animator.SetBool("LeftSwingCast", true);
+                            //playerController.animator.SetBool("LeftSwingCast", true);
+                            playerController.playerCombatAnimator.AddAction(InputType.LeftCast, "LeftSwingCast");
                         }
                         else
                         {
-                            playerController.animator.SetBool("LeftCast", true);
+                            //playerController.animator.SetBool("LeftCast", true);
+                            playerController.playerCombatAnimator.AddAction(InputType.LeftCast, "LeftCast");
                         }
-                        m_leftHandGlobalTimer = m_globalCooldown;
+                        //m_leftHandGlobalTimer = m_globalCooldown;
                     }
                     break;
                 case Hand.RIGHT:
@@ -101,13 +103,15 @@ namespace PlayerSystem
                     {
                         if (m_rightAbility.m_data.useSwingCast)
                         {
-                            playerController.animator.SetBool("RightSwingCast", true);
+                            //playerController.animator.SetBool("RightSwingCast", true);
+                            playerController.playerCombatAnimator.AddAction(InputType.RightCast, "RightSwingCast");
                         }
                         else
                         {
-                            playerController.animator.SetBool("RightCast", true);
+                            //playerController.animator.SetBool("RightCast", true);
+                            playerController.playerCombatAnimator.AddAction(InputType.RightCast, "RightCast");
                         }
-                        m_rightHandGlobalTimer = m_globalCooldown;
+                        //m_rightHandGlobalTimer = m_globalCooldown;
                     }
                     break;
                 default:
