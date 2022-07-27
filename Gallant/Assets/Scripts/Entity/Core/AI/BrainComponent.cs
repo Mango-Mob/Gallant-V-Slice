@@ -37,6 +37,10 @@ namespace EntitySystem.Core.AI
             {
                 LogicAnimator.SetFloat("Stamina%", Owner.Stamina / Owner.DataOnLoad.Stamina);
             }
+            if (HasParameter("NxtAtk", AnimatorControllerParameterType.Int, true))
+            {
+                LogicAnimator.SetInteger("NxtAtk", Owner.Attack.GetNextAttack());
+            }
         }
 
         /// <summary>
@@ -64,6 +68,11 @@ namespace EntitySystem.Core.AI
             {
                 Debug.LogWarning($"Param {_name} not found, Added to {LogicAnimator.runtimeAnimatorController.name }!");
                 var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>($"Assets/LogicAnimator/" + LogicAnimator.runtimeAnimatorController.name + ".controller");
+                foreach (var item in controller.parameters)
+                {
+                    if (item.name == _name)
+                        return true;
+                }
                 controller.AddParameter(_name, _paramType);
                 return true;
             }
