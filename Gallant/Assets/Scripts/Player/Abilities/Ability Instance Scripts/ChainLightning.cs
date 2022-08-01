@@ -97,6 +97,12 @@ public class ChainLightning : MonoBehaviour
                 //bestTarget.DealDamage(m_data.damage, CombatSystem.DamageType.Ability);
                 m_user.playerAttack.DamageTarget(bestTarget.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
 
+                StatusEffectContainer status = bestTarget.GetComponentInParent<StatusEffectContainer>();
+                if (status != null)
+                {
+                    status.AddStatusEffect(new StunStatus(m_data.duration));
+                }
+
                 // Chain VFX
                 CreateVFX(_lastPosition, bestTarget.m_selfTargetTransform.transform.position);
 

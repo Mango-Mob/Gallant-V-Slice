@@ -7,15 +7,16 @@ using PlayerSystem;
 public abstract class BaseAbilityProjectile : MonoBehaviour
 {
     [HideInInspector] public Player_Controller playerController;
-    private List<Actor> m_hitList = new List<Actor>();
+    protected List<Actor> m_hitList = new List<Actor>();
     [HideInInspector] public AbilityData m_data;
     [SerializeField] private GameObject m_particles;
-    [SerializeField] private AudioClip m_hitSound;
+    [SerializeField] protected AudioClip m_hitSound;
+    protected float m_knockbackScalar = 0.0f; 
 
     public float m_overwriteLifetime = 0.0f;
 
     public float m_speed = 25.0f;
-    private float m_lifeTimer = 0.0f;
+    protected float m_lifeTimer = 0.0f;
 
     // Start is called before the first frame update
     protected void Start()
@@ -55,7 +56,7 @@ public abstract class BaseAbilityProjectile : MonoBehaviour
         if (actor != null && m_hitList.Contains(actor))
             return false;
 
-        playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, 0, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
+        playerController.playerAttack.DamageTarget(other.gameObject, m_data.damage, m_knockbackScalar, 0, CombatSystem.DamageType.Ability, m_data.m_tags);
 
         if (actor != null && !m_hitList.Contains(actor))
         {

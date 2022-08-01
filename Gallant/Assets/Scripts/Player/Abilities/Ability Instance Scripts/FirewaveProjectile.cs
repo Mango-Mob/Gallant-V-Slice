@@ -13,12 +13,10 @@ public class FirewaveProjectile : BaseAbilityProjectile
         transform.localScale = Vector3.one * m_startingSize;
     }
 
-
     // Start is called before the first frame update
     new private void Start()
     {
         base.Start();
-        
     }
 
     private void Update()

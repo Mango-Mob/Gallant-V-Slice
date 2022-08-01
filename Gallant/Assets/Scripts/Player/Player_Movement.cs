@@ -59,7 +59,7 @@ namespace PlayerSystem
         public float m_shadowDuration = 1.0f;
         public GameObject m_adrenShadowPrefab;
         private float m_rollTimer = 0.0f;
-        private float m_rollDuration = 0.2f;
+        public float m_rollDuration { private set; get; } = 0.2f;
 
         private float m_rollCDTimer = 0.0f;
         public float m_rollCD = 1.0f;

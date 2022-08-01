@@ -14,6 +14,11 @@ namespace PlayerSystem
         FLAME_ROLL,
         ROLL_BASH,
         WHIRLPOOL,
+        AIR_ROLL,
+        LIGHT_SWORD_RAIN,
+        LIGHT_PASSIVE,
+        DARK_ACTIVE,
+        DARK_PASSIVE,
 
         ARCANE_BOLT,
         HP_BUFF,
@@ -202,6 +207,12 @@ namespace PlayerSystem
                         break;
                     case Ability.WHIRLPOOL:
                         abilityScript = gameObject.AddComponent<Ability_Whirlpool>();
+                        break;
+                    case Ability.AIR_ROLL:
+                        abilityScript = gameObject.AddComponent<Ability_VacuumRoll>();
+                        break;
+                    case Ability.LIGHT_SWORD_RAIN:
+                        abilityScript = gameObject.AddComponent<Ability_LightSwordRain>();
                         break;
                     default:
                         Debug.Log("No ability script set for " + _ability);
