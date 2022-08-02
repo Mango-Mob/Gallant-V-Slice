@@ -289,7 +289,7 @@ public class WeaponData : ScriptableObject
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/wandTomeData"));
                 break;
             case Weapon.DAGGER:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/swordData"));
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/daggerData"));
                 break;
         }
         _data.m_itemEffectData = null;
