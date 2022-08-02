@@ -157,6 +157,8 @@ public class AbilityData : ScriptableObject
                 return Resources.Load<AbilityData>("Data/Abilities/vacuumroll" + _powerLevel.ToString());
             case Ability.LIGHT_SWORD_RAIN:
                 return Resources.Load<AbilityData>("Data/Abilities/swordRain" + _powerLevel.ToString());
+            case Ability.SUMMON_MINION:
+                return Resources.Load<AbilityData>("Data/Abilities/summonMinion" + _powerLevel.ToString());
             default:
                 return null;
         }

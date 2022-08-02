@@ -16,8 +16,7 @@ namespace PlayerSystem
         WHIRLPOOL,
         AIR_ROLL,
         LIGHT_SWORD_RAIN,
-        LIGHT_PASSIVE,
-        DARK_ACTIVE,
+        SUMMON_MINION,
         DARK_PASSIVE,
 
         ARCANE_BOLT,
@@ -213,6 +212,9 @@ namespace PlayerSystem
                         break;
                     case Ability.LIGHT_SWORD_RAIN:
                         abilityScript = gameObject.AddComponent<Ability_LightSwordRain>();
+                        break;
+                    case Ability.SUMMON_MINION:
+                        abilityScript = gameObject.AddComponent<Ability_SummonMinion>();
                         break;
                     default:
                         Debug.Log("No ability script set for " + _ability);
