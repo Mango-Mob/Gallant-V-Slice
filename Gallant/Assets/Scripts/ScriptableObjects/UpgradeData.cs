@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 [CreateAssetMenu(fileName = "upgradeData", menuName = "Game Data/Upgrade Data", order = 1)]
 public class UpgradeData : ScriptableObject

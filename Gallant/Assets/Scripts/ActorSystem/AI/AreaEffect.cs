@@ -3,6 +3,7 @@ using ActorSystem.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public class AreaEffect: MonoBehaviour
 {

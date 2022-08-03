@@ -1,5 +1,6 @@
 ﻿using ActorSystem.AI;
 using UnityEngine;
+using PlayerSystem;
 
 namespace ActorSystem.Data
 {

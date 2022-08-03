@@ -2,6 +2,7 @@ using ActorSystem.AI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public abstract class BasePlayerProjectile : MonoBehaviour
 {
@@ -50,11 +51,17 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     public float m_statusStrengthMult = 1.0f;
     public float m_statusDuration = 1.0f;
 
+    private void Awake()
+    {
+        
+    }
+
     // Start is called before the first frame update
     protected void Start()
     {
         // Set hand transform to be returned to
         m_handTransform = (m_hand == Hand.LEFT ? m_projectileUser.m_leftHandTransform : m_projectileUser.m_rightHandTransform);
+        if (GetComponentInChildren<SphereCollider>())
         GetComponentInChildren<SphereCollider>().radius = m_hand == Hand.LEFT ? m_weaponData.altHitSize : m_weaponData.hitSize;
         m_startScale = transform.localScale;
 
@@ -82,6 +89,20 @@ public abstract class BasePlayerProjectile : MonoBehaviour
                     newColor.a = trailRenderer.endColor.a;
                     trailRenderer.endColor = newColor;
                 }
+            }
+        }
+
+        foreach (var effect in m_effects)
+        {
+            ParticleSystem[] particleSystems = effect.GetComponentsInChildren<ParticleSystem>();
+            foreach (var particleSystem in particleSystems)
+            {
+                particleSystem.Play();
+            }
+
+            if (effect.GetComponentInChildren<VolumeBlendController>() != null)
+            {
+                effect.GetComponentInChildren<VolumeBlendController>().m_volumeEnabled = true;
             }
         }
     }
@@ -232,6 +253,9 @@ public abstract class BasePlayerProjectile : MonoBehaviour
 
             if (effect.GetComponentInChildren<ParticleSystem>() != null)
                 effect.GetComponentInChildren<ParticleSystem>().Stop();
+
+            if (effect.GetComponentInChildren<VolumeBlendController>() != null)
+                effect.GetComponentInChildren<VolumeBlendController>().m_volumeEnabled = false;
         }
 
         Destroy(gameObject);

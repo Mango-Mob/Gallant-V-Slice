@@ -2,6 +2,7 @@
 using ActorSystem.AI.Components;
 using UnityEngine;
 using UnityEngine.AI;
+using PlayerSystem;
 
 namespace ActorSystem.Data
 {
