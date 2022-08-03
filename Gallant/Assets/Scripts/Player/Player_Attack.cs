@@ -697,7 +697,7 @@ namespace PlayerSystem
                 case Weapon.WAND:
                     return gameObject.AddComponent<Weapon_Wand>();
                 case Weapon.DAGGER:
-                    return gameObject.AddComponent<Weapon_Sword>();
+                    return gameObject.AddComponent<Weapon_Dagger>();
                 default:
                     return null;
             }
