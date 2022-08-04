@@ -7,6 +7,7 @@ public class Weapon_Sword : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("VFX/WeaponSwings/Sword Trail");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/SwordWave");
         base.Awake();
     }
 
@@ -63,27 +64,29 @@ public class Weapon_Sword : WeaponBase
     public override void WeaponRelease() { }
     public override void WeaponAltFunctionality()
     {
-        if (m_attackReady)
-        {
-            GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
-            VFX.transform.localScale *= (m_weaponData.altHitCenterOffset + m_weaponData.altHitSize) * 1.0f;
-            VFX.transform.position += m_weaponData.hitCenterOffset * playerController.playerMovement.playerModel.transform.forward;
-            VFX.transform.SetParent(transform);
+        //if (m_attackReady)
+        //{
+        //    GameObject VFX = SpawnVFX(m_objectPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
+        //    VFX.transform.localScale *= (m_weaponData.altHitCenterOffset + m_weaponData.altHitSize) * 1.0f;
+        //    VFX.transform.position += m_weaponData.hitCenterOffset * playerController.playerMovement.playerModel.transform.forward;
+        //    VFX.transform.SetParent(transform);
 
-            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
-            MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
-            m_attackReady = false;
-        }
-        else
-        {
-            playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
-            m_attackReady = true;
-        }
+        //    playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
+        //    MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
+        //    m_attackReady = false;
+        //}
+        //else
+        //{
+        //    playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
+        //    m_attackReady = true;
+        //}
 
         //MeleeAttack(m_weaponData, transform.position);
         //Transform modelTransform = playerController.playerMovement.playerModel.transform;
         //playerController.playerMovement.ApplyDashMovement(-modelTransform.forward * m_weaponData.m_dashSpeed * m_weaponData.m_speed * m_weaponData.m_altSpeedMult, m_weaponData.m_dashDuration / (m_weaponData.m_speed * m_weaponData.m_altSpeedMult), modelTransform.forward);
 
+        playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
+        ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
     }
     public override void WeaponAltRelease() { }
 }
