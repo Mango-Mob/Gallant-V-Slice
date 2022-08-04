@@ -114,6 +114,7 @@ public abstract class BasePlayerProjectile : MonoBehaviour
             transform.localScale = Vector3.Lerp(m_startScale, m_startScale * m_thrownScale, m_scaleLerp);
         }
     }
+    
     protected void ApplyWeaponModel()
     {
         m_weaponModel = Instantiate(m_weaponData.weaponModelPrefab, m_modelTransform);
@@ -283,5 +284,9 @@ public abstract class BasePlayerProjectile : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(1.5f);
         m_spawning = false;
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, transform.position + m_projectileSpeed * transform.forward);
     }
 }
