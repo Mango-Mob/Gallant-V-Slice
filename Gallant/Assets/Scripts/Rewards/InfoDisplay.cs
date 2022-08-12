@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PlayerSystem;
 
 public class InfoDisplay : MonoBehaviour
 {
@@ -181,6 +182,13 @@ public class InfoDisplay : MonoBehaviour
                     || (playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.abilityPower == m_abilityData.abilityPower // Same ability as book
                     && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel < 3 // Current power level is less than max
                     && playerController.playerAttack.m_rightWeapon.m_weaponData.abilityData.starPowerLevel <= m_abilityData.starPowerLevel)))); // Check power level of weapon is <= to the power level of the spell
+            }
+            else if (m_itemData && m_itemData.itemType == ItemData.UtilityType.FORGE)
+            {
+                m_mainHandDouble.m_interactDisplay?.SetActive(true);
+
+                m_offHandSingle.m_interactDisplay?.SetActive(false);
+                m_mainHandSingle.m_interactDisplay?.SetActive(false);
             }
             else
             {

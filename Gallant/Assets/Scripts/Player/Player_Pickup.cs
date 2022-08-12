@@ -2,83 +2,86 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/****************
- * Player_Pickup: Allows the player to pickup dropped weapons
- * @author : William de Beer
- * @file : Player_Pickup.cs
- * @year : 2021
- */
-public class Player_Pickup : MonoBehaviour
+namespace PlayerSystem
 {
-    private Player_Controller playerController;
-    // List of dropped weapons in range of player
-    private List<DroppedWeapon> weaponsInRange = new List<DroppedWeapon>();
-
-    private void Start()
-    {
-        playerController = GetComponentInParent<Player_Controller>();
-    }
-
-    public void Update()
-    {
-        playerController.m_isNearDrop = weaponsInRange.Count > 0;
-    }
-
-    /*******************
-     * FunctionName : Gets the closest weapon to the player inside the trigger box
+    /****************
+     * Player_Pickup: Allows the player to pickup dropped weapons
      * @author : William de Beer
-     * @return : (DroppedWeapon) Closest weapon to player.
+     * @file : Player_Pickup.cs
+     * @year : 2021
      */
-    public DroppedWeapon GetClosestWeapon() 
+    public class Player_Pickup : MonoBehaviour
     {
-        if (weaponsInRange.Count < 1) // Check if there are no weapons in range
+        private Player_Controller playerController;
+        // List of dropped weapons in range of player
+        private List<DroppedWeapon> weaponsInRange = new List<DroppedWeapon>();
+
+        private void Start()
         {
-            //Debug.Log("No weapon close enough to be picked up");
-            return null;
+            playerController = GetComponentInParent<Player_Controller>();
         }
-        // Set first weapon index as the default
-        DroppedWeapon closestWeapon = weaponsInRange[0];
-        float closestDistance = 100.0f;
-        foreach (var weapon in weaponsInRange) 
+
+        public void Update()
         {
-            float distance = Vector3.Distance(weapon.gameObject.transform.position, closestWeapon.transform.position);
-            if (distance < closestDistance) // Compare current closest to current in list
+            playerController.m_isNearDrop = weaponsInRange.Count > 0;
+        }
+
+        /*******************
+         * FunctionName : Gets the closest weapon to the player inside the trigger box
+         * @author : William de Beer
+         * @return : (DroppedWeapon) Closest weapon to player.
+         */
+        public DroppedWeapon GetClosestWeapon()
+        {
+            if (weaponsInRange.Count < 1) // Check if there are no weapons in range
             {
-                closestDistance = distance;
-                closestWeapon = weapon;
+                //Debug.Log("No weapon close enough to be picked up");
+                return null;
+            }
+            // Set first weapon index as the default
+            DroppedWeapon closestWeapon = weaponsInRange[0];
+            float closestDistance = 100.0f;
+            foreach (var weapon in weaponsInRange)
+            {
+                float distance = Vector3.Distance(weapon.gameObject.transform.position, closestWeapon.transform.position);
+                if (distance < closestDistance) // Compare current closest to current in list
+                {
+                    closestDistance = distance;
+                    closestWeapon = weapon;
+                }
+            }
+            return closestWeapon; // Return weapon 
+        }
+
+        public void RemoveDropFromList(DroppedWeapon _weapon)
+        {
+            weaponsInRange.Remove(_weapon); // Remove the weapon that is to be picked up
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
+            if (weapon != null)
+            {
+                // Toggle on weapon information panel
+                weapon.ToggleDisplay(true);
+                weapon.m_pickupDisplay.InitDisplayValues(playerController.playerAttack.m_rightWeaponData, Hand.RIGHT);
+
+                // Add to list
+                weaponsInRange.Add(weapon);
             }
         }
-        return closestWeapon; // Return weapon 
-    }
-
-    public void RemoveDropFromList(DroppedWeapon _weapon)
-    {
-        weaponsInRange.Remove(_weapon); // Remove the weapon that is to be picked up
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
-        if (weapon != null)
+        private void OnTriggerExit(Collider other)
         {
-            // Toggle on weapon information panel
-            weapon.ToggleDisplay(true);
-            weapon.m_pickupDisplay.InitDisplayValues(playerController.playerAttack.m_rightWeaponData, Hand.RIGHT);
+            DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
+            if (weapon != null)
+            {
+                // Toggle off weapon information panel
+                weapon.ToggleDisplay(false);
 
-            // Add to list
-            weaponsInRange.Add(weapon);
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        DroppedWeapon weapon = other.GetComponent<DroppedWeapon>();
-        if (weapon != null)
-        {
-            // Toggle off weapon information panel
-            weapon.ToggleDisplay(false);
-
-            // Remove from list
-            weaponsInRange.Remove(weapon);
+                // Remove from list
+                weaponsInRange.Remove(weapon);
+            }
         }
     }
 }

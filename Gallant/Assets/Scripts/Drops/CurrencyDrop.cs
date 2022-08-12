@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using PlayerSystem;
 public class CurrencyDrop : MonoBehaviour
 {
     [SerializeField] private int m_heldValue = 1;

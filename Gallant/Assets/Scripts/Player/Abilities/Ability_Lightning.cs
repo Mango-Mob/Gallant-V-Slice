@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
- * Ability_Firewave: Firewave ability
+ * Ability_Lightning: Lightning ability
  * @author : William de Beer
- * @file : Ability_Firewave.cs
+ * @file : Ability_Lightning.cs
  * @year : 2021
  */
 public class Ability_Lightning : AbilityBase

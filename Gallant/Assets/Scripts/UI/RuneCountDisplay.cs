@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using TMPro;
+using PlayerSystem;
 
 public class RuneCountDisplay : MonoBehaviour
 {

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using PlayerSystem;
 
 [RequireComponent(typeof(Collider))]
 public class ActorTrigger : MonoBehaviour

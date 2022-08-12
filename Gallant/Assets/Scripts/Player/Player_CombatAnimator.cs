@@ -2,127 +2,254 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_CombatAnimator : MonoBehaviour
+namespace PlayerSystem
 {
-    public Player_Controller playerController { private set; get; }
-    public float m_durationTransition = 0.4f;
-
-    // Start is called before the first frame update
-    void Awake()
+    public enum InputType
     {
-        playerController = GetComponent<Player_Controller>();
+        LeftAttack,
+        RightAttack,
+        LeftCast,
+        RightCast,
+        Roll,
+        Heal,
     }
 
-    public void PlayAttack(string _animName)
+    public class Player_CombatAnimator : MonoBehaviour
     {
-        if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
-            !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
-        {
-            float transitionDuration = m_durationTransition;
-            if (_animName == "Left Hammer")
-            {
-                playerController.animator.SetBool("CanRotate", false);
-            }
-            if (_animName == "Left Brick")
-            {
-                transitionDuration = 0.2f;
-                playerController.animator.SetBool("CanRotate", false);
-            }
-            if (_animName == "Left Hammer" || _animName == "Left Greatsword")
-            {
-                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
-                playerController.InstantRunStop();
-            }
-            playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
+        public Player_Controller playerController { private set; get; }
+        public float m_durationTransition = 0.4f;
+        private Queue<KeyValuePair<InputType, string>> m_inputQueue = new Queue<KeyValuePair<InputType, string>>();
 
-            if (_animName[0] == 'L')
-            {
-                playerController.animator.SetBool("UsingLeft", true);
-                playerController.m_lastAttackHand = Hand.LEFT;
-            }
-            if (_animName[0] == 'R')
-            {
-                playerController.animator.SetBool("UsingRight", true);
-                playerController.m_lastAttackHand = Hand.RIGHT;
-            }
+        // Start is called before the first frame update
+        void Awake()
+        {
+            playerController = GetComponent<Player_Controller>();
         }
-    }
 
-    public void SetIdleAnimation(Weapon _weapon, Hand _hand)
-    {
-        int layerIndex = 0;
-        switch (_hand)
+
+        // Update is called once per frame
+        void Update()
         {
-            case Hand.LEFT:
-                layerIndex = playerController.animator.GetLayerIndex("IdleArmL");
-                break;
-            case Hand.RIGHT:
-                layerIndex = playerController.animator.GetLayerIndex("IdleArmR");
-                break;
-            default:
+            // Check if no conflicting animation
+
+            bool baseLayerReady = playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Base")).IsName("Run Blend Tree") ||
+                playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Base")).IsName("Rotate Blend Tree");
+
+            bool attackLayerReady = playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") && // Check if not attack
+                !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")); // Check if not transitioning
+
+            bool animReady = baseLayerReady && attackLayerReady && m_inputQueue.Count != 0;
+
+            if (!animReady)
                 return;
+
+            switch (m_inputQueue.Peek().Key)
+            {
+                case InputType.LeftAttack:
+                case InputType.RightAttack:
+                    if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
+                !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+                    {
+                        float transitionDuration = m_durationTransition;
+                        string animName = m_inputQueue.Peek().Value;
+
+                        switch (animName)
+                        {
+                            case "Left Hammer":
+                                playerController.animator.SetBool("CanRotate", false);
+
+                                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
+                                playerController.InstantRunStop();
+                                break;
+                            case "Left Greatsword":
+                                playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
+                                playerController.InstantRunStop();
+                                break;
+                            case "Left Brick":
+                                transitionDuration = 0.2f;
+                                playerController.animator.SetBool("CanRotate", false);
+                                break;
+                            default:
+                                break;
+                        }
+
+                        Debug.Log("Playing Attack Anim");
+                        playerController.animator.CrossFade(animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
+
+                        if (animName[0] == 'L')
+                        {
+                            playerController.animator.SetBool("UsingLeft", true);
+                            playerController.m_lastAttackHand = Hand.LEFT;
+                        }
+                        if (animName[0] == 'R')
+                        {
+                            playerController.animator.SetBool("UsingRight", true);
+                            playerController.m_lastAttackHand = Hand.RIGHT;
+                        }
+                    }
+                    break;
+                case InputType.LeftCast:
+                case InputType.RightCast:
+                    if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
+                !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+                    {
+                        string animName = m_inputQueue.Peek().Value;
+                        playerController.animator.SetBool(animName, true);
+
+                        if (animName[0] == 'L')
+                        {
+                            playerController.animator.SetBool("UsingLeft", true);
+                            playerController.m_lastAttackHand = Hand.LEFT;
+                            playerController.playerAbilities.m_leftHandGlobalTimer = playerController.playerAbilities.m_globalCooldown;
+                        }
+                        if (animName[0] == 'R')
+                        {
+                            playerController.animator.SetBool("UsingRight", true);
+                            playerController.m_lastAttackHand = Hand.RIGHT;
+                            playerController.playerAbilities.m_rightHandGlobalTimer = playerController.playerAbilities.m_globalCooldown;
+                        }
+                    }
+                    break;
+                case InputType.Heal:
+                    // Heal from adrenaline
+                    playerController.animator.SetTrigger("Heal");
+                    playerController.animator.SetBool("IsHealing", true);
+                    break;
+                case InputType.Roll:
+                    // Activate roll
+                    playerController.playerMovement.Roll();
+                    break;
+                default:
+                    Debug.LogError("Unconfigured player animation queued");
+                    return;
+            }
+            m_inputQueue.Dequeue();
         }
 
-        string animName;
-        switch (_weapon)
+        public void AddAction(InputType _type, string _animName)
         {
-            case Weapon.BOW:
-                animName = "Bow";
-                break;
-            case Weapon.GREATSWORD:
-                animName = "Greatsword";
-                break;
-            case Weapon.CROSSBOW:
-                animName = "Crossbow";
-                break;
-            case Weapon.SPEAR:
-                animName = "Spear";
-                break;
-            default:
-                animName = "Default";
-                break;
+            foreach (var input in m_inputQueue)
+            {
+                if (input.Key == _type)
+                    return;
+            }
+
+            m_inputQueue.Enqueue(new KeyValuePair<InputType, string>(_type, _animName));
+            Debug.Log($"{_animName} added to queue ({_type}).");
         }
 
-        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
-        {
-            playerController.animator.Play(animName, layerIndex);
-        }
-    }
-    public void SetRunAnimation(Weapon _weapon, Hand _hand)
-    {
-        int layerIndex = 0;
-        switch (_hand)
-        {
-            case Hand.LEFT:
-                layerIndex = playerController.animator.GetLayerIndex("RunArmL");
-                break;
-            case Hand.RIGHT:
-                layerIndex = playerController.animator.GetLayerIndex("RunArmR");
-                break;
-            default:
-                return;
-        }
 
-        string animName;
-        switch (_weapon)
-        {
-            case Weapon.BOW:
-                animName = "Bow";
-                break;
-            case Weapon.GREATSWORD:
-                animName = "Greatsword";
-                break;
-            case Weapon.SPEAR:
-                animName = "Spear";
-                break;
-            default:
-                animName = "Default";
-                break;
-        }
+        //public void PlayAttack(string _animName)
+        //{
+        //    if (playerController.animator.GetCurrentAnimatorStateInfo(playerController.animator.GetLayerIndex("Arm")).IsName("No Attack") &&
+        //        !playerController.animator.IsInTransition(playerController.animator.GetLayerIndex("Arm")))
+        //    {
+        //        float transitionDuration = m_durationTransition;
+        //        if (_animName == "Left Hammer")
+        //        {
+        //            playerController.animator.SetBool("CanRotate", false);
+        //        }
+        //        if (_animName == "Left Brick")
+        //        {
+        //            transitionDuration = 0.2f;
+        //            playerController.animator.SetBool("CanRotate", false);
+        //        }
+        //        if (_animName == "Left Hammer" || _animName == "Left Greatsword")
+        //        {
+        //            playerController.playerMovement.QuickSetAttackMoveSpeedLerp(0.0f);
+        //            playerController.InstantRunStop();
+        //        }
+        //        playerController.animator.CrossFade(_animName, transitionDuration, playerController.animator.GetLayerIndex("Arm"));
 
-        if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+        //        if (_animName[0] == 'L')
+        //        {
+        //            playerController.animator.SetBool("UsingLeft", true);
+        //            playerController.m_lastAttackHand = Hand.LEFT;
+        //        }
+        //        if (_animName[0] == 'R')
+        //        {
+        //            playerController.animator.SetBool("UsingRight", true);
+        //            playerController.m_lastAttackHand = Hand.RIGHT;
+        //        }
+        //    }
+        //}
+
+        public void SetIdleAnimation(Weapon _weapon, Hand _hand)
         {
-            playerController.animator.Play(animName, layerIndex);
+            int layerIndex = 0;
+            switch (_hand)
+            {
+                case Hand.LEFT:
+                    layerIndex = playerController.animator.GetLayerIndex("IdleArmL");
+                    break;
+                case Hand.RIGHT:
+                    layerIndex = playerController.animator.GetLayerIndex("IdleArmR");
+                    break;
+                default:
+                    return;
+            }
+
+            string animName;
+            switch (_weapon)
+            {
+                case Weapon.BOW:
+                    animName = "Bow";
+                    break;
+                case Weapon.GREATSWORD:
+                    animName = "Greatsword";
+                    break;
+                case Weapon.CROSSBOW:
+                    animName = "Crossbow";
+                    break;
+                case Weapon.SPEAR:
+                    animName = "Spear";
+                    break;
+                default:
+                    animName = "Default";
+                    break;
+            }
+
+            if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+            {
+                playerController.animator.Play(animName, layerIndex);
+            }
+        }
+        public void SetRunAnimation(Weapon _weapon, Hand _hand)
+        {
+            int layerIndex = 0;
+            switch (_hand)
+            {
+                case Hand.LEFT:
+                    layerIndex = playerController.animator.GetLayerIndex("RunArmL");
+                    break;
+                case Hand.RIGHT:
+                    layerIndex = playerController.animator.GetLayerIndex("RunArmR");
+                    break;
+                default:
+                    return;
+            }
+
+            string animName;
+            switch (_weapon)
+            {
+                case Weapon.BOW:
+                    animName = "Bow";
+                    break;
+                case Weapon.GREATSWORD:
+                    animName = "Greatsword";
+                    break;
+                case Weapon.SPEAR:
+                    animName = "Spear";
+                    break;
+                default:
+                    animName = "Default";
+                    break;
+            }
+
+            if (!playerController.animator.GetCurrentAnimatorStateInfo(layerIndex).IsName(animName))
+            {
+                playerController.animator.Play(animName, layerIndex);
+            }
         }
     }
 }

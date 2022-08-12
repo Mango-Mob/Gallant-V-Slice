@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PlayerSystem;
 
 public class Debug_Player : MonoBehaviour
 {

@@ -1,6 +1,7 @@
 ﻿using ActorSystem.AI;
 using System;
 using UnityEngine;
+using PlayerSystem;
 
 public class StunStatus : StatusEffect
 {

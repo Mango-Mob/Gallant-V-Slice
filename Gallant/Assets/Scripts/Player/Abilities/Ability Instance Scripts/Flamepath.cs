@@ -19,6 +19,9 @@ public class Flamepath : BaseAbilityPath
         if (m_audioAgent)
             m_audioAgent.localVolume = Mathf.Clamp01(m_startVolume * (1.0f - (m_lifeTimer / m_data.lifetime)));
     }
+    protected override void ActorEffect(Actor _actor)
+    {
+    }
     protected override void AddStatusEffect(StatusEffectContainer _container)
     {
         _container.AddStatusEffect(new BurnStatus(m_data.damage * playerController.playerStats.m_abilityDamage, m_data.duration));

@@ -1,6 +1,7 @@
 ﻿using ActorSystem.AI;
 using System;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * BurnStatus : A status effect that burns the victim and slowly damages them over time. 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using PlayerSystem;
 
 public class TutorialManager : SingletonPersistent<TutorialManager>
 {

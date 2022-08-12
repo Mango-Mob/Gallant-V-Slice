@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * DroppedWeapon: A dropped weapon which contains information of a weapon and can be picked up by the player.
@@ -68,7 +69,17 @@ public class DroppedWeapon : MonoBehaviour
                     if (meshCount > 1 && m_weaponData.abilityData != null)
                         meshRenderers[meshCount - 1].material.color = m_weaponData.abilityData.droppedEnergyColor;
                 }
+                if (m_weaponData.weaponType == Weapon.WAND)
+                {
+                    MeshRenderer[] meshRenderers = m_weaponModel.GetComponentsInChildren<MeshRenderer>();
+                    int meshCount = meshRenderers.Length;
 
+                    if (meshCount > 1 && m_weaponData.abilityData != null)
+                    {
+                        meshRenderers[1].material.color = m_weaponData.abilityData.droppedEnergyColor;
+                        meshRenderers[meshCount - 2].material.color = m_weaponData.abilityData.droppedEnergyColor;
+                    }
+                }
 
                 Color newColor = m_weaponData.abilityData.droppedEnergyColor;
 
