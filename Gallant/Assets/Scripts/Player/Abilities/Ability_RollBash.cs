@@ -72,5 +72,9 @@ public class Ability_RollBash : AbilityBase
             m_lastProjectile.GetComponent<Rollbash>().Destruct();
         }
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

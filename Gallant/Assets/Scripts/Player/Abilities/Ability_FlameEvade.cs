@@ -71,5 +71,9 @@ public class Ability_FlameEvade : AbilityBase
         if (m_lastProjectile != null)
             m_lastProjectile?.GetComponent<Flamepath>()?.StartLife();
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

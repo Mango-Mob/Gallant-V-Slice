@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ActorSystem.AI;
 
 /****************
- * Ability_SandMissile: Sand missile ability
+ * Ability_SummonSkull: Summon skull ability
  * @author : William de Beer
- * @file : Ability_SandMissile.cs
- * @year : 2021
+ * @file : Ability_SummonSkull.cs
+ * @year : 2022
  */
-public class Ability_ArcaneBolt : AbilityBase
+public class Ability_SummonSkull : AbilityBase
 {
-    public GameObject m_boltPrefab;
-
+    public GameObject m_minionPrefab;
+    private List<Actor> m_hitList = new List<Actor>();
+    
     new private void Awake()
     {
         base.Awake();
@@ -20,22 +22,11 @@ public class Ability_ArcaneBolt : AbilityBase
     new private void Start()
     {
         base.Start();
-        m_boltPrefab = Resources.Load<GameObject>("Abilities/ArcaneBoltProjectile");
+        m_minionPrefab = Resources.Load<GameObject>("Abilities/TerribleMinion");
     }
     public override void AbilityFunctionality()
     {
-        if (m_boltPrefab != null)
-        {
-            playerController.playerAudioAgent.Lightning();
-            Transform modelTransform = playerController.playerMovement.playerModel.transform;
-
-            GameObject projectile = Instantiate(m_boltPrefab,
-                m_handTransform.position + 0.5f * modelTransform.forward,
-                modelTransform.rotation);
-
-            projectile.GetComponent<ArcaneboltProjectile>().m_data = m_data;
-            projectile.GetComponent<ArcaneboltProjectile>().playerController = playerController;
-        }
+        
     }
     public override void AbilityPassive()
     {
@@ -63,7 +54,13 @@ public class Ability_ArcaneBolt : AbilityBase
     }
     public override void AbilityOnKill(GameObject _target)
     {
+        if (m_minionPrefab != null)
+        {
+            playerController.playerAudioAgent.FirewaveLaunch();
 
+            GameObject projectile = Instantiate(m_minionPrefab, _target.transform.position, Quaternion.identity);
+
+        }
     }
 }
 

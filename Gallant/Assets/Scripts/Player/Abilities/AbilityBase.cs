@@ -11,6 +11,7 @@ public enum PassiveType
     BEGIN_ROLL,
     WHILE_ROLLING,
     END_ROLL,
+    ON_KILL,
 }
 
 /****************
@@ -69,6 +70,7 @@ public abstract class AbilityBase : MonoBehaviour
     public abstract void AbilityOnBeginRoll();
     public abstract void AbilityWhileRolling();
     public abstract void AbilityOnEndRoll();
+    public abstract void AbilityOnKill(GameObject _target);
 
     public void StartCooldown()
     {

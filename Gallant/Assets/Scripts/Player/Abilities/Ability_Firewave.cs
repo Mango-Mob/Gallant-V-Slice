@@ -62,5 +62,9 @@ public class Ability_Firewave : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 
