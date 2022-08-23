@@ -65,5 +65,9 @@ public class Ability_Lightning : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

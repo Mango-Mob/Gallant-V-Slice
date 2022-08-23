@@ -77,5 +77,9 @@ public class Ability_SummonMinion : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

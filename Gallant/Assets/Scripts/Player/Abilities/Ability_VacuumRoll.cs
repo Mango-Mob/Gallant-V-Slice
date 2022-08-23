@@ -73,5 +73,9 @@ public class Ability_VacuumRoll : AbilityBase
         if (m_lastProjectile != null)
             m_lastProjectile?.GetComponent<Vacuum>()?.StartLife();
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

@@ -79,5 +79,9 @@ public class Ability_Barrier : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 
