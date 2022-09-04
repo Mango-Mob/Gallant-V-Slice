@@ -1,4 +1,5 @@
 ﻿using ActorSystem.Data;
+using BTSystem.Core;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,17 +8,17 @@ namespace EntitySystem.Core.AI
 {
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(Animator))]
     public class AIEntity : Entity
     {
         [Header("AI Entity")]
+        public BTGraph Behaviour;
         public Entity Target;
         public LayerMask TargetMask;
         public List<AttackData> MyAttackData;
+        public GameObject AttackSource;
 
         public BrainComponent Brain { get; private set; } = null;
         public MoveComponent Movement { get; private set; } = null;
-
         public AttackComponent Attack { get; private set; } = null;
 
         public Animator EntityAnimation;
@@ -25,8 +26,9 @@ namespace EntitySystem.Core.AI
         protected override void Awake()
         {
             base.Awake();
+            Behaviour = Behaviour.Copy() as BTGraph;
 
-            Brain = new BrainComponent(this);
+            Brain = new BrainComponent(this, Behaviour);
             Movement = new MoveComponent(this);
             Attack = new AttackComponent(this, MyAttackData);
 
@@ -54,13 +56,32 @@ namespace EntitySystem.Core.AI
             throw new System.NotImplementedException();
         }
 
-        public void OnDrawGizmos()
+        public void OnDrawGizmosSelected()
         {
             if(Application.isPlaying)
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(Movement.TargetPosition, 0.5f);
+
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(transform.position, transform.position + Movement.TargetRotation * Vector3.forward);
+                Gizmos.color = Color.green;
+                Gizmos.DrawLine(transform.position, transform.position + transform.rotation * Vector3.forward);
+                
             }
+        }
+
+        public void InvokeAttack() 
+        {
+            if(Attack.CurrPerformance != null)
+            {
+                Attack.CurrPerformance.InvokeAttack(transform, ref AttackSource, TargetMask, 0);
+            }
+        }
+
+        public void EndAttack()
+        {
+            Attack.CurrPerformance = null; 
         }
     }
 }

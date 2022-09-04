@@ -1,0 +1,14 @@
+using UnityEngine;
+using XNode;
+using BTSystem.Nodes;
+using BTSystem.Core;
+
+[CreateNodeMenu("Decorator/#SCRIPTNAME#", order = 1)]
+public class #SCRIPTNAME# : DecoratorNode 
+{
+#NOTRIM#
+	protected override bool EnterCondition()
+    {
+		return true; //Add custom condition here
+    }
+}

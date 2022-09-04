@@ -14,11 +14,27 @@ namespace EntitySystem.Core.AI
 
         public Vector3 Velocity { get { return (m_isKnocked) ? Vector3.zero : Navigator.velocity; } }
         public Vector3 LocalVelocity { get { return (m_isKnocked) ? Vector3.zero : Quaternion.AngleAxis(Owner.transform.rotation.eulerAngles.y, -Vector3.up) * Navigator.velocity; } }
-        public Vector3 ScaledVelocity { get { return LocalVelocity / Navigator.speed; } }
+        
+        public Vector3 ScaledVelocity {
+            get {
+                if (Navigator.speed == 0 || Navigator.isStopped)
+                    return Vector3.zero;
+                else
+                    return LocalVelocity / Navigator.speed;
+            } 
+        }
+
+        public float RemainingDist { 
+            get {
+                if (Navigator.isStopped)
+                    return 0;
+                else
+                    return Navigator.remainingDistance;
+            } 
+        }
 
         private bool m_isKnocked;
         private bool m_canRotate;
-        
         
         public MoveComponent(AIEntity _owner) : base(_owner)
         {
@@ -47,9 +63,9 @@ namespace EntitySystem.Core.AI
                     Navigator.speed = Owner.Speed;
                 }
 
-                if (m_canRotate && Quaternion.Angle(Owner.transform.rotation, TargetRotation) > 1f)
+                if (m_canRotate && Quaternion.Angle(Owner.transform.rotation, TargetRotation) > 5f)
                 {
-                    Owner.transform.rotation = Quaternion.RotateTowards(Owner.transform.rotation, TargetRotation, Owner.Speed * Time.fixedDeltaTime);
+                    Owner.transform.rotation = Quaternion.RotateTowards(Owner.transform.rotation, TargetRotation, Owner.Speed * 40 * Time.fixedDeltaTime);
 
                     if (Quaternion.Angle(Owner.transform.rotation, TargetRotation) > 5f)
                     {
@@ -102,6 +118,13 @@ namespace EntitySystem.Core.AI
         public void SetTargetRotation(Quaternion rotation)
         {
             TargetRotation = rotation;
+        }
+
+        public void SetTargetRotationTowards(Vector3 _targetLook)
+        {
+            Vector3 direction = _targetLook - Owner.transform.position;
+            direction.y = 0;
+            TargetRotation = Quaternion.LookRotation(direction.normalized, Vector3.up);
         }
 
         public void Halt()

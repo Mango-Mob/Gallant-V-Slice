@@ -7,6 +7,7 @@ namespace EntitySystem.Core.AI
 {
     public class AttackComponent : CoreComponent
     {
+        public AttackData CurrPerformance = null;
         protected List<float> AtkCDs;
         protected List<AttackData> AtkData;
         public AttackComponent(AIEntity _owner, List<AttackData> _atks) : base(_owner)
@@ -23,34 +24,10 @@ namespace EntitySystem.Core.AI
             }
         }
 
-        public int GetNextAttack()
+        public void Perform(AttackData _attackData)
         {
-            int next = -1;
-
-            if (Owner.Target == null)
-                return -1;
-
-            for (int i = 0; i < AtkCDs.Count; i++)
-            {
-                if(AtkCDs[i] <= 0)
-                {
-                    //Attack is ready
-                    if(AtkData[i].HasDetectedCollider(Owner.transform, Owner.TargetMask))
-                    {
-                        //Attack in range;
-                        if (next >= 0)
-                        {
-                            next = (AtkData[i].priority < AtkData[next].priority) ? i : next;
-                        }
-                        else
-                        {
-                            next = i;
-                        }
-                    }
-                }
-            }
-
-            return next;
+            CurrPerformance = _attackData;
+            Owner.EntityAnimation?.Play(_attackData.animID);
         }
     }
 }
