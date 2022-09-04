@@ -8,6 +8,7 @@ public class Weapon_Dagger : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/DaggerAttack");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/DaggerPull");
         base.Awake();
     }
 
@@ -51,11 +52,26 @@ public class Weapon_Dagger : WeaponBase
         MeleeAttack(m_weaponData, transform.position + Vector3.up * playerController.playerAttack.m_swingHeight);
     }
     public override void WeaponRelease() { }
+
+    GameObject m_thrownWeapon;
     public override void WeaponAltFunctionality()
     {
-        
+        m_thrownWeapon = ThrowWeapon(m_weaponObject.transform.position, m_weaponData, Hand.LEFT);
     }
-    public override void WeaponAltRelease() { }
+    public override void WeaponAltRelease()
+    {
+        //playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType, 2);
+        isDashing = true;
+        Transform modelTransform = playerController.playerMovement.playerModel.transform;
+
+        Vector3 forward = (m_thrownWeapon.transform.position - m_weaponObject.transform.position).normalized;
+
+        Vector3 velocity = forward * m_weaponData.m_dashSpeed * m_weaponData.m_speed * m_weaponData.m_altSpeedMult;
+        float distance = (m_thrownWeapon.transform.position - m_weaponObject.transform.position).magnitude - 0.4f;
+        float duration = distance / velocity.magnitude;
+
+        playerController.playerMovement.ApplyDashMovement(velocity, duration, forward);
+    }
 
     public override string GetWeaponName()
     {

@@ -71,5 +71,9 @@ public class Ability_FrostEvade : AbilityBase
         if (m_lastProjectile != null)
             m_lastProjectile?.GetComponent<Frostpath>()?.StartLife();
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

@@ -17,7 +17,7 @@ namespace PlayerSystem
         AIR_ROLL,
         LIGHT_SWORD_RAIN,
         SUMMON_MINION,
-        DARK_PASSIVE,
+        SPAWN_SKULL, 
 
         ARCANE_BOLT,
         HP_BUFF,
@@ -216,6 +216,9 @@ namespace PlayerSystem
                     case Ability.SUMMON_MINION:
                         abilityScript = gameObject.AddComponent<Ability_SummonMinion>();
                         break;
+                    case Ability.SPAWN_SKULL:
+                        abilityScript = gameObject.AddComponent<Ability_SummonSkull>();
+                        break;
                     default:
                         Debug.Log("No ability script set for " + _ability);
                         break;
@@ -337,6 +340,9 @@ namespace PlayerSystem
                     break;
                 case PassiveType.END_ROLL:
                     abilityScript.AbilityOnEndRoll();
+                    break;
+                case PassiveType.ON_KILL:
+                    abilityScript.AbilityOnKill(_object);
                     break;
             }
         }

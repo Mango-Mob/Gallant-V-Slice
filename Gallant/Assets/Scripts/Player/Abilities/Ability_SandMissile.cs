@@ -62,5 +62,9 @@ public class Ability_SandMissile : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

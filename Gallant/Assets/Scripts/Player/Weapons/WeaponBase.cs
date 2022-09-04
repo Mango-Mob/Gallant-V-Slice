@@ -97,6 +97,15 @@ public abstract class WeaponBase : MonoBehaviour
             m_releasedThisFrame = true;
             WeaponRelease();
         }
+
+        if (playerController.animator.GetInteger("ComboCount") + 1 >= m_weaponData.m_comboDamageMult.Count)
+        {
+            playerController.animator.SetInteger("ComboCount", 0);
+        }
+        else
+        {
+            playerController.animator.SetInteger("ComboCount", playerController.animator.GetInteger("ComboCount") + 1);
+        }
     }
     public void TriggerWeaponAlt(bool _active)
     {
@@ -180,7 +189,6 @@ public abstract class WeaponBase : MonoBehaviour
         if (_usedHand == Hand.RIGHT && playerController.animator.GetInteger("ComboCount") < _data.m_comboDamageMult.Count)
             comboDamageMult = _data.m_comboDamageMult[playerController.animator.GetInteger("ComboCount")];
 
-        playerController.animator.SetInteger("ComboCount", playerController.animator.GetInteger("ComboCount") + 1);
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
         {

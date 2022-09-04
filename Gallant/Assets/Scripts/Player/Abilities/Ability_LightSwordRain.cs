@@ -68,5 +68,9 @@ public class Ability_LightSwordRain : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 
