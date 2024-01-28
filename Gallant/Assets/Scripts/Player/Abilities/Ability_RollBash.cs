@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * Ability_RollBash: Roll bash ability
@@ -70,6 +71,10 @@ public class Ability_RollBash : AbilityBase
             playerController.playerAudioAgent.RockEnd();
             m_lastProjectile.GetComponent<Rollbash>().Destruct();
         }
+    }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
     }
 }
 

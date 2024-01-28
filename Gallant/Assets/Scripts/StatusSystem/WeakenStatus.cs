@@ -2,6 +2,7 @@
 using ActorSystem.AI;
 using System;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * WeakenStatus : A status effect that weakens the victim and slowly restores their resistance back to the initial value. 

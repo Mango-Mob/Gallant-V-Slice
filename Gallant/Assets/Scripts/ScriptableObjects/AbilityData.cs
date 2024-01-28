@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -12,6 +13,8 @@ public enum AbilityTag
     Air,
     Earth,
     Water,
+    Light,
+    Dark,
 }
 
 
@@ -150,6 +153,14 @@ public class AbilityData : ScriptableObject
                 return Resources.Load<AbilityData>("Data/Abilities/rollBash" + _powerLevel.ToString());
             case Ability.WHIRLPOOL:
                 return Resources.Load<AbilityData>("Data/Abilities/whirlpool" + _powerLevel.ToString());
+            case Ability.AIR_ROLL:
+                return Resources.Load<AbilityData>("Data/Abilities/vacuumroll" + _powerLevel.ToString());
+            case Ability.LIGHT_SWORD_RAIN:
+                return Resources.Load<AbilityData>("Data/Abilities/swordRain" + _powerLevel.ToString());
+            case Ability.SUMMON_MINION:
+                return Resources.Load<AbilityData>("Data/Abilities/summonMinion" + _powerLevel.ToString());
+            case Ability.SPAWN_SKULL:
+                return Resources.Load<AbilityData>("Data/Abilities/spawnSkull" + _powerLevel.ToString());
             default:
                 return null;
         }

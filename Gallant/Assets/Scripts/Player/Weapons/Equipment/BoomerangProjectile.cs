@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * BoomerangProjectile: A boomerang projectile which can be launched by the player if they are holding a boomerang.

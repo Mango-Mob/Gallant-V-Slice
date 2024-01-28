@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public class AbilityPassiveVFX : MonoBehaviour
 {
@@ -81,6 +82,7 @@ public class AbilityPassiveVFX : MonoBehaviour
                 vfxPrefab = m_frostrollPrefab;
                 break;
             case Ability.THORNS:
+            case Ability.AIR_ROLL:
                 vfxPrefab = m_thornsPrefab;
                 break;
             case Ability.FLAME_ROLL:

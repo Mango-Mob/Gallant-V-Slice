@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using PlayerSystem;
 
 public class UI_StatsMenu : UI_Element
 {

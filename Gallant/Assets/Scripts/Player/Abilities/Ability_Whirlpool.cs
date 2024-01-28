@@ -61,5 +61,9 @@ public class Ability_Whirlpool : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

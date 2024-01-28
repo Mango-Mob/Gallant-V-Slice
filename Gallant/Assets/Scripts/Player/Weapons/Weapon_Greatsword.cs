@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public class Weapon_Greatsword : Weapon_Sword
 {
     private GameObject m_vfxPrefab;
-    bool isDashing = false;
+    //bool isDashing = false;
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("VFX/WeaponSwings/Sword Trail");

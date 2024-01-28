@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public abstract class WeaponBase : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public abstract class WeaponBase : MonoBehaviour
     private bool m_altAttackedThisFrame = false;
     private bool m_altReleasedThisFrame = false;
 
+    public bool isDashing = false;
+    public List<Actor> m_dashHitList = new List<Actor>();
+
     // Start is called before the first frame update
     protected void Awake()
     {
@@ -58,6 +62,11 @@ public abstract class WeaponBase : MonoBehaviour
         if (!playerController.animator.GetBool("UsingLeft") && !playerController.animator.GetBool("UsingRight"))
         {
             SetTrailActive(false);
+        }
+        if (!playerController.animator.GetBool("UsingLeft") && isDashing) // Dash stop
+        {
+            isDashing = false;
+            m_dashHitList.Clear();
         }
 
         m_attackedThisFrame = false;
@@ -87,6 +96,15 @@ public abstract class WeaponBase : MonoBehaviour
 
             m_releasedThisFrame = true;
             WeaponRelease();
+        }
+
+        if (playerController.animator.GetInteger("ComboCount") + 1 >= m_weaponData.m_comboDamageMult.Count)
+        {
+            playerController.animator.SetInteger("ComboCount", 0);
+        }
+        else
+        {
+            playerController.animator.SetInteger("ComboCount", playerController.animator.GetInteger("ComboCount") + 1);
         }
     }
     public void TriggerWeaponAlt(bool _active)
@@ -171,7 +189,6 @@ public abstract class WeaponBase : MonoBehaviour
         if (_usedHand == Hand.RIGHT && playerController.animator.GetInteger("ComboCount") < _data.m_comboDamageMult.Count)
             comboDamageMult = _data.m_comboDamageMult[playerController.animator.GetInteger("ComboCount")];
 
-        playerController.animator.SetInteger("ComboCount", playerController.animator.GetInteger("ComboCount") + 1);
         List<GameObject> hitList = new List<GameObject>();
         foreach (var collider in colliders)
         {
@@ -303,7 +320,7 @@ public abstract class WeaponBase : MonoBehaviour
         return projectile;
     }
 
-    protected void SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
+    protected GameObject SpawnProjectileInTransform(Vector3 _pos, WeaponData _data, Hand _hand)
     {
         GameObject projectile = Instantiate(_hand == Hand.LEFT ? m_objectAltPrefab : m_objectPrefab, transform);
         projectile.transform.position += Vector3.up * playerController.playerAttack.m_swingHeight + _pos;
@@ -313,5 +330,7 @@ public abstract class WeaponBase : MonoBehaviour
 
         m_weaponObject.SetActive(false);
         m_isInUse = true;
+
+        return projectile;
     }
 }

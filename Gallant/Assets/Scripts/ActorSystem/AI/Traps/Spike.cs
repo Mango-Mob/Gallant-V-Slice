@@ -1,6 +1,7 @@
 ﻿using ActorSystem.AI.Bosses;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 namespace ActorSystem.AI.Traps
 {

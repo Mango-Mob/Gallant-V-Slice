@@ -1,6 +1,8 @@
 ﻿using ActorSystem.AI;
 using System;
 using UnityEngine;
+using PlayerSystem;
+
 /****************
  * SlowStatus : A status effect that slows the victim and slowly speeds them up while the duration ends. 
  *              Strength = percentage of slow.

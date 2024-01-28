@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -283,6 +284,12 @@ public class WeaponData : ScriptableObject
                 break;
             case Weapon.BOW:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/bowData"));
+                break;
+            case Weapon.WAND:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/wandTomeData"));
+                break;
+            case Weapon.DAGGER:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/daggerData"));
                 break;
         }
         _data.m_itemEffectData = null;

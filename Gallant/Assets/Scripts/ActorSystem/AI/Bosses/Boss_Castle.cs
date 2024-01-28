@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using PlayerSystem;
 
 namespace ActorSystem.AI.Bosses
 {

@@ -6,6 +6,9 @@ using UnityEngine.VFX;
 
 public class Frostpath : BaseAbilityPath
 {
+    protected override void ActorEffect(Actor _actor)
+    {
+    }
     protected override void AddStatusEffect(StatusEffectContainer _container)
     {
         _container.AddStatusEffect(new SlowStatus(m_data.effectiveness, m_data.duration));

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 /****************
  * Ability_Barrier: Frost evade ability
@@ -75,6 +76,10 @@ public class Ability_Barrier : AbilityBase
 
     }
     public override void AbilityOnEndRoll()
+    {
+
+    }
+    public override void AbilityOnKill(GameObject _target)
     {
 
     }

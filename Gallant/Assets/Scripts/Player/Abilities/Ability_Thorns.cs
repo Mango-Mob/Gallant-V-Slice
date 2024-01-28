@@ -60,5 +60,9 @@ public class Ability_Thorns : AbilityBase
     {
 
     }
+    public override void AbilityOnKill(GameObject _target)
+    {
+
+    }
 }
 

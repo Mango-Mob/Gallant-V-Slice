@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using PlayerSystem;
 
 public abstract class BaseAbilityPath : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public abstract class BaseAbilityPath : MonoBehaviour
     private Vector3 m_endPos;
     private float m_startAlpha = 1.0f;
 
+    private float m_timeSinceLastSpawn = 0.0f;
+    protected BoxCollider m_collider;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,10 +34,13 @@ public abstract class BaseAbilityPath : MonoBehaviour
         m_startAlpha = meshRenderer.material.color.a;
 
         m_startPos = transform.position;
+        m_collider = GetComponent<BoxCollider>();
     }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
+        m_timeSinceLastSpawn += Time.fixedDeltaTime;
+
         if (m_beganLife)
         {
             m_lifeTimer += Time.fixedDeltaTime;
@@ -42,7 +49,10 @@ public abstract class BaseAbilityPath : MonoBehaviour
                 foreach (var vfx in particles)
                 {
                     //vfx.transform.SetParent(null);
-                    vfx.GetComponent<VFXTimerScript>().m_startedTimer = true;
+                    if (vfx.GetComponent<VFXTimerScript>())
+                    {
+                        vfx.GetComponent<VFXTimerScript>().m_startedTimer = true;
+                    }
                 }
                 ActorManager.Instance.RemoveObstacle(transform);
                 Destroy(gameObject);
@@ -57,12 +67,18 @@ public abstract class BaseAbilityPath : MonoBehaviour
         float count = 8.0f;
         for (int i = 0; i <= count; i++)
         {
-            SpawnVFX(Vector3.Lerp(m_startPos, m_endPos, i / count));
+            //SpawnVFX(Vector3.Lerp(m_startPos, m_endPos, i / count));
         }
         ActorManager.Instance?.AddObstacle(transform);
     }
     public void SetEdgePoint(Vector3 _pos)
     {
+        if (m_timeSinceLastSpawn > playerController.playerMovement.m_rollDuration / 8.0f)
+        {
+            m_timeSinceLastSpawn = 0.0f;
+            SpawnVFX(_pos);
+        }
+
         if (!m_hasStartPosition)
         {
             m_startPos = _pos;
@@ -79,11 +95,14 @@ public abstract class BaseAbilityPath : MonoBehaviour
 
     private void SpawnVFX(Vector3 _position)
     {
-        GameObject gameObject = Instantiate(m_prefabVFX, _position, transform.rotation);
+        GameObject gameObject = Instantiate(m_prefabVFX, _position, playerController.playerMovement.playerModel.transform.rotation);
         particles.Add(gameObject);
 
         VisualEffect vfx = gameObject.GetComponentInChildren<VisualEffect>();
-        vfx.SetFloat("life time", m_data.lifetime);
+        if (vfx)
+        {
+            vfx.SetFloat("life time", m_data.lifetime);
+        }
 
         ParticleSystem[] particleSystems = gameObject.GetComponentsInChildren<ParticleSystem>();
         foreach (var particle in particleSystems)
@@ -94,14 +113,15 @@ public abstract class BaseAbilityPath : MonoBehaviour
             particle.Play();
         }
     }
-    private void OnTriggerStay(Collider other)
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
         {
             Actor actor = other.GetComponentInParent<Actor>();
             if (actor != null)
             {
-
+                ActorEffect(actor);
             }
             StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
             if (status != null)
@@ -110,5 +130,25 @@ public abstract class BaseAbilityPath : MonoBehaviour
             }
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Attackable"))
+        {
+            Actor actor = other.GetComponentInParent<Actor>();
+            if (actor != null)
+            {
+                ActorEffect(actor);
+            }
+            StatusEffectContainer status = other.GetComponentInParent<StatusEffectContainer>();
+            if (status != null)
+            {
+                AddStatusEffect(status);
+            }
+        }
+    }
+
+    protected abstract void ActorEffect(Actor _actor);
+
     protected abstract void AddStatusEffect(StatusEffectContainer _container);
 }
