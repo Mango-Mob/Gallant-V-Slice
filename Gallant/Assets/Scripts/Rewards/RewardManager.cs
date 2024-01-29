@@ -301,8 +301,8 @@ public class RewardManager : Singleton<RewardManager>
         {
             item.gameObject.SetActive(true);
         }
-
-        m_onResult = onResult;
+        
+        m_onResult = (onResult != null) ? onResult : GiveReward;
 
         EventSystem.current.SetSelectedGameObject(m_rewardSlots[0].gameObject);
     }
@@ -380,7 +380,7 @@ public class RewardManager : Singleton<RewardManager>
                     m_currentlyEquip.SetActive(false);
                     break;
                 case RewardType.BOOK:
-                    //Only Abilities
+                    //Only Spells
                     for (int i = 0; i < 3; i++)
                     {
                         rewards.Add(GenerateBook(rewards, level));

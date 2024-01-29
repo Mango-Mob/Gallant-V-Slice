@@ -22,8 +22,9 @@ namespace ActorSystem.Spawning
         public List<Actor> m_myActors { get; private set; }
         public bool m_hasStarted { get; private set; } = false;
         public SpawnDataGenerator[] m_generators;
-
+        public bool giveRewardUponCompletion = true;
         public bool isSpawnning = false;
+        public bool spawnMaxOnly = false;
         private bool hasAReward = true;
         private int activeRoutines = 0;
         private float spawnDelay = 0.5f;
@@ -41,7 +42,7 @@ namespace ActorSystem.Spawning
                 if (floor < 0)
                     return;
 
-                m_waves = data.EvaluateCombat(NavigationManager.Instance.GetActiveFloor());
+                m_waves = data.EvaluateCombat(NavigationManager.Instance.GetActiveFloor(), spawnMaxOnly);
                 m_maxWave = m_waves.Count;
                 if (m_waves == null)
                 {
@@ -205,7 +206,8 @@ namespace ActorSystem.Spawning
                     Stop();
                     if(hasAReward)
                     {
-                        RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
+                        if(giveRewardUponCompletion)
+                            RewardManager.Instance.Show(Mathf.FloorToInt(GameManager.currentLevel));
                         GameManager.Advance();
                         EndScreenMenu.roomsCleared++;
                     }

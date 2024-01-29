@@ -16,6 +16,8 @@ namespace ActorSystem.AI.Users
         public int myTutorialPosition = 0;
         public float m_idealDistance = 1.5f;
         public int setTutorialPositionOnLoad = 0;
+        public bool only_show_if_dead = false;
+        public bool hide_if_player_died = false;
         private Interactable m_myInteractLogic;
 
         private UI_Text m_keyboardInput;
@@ -37,6 +39,11 @@ namespace ActorSystem.AI.Users
             base.Awake();
             m_myInteractLogic = GetComponentInChildren<Interactable>();
             TutorialManager.Instance.tutorialPosition = setTutorialPositionOnLoad;
+
+            if (TutorialManager.Instance.m_playerHasDied && hide_if_player_died)
+                gameObject.SetActive(false);
+            else if(!TutorialManager.Instance.m_playerHasDied && only_show_if_dead)
+                gameObject.SetActive(false);
         }
 
         protected override void Start()
@@ -75,7 +82,7 @@ namespace ActorSystem.AI.Users
 
         public void Interact()
         {
-            DialogManager.Instance.LoadDialog(m_dialog[TutorialManager.Instance.targetDialog]);
+            DialogManager.Instance.LoadDialog(m_dialog[0]);
 
             DialogManager.Instance.m_interact[0] = new UnityEvent();
             DialogManager.Instance.m_interact[0].AddListener(InteractFunc);

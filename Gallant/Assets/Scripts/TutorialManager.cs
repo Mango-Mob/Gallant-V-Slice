@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using PlayerSystem;
+using UnityEngine.Events;
 
 public class TutorialManager : SingletonPersistent<TutorialManager>
 {
@@ -20,9 +21,9 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public SceneData[] m_sceneData;
 
     public int tutorialPosition = 0;
-    public int targetDialog = 0;
     public TextAsset m_playerDeathDialog;
 
+    public TextAsset[] m_classDialog;
     public ClassData m_warrior;
     public ClassData m_mage;
     public ClassData m_hunter;
@@ -32,8 +33,8 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
     public GameObject[] m_mainGameObject;
     private Image m_fade;
 
+    public bool m_playerHasDied = false;
     private bool m_isRespawning = false;
-    private bool m_playerHasDied = false;
 
     protected override void Awake()
     {
@@ -75,17 +76,22 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         if(NavigationManager.Instance.index == 3 && tutorialPosition == 3)
         {
             tutorialPosition = 4;
-            targetDialog = 0;
-        }
-        else if(tutorialPosition > 3)
-        {
-            targetDialog = 0;
         }
     }
-    public void InteractFunction()
+    public void InteractFunction( )
     {
         if (tutorialPosition == 3)
+        {
             RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
+        }
+        if (tutorialPosition == 5)
+        {
+            RewardManager.Instance.Show( m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon);
+        }
+        if (tutorialPosition == 6)
+        {
+            RewardManager.Instance.Show(1, RewardManager.RewardType.BOOK);
+        }
     }
 
     public bool AdvanceTutorial()
@@ -95,19 +101,16 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
             tutorialPosition++;
             return true;
         }
-        
-        if(tutorialPosition == 3)
+
+        if (tutorialPosition == 3)
         {
-            //RewardManager.Instance.Show(m_warrior.startWeapon, m_mage.startWeapon, m_hunter.startWeapon, SelectClass);
             return false;
         }
-        
         return false;
     }
 
     public void SelectClass(int selected)
     {
-        targetDialog = selected;
         switch (selected)
         {
             default:
@@ -121,6 +124,8 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
                 GameManager.Instance.m_player.GetComponent<Player_Controller>().SelectClass(m_hunter);
                 break;
         }
+        DialogManager.Instance.LoadDialog(m_classDialog[selected]);
+        DialogManager.Instance.Show();
     }
 
     private IEnumerator RespawnPlayer()
@@ -140,8 +145,8 @@ public class TutorialManager : SingletonPersistent<TutorialManager>
         m_fade.enabled = false;
         NavigationManager.Instance.UpdateMap(1);
         LevelManager.Instance.LoadNewLevel("Tutorial");
-        tutorialPosition = 3;
-        targetDialog = 3;
+        tutorialPosition = 2;
+        m_playerHasDied = true;
         yield return null;
     }
 }

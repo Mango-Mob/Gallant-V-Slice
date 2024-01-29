@@ -64,6 +64,7 @@ public class DialogManager : Singleton<DialogManager>
     {
         if(m_window.activeInHierarchy)
         {
+            m_player.m_isDisabledInput = true;
             for (int i = 0; i < 3; i++)
             {
                 if (InputManager.Instance.IsKeyDown(KeyType.NUM_ONE + i) || InputManager.Instance.IsKeyDown(KeyType.ALP_ONE + i) || InputManager.Instance.IsGamepadButtonDown(ButtonType.UP + i, 0))

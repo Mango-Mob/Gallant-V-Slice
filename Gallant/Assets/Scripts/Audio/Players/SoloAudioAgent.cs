@@ -43,6 +43,9 @@ public class SoloAudioAgent : AudioAgent
 
     protected override void Update()
     {
+        if (player == null)
+            return;
+
         player.is3D = is3D;
         player.Set3DRange(min3D_Dist, max3D_Dist);
 

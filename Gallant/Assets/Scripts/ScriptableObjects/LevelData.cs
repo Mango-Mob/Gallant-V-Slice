@@ -34,7 +34,7 @@ public class LevelData : ScriptableObject
         return m_probOfGrowth.Evaluate(t);
     }
 
-    public List<WaveData> EvaluateCombat(FloorData floor)
+    public List<WaveData> EvaluateCombat(FloorData floor, bool spend_max = false)
     {
         List<WaveData> result = new List<WaveData>();
         List<WaveData> options = new List<WaveData>();
@@ -53,7 +53,7 @@ public class LevelData : ScriptableObject
             if (archive.Count == 0)
                 archive = new List<WaveData>(m_spawnableWaves);
 
-            options = GetWavesUnderBudget(archive, budget, limit);
+            options = !spend_max ? GetWavesUnderBudget(archive, budget, limit) : GetWavesMax(archive, budget);
 
             //Randomly select a wave available.
             WaveData toAdd = null;
@@ -100,6 +100,26 @@ public class LevelData : ScriptableObject
             if (result[j].m_diffCost > budget || result[j].m_diffCost < limit)
             {
                 result.RemoveAt(j);
+            }
+        }
+
+        return result;
+    }
+    private List<WaveData> GetWavesMax(List<WaveData> archive, float budget)
+    {
+        List<WaveData> options = new List<WaveData>(archive);
+        List<WaveData> result = new List<WaveData>();
+        //Calculate which options are available.
+        float current_max = 0;
+        for (int j = options.Count - 1; j >= 0; j--)
+        {
+            if (options[j].m_diffCost >= current_max && options[j].m_diffCost <= budget)
+            {
+                if(options[j].m_diffCost > current_max)
+                    result.Clear();
+
+                current_max = options[j].m_diffCost;
+                result.Add(options[j]);
             }
         }
 
