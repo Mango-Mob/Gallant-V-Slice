@@ -1,7 +1,6 @@
 ﻿
 using BTSystem.Core;
 using UnityEditor;
-using UnityEditor.Animations;
 using UnityEngine;
 
 namespace EntitySystem.Core.AI

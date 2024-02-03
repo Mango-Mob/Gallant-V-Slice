@@ -108,26 +108,26 @@ namespace UnityEditor.Rendering.Universal.ShaderGUI
         }
 
         // Material additional foldouts
-        public override void DrawAdditionalFoldouts(Material material)
-        {
-            base.DrawAdditionalFoldouts(material);
-
-            m_GeometryFoldout.value = EditorGUILayout.BeginFoldoutHeaderGroup(m_GeometryFoldout.value, LitTessellationGUI.Styles.geometryLabel);
-            if (m_GeometryFoldout.value)
-            {
-                DrawGeometryInputsFoldout(material);
-                EditorGUILayout.Space();
-            }
-            EditorGUILayout.EndFoldoutHeaderGroup();
-
-            m_GeometryAdvancedFoldout.value = EditorGUILayout.BeginFoldoutHeaderGroup(m_GeometryAdvancedFoldout.value, LitTessellationGUI.Styles.geometryAdvancedLabel);
-            if (m_GeometryAdvancedFoldout.value)
-            {
-                DrawGeometryAdvancedFoldout(material);
-                EditorGUILayout.Space();
-            }
-            EditorGUILayout.EndFoldoutHeaderGroup();
-        }
+        //public override void DrawAdditionalFoldouts(Material material)
+        //{
+        //    base.DrawAdditionalFoldouts(material);
+        //
+        //    m_GeometryFoldout.value = EditorGUILayout.BeginFoldoutHeaderGroup(m_GeometryFoldout.value, LitTessellationGUI.Styles.geometryLabel);
+        //    if (m_GeometryFoldout.value)
+        //    {
+        //        DrawGeometryInputsFoldout(material);
+        //        EditorGUILayout.Space();
+        //    }
+        //    EditorGUILayout.EndFoldoutHeaderGroup();
+        //
+        //    m_GeometryAdvancedFoldout.value = EditorGUILayout.BeginFoldoutHeaderGroup(m_GeometryAdvancedFoldout.value, LitTessellationGUI.Styles.geometryAdvancedLabel);
+        //    if (m_GeometryAdvancedFoldout.value)
+        //    {
+        //        DrawGeometryAdvancedFoldout(material);
+        //        EditorGUILayout.Space();
+        //    }
+        //    EditorGUILayout.EndFoldoutHeaderGroup();
+        //}
 
         // Material geometry inputs foldout
         public virtual void DrawGeometryInputsFoldout(Material material)
