@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using TMPro;
 
 #if UNITY_EDITOR
-using UnityEditor.Experimental.SceneManagement;
+
 #endif
 
 public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -383,7 +383,7 @@ public class SkillButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         Handles.color = Color.white;
         Handles.Label(transform.position, m_skillData ? m_skillData.skillName : "EMPTY");
 
-        if (PrefabStageUtility.GetCurrentPrefabStage() == null || PrefabStageUtility.GetCurrentPrefabStage().scene.name != "SkillButton")
+        if (UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() == null || UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage().scene.name != "SkillButton")
         {
             gameObject.name = m_skillData ? m_skillData.name : "emptyButton";
         }

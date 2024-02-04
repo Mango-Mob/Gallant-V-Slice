@@ -39,7 +39,7 @@ namespace BTSystem.Nodes.Flow
         public override void Execute()
         {
             base.Execute();
-            XNodeEditor.NodeEditorWindow.RepaintAll();
+
             if (m_timer > 0)
             {
                 UpdateTimer();
