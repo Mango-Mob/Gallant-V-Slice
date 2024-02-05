@@ -21,6 +21,7 @@ namespace PlayerSystem
         DAGGER,
 
         BRICK,
+        GUN,
     }
     public enum Hand
     {
@@ -698,6 +699,8 @@ namespace PlayerSystem
                     return gameObject.AddComponent<Weapon_Wand>();
                 case Weapon.DAGGER:
                     return gameObject.AddComponent<Weapon_Dagger>();
+                case Weapon.GUN:
+                    return gameObject.AddComponent<Weapon_Gun>();
                 default:
                     return null;
             }

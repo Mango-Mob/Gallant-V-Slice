@@ -38,6 +38,17 @@ namespace PlayerSystem
                             break;
                     }
                     break;
+                case Weapon.GUN:
+                    switch (_sound)
+                    {
+                        case 1:
+                            base.PlayOnce("Gunshot", false, Random.Range(0.95f, 1.05f));
+                            break;
+                        case 2:
+                            base.PlayOnce("Gunshot", false, Random.Range(0.75f, 0.85f));
+                            break;
+                    }
+                    break;
                 case Weapon.BOW:
                     base.PlayOnce("BowLoad", false, Random.Range(0.95f, 1.05f));
                     break;
@@ -107,6 +118,9 @@ namespace PlayerSystem
                     break;
                 case Weapon.CROSSBOW:
                     base.PlayOnce("BowImpact", false, Random.Range(0.95f, 1.05f));
+                    break;
+                case Weapon.GUN:
+                    base.PlayOnce("HammerHit2", false, Random.Range(0.95f, 1.05f));
                     break;
                 default:
                     base.PlayOnce("SwordCut", false, Random.Range(0.95f, 1.05f));

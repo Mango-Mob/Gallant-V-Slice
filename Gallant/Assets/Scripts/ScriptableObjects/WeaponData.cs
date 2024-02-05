@@ -264,6 +264,9 @@ public class WeaponData : ScriptableObject
                 else
                     _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/woodenCrossbowData"));
                 break;
+            case Weapon.GUN:
+                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/gunData"));
+                break;
             case Weapon.SPEAR:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/spearData"));
                 break;
