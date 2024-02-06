@@ -1,61 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8994914929946405133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0202722d514487241b2e71a4205cf11b, type: 3}
-  m_Name: Reset Timer
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 1096, y: -264}
-  ports:
-    keys:
-    - Timer
-    - entry
-    - decoration
-    values:
-    - _fieldName: Timer
-      _node: {fileID: -8994914929946405133}
-      _typeQualifiedName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: resetter
-        node: {fileID: 57162500391843182}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: entry
-      _node: {fileID: -8994914929946405133}
-      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: exit
-        node: {fileID: 4224357793591401650}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: decoration
-      _node: {fileID: -8994914929946405133}
-      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-  decoration: 0
-  entry: 0
-  Timer: 0
 --- !u!114 &-8700042831861786854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +13,7 @@ MonoBehaviour:
   m_Name: Distance To Target Decorator
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 520, y: -632}
+  position: {x: 1128, y: -216}
   ports:
     keys:
     - entry
@@ -89,7 +33,7 @@ MonoBehaviour:
   entry: 0
   InverseInput: 0
   Condition: 0
-  TargetValue: 2
+  TargetValue: 3
 --- !u!114 &-8699565203199677529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +47,7 @@ MonoBehaviour:
   m_Name: Sub Graph
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -136, y: 184}
+  position: {x: -136, y: 120}
   ports:
     keys:
     - entry
@@ -157,11 +101,88 @@ MonoBehaviour:
   m_Name: Stop if no attack is available
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 504, y: -72}
+  position: {x: 824, y: -104}
   ports:
     keys: []
     values: []
+  width: 283
+  height: 107
+  color: {r: 1, g: 1, b: 1, a: 0.1}
+  comment: Stop if no attack is available
   Size: {x: 270, y: 109}
+--- !u!114 &-6328759678656445017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3e2740470a89d84ea0f21262b12c42d, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 184, y: -264}
+  ports:
+    keys:
+    - timer
+    - entry
+    - exits
+    - decoration
+    values:
+    - _fieldName: timer
+      _node: {fileID: -6328759678656445017}
+      _typeQualifiedName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: Timer
+        node: {fileID: 4867077441470470228}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: entry
+      _node: {fileID: -6328759678656445017}
+      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: exits
+        node: {fileID: -118973535930146670}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: exits
+      _node: {fileID: -6328759678656445017}
+      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: entry
+        node: {fileID: 2435129709519812407}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: decoration
+      _node: {fileID: -6328759678656445017}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  decoration: 0
+  entry: 0
+  exits: 0
+  WaitTime: 0
+  ExecuteOnce: 0
+  TimerDisplay: 0
+  timer: 0
 --- !u!114 &-5996281893202048840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +196,7 @@ MonoBehaviour:
   m_Name: Move To Target Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 520, y: -504}
+  position: {x: 840, y: -264}
   ports:
     keys:
     - entry
@@ -266,7 +287,7 @@ MonoBehaviour:
   m_Name: Halt Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 520, y: -40}
+  position: {x: 840, y: -72}
   ports:
     keys:
     - entry
@@ -307,6 +328,28 @@ MonoBehaviour:
   entry: 0
   exit: 0
   LookAtTarget: 0
+--- !u!114 &-446268879170302611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0829fdc9fe37d4c891ef2332322dda, type: 3}
+  m_Name: Run a roaming behaviour while this entity doesn't have a target.
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -168, y: 56}
+  ports:
+    keys: []
+    values: []
+  width: 301
+  height: 146
+  color: {r: 1, g: 1, b: 1, a: 0.1}
+  comment: Run a roaming behaviour while this entity doesn't have a target.
+  Size: {x: 0, y: 0}
 --- !u!114 &-118973535930146670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,7 +388,7 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: entry
-        node: {fileID: 2435129709519812407}
+        node: {fileID: -6328759678656445017}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -357,10 +400,10 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: entry
-        node: {fileID: 2017439105205478667}
+        node: {fileID: 2917122976852444346}
         reroutePoints: []
       - fieldName: entry
-        node: {fileID: 2917122976852444346}
+        node: {fileID: 2017439105205478667}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -382,7 +425,7 @@ MonoBehaviour:
   m_Name: FishWarrior
   m_EditorClassIdentifier: 
   nodes:
-  - {fileID: 7299517551911766738}
+  - {fileID: -446268879170302611}
   - {fileID: -7430552155464859295}
   - {fileID: 7440073888221180863}
   - {fileID: -118973535930146670}
@@ -391,12 +434,11 @@ MonoBehaviour:
   - {fileID: -630499645020255160}
   - {fileID: -8699565203199677529}
   - {fileID: -8700042831861786854}
-  - {fileID: 471227075032974244}
-  - {fileID: 4224357793591401650}
   - {fileID: 2435129709519812407}
   - {fileID: 2917122976852444346}
-  - {fileID: -8994914929946405133}
-  - {fileID: 57162500391843182}
+  - {fileID: 7361195916860380421}
+  - {fileID: -6328759678656445017}
+  - {fileID: 4867077441470470228}
   currentNodes: []
   Owner: {fileID: 0}
   Target: {fileID: 0}
@@ -404,98 +446,6 @@ MonoBehaviour:
   IsAttacking: 0
   HealthPercent: 0
   StaminaPercent: 0
---- !u!114 &57162500391843182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3e2740470a89d84ea0f21262b12c42d, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 520, y: -264}
-  ports:
-    keys:
-    - resetter
-    - entry
-    - exits
-    - decoration
-    values:
-    - _fieldName: resetter
-      _node: {fileID: 57162500391843182}
-      _typeQualifiedName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: Timer
-        node: {fileID: -8994914929946405133}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: entry
-      _node: {fileID: 57162500391843182}
-      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: exits
-        node: {fileID: 2435129709519812407}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: exits
-      _node: {fileID: 57162500391843182}
-      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: entry
-        node: {fileID: 4224357793591401650}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: decoration
-      _node: {fileID: 57162500391843182}
-      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-  decoration: 0
-  entry: 0
-  exits: 0
-  WaitTimeMin: 1
-  WaitTimeMax: 2
-  ExecuteOnce: 1
-  TimerDisplay: 0
-  resetter: 0
---- !u!114 &471227075032974244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0829fdc9fe37d4c891ef2332322dda, type: 3}
-  m_Name: MoveToAPoint
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 1048, y: -856}
-  ports:
-    keys: []
-    values: []
-  Size: {x: 208, y: 0}
 --- !u!114 &2017439105205478667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +459,7 @@ MonoBehaviour:
   m_Name: Has Target Decorator
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -136, y: -344}
+  position: {x: -104, y: -360}
   ports:
     keys:
     - entry
@@ -541,7 +491,7 @@ MonoBehaviour:
   m_Name: Select
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 216, y: -264}
+  position: {x: 488, y: -264}
   ports:
     keys:
     - entry
@@ -554,7 +504,7 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: exits
-        node: {fileID: -118973535930146670}
+        node: {fileID: -6328759678656445017}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -566,13 +516,13 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: entry
+        node: {fileID: 7361195916860380421}
+        reroutePoints: []
+      - fieldName: entry
         node: {fileID: -5996281893202048840}
         reroutePoints: []
       - fieldName: entry
         node: {fileID: -630499645020255160}
-        reroutePoints: []
-      - fieldName: entry
-        node: {fileID: 57162500391843182}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -603,7 +553,7 @@ MonoBehaviour:
   m_Name: Is Attacking Decorator
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -136, y: -424}
+  position: {x: -104, y: -440}
   ports:
     keys:
     - entry
@@ -622,7 +572,7 @@ MonoBehaviour:
       _dynamic: 0
   entry: 0
   InverseInput: 1
---- !u!114 &4224357793591401650
+--- !u!114 &4867077441470470228
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -631,43 +581,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6517dfe32c8381d428fd323bc3832f08, type: 3}
-  m_Name: Preform Attack Action
+  m_Script: {fileID: 11500000, guid: 6267d6b7a7634df4e8a859b64651554a, type: 3}
+  m_Name: Set Timer
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 808, y: -264}
+  position: {x: 1144, y: -520}
   ports:
     keys:
+    - Timer
     - entry
-    - exit
     - decoration
     values:
+    - _fieldName: Timer
+      _node: {fileID: 4867077441470470228}
+      _typeQualifiedName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: timer
+        node: {fileID: -6328759678656445017}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
     - _fieldName: entry
-      _node: {fileID: 4224357793591401650}
+      _node: {fileID: 4867077441470470228}
       _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
       connections:
-      - fieldName: exits
-        node: {fileID: 57162500391843182}
+      - fieldName: exit
+        node: {fileID: 7361195916860380421}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
       _dynamic: 0
-    - _fieldName: exit
-      _node: {fileID: 4224357793591401650}
-      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: entry
-        node: {fileID: -8994914929946405133}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 0
     - _fieldName: decoration
-      _node: {fileID: 4224357793591401650}
+      _node: {fileID: 4867077441470470228}
       _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
       connections: []
@@ -677,8 +627,8 @@ MonoBehaviour:
       _dynamic: 0
   decoration: 0
   entry: 0
-  exit: 0
-  Attack: {fileID: 11400000, guid: 1c81b13c9ad820a45a291902a61e00f1, type: 2}
+  Timer: 0
+  setTime: 0.25
 --- !u!114 &5614572472672425439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -712,7 +662,7 @@ MonoBehaviour:
   entry: 0
   InverseInput: 1
   TargetValue: 0
---- !u!114 &7299517551911766738
+--- !u!114 &7361195916860380421
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -721,15 +671,54 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e0829fdc9fe37d4c891ef2332322dda, type: 3}
-  m_Name: Run a roaming behaviour while this entity doesn't have a target.
+  m_Script: {fileID: 11500000, guid: 7ca261b1cc4af8e44b96dfdbb0ef2eb7, type: 3}
+  m_Name: Preform Any Attack Action
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -168, y: 152}
+  position: {x: 840, y: -520}
   ports:
-    keys: []
-    values: []
-  Size: {x: 411, y: 132}
+    keys:
+    - entry
+    - exit
+    - decoration
+    values:
+    - _fieldName: entry
+      _node: {fileID: 7361195916860380421}
+      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: exits
+        node: {fileID: 2435129709519812407}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: exit
+      _node: {fileID: 7361195916860380421}
+      _typeQualifiedName: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: entry
+        node: {fileID: 4867077441470470228}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: decoration
+      _node: {fileID: 7361195916860380421}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  decoration: 0
+  entry: 0
+  exit: 0
+  Attack: {fileID: 0}
 --- !u!114 &7440073888221180863
 MonoBehaviour:
   m_ObjectHideFlags: 0

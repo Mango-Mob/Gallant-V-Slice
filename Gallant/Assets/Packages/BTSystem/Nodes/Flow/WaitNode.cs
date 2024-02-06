@@ -11,22 +11,19 @@ namespace BTSystem.Nodes.Flow
     [CreateNodeMenu("Flow/Wait", order = 1)]
     public class WaitNode : FlowNode, ITimer
     {
-        public float WaitTimeMin;
-        public float WaitTimeMax;
+        public float WaitTime;
         public bool ExecuteOnce;
 
         [Range(0f, 1f)]
         public float TimerDisplay;
-        [Input] public float resetter;
+        [Input] public float timer;
         private float m_timer;
         private float m_waitTime;
         private void Awake()
         {
             if (Application.isPlaying)
             {
-                WaitTimeMin = Mathf.Abs(WaitTimeMin);
-                WaitTimeMax = Mathf.Abs(WaitTimeMax);
-                m_waitTime = Random.Range(WaitTimeMin, WaitTimeMax);
+                m_waitTime = WaitTime;
                 m_timer = m_waitTime;
             }
         }
@@ -68,9 +65,14 @@ namespace BTSystem.Nodes.Flow
             m_timer -= Time.deltaTime;
         }
 
+        public void SetTime( float time )
+        {
+            WaitTime = time;
+        }
+
         public void Reset()
         {
-            m_waitTime = Random.Range(WaitTimeMin, WaitTimeMax);
+            m_waitTime = WaitTime;
             m_timer = m_waitTime;
         }
 

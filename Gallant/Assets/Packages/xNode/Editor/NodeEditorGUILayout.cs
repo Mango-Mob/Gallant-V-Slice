@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using static Codice.CM.WorkspaceServer.WorkspaceTreeDataStore;
 
 namespace XNodeEditor {
     /// <summary> xNode-specific version of <see cref="EditorGUILayout"/> </summary>
@@ -198,22 +199,44 @@ namespace XNodeEditor {
 
             // If property is an input, display a regular property field and put a port handle on the left side
             if (port.direction == XNode.NodePort.IO.Input) {
-                // Display a label
-                EditorGUILayout.LabelField(content, options);
-
-                Rect rect = GUILayoutUtility.GetLastRect();
-                float paddingLeft = NodeEditorWindow.current.graphEditor.GetPortStyle(port).padding.left;
-                position = rect.position - new Vector2(16 + paddingLeft, 0);
+                PortInputField(label, port, options);
             }
             // If property is an output, display a text label and put a port handle on the right side
             else if (port.direction == XNode.NodePort.IO.Output) {
-                // Display a label
-                EditorGUILayout.LabelField(content, NodeEditorResources.OutputPort, options);
-
-                Rect rect = GUILayoutUtility.GetLastRect();
-                rect.width += NodeEditorWindow.current.graphEditor.GetPortStyle(port).padding.right;
-                position = rect.position + new Vector2(rect.width, 0);
+                PortOutputField(label, port, options);
             }
+        }
+
+        public static void PortInputField(GUIContent label, XNode.NodePort port, params GUILayoutOption[] options )
+        {
+            if (port == null) return;
+            if (options == null) options = new GUILayoutOption[] { GUILayout.MinWidth(30) };
+            GUIContent content = label != null ? label : new GUIContent(ObjectNames.NicifyVariableName(port.fieldName));
+            Vector2 position = Vector3.zero;
+            // Display a label
+            EditorGUILayout.LabelField(content, options);
+
+            Rect rect = GUILayoutUtility.GetLastRect();
+            float paddingLeft = NodeEditorWindow.current.graphEditor.GetPortStyle(port).padding.left;
+            position = rect.position - new Vector2(16 + paddingLeft, 0);
+
+            PortField(position, port);
+        }
+
+        public static void PortOutputField(GUIContent label, XNode.NodePort port, params GUILayoutOption[] options)
+        {
+            if (port == null) return;
+            if (options == null) options = new GUILayoutOption[] { GUILayout.MinWidth(30) };
+            GUIContent content = label != null ? label : new GUIContent(ObjectNames.NicifyVariableName(port.fieldName));
+            Vector2 position = Vector3.zero;
+
+            // Display a label
+            EditorGUILayout.LabelField(content, NodeEditorResources.OutputPort, options);
+
+            Rect rect = GUILayoutUtility.GetLastRect();
+            rect.width += NodeEditorWindow.current.graphEditor.GetPortStyle(port).padding.right;
+            position = rect.position + new Vector2(rect.width, 0);
+
             PortField(position, port);
         }
 
