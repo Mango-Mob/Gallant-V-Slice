@@ -20,35 +20,34 @@ namespace EntitySystem.Core.AI
         public BrainComponent Brain { get; private set; } = null;
         public MoveComponent Movement { get; private set; } = null;
         public AttackComponent Attack { get; private set; } = null;
-
-        public Animator EntityAnimation;
         
         protected override void Awake()
         {
             base.Awake();
-            Behaviour = Behaviour.Copy() as BTGraph;
 
-            Brain = new BrainComponent(this, Behaviour);
-            Movement = new MoveComponent(this);
-            Attack = new AttackComponent(this, MyAttackData);
+            if (BrainComponent.CanOwnerHaveComponent(this) && Behaviour)
+            {
+                Behaviour = Behaviour.Copy() as BTGraph;
+                Brain = new BrainComponent(this, Behaviour);
+            }
 
+            if( MoveComponent.CanOwnerHaveComponent(this) )
+                Movement = new MoveComponent(this);
+
+            if(AttackComponent.CanOwnerHaveComponent(this))
+                Attack = new AttackComponent(this, MyAttackData);
         }
 
         protected virtual void Update()
         {
-            Brain.Update(Time.deltaTime);
-            Movement.Update(Time.deltaTime);
-            Attack.Update(Time.deltaTime);
-
-            EntityAnimation?.SetFloat("VelocityHorizontal", Movement.ScaledVelocity.x);
-            EntityAnimation?.SetFloat("VelocityVertical", Movement.ScaledVelocity.z);
-            EntityAnimation?.SetFloat("RotationVelocity", Movement.RotateDirection);
-            EntityAnimation?.SetFloat("VelocityHaste", 1f);
+            Brain?.Update(Time.deltaTime);
+            Movement?.Update(Time.deltaTime);
+            Attack?.Update(Time.deltaTime);
         }
 		
         protected virtual void FixedUpdate()
         {
-            Movement.FixedUpdate(Time.fixedDeltaTime);
+            Movement?.FixedUpdate(Time.fixedDeltaTime);
         }
 
         public override bool DealDamageToEntity(DamageInstance _damage, bool _playHurtSound = false)

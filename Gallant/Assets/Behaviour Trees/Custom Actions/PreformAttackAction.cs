@@ -4,7 +4,7 @@ using BTSystem.Nodes;
 using BTSystem.Core;
 using ActorSystem.Data;
 
-[CreateNodeMenu("Action/PreformAttack", order = 1)]
+[CreateNodeMenu("Action/Attacks/PreformAttack", order = 1)]
 public class PreformAttackAction : ActionNode 
 {
 	public AttackData Attack;

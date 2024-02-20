@@ -7,7 +7,7 @@ using XNode;
 
 namespace BTSystem.Nodes.Flow
 {
-    [CreateNodeMenu("Status/ResetATimer", order = 1)]
+    [CreateNodeMenu("Status/Timer/ResetTimer", order = 1)]
     public class ResetTimerNode : StatusNode
     {
         [Output] public float Timer;

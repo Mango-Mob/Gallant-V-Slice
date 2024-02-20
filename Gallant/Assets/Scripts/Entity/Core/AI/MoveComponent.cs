@@ -35,11 +35,16 @@ namespace EntitySystem.Core.AI
 
         private bool m_isKnocked;
         private bool m_canRotate;
-        
+
+        private Animator EntityAnimation;
+
         public MoveComponent(AIEntity _owner) : base(_owner)
         {
+            EntityAnimation = _owner.GetComponentInChildren<Animator>();
             Navigator = _owner.GetComponent<NavMeshAgent>();
             Body = _owner.GetComponent<Rigidbody>();
+
+            Debug.Assert(Navigator != null && Body != null);
 
             m_isKnocked = false;
             m_canRotate = true;
@@ -48,9 +53,14 @@ namespace EntitySystem.Core.AI
             TargetRotation = Owner.transform.rotation;
         }
 
+        static public bool CanOwnerHaveComponent(AIEntity _owner) { return _owner.GetComponent<NavMeshAgent>() && _owner.GetComponentInChildren<Animator>() && _owner.GetComponent<Rigidbody>(); }
+
         public override void Update(float deltaTime)
         {
-
+            EntityAnimation?.SetFloat("VelocityHorizontal", ScaledVelocity.x);
+            EntityAnimation?.SetFloat("VelocityVertical", ScaledVelocity.z);
+            EntityAnimation?.SetFloat("RotationVelocity", RotateDirection);
+            EntityAnimation?.SetFloat("VelocityHaste", 1f);
         }
 
         public void FixedUpdate(float _fixedDeltaTime)

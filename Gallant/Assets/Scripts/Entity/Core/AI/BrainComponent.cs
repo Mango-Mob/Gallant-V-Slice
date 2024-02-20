@@ -2,6 +2,7 @@
 using BTSystem.Core;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace EntitySystem.Core.AI
 {
@@ -11,9 +12,10 @@ namespace EntitySystem.Core.AI
 
         public BrainComponent(AIEntity _owner, BTGraph _behaviour) : base(_owner)
         {
+            Debug.Assert(_behaviour != null);
             Behaviour = _behaviour;
         }
-
+        static public bool CanOwnerHaveComponent(AIEntity _owner) { return true; }
         public override void Update(float deltaTime)
         {
             UpdateParam();
