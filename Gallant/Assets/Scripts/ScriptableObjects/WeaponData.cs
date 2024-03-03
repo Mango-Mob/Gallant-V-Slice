@@ -289,7 +289,10 @@ public class WeaponData : ScriptableObject
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/bowData"));
                 break;
             case Weapon.WAND:
-                _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/wandTomeData"));
+                if (!_wooden)
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/wandData"));
+                else
+                    _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/woodenWandData"));
                 break;
             case Weapon.DAGGER:
                 _data.Clone(Resources.Load<WeaponData>("Data/BaseWeapons/daggerData"));
