@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PlayerSystem;
 
 public class Weapon_Staff : WeaponBase
 {
@@ -8,7 +9,7 @@ public class Weapon_Staff : WeaponBase
     new private void Awake()
     {
         m_objectPrefab = Resources.Load<GameObject>("WeaponProjectiles/StaffArcaneBolt");
-        m_objectAltPrefab = Resources.Load<GameObject>("VFX/ArcanePush");
+        m_objectAltPrefab = Resources.Load<GameObject>("WeaponProjectiles/WandLaser");
 
         m_overrideHitVFXPrefab = Resources.Load<GameObject>("VFX/ArcaneHit");
         m_overrideAltHitVFXPrefab = Resources.Load<GameObject>("VFX/ArcaneHit");
@@ -28,18 +29,34 @@ public class Weapon_Staff : WeaponBase
 
         if (meshCount > 1 && m_weaponData.abilityData != null)
             meshRenderers[meshCount - 1].material.color = m_weaponData.abilityData.droppedEnergyColor;
+
     }
 
     // Update is called once per frame
     new private void Update()
     {
         base.Update();
+
+        if (m_beamObject)
+        {
+            playerController.playerResources.ChangeStamina(-35.0f * Time.deltaTime);
+        }
+
+        if ((playerController.playerAttack.GetCurrentUsedHand() == Hand.NONE && !playerController.animator.GetBool("UsingLeft")) || playerController.Stamina <= 0.0f)
+        {
+            WeaponAltRelease();
+            playerController.animator.SetBool("UsingLeft", false);
+        }
+    }
+    private void OnDestroy()
+    {
+        Destroy(m_weaponObject);
     }
     public override void WeaponFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
 
-        GameObject projectile = ShootProjectile(m_weaponObject.transform.position, m_weaponData, m_hand);
+        GameObject projectile = ShootProjectile(m_weaponObject.transform.position, m_weaponData, Hand.RIGHT);
 
         if (m_weaponData.abilityData != null)
         {
@@ -52,17 +69,22 @@ public class Weapon_Staff : WeaponBase
         }
     }
     public override void WeaponRelease() { }
-    public override void WeaponAltFunctionality() 
+
+    GameObject m_beamObject;
+    public override void WeaponAltFunctionality()
     {
         playerController.playerAudioAgent.PlayWeaponSwing(m_weaponData.weaponType);
 
-        ConeAttack(m_weaponObject.transform.position, m_weaponData, m_hand, m_pushAngle);
+        if (m_beamObject)
+            Destroy(m_beamObject);
 
-        GameObject VFX = SpawnVFX(m_objectAltPrefab, transform.position + transform.up, playerController.playerMovement.playerModel.transform.rotation);
-        VFX.transform.localScale *= (m_weaponData.altHitCenterOffset + m_weaponData.altHitSize) * 1.0f;
-        VFX.transform.SetParent(transform);
-
-        VFX.transform.position += playerController.playerMovement.playerModel.transform.forward * 1.5f;
+        m_beamObject = ShootProjectile(transform.position + playerController.playerMovement.playerModel.transform.forward + Vector3.up * playerController.playerAttack.m_swingHeight,
+            m_weaponData, Hand.LEFT);
+        m_beamObject.transform.SetParent(playerController.playerMovement.playerModel.transform);
     }
-    public override void WeaponAltRelease() { }
+    public override void WeaponAltRelease()
+    {
+        if (m_beamObject)
+            m_beamObject.GetComponent<BasePlayerProjectile>().Destruct();
+    }
 }
